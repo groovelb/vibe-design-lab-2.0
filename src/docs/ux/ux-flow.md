@@ -526,7 +526,7 @@ technical에게 넘기는 정보. 이 서비스가 외부와 연결되는 지점
 | 연동 | 역할 | Phase | 방식 |
 |------|------|-------|------|
 | **Discord** | 코스 커뮤니티의 실시간 소통 채널 | Phase 1 | Discord 초대 링크로 연결. Phase 2에서 API 연동 검토 |
-| **YouTube** | 코스 영상 호스팅 | Phase 1 | iframe 임베드. 자체 플레이어 없음 |
+| **Mux** | 코스 영상 스트리밍 | Phase 1 | HLS 적응형 스트리밍 + signed URL 콘텐츠 보호 |
 | **외부 결제** | 코스 수강 신청 | Phase 1 | 외부 결제 페이지 링크. 자체 결제 없음 |
 | **Analytics** | 전환 퍼널 추적 | Phase 1 | GA4 또는 동등 도구. 핵심 이벤트: Landing 섹션별 스크롤 도달률, Landing→Course Detail(숏컷), Landing→Course, Course→Detail, Detail→CTA클릭 |
 | **SNS 메타 태그** | 공유 시 미리보기 카드 | Phase 1 | Open Graph + Twitter Card 메타 태그 |

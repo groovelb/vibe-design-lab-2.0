@@ -13,7 +13,7 @@
 | **Primary** | 블랙 & 화이트 (무채색). 유채색 primary 제거 | 전면 전환 |
 | **Gray 스케일** | Violet-tinted grayscale (hue 250-270°). 순수 neutral gray 금지 | 전면 전환 |
 | **유채색** | 코드 구문 하이라이팅에서만 허용 | 제한 |
-| **서체** | 산세리프 + 모노스페이스 공존 | 모노 추가 |
+| **서체** | IBM Plex Sans (브랜드) + SUIT (프로덕트/헤딩) + IBM Plex Mono (코드) | 전면 전환 |
 | **Elevation** | 명도 차이로 위계. shadow 최소화 | 전환 |
 | **그래픽 모티프** | Naming Line, Grid 배경, Monoline 1px | 신규 |
 | **borderRadius** | 0 | 유지 |
@@ -92,11 +92,16 @@ createTheme({
 
 ### 2.2 타이포그래피
 
+| 역할 | 서체 | 용도 |
+|------|------|------|
+| **브랜드** | IBM Plex Sans | 로고, 태그라인, 브랜드 강조 텍스트 |
+| **프로덕트/헤딩** | SUIT | 본문, UI, h1~h6 — 한글 최적화 |
+| **코드** | IBM Plex Mono | 키워드, 토큰명, 인라인 코드, 코드 블록 |
+
 | 변경 | 내용 |
 |------|------|
-| **모노스페이스 추가** | 키워드, 토큰명, 인라인 코드용. 서체 후보: JetBrains Mono, Fira Code 등 |
 | **Display 웨이트** | 900 → 800 (ExtraBold) |
-| **신규 variant** | `display` (heading font, 800, 48-64px), `code` (mono, 500, 14px), `codeBlock` (mono, 400, 14px) |
+| **신규 variant** | `display` (IBM Plex Sans, 800, 48-64px), `code` (IBM Plex Mono, 500, 14px), `codeBlock` (IBM Plex Mono, 400, 14px) |
 
 ### 2.3 Elevation
 

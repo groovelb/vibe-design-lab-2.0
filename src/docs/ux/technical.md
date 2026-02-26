@@ -17,7 +17,7 @@
          │                          │
          ▼                          ▼
 ┌─ BaaS ─────────┐      ┌─ External ──────────┐
-│  Supabase       │      │  YouTube IFrame API  │
+│  Supabase       │      │  Mux (Video Stream)  │
 │  ├── PostgreSQL │      │  Discord (링크/API)   │
 │  ├── Auth       │      │  외부 결제 링크       │
 │  ├── Realtime   │      │  GA4                 │
@@ -40,6 +40,8 @@
 |--------|------|-------|
 | `@supabase/supabase-js` | DB, Auth, Realtime, Storage 단일 클라이언트 | 1 |
 | `@supabase/ssr` | Next.js App Router 쿠키 기반 세션 | 1 |
+| `@mux/mux-player-react` | 영상 플레이어. HLS 적응형 스트리밍, signed URL 콘텐츠 보호 | 1 |
+| `@mux/mux-node` | 서버 사이드 Mux API (signed token 생성, 영상 업로드) | 1 |
 
 **추가하지 않는 것과 이유:**
 
@@ -48,11 +50,13 @@
 | next-auth | Supabase Auth가 대체. 별도 인증 라이브러리 불필요 |
 | prisma | Supabase JS client가 쿼리 담당. ORM 레이어 불필요 |
 | react-query / swr | Server Components가 데이터 페칭 담당. 실시간은 Supabase Realtime |
-| react-player | YouTube IFrame API 직접 사용. 래퍼 불필요 |
 | zustand / redux | 전역 상태 최소. React context + Server Components로 충분 |
-| @mux/mux-player-react | Phase 2 검토. Phase 1은 YouTube |
+| video.js / react-player | Mux Player가 대체. 별도 플레이어 불필요 |
 
-**모노스페이스 서체:** `next/font/google`로 로딩 (패키지 불필요). 후보: JetBrains Mono, Fira Code, IBM Plex Mono — 렌더링 테스트 후 확정.
+**서체:** 모두 `next/font/google`로 로딩 (패키지 불필요).
+- 브랜드: IBM Plex Sans — 로고, 태그라인, 브랜드 강조
+- 프로덕트/헤딩: SUIT — 본문, UI, h1~h6 (한글 최적화)
+- 코드: IBM Plex Mono — 키워드, 토큰명, 인라인 코드
 
 ---
 
@@ -87,6 +91,11 @@ src/
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=        # Server Action에서만 사용
+
+MUX_TOKEN_ID=                     # Mux API 인증
+MUX_TOKEN_SECRET=                 # Mux API 인증
+MUX_SIGNING_KEY=                  # Signed URL 발급용
+MUX_SIGNING_KEY_PRIVATE=          # Signed URL 발급용
 ```
 
 ---
@@ -155,7 +164,8 @@ chapters (
   slug                   text NOT NULL,
   title                  text NOT NULL,
   description            text,
-  video_url              text,          -- YouTube URL
+  mux_playback_id        text,          -- Mux playback ID
+  mux_asset_id           text,          -- Mux asset ID (관리용)
   video_duration         integer,       -- 초
   challenge_title        text,
   challenge_description  text,
@@ -330,17 +340,17 @@ app/
 **Course Detail** = 공개 전환 페이지 (누구나 접근)
 **Chapter Learning** = 수강생 전용 학습 페이지 (enrollment 필요)
 
-### 5.2 영상 챕터 구분
+### 5.2 영상 스트리밍 + 챕터 구분
 
-YouTube IFrame API로 영상 재생 + 자체 챕터 마커 UI.
+Mux Player로 HLS 적응형 스트리밍 + signed URL 콘텐츠 보호 + 자체 챕터 마커 UI.
 
 ```
 ┌─────────────────────────────────────────────────┐
-│  YouTube Player (IFrame API)                     │
+│  Mux Player (@mux/mux-player-react)              │
 │  ┌─────────────────────────────────────────────┐ │
 │  │                                             │ │
 │  │              영상 영역                       │ │
-│  │                                             │ │
+│  │         HLS 적응형 비트레이트                 │ │
 │  └─────────────────────────────────────────────┘ │
 │  ▶ ════●══════════════════════════════════ 12:34  │
 │        ▲    ▲         ▲              ▲           │
@@ -355,28 +365,52 @@ YouTube IFrame API로 영상 재생 + 자체 챕터 마커 UI.
 └────────────────────────────────────┘
 ```
 
-**구현 방식:**
+**콘텐츠 보호 (Signed URL):**
+
+유료 콘텐츠이므로 Mux signed playback token으로 URL 공유 방지.
 
 ```js
-// YouTube IFrame API 핵심
-const player = new YT.Player('player', {
-  videoId: extractVideoId(chapter.video_url),
-  events: {
-    onStateChange: handleStateChange,
-  }
-});
+// Server Action — 수강생 검증 후 signed token 발급
+import Mux from '@mux/mux-node';
 
-// 현재 재생 시점 추적 (1초 인터벌)
-const interval = setInterval(() => {
-  const currentTime = Math.floor(player.getCurrentTime());
-  setCurrentTime(currentTime);
-}, 1000);
-
-// 마커 클릭 → 해당 시점으로 이동
-const seekTo = (seconds) => player.seekTo(seconds, true);
+export async function getPlaybackToken(chapterId) {
+  // 1. Supabase에서 수강 여부 확인 (enrollment RLS)
+  // 2. chapter의 mux_playback_id 조회
+  // 3. signed token 발급 (24시간 만료)
+  const token = await mux.jwt.signPlaybackId(playbackId, {
+    type: 'video',
+    expiration: '24h',
+  });
+  return token;
+}
 ```
 
-**진도 저장:** `chapter_progress.last_video_position`에 주기적으로 저장 (10초 간격 debounce). 재방문 시 이어보기.
+**플레이어 구현:**
+
+```jsx
+import MuxPlayer from '@mux/mux-player-react';
+
+<MuxPlayer
+  playbackId={chapter.mux_playback_id}
+  tokens={{ playback: signedToken }}
+  onTimeUpdate={(e) => setCurrentTime(Math.floor(e.target.currentTime))}
+  startTime={chapter_progress.last_video_position}  // 이어보기
+/>
+```
+
+**챕터 마커 seek:**
+
+```js
+// MuxPlayer ref로 시점 이동
+const playerRef = useRef(null);
+const seekTo = (seconds) => {
+  playerRef.current.currentTime = seconds;
+};
+```
+
+**진도 저장:** `chapter_progress.last_video_position`에 주기적으로 저장 (10초 간격 debounce). `startTime` prop으로 이어보기.
+
+**영상 업로드 (관리자):** Mux Direct Upload API → `mux_asset_id` + `mux_playback_id` 저장. 관리자 페이지 또는 Mux Dashboard에서 업로드.
 
 ### 5.3 타임라인 댓글
 
@@ -411,7 +445,7 @@ const seekTo = (seconds) => player.seekTo(seconds, true);
 | 동작 | 구현 |
 |------|------|
 | 댓글 작성 시 현재 재생 시점 자동 첨부 | `video_timestamp = currentTime` (선택적 — 체크박스로 시점 첨부 토글) |
-| 타임스탬프 뱃지 클릭 → 영상 이동 | `player.seekTo(comment.video_timestamp)` |
+| 타임스탬프 뱃지 클릭 → 영상 이동 | `playerRef.current.currentTime = comment.video_timestamp` |
 | 타임라인순 정렬 | `ORDER BY video_timestamp ASC NULLS LAST` |
 | 실시간 새 댓글 표시 | Supabase Realtime `postgres_changes` 구독 |
 | 대댓글 | `parent_id` 참조. 1depth만 허용 |
@@ -439,7 +473,7 @@ supabase
 
 ┌─ 좌측 (영상 + 댓글) ────────┐  ┌─ 우측 (네비 + 챌린지) ─┐
 │                              │  │                        │
-│  [YouTube Player]            │  │  Chapter Navigation    │
+│  [Mux Player]                │  │  Chapter Navigation    │
 │  [Chapter Markers]           │  │  ├── ✓ Ch.1 인트로     │
 │                              │  │  ├── ● Ch.2 토큰 기초  │ ← 현재
 │  ─────────────────           │  │  ├── ○ Ch.3 컴포넌트   │
@@ -523,21 +557,38 @@ export const theme = createTheme({
   shape: { borderRadius: 0 },
   spacing: 8,
   typography: {
-    fontFamily: 'var(--font-pretendard)',
-    // h1, h2: fontWeight 900 → 800
-    // + display, code, codeBlock variants
+    fontFamily: 'var(--font-suit)',          // 프로덕트/본문 기본
+    h1: { fontFamily: 'var(--font-suit)', fontWeight: 800 },
+    h2: { fontFamily: 'var(--font-suit)', fontWeight: 800 },
+    // display: IBM Plex Sans (브랜드)
+    // code, codeBlock: IBM Plex Mono
   },
   // elevation → 다크: bg 단계, 라이트: shadow
 });
 ```
 
-### 6.4 모노스페이스 서체 추가
+### 6.4 서체 설정
 
 ```js
-// app/fonts.js에 추가
-import { JetBrains_Mono } from 'next/font/google';
+// app/fonts.js — 기존 Outfit + Pretendard 대체
+import { IBM_Plex_Sans, IBM_Plex_Mono } from 'next/font/google';
+import localFont from 'next/font/local';
 
-export const jetbrainsMono = JetBrains_Mono({
+// 브랜드 (로고, 태그라인, display)
+export const ibmPlexSans = IBM_Plex_Sans({
+  subsets: ['latin'],
+  variable: '--font-brand',
+  weight: ['400', '500', '600', '700'],
+});
+
+// 프로덕트/헤딩 (본문, UI, h1~h6)
+export const suit = localFont({
+  src: '../public/fonts/SUIT-Variable.woff2',
+  variable: '--font-suit',
+});
+
+// 코드 (키워드, 토큰명, 인라인 코드)
+export const ibmPlexMono = IBM_Plex_Mono({
   subsets: ['latin'],
   variable: '--font-mono',
   weight: ['400', '500'],
@@ -629,7 +680,7 @@ Next.js Server Actions 기본. Route Handler는 외부 webhook 수신 시만 사
 |------|------|------|
 | 사용자 세션 | 서버 (쿠키) | Supabase Auth + middleware |
 | 코스/챕터 데이터 | 서버 | Server Component에서 fetch |
-| 비디오 재생 시점 | 클라이언트 | React state + YouTube API |
+| 비디오 재생 시점 | 클라이언트 | React state + Mux Player onTimeUpdate |
 | 타임라인 댓글 | 클라이언트 | React state + Supabase Realtime 구독 |
 | 아코디언/트리 펼침 | 클라이언트 | React state (로컬) |
 | Floating CTA 표시 | 클라이언트 | IntersectionObserver |
@@ -643,7 +694,7 @@ Next.js Server Actions 기본. Route Handler는 외부 webhook 수신 시만 사
 
 | 연동 | Phase 1 | Phase 2 |
 |------|---------|---------|
-| **YouTube** | IFrame API — 챕터 마커 오버레이 + 타임스탬프 추적 | Mux 마이그레이션 검토 (커스텀 플레이어, 분석) |
+| **Mux** | HLS 스트리밍 + signed URL 콘텐츠 보호 + 챕터 마커 | 영상 분석 대시보드, 시청 히트맵 |
 | **Discord** | 초대 링크 제공 | API 연동 — 채널 활동 스냅샷, 멤버 동기화 |
 | **결제** | 외부 결제 페이지 링크 + webhook | 자체 결제 검토 |
 | **GA4** | `next/script`로 삽입. 핵심 이벤트 아래 참조 | 커스텀 대시보드 |
@@ -678,7 +729,7 @@ Next.js Server Actions 기본. Route Handler는 외부 webhook 수신 시만 사
 
 | 제약 | 이유 |
 |------|------|
-| 자체 영상 호스팅 안 함 | Non-goal. YouTube 또는 Mux 사용 |
+| 자체 인코딩/CDN 안 함 | Mux가 인코딩 + HLS + CDN 전담. 자체 미디어 서버 구축 안 함 |
 | 자체 결제 안 함 | Phase 1 Non-goal. 외부 결제 링크 |
 | 실시간 채팅 안 함 | Non-goal. Discord가 담당. 플랫폼은 비동기 댓글 |
 | AI 자동 피드백 안 함 | Non-goal. 피드백은 프랙티셔너와 동료가 담당 |
@@ -703,7 +754,7 @@ Next.js Server Actions 기본. Route Handler는 외부 webhook 수신 시만 사
 | 순서 | 항목 |
 |------|------|
 | 5 | Course / Course Detail 페이지 (공개, 전환용) |
-| 6 | YouTube IFrame API + 챕터 마커 UI |
+| 6 | Mux Player + signed URL + 챕터 마커 UI |
 | 7 | Chapter Learning 페이지 + 진도 저장 |
 | 8 | 타임라인 댓글 (Supabase Realtime) |
 | 9 | 챌린지 제출 + 피어 피드백 |
@@ -722,7 +773,7 @@ Next.js Server Actions 기본. Route Handler는 외부 webhook 수신 시만 사
 
 - 결제 webhook 자동화
 - Discord API 연동
-- Mux 마이그레이션 검토
+- Mux 영상 분석 (시청 히트맵, 이탈 구간)
 - Dictionary Wiki Entry 개별 페이지
 
 ---
