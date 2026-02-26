@@ -61,7 +61,7 @@ export function StyledParagraph({
       lineHeight: 0.8,
       mr: 1,
       mt: 1,
-      fontFamily: '"Outfit", "Pretendard Variable", sans-serif',
+      fontFamily: '"SUIT Variable", SUIT, sans-serif',
       color: styleColor,
     },
   };

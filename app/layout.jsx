@@ -1,10 +1,11 @@
+import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
 import ThemeRegistry from './providers';
-import { outfit, pretendard } from './fonts';
+import { ibmPlexSans, suit, ibmPlexMono } from './fonts';
 import './globals.css';
 
 export const metadata = {
-  title: 'Starter Kit',
-  description: 'Your design system foundation',
+  title: 'Vibe Design Labs',
+  description: 'Design language system for vibe coding education',
   icons: {
     icon: '/favicon.svg',
   },
@@ -12,8 +13,13 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="ko" className={ `${outfit.variable} ${pretendard.variable}` }>
+    <html
+      lang="ko"
+      className={ `${ibmPlexSans.variable} ${suit.variable} ${ibmPlexMono.variable}` }
+      suppressHydrationWarning
+    >
       <body>
+        <InitColorSchemeScript attribute="data-mui-color-scheme" defaultMode="dark" />
         <ThemeRegistry>
           {children}
         </ThemeRegistry>

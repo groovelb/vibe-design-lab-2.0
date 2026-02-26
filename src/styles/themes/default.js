@@ -1,247 +1,37 @@
 /**
- * Default Theme
+ * VDL Default Theme
  *
- * 프로젝트의 기본 디자인 토큰을 정의하는 표준 테마입니다.
- * 피그마의 Design Tokens / Variables와 동일한 역할입니다.
+ * Vibe Design Labs 디자인 시스템 토큰을 정의하는 표준 테마입니다.
  *
  * ## 핵심 철학
- * - **Sharp Corners**: borderRadius 0 (날카로운 모서리)
- * - **Dimmed Shadow**: offset 없이 blur만 사용하는 은은한 그림자
- * - **Pure White**: 깔끔한 흰색 배경
- * - **Brand Blue**: Primary 색상 #0000FF
+ * - **Dark-first**: 다크 모드가 기본 경험
+ * - **Achromatic Primary**: 무채색 (dark: white, light: black)
+ * - **Violet-tinted Grayscale**: hue 260° 기반 회색 스케일
+ * - **Sharp Corners**: borderRadius 0
+ * - **Brightness Elevation**: 다크 모드에서 명도 차이로 위계 표현
  */
 
 import { createTheme } from '@mui/material/styles';
-import { blueGrey, grey } from '@mui/material/colors';
 
 // ============================================================
-// 1. Color Tokens (색상 토큰)
+// 1. Primitive Tokens — Violet-tinted Grayscale
 // ============================================================
-const palette = {
-  mode: 'light',
-  // 브랜드 색상
-  primary: {
-    light: '#6666FF',
-    main: '#0000FF',
-    dark: '#0000B2',
-    contrastText: '#FFFFFF',
-  },
-  secondary: {
-    light: blueGrey[700],
-    main: blueGrey[900],
-    dark: '#1a252b',
-    contrastText: '#FFFFFF',
-  },
-
-  // 상태 색상 (Feedback)
-  error: {
-    light: '#ef5350',
-    main: '#d32f2f',
-    dark: '#c62828',
-    contrastText: '#FFFFFF',
-  },
-  warning: {
-    light: '#ff9800',
-    main: '#ed6c02',
-    dark: '#e65100',
-    contrastText: '#FFFFFF',
-  },
-  success: {
-    light: '#4caf50',
-    main: '#2e7d32',
-    dark: '#1b5e20',
-    contrastText: '#FFFFFF',
-  },
-  info: {
-    light: '#03a9f4',
-    main: '#0288d1',
-    dark: '#01579b',
-    contrastText: '#FFFFFF',
-  },
-
-  // 텍스트 색상
-  text: {
-    primary: 'rgba(0, 0, 0, 0.87)',
-    secondary: 'rgba(0, 0, 0, 0.6)',
-    disabled: 'rgba(0, 0, 0, 0.38)',
-  },
-
-  // 배경 색상
-  background: {
-    default: '#FFFFFF',
-    paper: '#FFFFFF',
-  },
-
-  // 구분선
-  divider: 'rgba(0, 0, 0, 0.12)',
-
-  // 액션 상태
-  action: {
-    active: 'rgba(0, 0, 0, 0.54)',
-    hover: 'rgba(0, 0, 0, 0.04)',
-    selected: 'rgba(0, 0, 0, 0.08)',
-    disabled: 'rgba(0, 0, 0, 0.26)',
-    disabledBackground: 'rgba(0, 0, 0, 0.12)',
-    focus: 'rgba(0, 0, 0, 0.12)',
-  },
-
-  // Grey 스케일
-  grey: {
-    50: grey[50],
-    100: grey[100],
-    200: grey[200],
-    300: grey[300],
-    400: grey[400],
-    500: grey[500],
-    600: grey[600],
-    700: grey[700],
-    800: grey[800],
-    900: grey[900],
-  },
+const violetGray = {
+  950: 'hsl(260, 20%, 8%)',
+  900: 'hsl(260, 16%, 12%)',
+  800: 'hsl(260, 12%, 18%)',
+  700: 'hsl(260, 8%, 28%)',
+  600: 'hsl(260, 6%, 38%)',
+  500: 'hsl(260, 6%, 48%)',
+  400: 'hsl(260, 5%, 58%)',
+  300: 'hsl(260, 5%, 68%)',
+  200: 'hsl(260, 8%, 82%)',
+  100: 'hsl(260, 10%, 90%)',
+  50: 'hsl(260, 12%, 96%)',
 };
 
 // ============================================================
-// 2. Typography Tokens (타이포그래피 토큰)
-// ============================================================
-const typography = {
-  // 기본 폰트 패밀리 (Next.js: CSS Custom Property, Storybook: 직접 지정)
-  fontFamily: [
-    'var(--font-pretendard, "Pretendard Variable")',
-    'Pretendard',
-    '-apple-system',
-    'BlinkMacSystemFont',
-    'system-ui',
-    'Roboto',
-    '"Helvetica Neue"',
-    '"Segoe UI"',
-    '"Apple SD Gothic Neo"',
-    '"Noto Sans KR"',
-    '"Malgun Gothic"',
-    '"Apple Color Emoji"',
-    '"Segoe UI Emoji"',
-    '"Segoe UI Symbol"',
-    'sans-serif',
-  ].join(','),
-
-  // 헤딩 폰트 패밀리 (Next.js: CSS Custom Property, Storybook: 직접 지정)
-  headingFontFamily: 'var(--font-outfit, "Outfit"), var(--font-pretendard, "Pretendard Variable"), Pretendard, sans-serif',
-
-  // 폰트 크기 기준
-  fontSize: 14,
-  htmlFontSize: 16,
-
-  // 폰트 굵기
-  fontWeightLight: 300,
-  fontWeightRegular: 400,
-  fontWeightMedium: 500,
-  fontWeightBold: 700,
-
-  // 헤딩 스타일
-  h1: {
-    fontFamily: 'var(--font-outfit, "Outfit"), var(--font-pretendard, "Pretendard Variable"), Pretendard, sans-serif',
-    fontWeight: 900,
-    fontSize: '2.5rem',      // 40px
-    lineHeight: 1.2,
-    letterSpacing: '-0.02em',
-  },
-  h2: {
-    fontFamily: 'var(--font-outfit, "Outfit"), var(--font-pretendard, "Pretendard Variable"), Pretendard, sans-serif',
-    fontWeight: 900,
-    fontSize: '2rem',        // 32px
-    lineHeight: 1.2,
-    letterSpacing: '-0.02em',
-  },
-  h3: {
-    fontFamily: 'var(--font-outfit, "Outfit"), var(--font-pretendard, "Pretendard Variable"), Pretendard, sans-serif',
-    fontWeight: 800,
-    fontSize: '1.75rem',     // 28px
-    lineHeight: 1.3,
-    letterSpacing: '-0.01em',
-  },
-  h4: {
-    fontFamily: 'var(--font-outfit, "Outfit"), var(--font-pretendard, "Pretendard Variable"), Pretendard, sans-serif',
-    fontWeight: 700,
-    fontSize: '1.5rem',      // 24px
-    lineHeight: 1.3,
-    letterSpacing: '-0.01em',
-  },
-  h5: {
-    fontFamily: 'var(--font-outfit, "Outfit"), var(--font-pretendard, "Pretendard Variable"), Pretendard, sans-serif',
-    fontWeight: 700,
-    fontSize: '1.25rem',     // 20px
-    lineHeight: 1.4,
-    letterSpacing: '0',
-  },
-  h6: {
-    fontFamily: 'var(--font-outfit, "Outfit"), var(--font-pretendard, "Pretendard Variable"), Pretendard, sans-serif',
-    fontWeight: 600,
-    fontSize: '1.125rem',    // 18px
-    lineHeight: 1.4,
-    letterSpacing: '0',
-  },
-
-  // 본문 스타일
-  body1: {
-    fontSize: '1rem',        // 16px
-    lineHeight: 1.6,
-    letterSpacing: '0',
-  },
-  body2: {
-    fontSize: '0.875rem',    // 14px
-    lineHeight: 1.6,
-    letterSpacing: '0',
-  },
-
-  // 부제목
-  subtitle1: {
-    fontSize: '1rem',        // 16px
-    fontWeight: 500,
-    lineHeight: 1.5,
-    letterSpacing: '0.01em',
-  },
-  subtitle2: {
-    fontSize: '0.875rem',    // 14px
-    fontWeight: 500,
-    lineHeight: 1.5,
-    letterSpacing: '0.01em',
-  },
-
-  // 기타
-  button: {
-    fontSize: '0.875rem',    // 14px
-    fontWeight: 600,
-    lineHeight: 1.75,
-    letterSpacing: '0.02em',
-    textTransform: 'none',   // 대문자 변환 비활성화
-  },
-  caption: {
-    fontSize: '0.75rem',     // 12px
-    lineHeight: 1.5,
-    letterSpacing: '0.02em',
-  },
-  overline: {
-    fontSize: '0.75rem',     // 12px
-    fontWeight: 600,
-    lineHeight: 2,
-    letterSpacing: '0.08em',
-    textTransform: 'uppercase',
-  },
-};
-
-// ============================================================
-// 3. Spacing Token (간격 토큰)
-// ============================================================
-const spacing = 8; // 기본 단위: 8px
-
-// ============================================================
-// 4. Shape Token (모양 토큰)
-// ============================================================
-const shape = {
-  borderRadius: 0, // Sharp corners (0px)
-};
-
-// ============================================================
-// 5. Shadow Tokens (그림자 토큰)
+// 2. Shadow Tokens (그림자 토큰)
 // ============================================================
 const customShadows = {
   none: 'none',
@@ -252,20 +42,172 @@ const customShadows = {
 };
 
 // ============================================================
-// 6. Breakpoints (브레이크포인트)
+// 3. Typography Tokens (타이포그래피 토큰)
 // ============================================================
-const breakpoints = {
-  values: {
-    xs: 0,      // 모바일
-    sm: 600,    // 태블릿 세로
-    md: 900,    // 태블릿 가로
-    lg: 1200,   // 데스크톱
-    xl: 1536,   // 대형 데스크톱
+
+// 폰트 패밀리 상수
+const suitFamily = 'var(--font-suit, "SUIT Variable"), SUIT, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif';
+const brandFamily = 'var(--font-brand, "IBM Plex Sans"), "IBM Plex Sans", sans-serif';
+const codeFamily = 'var(--font-mono, "IBM Plex Mono"), "IBM Plex Mono", monospace';
+
+const typography = {
+  fontFamily: suitFamily,
+  headingFontFamily: suitFamily,
+  brandFontFamily: brandFamily,
+  codeFontFamily: codeFamily,
+
+  fontSize: 14,
+  htmlFontSize: 16,
+
+  fontWeightLight: 300,
+  fontWeightRegular: 400,
+  fontWeightMedium: 500,
+  fontWeightBold: 700,
+
+  // 헤딩 — SUIT
+  h1: {
+    fontFamily: suitFamily,
+    fontWeight: 800,
+    fontSize: '2.5rem',
+    lineHeight: 1.3,
+    letterSpacing: '-0.02em',
+  },
+  h2: {
+    fontFamily: suitFamily,
+    fontWeight: 800,
+    fontSize: '2rem',
+    lineHeight: 1.3,
+    letterSpacing: '-0.02em',
+  },
+  h3: {
+    fontFamily: suitFamily,
+    fontWeight: 800,
+    fontSize: '1.75rem',
+    lineHeight: 1.35,
+    letterSpacing: '-0.01em',
+  },
+  h4: {
+    fontFamily: suitFamily,
+    fontWeight: 700,
+    fontSize: '1.5rem',
+    lineHeight: 1.35,
+    letterSpacing: '-0.01em',
+  },
+  h5: {
+    fontFamily: suitFamily,
+    fontWeight: 700,
+    fontSize: '1.25rem',
+    lineHeight: 1.4,
+    letterSpacing: '0',
+  },
+  h6: {
+    fontFamily: suitFamily,
+    fontWeight: 600,
+    fontSize: '1.125rem',
+    lineHeight: 1.4,
+    letterSpacing: '0',
+  },
+
+  // 본문 — SUIT (fontFamily 상속)
+  body1: {
+    fontSize: '1rem',
+    lineHeight: 1.6,
+    letterSpacing: '0',
+  },
+  body2: {
+    fontSize: '0.875rem',
+    lineHeight: 1.6,
+    letterSpacing: '0',
+  },
+
+  // 부제목
+  subtitle1: {
+    fontSize: '1rem',
+    fontWeight: 500,
+    lineHeight: 1.5,
+    letterSpacing: '0.01em',
+  },
+  subtitle2: {
+    fontSize: '0.875rem',
+    fontWeight: 500,
+    lineHeight: 1.5,
+    letterSpacing: '0.01em',
+  },
+
+  // 기타
+  button: {
+    fontSize: '0.875rem',
+    fontWeight: 600,
+    lineHeight: 1.75,
+    letterSpacing: '0.02em',
+    textTransform: 'none',
+  },
+  caption: {
+    fontSize: '0.75rem',
+    lineHeight: 1.5,
+    letterSpacing: '0.02em',
+  },
+  overline: {
+    fontSize: '0.75rem',
+    fontWeight: 600,
+    lineHeight: 2,
+    letterSpacing: '0.08em',
+    textTransform: 'uppercase',
+  },
+
+  // 신규 variant — Display (IBM Plex Sans)
+  display: {
+    fontFamily: brandFamily,
+    fontWeight: 800,
+    fontSize: 'clamp(3rem, 5vw, 4rem)',
+    lineHeight: 1.2,
+    letterSpacing: '-0.02em',
+  },
+
+  // 신규 variant — Code (IBM Plex Mono)
+  code: {
+    fontFamily: codeFamily,
+    fontWeight: 500,
+    fontSize: '0.875rem',
+    lineHeight: 1.6,
+  },
+
+  // 신규 variant — Code Block (IBM Plex Mono)
+  codeBlock: {
+    fontFamily: codeFamily,
+    fontWeight: 400,
+    fontSize: '0.875rem',
+    lineHeight: 1.7,
   },
 };
 
 // ============================================================
-// 7. Z-Index (레이어 순서)
+// 4. Spacing Token
+// ============================================================
+const spacing = 8;
+
+// ============================================================
+// 5. Shape Token
+// ============================================================
+const shape = {
+  borderRadius: 0,
+};
+
+// ============================================================
+// 6. Breakpoints
+// ============================================================
+const breakpoints = {
+  values: {
+    xs: 0,
+    sm: 768,
+    md: 900,
+    lg: 1200,
+    xl: 1440,
+  },
+};
+
+// ============================================================
+// 7. Z-Index
 // ============================================================
 const zIndex = {
   mobileStepper: 1000,
@@ -279,7 +221,7 @@ const zIndex = {
 };
 
 // ============================================================
-// 8. Transitions (전환 효과)
+// 8. Transitions
 // ============================================================
 const transitions = {
   duration: {
@@ -300,20 +242,33 @@ const transitions = {
 };
 
 // ============================================================
-// 9. Component Overrides (컴포넌트 오버라이드)
+// 9. Component Overrides
 // ============================================================
 const components = {
   MuiCssBaseline: {
-    styleOverrides: {
-      body: {
-        scrollbarWidth: 'thin',
-      },
-    },
+    styleOverrides: `
+      :root {
+        --vdl-950: ${violetGray[950]};
+        --vdl-900: ${violetGray[900]};
+        --vdl-800: ${violetGray[800]};
+        --vdl-700: ${violetGray[700]};
+        --vdl-600: ${violetGray[600]};
+        --vdl-500: ${violetGray[500]};
+        --vdl-400: ${violetGray[400]};
+        --vdl-300: ${violetGray[300]};
+        --vdl-200: ${violetGray[200]};
+        --vdl-100: ${violetGray[100]};
+        --vdl-50: ${violetGray[50]};
+      }
+      body {
+        scrollbar-width: thin;
+      }
+    `,
   },
   MuiPaper: {
     styleOverrides: {
       root: {
-        boxShadow: customShadows.lg,
+        backgroundImage: 'none',
       },
       elevation0: {
         boxShadow: customShadows.none,
@@ -357,10 +312,131 @@ const components = {
 };
 
 // ============================================================
-// Theme 생성
+// 10. Theme 생성 — cssVariables + colorSchemes
 // ============================================================
 const defaultTheme = createTheme({
-  palette,
+  cssVariables: true,
+  colorSchemes: {
+    dark: {
+      palette: {
+        primary: {
+          main: violetGray[50],
+          light: '#ffffff',
+          dark: violetGray[200],
+          contrastText: violetGray[950],
+        },
+        secondary: {
+          main: violetGray[200],
+          light: violetGray[100],
+          dark: violetGray[300],
+          contrastText: violetGray[950],
+        },
+        error: {
+          light: '#ef5350',
+          main: '#d32f2f',
+          dark: '#c62828',
+          contrastText: '#FFFFFF',
+        },
+        warning: {
+          light: '#ff9800',
+          main: '#ed6c02',
+          dark: '#e65100',
+          contrastText: '#FFFFFF',
+        },
+        success: {
+          light: '#4caf50',
+          main: '#2e7d32',
+          dark: '#1b5e20',
+          contrastText: '#FFFFFF',
+        },
+        info: {
+          light: '#03a9f4',
+          main: '#0288d1',
+          dark: '#01579b',
+          contrastText: '#FFFFFF',
+        },
+        background: {
+          default: violetGray[950],
+          paper: violetGray[900],
+        },
+        text: {
+          primary: violetGray[50],
+          secondary: violetGray[200],
+          disabled: violetGray[700],
+        },
+        divider: violetGray[800],
+        action: {
+          active: violetGray[200],
+          hover: violetGray[800],
+          selected: violetGray[800],
+          disabled: violetGray[700],
+          disabledBackground: violetGray[800],
+          focus: violetGray[800],
+        },
+        grey: violetGray,
+      },
+    },
+    light: {
+      palette: {
+        primary: {
+          main: violetGray[950],
+          light: violetGray[700],
+          dark: '#000000',
+          contrastText: violetGray[50],
+        },
+        secondary: {
+          main: violetGray[700],
+          light: violetGray[500],
+          dark: violetGray[900],
+          contrastText: '#FFFFFF',
+        },
+        error: {
+          light: '#ef5350',
+          main: '#d32f2f',
+          dark: '#c62828',
+          contrastText: '#FFFFFF',
+        },
+        warning: {
+          light: '#ff9800',
+          main: '#ed6c02',
+          dark: '#e65100',
+          contrastText: '#FFFFFF',
+        },
+        success: {
+          light: '#4caf50',
+          main: '#2e7d32',
+          dark: '#1b5e20',
+          contrastText: '#FFFFFF',
+        },
+        info: {
+          light: '#03a9f4',
+          main: '#0288d1',
+          dark: '#01579b',
+          contrastText: '#FFFFFF',
+        },
+        background: {
+          default: violetGray[50],
+          paper: '#ffffff',
+        },
+        text: {
+          primary: violetGray[950],
+          secondary: violetGray[700],
+          disabled: violetGray[200],
+        },
+        divider: violetGray[100],
+        action: {
+          active: violetGray[950],
+          hover: violetGray[100],
+          selected: violetGray[100],
+          disabled: violetGray[200],
+          disabledBackground: violetGray[100],
+          focus: violetGray[100],
+        },
+        grey: violetGray,
+      },
+    },
+  },
+  defaultColorScheme: 'dark',
   typography,
   spacing,
   shape,
@@ -370,69 +446,34 @@ const defaultTheme = createTheme({
   components,
 });
 
-// 커스텀 속성 추가 (타입 확장 없이 접근 가능하도록)
+// ============================================================
+// 커스텀 속성 추가
+// ============================================================
 defaultTheme.customShadows = customShadows;
 
-/**
- * 대시보드 스타일 설정 (Default)
- */
-defaultTheme.dashboard = {
-  style: 'default',
-  iconStyle: 'outlined',
-  iconWeight: 400,
-  cardBorderRadius: 0,
-  cardColors: [
-    'linear-gradient(to bottom, #FFFFFF 0%, #FFFFFF 100%)',
-    'linear-gradient(to bottom, #FFFFFF 0%, #FFFFFF 100%)',
-    'linear-gradient(to bottom, #FFFFFF 0%, #FFFFFF 100%)',
-    'linear-gradient(to bottom, #FFFFFF 0%, #FFFFFF 100%)',
-    'linear-gradient(to bottom, #FFFFFF 0%, #FFFFFF 100%)',
-    'linear-gradient(to bottom, #FFFFFF 0%, #FFFFFF 100%)',
-  ],
-  subCardColors: [
-    'linear-gradient(to bottom, #FAFAFA 0%, #FAFAFA 100%)',
-    'linear-gradient(to bottom, #FAFAFA 0%, #FAFAFA 100%)',
-    'linear-gradient(to bottom, #FAFAFA 0%, #FAFAFA 100%)',
-    'linear-gradient(to bottom, #FAFAFA 0%, #FAFAFA 100%)',
-    'linear-gradient(to bottom, #FAFAFA 0%, #FAFAFA 100%)',
-    'linear-gradient(to bottom, #FAFAFA 0%, #FAFAFA 100%)',
-  ],
-  textColor: palette.text.primary,
-  textSecondary: palette.text.secondary,
-  textShadow: '0 0 0 rgba(0, 0, 0, 0)',
-  backdropFilter: 'blur(0px)',
-  WebkitBackdropFilter: 'blur(0px)',
-  border: '1px solid transparent',
-  borderColor: 'transparent',
-  shadow: customShadows.lg,
-  subBorder: '1px solid rgba(0, 0, 0, 0.06)',
-  subShadow: '0 0 0 rgba(0, 0, 0, 0)',
-  subBackdropFilter: 'blur(0px)',
-  subBorderRadius: 0,
-  dividerColor: 'rgba(0, 0, 0, 0.12)',
-  progressHeight: 6,
-  progressTrackColor: 'rgba(0, 0, 0, 0.08)',
-  progressBarColor: palette.primary.main,
-  progressGradient: false,
-  progressBorderRadius: 0,
-  background: '#FFFFFF',
-  atmosphere: 'linear-gradient(to bottom, #FFFFFF 0%, #FFFFFF 100%)',
-  atmosphereOpacity: 0,
-  accentColor: palette.primary.main,
-  accentColors: {
-    wind: '#4DB6AC',
-    humidity: '#FFB74D',
-    uvIndex: '#FF8A65',
-    pressure: '#64B5F6',
+// VDL 전용 토큰
+defaultTheme.vdl = {
+  monoline: {
+    weight: '1px',
+    cap: 'round',
+    join: 'round',
   },
-  blobs: null,
+  grid: {
+    unit: 8,
+    color: 'hsla(260, 12%, 18%, 0.15)',
+  },
+  namingLine: {
+    dotSize: 4,
+    labelGap: 8,
+  },
+  primitives: violetGray,
 };
 
 export default defaultTheme;
 
 // 개별 토큰 내보내기 (문서화용)
 export {
-  palette,
+  violetGray,
   typography,
   spacing,
   shape,

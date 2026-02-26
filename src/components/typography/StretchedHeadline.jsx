@@ -20,7 +20,7 @@ import { Box } from '@mui/material';
  * @param {string} variant - 'static' | 'animated' [Optional, 기본값: 'static']
  * @param {boolean} fillWidth - 전체 너비 채우기 [Optional, 기본값: true]
  * @param {number} minWordSpacing - fillWidth가 false일 때 최소 단어 간격 (em) [Optional, 기본값: 0.5]
- * @param {string} fontFamily - 폰트 패밀리 [Optional, 기본값: 'Outfit']
+ * @param {string} fontFamily - 폰트 패밀리 [Optional, 기본값: 'SUIT Variable']
  * @param {number} fontSize - 폰트 크기 (px 또는 rem) [Optional, 기본값: 'clamp(2rem, 8vw, 6rem)']
  * @param {number} fontWeight - 폰트 굵기 [Optional, 기본값: 900]
  * @param {number} lineHeight - 줄 높이 [Optional, 기본값: 1]
@@ -36,7 +36,7 @@ export function StretchedHeadline({
   variant = 'static',
   fillWidth = true,
   minWordSpacing = 0.5,
-  fontFamily = '"Outfit", "Pretendard Variable", sans-serif',
+  fontFamily = '"SUIT Variable", SUIT, sans-serif',
   fontSize = 'clamp(2rem, 8vw, 6rem)',
   fontWeight = 900,
   lineHeight = 1,

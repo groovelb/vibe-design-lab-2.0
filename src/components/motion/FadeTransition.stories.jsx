@@ -154,7 +154,7 @@ export const StaggeredList = {
               >
                 <Typography
                   variant="h4"
-                  sx={ { fontFamily: '"Outfit", sans-serif', fontWeight: 700, color: 'primary.main' } }
+                  sx={ { fontFamily: '"SUIT Variable", SUIT, sans-serif', fontWeight: 700, color: 'primary.main' } }
                 >
                   { String(index + 1).padStart(2, '0') }
                 </Typography>

@@ -16,8 +16,9 @@ export const themes = {
 export const themeMeta = {
   default: {
     name: 'Default',
-    description: '프로젝트 기본 테마',
-    mode: 'light',
+    description: 'VDL 디자인 시스템 테마 (dark-first)',
+    mode: 'dark',
+    supportedModes: ['dark', 'light'],
   },
 };
 

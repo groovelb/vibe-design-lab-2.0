@@ -3,14 +3,16 @@ import CssBaseline from '@mui/material/CssBaseline';
 
 import { defaultTheme } from '../src/styles/themes';
 
-// Google Fonts 로드 (Material Symbols + 기본 폰트)
+// Google Fonts 로드 (Material Symbols + 브랜드/코드 폰트)
 const googleFonts = [
   // Material Symbols
   'Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200',
   'Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200',
   'Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200',
-  // Default Theme Font
-  'Outfit:wght@300;400;500;600;700;800;900',
+  // IBM Plex Sans (brand)
+  'IBM+Plex+Sans:wght@400;500;600;700',
+  // IBM Plex Mono (code)
+  'IBM+Plex+Mono:wght@400;500',
 ];
 
 googleFonts.forEach((font) => {
@@ -19,6 +21,18 @@ googleFonts.forEach((font) => {
   link.href = `https://fonts.googleapis.com/css2?family=${font}&display=swap`;
   document.head.appendChild(link);
 });
+
+// SUIT 로컬 폰트 (Storybook은 next/font 미지원이므로 @font-face 직접 등록)
+const suitStyle = document.createElement('style');
+suitStyle.textContent = `
+  @font-face {
+    font-family: 'SUIT Variable';
+    src: url('/fonts/SUIT-Variable.woff2') format('woff2');
+    font-weight: 100 900;
+    font-display: swap;
+  }
+`;
+document.head.appendChild(suitStyle);
 
 /** @type { import('@storybook/nextjs').Preview } */
 const preview = {
@@ -64,8 +78,8 @@ const preview = {
   decorators: [
     (Story) => (
       <ThemeProvider theme={defaultTheme}>
-        <CssBaseline />
-        <div style={{ width: '100%', paddingTop: '40px' }}>
+        <CssBaseline enableColorScheme />
+        <div style={ { width: '100%', paddingTop: '40px' } }>
           <Story />
         </div>
       </ThemeProvider>

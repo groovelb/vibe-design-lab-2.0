@@ -1,3 +1,5 @@
+'use client';
+
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Table from '@mui/material/Table';
@@ -26,8 +28,7 @@ export default {
 /**
  * PriorityChip - 우선순위 뱃지
  *
- * Props:
- * @param {string} priority - 우선순위 키 (root, CRITICAL, MUST, SHOULD, Reference, Skill, Skill Resource) [Required]
+ * @param {string} priority - 우선순위 키 [Required]
  */
 function PriorityChip({ priority }) {
   const meta = priorityMeta[priority];
@@ -49,33 +50,53 @@ function PriorityChip({ priority }) {
 }
 
 /**
- * TreeDiagram - CLAUDE.md 중심 룰 계층 트리
+ * NodeBox - 노드 렌더링 공통 컴포넌트
  *
- * ruleNodes와 ruleEdges 데이터를 기반으로
- * CLAUDE.md에서 각 서브룰로의 로드 관계를 시각적으로 표현
+ * @param {object} node - ruleNode 객체 [Required]
+ * @param {string} borderStyle - border 스타일 [Optional, 기본값: 'solid']
+ */
+function NodeBox({ node, borderStyle = 'solid' }) {
+  const meta = priorityMeta[node.priority];
+
+  return (
+    <Box
+      sx={ {
+        px: 1.5,
+        py: 0.5,
+        border: `1px ${borderStyle}`,
+        borderColor: meta?.color || 'divider',
+        borderLeftWidth: borderStyle === 'solid' ? 3 : 1,
+        fontFamily: 'monospace',
+        fontSize: 12,
+      } }
+      title={ `${node.path}\n${node.description}` }
+    >
+      { node.name }
+    </Box>
+  );
+}
+
+/**
+ * TreeDiagram - CLAUDE.md 중심 룰 계층 트리
  */
 function TreeDiagram() {
   const root = ruleNodes.find((n) => n.id === 'claude-md');
 
-  // 자동 로드 그룹 (CLAUDE.md → loads)
   const ruleGroups = {
     CRITICAL: ruleNodes.filter((n) => n.priority === 'CRITICAL'),
     MUST: ruleNodes.filter((n) => n.priority === 'MUST'),
-    SHOULD: ruleNodes.filter((n) => n.priority === 'SHOULD'),
-    Reference: ruleNodes.filter((n) => n.priority === 'Reference'),
   };
 
-  // 스킬 그룹 (CLAUDE.md → activates)
   const skillNodes = ruleNodes.filter((n) => n.priority === 'Skill');
-  const skillResourceNodes = ruleNodes.filter((n) => n.priority === 'Skill Resource');
+  const referenceNodes = ruleNodes.filter((n) => n.priority === 'Reference');
 
-  // 서브룰 간 참조 엣지 (loads, activates 제외)
-  const crossEdges = ruleEdges.filter(
-    (e) => e.from !== 'claude-md' && e.type === 'references'
+  const skillResourceEdges = ruleEdges.filter((e) => e.type === 'resources');
+  const uxRefEdges = ruleEdges.filter(
+    (e) => e.from === 'ux-architecture' && e.type === 'references'
   );
-
-  // Skill → Resource 엣지
-  const resourceEdges = ruleEdges.filter((e) => e.type === 'resources');
+  const crossEdges = ruleEdges.filter(
+    (e) => e.from !== 'claude-md' && e.from !== 'ux-architecture' && e.type === 'references'
+  );
 
   return (
     <Box sx={ { p: 3, border: '1px solid', borderColor: 'divider' } }>
@@ -107,13 +128,7 @@ function TreeDiagram() {
           return (
             <Box key={ priority }>
               <Box sx={ { display: 'flex', alignItems: 'center', gap: 1, mb: 1 } }>
-                <Box
-                  sx={ {
-                    width: 24,
-                    borderTop: '1px solid',
-                    borderColor: 'text.disabled',
-                  } }
-                />
+                <Box sx={ { width: 24, borderTop: '1px solid', borderColor: 'text.disabled' } } />
                 <PriorityChip priority={ priority } />
                 <Typography variant="caption" color="text.secondary">
                   { priorityMeta[priority].label }
@@ -121,26 +136,78 @@ function TreeDiagram() {
               </Box>
               <Box sx={ { display: 'flex', flexWrap: 'wrap', gap: 1, pl: 4 } }>
                 { nodes.map((node) => (
-                  <Box
-                    key={ node.id }
-                    sx={ {
-                      px: 1.5,
-                      py: 0.5,
-                      border: '1px solid',
-                      borderColor: priorityMeta[priority].color,
-                      borderLeftWidth: 3,
-                      fontFamily: 'monospace',
-                      fontSize: 12,
-                    } }
-                  >
-                    { node.name }
-                  </Box>
+                  <NodeBox key={ node.id } node={ node } />
                 )) }
               </Box>
             </Box>
           );
         }) }
       </Box>
+
+      {/* UX 참조 문서 (ux-architecture → docs) */}
+      { referenceNodes.length > 0 && (
+        <>
+          <Typography variant="caption" color="text.secondary" sx={ { display: 'block', pl: 4, mb: 1 } }>
+            UX 참조 문서 (ux-architecture → on-demand Read)
+          </Typography>
+          <Box sx={ { pl: 4, mb: 3 } }>
+            <Box sx={ { display: 'flex', alignItems: 'center', gap: 1, mb: 1 } }>
+              <Box
+                sx={ {
+                  width: 24,
+                  borderTop: '2px dashed',
+                  borderColor: priorityMeta.Reference.color,
+                } }
+              />
+              <Box
+                sx={ {
+                  px: 1.5,
+                  py: 0.5,
+                  border: '2px solid',
+                  borderColor: priorityMeta.MUST.color,
+                  fontFamily: 'monospace',
+                  fontSize: 12,
+                  fontWeight: 700,
+                } }
+              >
+                ux-architecture.md
+              </Box>
+              <Typography variant="caption" color="text.secondary">
+                작업 성격에 따라 해당 문서 참조
+              </Typography>
+            </Box>
+            <Box sx={ { display: 'flex', flexWrap: 'wrap', gap: 1, pl: 6 } }>
+              { referenceNodes.map((node) => {
+                const edge = uxRefEdges.find((e) => e.to === node.id);
+
+                return (
+                  <Box
+                    key={ node.id }
+                    sx={ {
+                      px: 1.5,
+                      py: 0.5,
+                      border: '1px dashed',
+                      borderColor: priorityMeta.Reference.color,
+                      fontFamily: 'monospace',
+                      fontSize: 11,
+                      color: 'text.secondary',
+                    } }
+                    title={ `${node.path}\n${edge?.note || node.description}` }
+                  >
+                    { node.name }
+                    <Typography
+                      component="span"
+                      sx={ { fontSize: 10, ml: 1, color: 'text.disabled' } }
+                    >
+                      { edge?.note }
+                    </Typography>
+                  </Box>
+                );
+              }) }
+            </Box>
+          </Box>
+        </>
+      ) }
 
       {/* 스킬 그룹 (의도 기반 활성화) */}
       { skillNodes.length > 0 && (
@@ -149,67 +216,74 @@ function TreeDiagram() {
             의도 기반 활성화 (activates)
           </Typography>
           <Box sx={ { pl: 4, mb: 2 } }>
-            { skillNodes.map((node) => (
-              <Box key={ node.id } sx={ { mb: 2 } }>
-                <Box sx={ { display: 'flex', alignItems: 'center', gap: 1, mb: 1 } }>
-                  <Box
-                    sx={ {
-                      width: 24,
-                      borderTop: '2px dashed',
-                      borderColor: priorityMeta.Skill.color,
-                    } }
-                  />
-                  <Box
-                    sx={ {
-                      px: 1.5,
-                      py: 0.5,
-                      border: '2px solid',
-                      borderColor: priorityMeta.Skill.color,
-                      fontFamily: 'monospace',
-                      fontSize: 12,
-                      fontWeight: 700,
-                    } }
-                  >
-                    { node.name }
-                  </Box>
-                  <Typography variant="caption" color="text.secondary">
-                    { node.description }
-                  </Typography>
-                </Box>
+            { skillNodes.map((skillNode) => {
+              const resourceEdgesForSkill = skillResourceEdges.filter((e) => e.from === skillNode.id);
+              const resourceNodes = resourceEdgesForSkill.map((e) =>
+                ruleNodes.find((n) => n.id === e.to)
+              ).filter(Boolean);
 
-                {/* Skill Resources */}
-                { skillResourceNodes.length > 0 && (
-                  <Box sx={ { pl: 6 } }>
-                    <Typography variant="caption" color="text.secondary" sx={ { display: 'block', mb: 0.5 } }>
-                      on-demand Read (resources)
-                    </Typography>
-                    <Box sx={ { display: 'flex', flexWrap: 'wrap', gap: 1 } }>
-                      { skillResourceNodes.map((res) => {
-                        const edge = resourceEdges.find((e) => e.to === res.id);
-
-                        return (
-                          <Box
-                            key={ res.id }
-                            sx={ {
-                              px: 1.5,
-                              py: 0.5,
-                              border: '1px dashed',
-                              borderColor: priorityMeta['Skill Resource'].color,
-                              fontFamily: 'monospace',
-                              fontSize: 11,
-                              color: 'text.secondary',
-                            } }
-                            title={ edge?.note || res.description }
-                          >
-                            { res.name }
-                          </Box>
-                        );
-                      }) }
+              return (
+                <Box key={ skillNode.id } sx={ { mb: 2 } }>
+                  <Box sx={ { display: 'flex', alignItems: 'center', gap: 1, mb: 1 } }>
+                    <Box
+                      sx={ {
+                        width: 24,
+                        borderTop: '2px dashed',
+                        borderColor: priorityMeta.Skill.color,
+                      } }
+                    />
+                    <Box
+                      sx={ {
+                        px: 1.5,
+                        py: 0.5,
+                        border: '2px solid',
+                        borderColor: priorityMeta.Skill.color,
+                        fontFamily: 'monospace',
+                        fontSize: 12,
+                        fontWeight: 700,
+                      } }
+                    >
+                      { skillNode.name }
                     </Box>
+                    <Typography variant="caption" color="text.secondary">
+                      { skillNode.description }
+                    </Typography>
                   </Box>
-                ) }
-              </Box>
-            )) }
+
+                  {/* Skill Resources */}
+                  { resourceNodes.length > 0 && (
+                    <Box sx={ { pl: 6 } }>
+                      <Typography variant="caption" color="text.secondary" sx={ { display: 'block', mb: 0.5 } }>
+                        on-demand Read (resources)
+                      </Typography>
+                      <Box sx={ { display: 'flex', flexWrap: 'wrap', gap: 1 } }>
+                        { resourceNodes.map((res) => {
+                          const edge = resourceEdgesForSkill.find((e) => e.to === res.id);
+
+                          return (
+                            <Box
+                              key={ res.id }
+                              sx={ {
+                                px: 1.5,
+                                py: 0.5,
+                                border: '1px dashed',
+                                borderColor: priorityMeta['Skill Resource'].color,
+                                fontFamily: 'monospace',
+                                fontSize: 11,
+                                color: 'text.secondary',
+                              } }
+                              title={ edge?.note || res.description }
+                            >
+                              { res.name }
+                            </Box>
+                          );
+                        }) }
+                      </Box>
+                    </Box>
+                  ) }
+                </Box>
+              );
+            }) }
           </Box>
         </>
       ) }
@@ -248,9 +322,9 @@ export const Doc = {
         title="Rule Relationships"
         status="Available"
         note="Project rule structure and relationships"
-        brandName="Design System"
+        brandName="Vibe Design Labs"
         systemName="Starter Kit"
-        version="1.0"
+        version="2.0"
       />
       <PageContainer>
         <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
@@ -274,6 +348,7 @@ export const Doc = {
               <TableRow>
                 <TableCell sx={ { fontWeight: 600 } }>파일명</TableCell>
                 <TableCell sx={ { fontWeight: 600 } }>우선순위</TableCell>
+                <TableCell sx={ { fontWeight: 600 } }>경로</TableCell>
                 <TableCell sx={ { fontWeight: 600 } }>설명</TableCell>
               </TableRow>
             </TableHead>
@@ -285,6 +360,9 @@ export const Doc = {
                   </TableCell>
                   <TableCell>
                     <PriorityChip priority={ node.priority } />
+                  </TableCell>
+                  <TableCell sx={ { fontFamily: 'monospace', fontSize: 11, color: 'text.disabled' } }>
+                    { node.path }
                   </TableCell>
                   <TableCell sx={ { color: 'text.secondary', fontSize: 13 } }>
                     { node.description }
@@ -326,33 +404,33 @@ export const Doc = {
             </TableHead>
             <TableBody>
               { ruleEdges.map((edge, i) => {
-                  const fromNode = ruleNodes.find((n) => n.id === edge.from);
-                  const toNode = ruleNodes.find((n) => n.id === edge.to);
+                const fromNode = ruleNodes.find((n) => n.id === edge.from);
+                const toNode = ruleNodes.find((n) => n.id === edge.to);
 
-                  return (
-                    <TableRow key={ i }>
-                      <TableCell sx={ { fontFamily: 'monospace', fontSize: 12 } }>
-                        { fromNode?.name }
-                      </TableCell>
-                      <TableCell sx={ { textAlign: 'center' } }>{'\u2192'}</TableCell>
-                      <TableCell sx={ { fontFamily: 'monospace', fontSize: 12 } }>
-                        { toNode?.name }
-                      </TableCell>
-                      <TableCell sx={ { fontSize: 12 } }>
-                        { edgeTypes[edge.type]?.label }
-                      </TableCell>
-                      <TableCell sx={ { color: 'text.secondary', fontSize: 12 } }>
-                        { edge.note || '-' }
-                      </TableCell>
-                    </TableRow>
-                  );
-                }) }
+                return (
+                  <TableRow key={ i }>
+                    <TableCell sx={ { fontFamily: 'monospace', fontSize: 12 } }>
+                      { fromNode?.name }
+                    </TableCell>
+                    <TableCell sx={ { textAlign: 'center' } }>{'\u2192'}</TableCell>
+                    <TableCell sx={ { fontFamily: 'monospace', fontSize: 12 } }>
+                      { toNode?.name }
+                    </TableCell>
+                    <TableCell sx={ { fontSize: 12 } }>
+                      { edgeTypes[edge.type]?.label }
+                    </TableCell>
+                    <TableCell sx={ { color: 'text.secondary', fontSize: 12 } }>
+                      { edge.note || '-' }
+                    </TableCell>
+                  </TableRow>
+                );
+              }) }
             </TableBody>
           </Table>
         </TableContainer>
 
         {/* 4. 활용 조건 매트릭스 */}
-        <SectionTitle title="활용 조건 매트릭스" description="작업 유형별 확인해야 할 룰과 스킬" />
+        <SectionTitle title="활용 조건 매트릭스" description="작업 유형별 확인해야 할 룰, 스킬, UX 문서" />
         <TableContainer>
           <Table size="small">
             <TableHead>
@@ -361,6 +439,7 @@ export const Doc = {
                 <TableCell sx={ { fontWeight: 600 } }>확인할 룰</TableCell>
                 <TableCell sx={ { fontWeight: 600 } }>Skill</TableCell>
                 <TableCell sx={ { fontWeight: 600 } }>Skill Resources</TableCell>
+                <TableCell sx={ { fontWeight: 600 } }>UX 문서</TableCell>
                 <TableCell sx={ { fontWeight: 600 } }>비고</TableCell>
               </TableRow>
             </TableHead>
@@ -426,6 +505,32 @@ export const Doc = {
                                 height: 22,
                                 borderColor: priorityMeta['Skill Resource']?.color,
                                 color: priorityMeta['Skill Resource']?.color,
+                              } }
+                            />
+                          );
+                        }) }
+                      </Box>
+                    ) : (
+                      <Typography variant="caption" color="text.disabled">-</Typography>
+                    ) }
+                  </TableCell>
+                  <TableCell>
+                    { row.uxDocs?.length > 0 ? (
+                      <Box sx={ { display: 'flex', flexWrap: 'wrap', gap: 0.5 } }>
+                        { row.uxDocs.map((docId) => {
+                          const node = ruleNodes.find((n) => n.id === docId);
+
+                          return (
+                            <Chip
+                              key={ docId }
+                              label={ node?.name?.replace('.md', '') }
+                              size="small"
+                              variant="outlined"
+                              sx={ {
+                                fontSize: 11,
+                                height: 22,
+                                borderColor: priorityMeta.Reference?.color,
+                                color: priorityMeta.Reference?.color,
                               } }
                             />
                           );

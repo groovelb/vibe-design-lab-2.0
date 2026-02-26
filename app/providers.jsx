@@ -22,7 +22,7 @@ function ThemeRegistry({ children }) {
   return (
     <AppRouterCacheProvider options={ { key: 'mui' } }>
       <ThemeProvider theme={ defaultTheme }>
-        <CssBaseline />
+        <CssBaseline enableColorScheme />
         {children}
       </ThemeProvider>
     </AppRouterCacheProvider>

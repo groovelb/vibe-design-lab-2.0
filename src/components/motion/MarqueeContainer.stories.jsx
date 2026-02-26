@@ -121,7 +121,7 @@ export const Variants = {
               <Typography
                 variant="caption"
                 sx={ {
-                  fontFamily: '"Outfit", sans-serif',
+                  fontFamily: '"SUIT Variable", SUIT, sans-serif',
                   fontWeight: 700,
                   letterSpacing: '0.08em',
                   color: p.accent,
@@ -200,7 +200,7 @@ export const ScrollScrub = {
               <Typography
                 variant="caption"
                 sx={ {
-                  fontFamily: '"Outfit", sans-serif',
+                  fontFamily: '"SUIT Variable", SUIT, sans-serif',
                   fontWeight: 700,
                   letterSpacing: '0.08em',
                   color: p.accent,

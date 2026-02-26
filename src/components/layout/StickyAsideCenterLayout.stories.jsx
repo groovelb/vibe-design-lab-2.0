@@ -54,7 +54,7 @@ const SectionBlock = ({ index }) => (
   <Box sx={ { mb: 6 } }>
     <Typography
       variant="h5"
-      sx={ { mb: 3, fontFamily: '"Outfit", sans-serif', fontWeight: 700 } }
+      sx={ { mb: 3, fontFamily: '"SUIT Variable", SUIT, sans-serif', fontWeight: 700 } }
     >
       { sectionLabels[index % sectionLabels.length] }
     </Typography>
@@ -151,7 +151,7 @@ export const SectionSeries = {
         >
           <Typography
             variant="h4"
-            sx={ { mb: 3, fontFamily: '"Outfit", sans-serif', fontWeight: 700 } }
+            sx={ { mb: 3, fontFamily: '"SUIT Variable", SUIT, sans-serif', fontWeight: 700 } }
           >
             { label }
           </Typography>
