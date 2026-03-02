@@ -2,7 +2,7 @@ import Stack from '@mui/material/Stack';
 import { CommunityActivityCard } from './CommunityActivityCard';
 
 export default {
-  title: 'Component/3. Card/CommunityActivityCard',
+  title: 'VDL/CommunityActivityCard',
   component: CommunityActivityCard,
   tags: ['autodocs'],
   parameters: {

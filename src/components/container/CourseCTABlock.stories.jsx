@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import { CourseCTABlock } from './CourseCTABlock';
 
 export default {
-  title: 'Component/2. Container/CourseCTABlock',
+  title: 'VDL/CourseCTABlock',
   component: CourseCTABlock,
   tags: ['autodocs'],
   parameters: {

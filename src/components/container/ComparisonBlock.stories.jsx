@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import { ComparisonBlock } from './ComparisonBlock';
 
 export default {
-  title: 'Component/2. Container/ComparisonBlock',
+  title: 'VDL/ComparisonBlock',
   component: ComparisonBlock,
   tags: ['autodocs'],
   parameters: {

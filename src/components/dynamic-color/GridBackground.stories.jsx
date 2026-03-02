@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import { GridBackground } from './GridBackground';
 
 export default {
-  title: 'Interactive/15. DynamicColor/GridBackground',
+  title: 'VDL/GridBackground',
   component: GridBackground,
   tags: ['autodocs'],
   parameters: {

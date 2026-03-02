@@ -3,7 +3,7 @@ import Stack from '@mui/material/Stack';
 import { TestimonialCard } from './TestimonialCard';
 
 export default {
-  title: 'Component/3. Card/TestimonialCard',
+  title: 'VDL/TestimonialCard',
   component: TestimonialCard,
   tags: ['autodocs'],
   parameters: {

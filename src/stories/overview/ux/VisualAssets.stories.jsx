@@ -13,6 +13,11 @@ import {
   PoweredByAgentsIllustration,
   DesignedForSpeedIllustration,
 } from './referenceIllustrations';
+import {
+  ImplementationIllustration,
+  LanguageIllustration,
+  DesignIllustration,
+} from './philosophyIllustrations';
 
 export default {
   title: 'Overview/UX/Visual Assets',
@@ -39,6 +44,27 @@ const REFERENCE_ILLUSTRATIONS = [
     title: 'Designed for speed',
     description: 'Cascading isometric momentum cards — reduces noise and restores momentum to ship with high velocity.',
     Illustration: DesignedForSpeedIllustration,
+  },
+];
+
+const PHILOSOPHY_ILLUSTRATIONS = [
+  {
+    fig: 'FIG 0.5',
+    title: '구현은 언어를 따른다',
+    description: '좌우 대비 — 좌측 산란 카드(모호한 입력)와 우측 정돈 카드(정밀한 언어)의 배치가 입력↔결과 대응을 증명한다.',
+    Illustration: ImplementationIllustration,
+  },
+  {
+    fig: 'FIG 0.6',
+    title: '언어는 경험을 함축한다',
+    description: '방사 확장 — 중앙 대형 프리즘(압축된 키워드)에서 외곽 소형 프리즘(전개된 결정들)으로 높이가 감소하며 퍼진다.',
+    Illustration: LanguageIllustration,
+  },
+  {
+    fig: 'FIG 0.7',
+    title: '감각도 쪼개면 로직이다',
+    description: '수직 피라미드 — 하단의 큰 프리즘(완성된 결과물)에서 상단의 작은 프리즘(원자적 토큰)으로 분해되는 적층 구조.',
+    Illustration: DesignIllustration,
   },
 ];
 
@@ -325,6 +351,17 @@ export const Docs = {
             </AssetCard>
           );
         }) }
+
+        {/* Philosophy 일러스트 프리뷰 */}
+        { PHILOSOPHY_ILLUSTRATIONS.map((item) => (
+          <ReferenceCard
+            key={ item.fig }
+            fig={ item.fig }
+            title={ item.title }
+            description={ item.description }
+            Illustration={ item.Illustration }
+          />
+        )) }
 
         <Divider sx={ { my: 4 } } />
 
