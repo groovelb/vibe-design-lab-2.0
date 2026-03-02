@@ -40,6 +40,7 @@ pnpm lint             # ESLint 검사
 - 컴포넌트 작업 (생성/수정/삭제/스토리) → `component-work` Skill 사용
 - 룰 수정/추가/삭제 → `rule-visualization` Skill 사용
 - 리팩토링 → `component-work` Skill의 `resources/refactoring-guide.md` 참조
+- SVG 일러스트 생성 → `isometric-illustration` Skill 사용
 
 ## 병렬 작업 규칙
 

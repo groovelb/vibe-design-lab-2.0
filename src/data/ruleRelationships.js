@@ -132,6 +132,13 @@ export const ruleNodes = [
     path: '.claude/skills/convert-external/SKILL.md',
     description: '외부 컴포넌트를 프로젝트 규칙에 맞게 변환',
   },
+  {
+    id: 'isometric-illustration',
+    name: 'isometric-illustration (Skill)',
+    priority: 'Skill',
+    path: '.claude/skills/isometric-illustration/SKILL.md',
+    description: '키워드→메타포→구조화→SVG 아이소메트릭 일러스트 생성',
+  },
   // Skill Resources
   {
     id: 'components',
@@ -189,6 +196,20 @@ export const ruleNodes = [
     path: '.claude/skills/convert-external/resources/conversion-checklist.md',
     description: '외부 컴포넌트 변환 체크리스트',
   },
+  {
+    id: 'visual-grammar',
+    name: 'visual-grammar.md',
+    priority: 'Skill Resource',
+    path: '.claude/skills/isometric-illustration/resources/visual-grammar.md',
+    description: '아이소메트릭 일러스트 컬러/스트로크/쉐도우/구성 규칙',
+  },
+  {
+    id: 'reference-catalog',
+    name: 'reference-catalog.md',
+    priority: 'Skill Resource',
+    path: '.claude/skills/isometric-illustration/resources/reference-catalog.md',
+    description: 'FIG 0.2~0.4 레퍼런스 일러스트 분석 카탈로그',
+  },
 ];
 
 export const edgeTypes = {
@@ -212,6 +233,7 @@ export const ruleEdges = [
   { from: 'claude-md', to: 'component-work', type: 'activates', note: '컴포넌트 작업 시' },
   { from: 'claude-md', to: 'rule-visualization', type: 'activates', note: '룰/스킬 변경 시' },
   { from: 'claude-md', to: 'convert-external', type: 'activates', note: '외부 컴포넌트 변환 시' },
+  { from: 'claude-md', to: 'isometric-illustration', type: 'activates', note: 'SVG 일러스트 생성 시' },
 
   // ux-architecture → UX 참조 문서 (on-demand)
   { from: 'ux-architecture', to: 'ux-project-summary', type: 'references', note: '서비스 방향·범위 판단 시' },
@@ -229,6 +251,8 @@ export const ruleEdges = [
   { from: 'component-work', to: 'mui-theme', type: 'resources', note: '테마/스타일 수정 시' },
   { from: 'component-work', to: 'refactoring-guide', type: 'resources', note: '리팩토링 시' },
   { from: 'convert-external', to: 'conversion-checklist', type: 'resources', note: '변환 절차 확인' },
+  { from: 'isometric-illustration', to: 'visual-grammar', type: 'resources', note: '4단계: 시각 마무리 시 항상' },
+  { from: 'isometric-illustration', to: 'reference-catalog', type: 'resources', note: '1~2단계: 패턴 참조 시' },
 
   // rules 간 참조
   { from: 'project-directory', to: 'taxonomy', type: 'references', note: '분류 기준' },
@@ -320,5 +344,12 @@ export const conditionMatrix = [
     rules: ['design-system', 'code-convention'],
     skill: 'convert-external',
     skillResources: ['conversion-checklist'],
+  },
+  {
+    task: 'SVG 일러스트 생성',
+    rules: ['design-system'],
+    skill: 'isometric-illustration',
+    skillResources: ['visual-grammar', 'reference-catalog'],
+    note: '키워드→메타포→컨셉→구조→시각 마무리 파이프라인',
   },
 ];
