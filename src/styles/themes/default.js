@@ -17,8 +17,8 @@ import { createTheme } from '@mui/material/styles';
 // 1. Primitive Tokens — Violet-tinted Grayscale
 // ============================================================
 const violetGray = {
-  950: 'hsl(260, 20%, 8%)',
-  900: 'hsl(260, 16%, 12%)',
+  950: 'hsl(260, 20%, 4%)',
+  900: 'hsl(260, 16%, 8%)',
   800: 'hsl(260, 12%, 18%)',
   700: 'hsl(260, 8%, 28%)',
   600: 'hsl(260, 6%, 38%)',
