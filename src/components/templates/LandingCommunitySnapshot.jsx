@@ -3,7 +3,8 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { SectionContainer } from '../container/SectionContainer';
 import { PageContainer } from '../layout/PageContainer';
-import { CarouselContainer } from '../container/CarouselContainer';
+import Grid from '@mui/material/Grid';
+import LineGrid from '../layout/LineGrid';
 import { CommunityActivityCard } from '../card/CommunityActivityCard';
 import FadeTransition from '../motion/FadeTransition';
 import { PAGES } from '../../data/contents';
@@ -44,20 +45,20 @@ export function LandingCommunitySnapshot() {
         </FadeTransition>
 
         <FadeTransition direction="up" delay={200} isTriggerOnView>
-          <CarouselContainer
-            items={MOCK_COMMUNITY}
-            visible={{ xs: 1, sm: 2, md: 3, lg: 4 }}
-            gap={16}
-            renderItem={(item) => (
-              <CommunityActivityCard
-                type={item.type}
-                contentPreview={item.contentPreview}
-                memberName={item.memberName}
-                timestamp={item.timestamp}
-                sx={{ height: '100%' }}
-              />
-            )}
-          />
+          <LineGrid container gap={16} borderColor="divider">
+            {MOCK_COMMUNITY.map((item, index) => (
+              <Grid key={index} size={{ xs: 12, sm: 6, md: 3 }}>
+                <CommunityActivityCard
+                  type={item.type}
+                  contentPreview={item.contentPreview}
+                  memberName={item.memberName}
+                  timestamp={item.timestamp}
+                  cardVariant="editorial"
+                  sx={{ height: '100%' }}
+                />
+              </Grid>
+            ))}
+          </LineGrid>
         </FadeTransition>
       </PageContainer>
     </SectionContainer>

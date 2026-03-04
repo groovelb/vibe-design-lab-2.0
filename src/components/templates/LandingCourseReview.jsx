@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import { SectionContainer } from '../container/SectionContainer';
 import { PageContainer } from '../layout/PageContainer';
+import LineGrid from '../layout/LineGrid';
 import { TestimonialCard } from '../card/TestimonialCard';
 import FadeTransition from '../motion/FadeTransition';
 import { PAGES } from '../../data/contents';
@@ -45,7 +46,7 @@ export function LandingCourseReview() {
         </FadeTransition>
 
         {/* 후기 카드 3열 */}
-        <Grid container spacing={3}>
+        <LineGrid container gap={24} borderColor="divider">
           {MOCK_TESTIMONIALS.map((testimonial, index) => (
             <Grid key={testimonial.id} size={{ xs: 12, md: 4 }}>
               <FadeTransition direction="up" delay={index * 150} isTriggerOnView>
@@ -55,12 +56,13 @@ export function LandingCourseReview() {
                   memberName={testimonial.memberName}
                   memberRole={testimonial.memberRole}
                   variant="compact"
+                  cardVariant="editorial"
                   sx={{ height: '100%' }}
                 />
               </FadeTransition>
             </Grid>
           ))}
-        </Grid>
+        </LineGrid>
       </PageContainer>
     </SectionContainer>
   );

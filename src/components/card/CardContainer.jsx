@@ -14,7 +14,7 @@ import Box from '@mui/material/Box';
  * 3. sx prop으로 추가 커스터마이징 가능
  *
  * Props:
- * @param {string} variant - 카드 스타일 ('outlined' | 'elevation' | 'ghost' | 'filled') [Optional, 기본값: 'outlined']
+ * @param {string} variant - 카드 스타일 ('outlined' | 'elevation' | 'ghost' | 'filled' | 'editorial') [Optional, 기본값: 'outlined']
  * @param {string} padding - 내부 패딩 ('none' | 'sm' | 'md' | 'lg') [Optional, 기본값: 'md']
  * @param {string} radius - 모서리 둥글기 ('none' | 'sm' | 'md' | 'lg') [Optional, 기본값: 'md']
  * @param {boolean} isInteractive - 호버 효과 활성화 [Optional, 기본값: false]
@@ -90,6 +90,13 @@ const CardContainer = forwardRef(function CardContainer({
           border: 'none',
         };
 
+      case 'editorial':
+        return {
+          ...base,
+          backgroundColor: 'transparent',
+          border: 'none',
+        };
+
       case 'outlined':
       default:
         return {
@@ -122,6 +129,7 @@ const CardContainer = forwardRef(function CardContainer({
       filled: {
         backgroundColor: 'grey.200',
       },
+      editorial: {},
     };
 
     return {

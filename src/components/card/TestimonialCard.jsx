@@ -21,6 +21,7 @@ import AspectMedia from '../media/AspectMedia';
  * @param {string} resultUrl - 결과물 URL [Optional]
  * @param {string} resultImage - 결과물 이미지 [Optional]
  * @param {string} variant - 표시 모드 ('compact' | 'full') [Optional, 기본값: 'compact']
+ * @param {string} cardVariant - 카드 컨테이너 스타일 ('outlined' | 'editorial') [Optional, 기본값: 'outlined']
  * @param {object} sx - 추가 스타일 [Optional]
  *
  * Example usage:
@@ -39,6 +40,7 @@ const TestimonialCard = forwardRef(function TestimonialCard({
   resultUrl,
   resultImage,
   variant = 'compact',
+  cardVariant = 'outlined',
   sx,
   ...props
 }, ref) {
@@ -50,9 +52,9 @@ const TestimonialCard = forwardRef(function TestimonialCard({
       ref={ref}
       sx={{
         p: { xs: 3, md: 4 },
-        backgroundColor: 'background.paper',
-        border: 1,
-        borderColor: 'divider',
+        ...(cardVariant === 'editorial'
+          ? { backgroundColor: 'transparent', border: 'none' }
+          : { backgroundColor: 'background.paper', border: 1, borderColor: 'divider' }),
         ...sx,
       }}
       {...props}

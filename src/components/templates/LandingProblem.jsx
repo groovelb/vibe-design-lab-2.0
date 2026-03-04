@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import { SectionContainer } from '../container/SectionContainer';
 import { PageContainer } from '../layout/PageContainer';
+import LineGrid from '../layout/LineGrid';
 import { CardContainer } from '../card/CardContainer';
 import FadeTransition from '../motion/FadeTransition';
 import { PAGES } from '../../data/contents';
@@ -37,7 +38,7 @@ export function LandingProblem() {
             <Typography
               variant="h1"
               component="h2"
-              sx={{ fontWeight: 800, maxWidth: '16ch' }}
+              sx={{ fontWeight: 800, maxWidth: '16ch', fontSize: { xs: '2rem', md: '3rem' } }}
             >
               {problem.headline}
             </Typography>
@@ -59,12 +60,12 @@ export function LandingProblem() {
           >
             커리어 문제
           </Typography>
-          <Grid container spacing={2}>
+          <LineGrid container gap={16} borderColor="divider">
             {problem.career.map((item, index) => (
               <Grid key={item.persona} size={{ xs: 12, md: 4 }}>
                 <FadeTransition direction="up" delay={index * 100} isTriggerOnView>
                   <CardContainer
-                    variant="outlined"
+                    variant="editorial"
                     sx={{ height: '100%', p: { xs: 3, md: 4 } }}
                   >
                     <Stack spacing={1.5}>
@@ -85,7 +86,7 @@ export function LandingProblem() {
                 </FadeTransition>
               </Grid>
             ))}
-          </Grid>
+          </LineGrid>
         </Box>
 
         {/* 학습 환경 문제 — 3컬럼 */}
@@ -103,12 +104,12 @@ export function LandingProblem() {
           >
             학습 환경 문제
           </Typography>
-          <Grid container spacing={2}>
+          <LineGrid container gap={16} borderColor="divider">
             {problem.learning.map((item, index) => (
               <Grid key={item.problem} size={{ xs: 12, md: 4 }}>
                 <FadeTransition direction="up" delay={index * 100} isTriggerOnView>
                   <CardContainer
-                    variant="outlined"
+                    variant="editorial"
                     sx={{ height: '100%', p: { xs: 3, md: 4 } }}
                   >
                     <Stack spacing={1.5}>
@@ -129,7 +130,7 @@ export function LandingProblem() {
                 </FadeTransition>
               </Grid>
             ))}
-          </Grid>
+          </LineGrid>
         </Box>
       </PageContainer>
     </SectionContainer>

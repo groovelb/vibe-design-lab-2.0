@@ -1,14 +1,14 @@
 'use client';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 import { GridBackground } from '../dynamic-color/GridBackground';
 import { PageContainer } from '../layout/PageContainer';
 import { FitText } from '../typography/FitText';
 import FadeTransition from '../motion/FadeTransition';
-import { BuiltForPurposeIllustration } from '../../stories/overview/ux/referenceIllustrations';
 import { PAGES } from '../../data/contents';
 
-const { hero } = PAGES.landing;
+const { hero, footerCta } = PAGES.landing;
 
 /**
  * LandingHero 섹션 템플릿
@@ -32,22 +32,23 @@ export function LandingHero() {
           minHeight: '100svh',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'flex-end',
+          justifyContent: 'center',
+          alignItems: 'center',
           pb: { xs: 8, md: 12 },
           pt: { xs: 16, md: 20 },
         }}
       >
-        {/* 키비쥬얼 — 좌측 정렬, 억제된 존재감 */}
+        {/* 키비쥬얼 placeholder */}
         <FadeTransition direction="up" isTriggerOnView>
           <Box
             sx={{
-              maxWidth: 240,
+              width: 240,
+              height: 160,
               mb: { xs: 6, md: 10 },
-              opacity: 0.7,
+              border: '1px dashed',
+              borderColor: 'divider',
             }}
-          >
-            <BuiltForPurposeIllustration width="100%" height="auto" />
-          </Box>
+          />
         </FadeTransition>
 
         {/* 메인 헤드라인 — FitText로 전체 폭 점유 */}
@@ -55,7 +56,7 @@ export function LandingHero() {
           <FitText text={hero.headline} variant="headline" />
         </FadeTransition>
 
-        {/* 서브카피 — 좌측 정렬, 제한 폭, 충분한 상단 간격 */}
+        {/* 서브카피 — 중앙 정렬 */}
         <FadeTransition direction="up" delay={400} isTriggerOnView>
           <Typography
             variant="body1"
@@ -64,10 +65,23 @@ export function LandingHero() {
               maxWidth: '48ch',
               mt: { xs: 3, md: 4 },
               lineHeight: 1.7,
+              textAlign: 'center',
             }}
           >
             {hero.subCopy}
           </Typography>
+        </FadeTransition>
+
+        {/* CTA */}
+        <FadeTransition direction="up" delay={600} isTriggerOnView>
+          <Button
+            variant="contained"
+            size="large"
+            href="/course"
+            sx={{ mt: { xs: 4, md: 5 }, px: 5, py: 1.5 }}
+          >
+            {footerCta.cta}
+          </Button>
         </FadeTransition>
       </PageContainer>
     </GridBackground>

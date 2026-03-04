@@ -26,6 +26,7 @@ import { CardContainer } from './CardContainer';
  * @param {node} children - 콘텐츠 영역 내용 [Optional]
  * @param {string} contentPadding - 콘텐츠 패딩 ('none' | 'sm' | 'md' | 'lg') [Optional, 기본값: 'md']
  * @param {string} contentAlign - 콘텐츠 정렬 ('start' | 'center' | 'end') [Optional, 기본값: 'start']
+ * @param {string} variant - CardContainer variant ('outlined' | 'elevation' | 'ghost' | 'filled' | 'editorial') [Optional, 기본값: 'outlined']
  * @param {boolean} isInteractive - 호버 효과 [Optional, 기본값: false]
  * @param {function} onClick - 클릭 핸들러 [Optional]
  * @param {object} sx - 추가 스타일 [Optional]
@@ -52,6 +53,7 @@ const CustomCard = forwardRef(function CustomCard({
   children,
   contentPadding = 'md',
   contentAlign = 'start',
+  variant = 'outlined',
   isInteractive = false,
   onClick,
   sx,
@@ -221,7 +223,7 @@ const CustomCard = forwardRef(function CustomCard({
   return (
     <CardContainer
       ref={ref}
-      variant="outlined"
+      variant={variant}
       padding="none"
       radius="md"
       onClick={onClick}

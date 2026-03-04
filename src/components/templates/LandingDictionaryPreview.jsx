@@ -7,7 +7,6 @@ import { SectionContainer } from '../container/SectionContainer';
 import { PageContainer } from '../layout/PageContainer';
 import { PhiSplit } from '../layout/PhiSplit';
 import FadeTransition from '../motion/FadeTransition';
-import { PoweredByAgentsIllustration } from '../../stories/overview/ux/referenceIllustrations';
 import { PAGES } from '../../data/contents';
 
 const { dictionaryPreview } = PAGES.landing;
@@ -70,18 +69,11 @@ export function LandingDictionaryPreview() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   p: { xs: 3, md: 5 },
-                  backgroundColor: 'background.paper',
-                  border: 1,
+                  border: '1px dashed',
                   borderColor: 'divider',
                   minHeight: 320,
                 }}
-              >
-                <PoweredByAgentsIllustration
-                  width="100%"
-                  height="auto"
-                  style={{ maxWidth: 280 }}
-                />
-              </Box>
+              />
             }
           />
         </FadeTransition>

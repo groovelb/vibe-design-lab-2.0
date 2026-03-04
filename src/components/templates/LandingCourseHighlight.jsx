@@ -6,6 +6,7 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import { SectionContainer } from '../container/SectionContainer';
 import { PageContainer } from '../layout/PageContainer';
+import LineGrid from '../layout/LineGrid';
 import { CustomCard } from '../card/CustomCard';
 import { CohortBadge } from '../../common/ui/CohortBadge';
 import Placeholder from '../../common/ui/Placeholder';
@@ -49,11 +50,12 @@ export function LandingCourseHighlight() {
         </FadeTransition>
 
         {/* 코스 카드 2열 */}
-        <Grid container spacing={3}>
+        <LineGrid container gap={24} borderColor="divider">
           {MOCK_COURSES.map((course, index) => (
             <Grid key={course.slug} size={{ xs: 12, md: 6 }}>
               <FadeTransition direction="up" delay={index * 150} isTriggerOnView>
                 <CustomCard
+                  variant="editorial"
                   mediaSlot={<Placeholder.Media index={index} ratio="16/9" />}
                   mediaRatio="16/9"
                 >
@@ -83,7 +85,7 @@ export function LandingCourseHighlight() {
               </FadeTransition>
             </Grid>
           ))}
-        </Grid>
+        </LineGrid>
 
         {/* 전체 보기 — 좌측 정렬 */}
         <FadeTransition direction="up" delay={400} isTriggerOnView>

@@ -1,9 +1,9 @@
 'use client';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { SectionContainer } from '../container/SectionContainer';
 import { PageContainer } from '../layout/PageContainer';
+import { FitText } from '../typography/FitText';
 import FadeTransition from '../motion/FadeTransition';
 import { PAGES } from '../../data/contents';
 
@@ -21,7 +21,7 @@ const { footerCta } = PAGES.landing;
  */
 export function LandingFooterCTA() {
   return (
-    <SectionContainer sx={{ py: { xs: 10, md: 16 } }}>
+    <SectionContainer sx={{ py: { xs: 12, md: 20 } }}>
       <PageContainer>
         <FadeTransition direction="up" isTriggerOnView>
           <Box
@@ -33,19 +33,9 @@ export function LandingFooterCTA() {
               py: { xs: 4, md: 8 },
             }}
           >
-            <Typography
-              variant="h1"
-              component="p"
-              sx={{
-                fontWeight: 800,
-                fontSize: { xs: '2.5rem', md: '3.5rem' },
-                lineHeight: 1.2,
-                letterSpacing: '-0.02em',
-                mb: { xs: 4, md: 5 },
-              }}
-            >
-              {footerCta.headline}
-            </Typography>
+            <Box sx={{ width: '100%', mb: { xs: 4, md: 5 } }}>
+              <FitText text={footerCta.headline} variant="headline" />
+            </Box>
             <Button
               variant="contained"
               size="large"

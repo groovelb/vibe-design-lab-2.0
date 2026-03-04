@@ -3,9 +3,11 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { SectionContainer } from '../container/SectionContainer';
 import { PageContainer } from '../layout/PageContainer';
-import { ComparisonBlock } from '../container/ComparisonBlock';
+import Stack from '@mui/material/Stack';
+import Grid from '@mui/material/Grid';
+import LineGrid from '../layout/LineGrid';
 import FadeTransition from '../motion/FadeTransition';
-import { PAGES, COMPARISON_TABLE } from '../../data/contents';
+import { PAGES, VALUE_PROPOSITIONS } from '../../data/contents';
 
 const { howDifferent } = PAGES.landing;
 
@@ -20,9 +22,6 @@ const { howDifferent } = PAGES.landing;
  * <LandingDifference />
  */
 export function LandingDifference() {
-  const leftItems = COMPARISON_TABLE.map((row) => row.vod);
-  const rightItems = COMPARISON_TABLE.map((row) => row.vdl);
-
   return (
     <SectionContainer sx={{ py: { xs: 8, md: 12 } }}>
       <PageContainer>
@@ -48,13 +47,13 @@ export function LandingDifference() {
               <Typography
                 variant="h1"
                 component="h2"
-                sx={{ fontWeight: 800 }}
+                sx={{ fontWeight: 800, fontSize: { xs: '2rem', md: '3rem' } }}
               >
                 {howDifferent.headline}
               </Typography>
             </Box>
             <Typography
-              variant="body2"
+              variant="body1"
               sx={{
                 color: 'text.secondary',
                 maxWidth: '32ch',
@@ -67,16 +66,31 @@ export function LandingDifference() {
           </Box>
         </FadeTransition>
 
-        <FadeTransition direction="up" delay={200} isTriggerOnView>
-          <ComparisonBlock
-            leftLabel="일반 VOD"
-            rightLabel="VDL 코호트"
-            leftItems={leftItems}
-            rightItems={rightItems}
-            leftTone="negative"
-            rightTone="positive"
-          />
-        </FadeTransition>
+        {/* 가치 제안 — 3컬럼 */}
+        <LineGrid container gap={24} borderColor="divider">
+          {VALUE_PROPOSITIONS.map((vp, index) => (
+            <Grid key={vp.name} size={{ xs: 12, md: 4 }}>
+              <FadeTransition direction="up" delay={index * 100} isTriggerOnView>
+                <Stack spacing={2} sx={{ py: { xs: 3, md: 4 } }}>
+                  <Box
+                    sx={{
+                      width: '100%',
+                      height: 120,
+                      border: '1px dashed',
+                      borderColor: 'divider',
+                    }}
+                  />
+                  <Typography variant="h5" sx={{ fontWeight: 700 }}>
+                    {vp.name}
+                  </Typography>
+                  <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.7 }}>
+                    {vp.description}
+                  </Typography>
+                </Stack>
+              </FadeTransition>
+            </Grid>
+          ))}
+        </LineGrid>
       </PageContainer>
     </SectionContainer>
   );

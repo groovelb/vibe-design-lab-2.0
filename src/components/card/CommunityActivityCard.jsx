@@ -25,6 +25,7 @@ const typeMap = {
  * @param {string} contentPreview - 미리보기 텍스트 [Required]
  * @param {string} memberName - 멤버 이름 [Required]
  * @param {string} timestamp - 시간 표시 [Required]
+ * @param {string} cardVariant - 카드 컨테이너 스타일 ('outlined' | 'editorial') [Optional, 기본값: 'outlined']
  * @param {object} sx - 추가 스타일 [Optional]
  *
  * Example usage:
@@ -40,6 +41,7 @@ const CommunityActivityCard = forwardRef(function CommunityActivityCard({
   contentPreview,
   memberName,
   timestamp,
+  cardVariant = 'outlined',
   sx,
   ...props
 }, ref) {
@@ -50,9 +52,9 @@ const CommunityActivityCard = forwardRef(function CommunityActivityCard({
       ref={ref}
       sx={{
         p: 3,
-        border: 1,
-        borderColor: 'divider',
-        backgroundColor: 'background.paper',
+        ...(cardVariant === 'editorial'
+          ? { backgroundColor: 'transparent', border: 'none' }
+          : { border: 1, borderColor: 'divider', backgroundColor: 'background.paper' }),
         ...sx,
       }}
       {...props}
