@@ -1,10 +1,9 @@
-import { IBM_Plex_Sans, IBM_Plex_Mono } from 'next/font/google';
+import { Inter, IBM_Plex_Mono } from 'next/font/google';
 import localFont from 'next/font/local';
 
 // 브랜드 서체 (로고, 태그라인, display variant)
-export const ibmPlexSans = IBM_Plex_Sans({
+export const inter = Inter({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
   display: 'swap',
   variable: '--font-brand',
 });

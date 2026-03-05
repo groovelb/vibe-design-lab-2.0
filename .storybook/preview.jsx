@@ -9,8 +9,8 @@ const googleFonts = [
   'Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200',
   'Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200',
   'Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200',
-  // IBM Plex Sans (brand)
-  'IBM+Plex+Sans:wght@400;500;600;700',
+  // Inter (brand)
+  'Inter:wght@400;500;600;700',
   // IBM Plex Mono (code)
   'IBM+Plex+Mono:wght@400;500',
 ];

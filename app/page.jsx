@@ -1,29 +1,10 @@
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+import { LandingPage } from '@/components/page/LandingPage';
 
 export const metadata = {
-  title: 'Starter Kit',
-  description: 'Your design system foundation',
+  title: 'Vibe Design Labs',
+  description: 'Design language system for vibe coding education',
 };
 
 export default function HomePage() {
-  return (
-    <Box
-      sx={ {
-        p: 4,
-        textAlign: 'center',
-        minHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-      } }
-    >
-      <Typography variant="h3" gutterBottom>
-        Starter Kit
-      </Typography>
-      <Typography color="text.secondary">
-        Your design system foundation
-      </Typography>
-    </Box>
-  );
+  return <LandingPage />;
 }

@@ -1,12 +1,11 @@
 'use client';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import { SectionContainer } from '../container/SectionContainer';
-import { PageContainer } from '../layout/PageContainer';
 import LineGrid from '../layout/LineGrid';
 import { TestimonialCard } from '../card/TestimonialCard';
 import FadeTransition from '../motion/FadeTransition';
+import { SectionDivider } from '../typography/SectionDivider';
+import { SectionTitle } from '../typography/SectionTitle';
 import { PAGES } from '../../data/contents';
 import { MOCK_TESTIMONIALS } from '../../data/landingMockData';
 
@@ -24,25 +23,13 @@ const { courseReview } = PAGES.landing;
  */
 export function LandingCourseReview() {
   return (
-    <SectionContainer sx={{ py: { xs: 8, md: 12 } }}>
-      <PageContainer>
-        {/* 섹션 헤드 — overline + 대형 헤드라인 */}
+    <SectionContainer>
         <FadeTransition direction="up" isTriggerOnView>
-          <Box sx={{ mb: { xs: 6, md: 10 } }}>
-            <Typography
-              variant="overline"
-              sx={{ color: 'text.disabled', mb: 1.5, display: 'block' }}
-            >
-              Review
-            </Typography>
-            <Typography
-              variant="h1"
-              component="h2"
-              sx={{ fontWeight: 800 }}
-            >
-              {courseReview.headline}
-            </Typography>
-          </Box>
+          <SectionDivider label="Review" sx={{ mb: 3 }} />
+          <SectionTitle
+            headline={courseReview.headline}
+            sx={{ mb: { xs: 6, md: 10 } }}
+          />
         </FadeTransition>
 
         {/* 후기 카드 3열 */}
@@ -63,7 +50,6 @@ export function LandingCourseReview() {
             </Grid>
           ))}
         </LineGrid>
-      </PageContainer>
     </SectionContainer>
   );
 }

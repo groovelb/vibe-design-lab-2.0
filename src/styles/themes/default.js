@@ -15,7 +15,7 @@ import { createTheme } from '@mui/material/styles';
 
 // ============================================================
 // 1. Primitive Tokens — Violet-tinted Grayscale
-// ============================================================
+// ============================================@================
 const violetGray = {
   950: 'hsl(260, 20%, 4%)',
   900: 'hsl(260, 16%, 8%)',
@@ -47,7 +47,7 @@ const customShadows = {
 
 // 폰트 패밀리 상수
 const suitFamily = 'var(--font-suit, "SUIT Variable"), SUIT, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif';
-const brandFamily = 'var(--font-brand, "IBM Plex Sans"), "IBM Plex Sans", sans-serif';
+const brandFamily = 'var(--font-brand, "Inter"), "Inter", sans-serif';
 const codeFamily = 'var(--font-mono, "IBM Plex Mono"), "IBM Plex Mono", monospace';
 
 const typography = {
@@ -67,17 +67,19 @@ const typography = {
   // 헤딩 — SUIT
   h1: {
     fontFamily: suitFamily,
-    fontWeight: 800,
-    fontSize: '3.5rem',
-    lineHeight: 1.15,
-    letterSpacing: '-0.02em',
+    fontWeight: 700,
+    fontSize: '3rem',
+    lineHeight: 1.075,
+    letterSpacing: '-0.03em',
+    wordSpacing: '0.1em',
   },
   h2: {
     fontFamily: suitFamily,
-    fontWeight: 800,
+    fontWeight: 700,
     fontSize: '2.5rem',
     lineHeight: 1.2,
     letterSpacing: '-0.02em',
+    wordSpacing: '0.1em',
   },
   h3: {
     fontFamily: suitFamily,
@@ -85,6 +87,7 @@ const typography = {
     fontSize: '2rem',
     lineHeight: 1.25,
     letterSpacing: '-0.01em',
+    wordSpacing: '0.1em',
   },
   h4: {
     fontFamily: suitFamily,
@@ -92,6 +95,7 @@ const typography = {
     fontSize: '1.5rem',
     lineHeight: 1.3,
     letterSpacing: '-0.01em',
+    wordSpacing: '0.1em',
   },
   h5: {
     fontFamily: suitFamily,
@@ -99,6 +103,7 @@ const typography = {
     fontSize: '1.25rem',
     lineHeight: 1.4,
     letterSpacing: '0',
+    wordSpacing: '0.1em',
   },
   h6: {
     fontFamily: suitFamily,
@@ -106,6 +111,7 @@ const typography = {
     fontSize: '1.125rem',
     lineHeight: 1.4,
     letterSpacing: '0',
+    wordSpacing: '0.1em',
   },
 
   // 본문 — SUIT (fontFamily 상속)
@@ -155,13 +161,14 @@ const typography = {
     textTransform: 'uppercase',
   },
 
-  // 신규 variant — Display (IBM Plex Sans)
+  // 신규 variant — Display (Inter)
   display: {
     fontFamily: brandFamily,
-    fontWeight: 800,
-    fontSize: 'clamp(4rem, 7vw, 6rem)',
+    fontWeight: 475,
+    fontSize: 'clamp(4rem, 7vw, 5rem)',
     lineHeight: 1.1,
-    letterSpacing: '-0.02em',
+    letterSpacing: '-0.05em',
+    wordSpacing: '0.05em',
   },
 
   // 신규 variant — Code (IBM Plex Mono)
@@ -293,6 +300,18 @@ const components = {
         borderRadius: 0,
         textTransform: 'none',
       },
+      sizeSmall: {
+        padding: '8px 20px',
+        fontSize: '0.875rem',
+      },
+      sizeMedium: {
+        padding: '12px 32px',
+        fontSize: '1rem',
+      },
+      sizeLarge: {
+        padding: '16px 44px',
+        fontSize: '1.125rem',
+      },
     },
   },
   MuiCard: {
@@ -396,8 +415,8 @@ const defaultTheme = createTheme({
       paper: violetGray[900],
     },
     text: {
-      primary: violetGray[50],
-      secondary: violetGray[200],
+      primary: violetGray[100],
+      secondary: violetGray[400],
       disabled: violetGray[700],
     },
     divider: violetGray[800],

@@ -9,6 +9,7 @@
 import {
   BRAND as _BRAND,
   PERSONAS as _PERSONAS,
+  PROBLEM_DEFINITION as _PROBLEM,
   WEBSITE_COPY,
 } from './verbalIdentity';
 
@@ -58,30 +59,34 @@ export const PAGES = {
       subCopy: _BRAND.tagline,
     },
     problem: {
-      headline: '시장은 바뀌는데, 배울 곳이 없다',
+      market: _PROBLEM.market.lines.map((l) => l.text).join(' '),
       career: [
         {
           persona: _PERSONAS.canvasDesigner.label,
-          text: 'Figma 안에서만 영향력이 있다. 채용 시장은 디자인 엔지니어를 찾는데, 캔버스 밖으로 나가면 무력해진다. 개발팀에 넘기면 간격, 색상, 트랜지션이 의도와 달라진다. 내 디자인인데 완성은 남의 몫이다.',
+          subtitle: '피그마 벗어나지 못하는 존재감.',
+          text: '결정권이 피그마 안에서만 존재합니다. 넘기는 순간 대체 가능한 포지션이 됩니다. 캔버스를 뛰어넘는 디자인 엔지니어가 생존합니다.',
         },
         {
           persona: _PERSONAS.sandwichPM.label,
-          text: '위아래에 끼여 결정권 없이 조율만 한다. 검증하고 싶은 아이디어가 있는데 프로토타입을 만들 수 없다. 개발 리소스 요청하면 우선순위에서 밀린다. 말로 설득해야 하는데 보여줄 게 없다.',
+          subtitle: '보여줄 게 없어서 말로만 설득하는 한계.',
+          text: '설득의 도구가 기획서와 말뿐입니다. 점점 의사결정 테이블에서 밀려납니다. 직접 증명하고 기술적 공감대를 주는 PM이 주목받습니다.',
         },
         {
           persona: _PERSONAS.pipelineDev.label,
-          text: '할당된 티켓이 곧 업무 범위다. 레이아웃, 색상, 타이포, 간격을 "왜 이렇게" 결정하는 기준 자체를 모른다. 사이드 프로젝트를 만들려 해도 구현은 되는데 UI 의사결정에서 반복적으로 막힌다. 왜 어색한지 모르겠다.',
+          subtitle: '작동은 하지만 왜 어색한지 모르는 답답함.',
+          text: '기능은 다 정상인데 왜 어색한지 설명을 못합니다. 디자인 설계 문제가 반복되는 개발작업을 늘려갑니다. 완성된 빌더로 전향이 필요합니다.',
         },
       ],
-      learning: [
+      learning: _PROBLEM.learning.lines.map((l) => l.text).join(' '),
+      learningDetails: [
         { problem: 'VOD 한계', text: '혼자 듣는 VOD는 혼자 막히고 혼자 포기한다' },
         { problem: '도구 종속', text: '도구 사용법을 배워도 도구가 바뀌면 처음부터다' },
         { problem: '학습 단절', text: '코스가 끝나면 끝이다. 쌓이는 게 없다' },
       ],
     },
     howDifferent: {
-      headline: 'VOD가 아니다',
-      subCopy: '코스 하나가 하나의 커뮤니티다',
+      headline: '도구 이전에, 언어 체계.',
+      subCopy: '도구는 바뀌어도 설계의 기준은 남습니다',
     },
     courseHighlight: {
       headline: '코스',

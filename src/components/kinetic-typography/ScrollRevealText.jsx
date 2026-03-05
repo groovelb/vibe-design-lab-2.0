@@ -20,6 +20,7 @@ import Typography from '@mui/material/Typography';
  * @param {string} activeColor - 활성화된 글자 색상 [Optional, 기본값: 'text.primary']
  * @param {string} inactiveColor - 비활성 글자 색상 [Optional, 기본값: 'text.disabled']
  * @param {string} variant - MUI Typography variant [Optional, 기본값: 'h4']
+ * @param {boolean} isSplitSentences - 문장 단위 개행 여부 [Optional, 기본값: true]
  * @param {object} sx - MUI sx 스타일 [Optional]
  *
  * Example usage:
@@ -30,6 +31,7 @@ function ScrollRevealText({
   activeColor = 'text.primary',
   inactiveColor = 'text.disabled',
   variant = 'h4',
+  isSplitSentences = true,
   sx = {},
 }) {
   const containerRef = useRef(null);
@@ -69,9 +71,9 @@ function ScrollRevealText({
   }, []);
 
   /** 문장 단위 분리 ('. ' 기준) */
-  const sentences = text.split('. ').map((s, i, arr) =>
-    i < arr.length - 1 ? s + '.' : s
-  );
+  const sentences = isSplitSentences
+    ? text.split('. ').map((s, i, arr) => (i < arr.length - 1 ? s + '.' : s))
+    : [text];
 
   /** 전체 글자 수 계산 */
   const totalChars = sentences.reduce((sum, s) => sum + s.length, 0);

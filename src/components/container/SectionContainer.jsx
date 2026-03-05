@@ -17,7 +17,7 @@ export const SectionContainer = ({ children, sx, ...props }) => {
       component="section"
       sx={{
         width: '100%',
-        py: { xs: 4, md: 6 }, // 기본 섹션 간격
+        py: { xs: 8, md: 16 }, // 기본 섹션 간격
         ...sx
       }}
       {...props}

@@ -2,7 +2,6 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { SectionContainer } from '../container/SectionContainer';
-import { PageContainer } from '../layout/PageContainer';
 import { FitText } from '../typography/FitText';
 import FadeTransition from '../motion/FadeTransition';
 import { PAGES } from '../../data/contents';
@@ -21,8 +20,7 @@ const { footerCta } = PAGES.landing;
  */
 export function LandingFooterCTA() {
   return (
-    <SectionContainer sx={{ py: { xs: 12, md: 20 } }}>
-      <PageContainer>
+    <SectionContainer>
         <FadeTransition direction="up" isTriggerOnView>
           <Box
             sx={{
@@ -46,7 +44,6 @@ export function LandingFooterCTA() {
             </Button>
           </Box>
         </FadeTransition>
-      </PageContainer>
     </SectionContainer>
   );
 }

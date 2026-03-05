@@ -1,14 +1,14 @@
 'use client';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import { SectionContainer } from '../container/SectionContainer';
-import { PageContainer } from '../layout/PageContainer';
 import LineGrid from '../layout/LineGrid';
 import { CourseCard } from '../card/CourseCard';
 import Placeholder from '../../common/ui/Placeholder';
 import FadeTransition from '../motion/FadeTransition';
+import { SectionDivider } from '../typography/SectionDivider';
+import { SectionTitle } from '../typography/SectionTitle';
 import { PAGES } from '../../data/contents';
 import { MOCK_COURSES } from '../../data/landingMockData';
 
@@ -26,25 +26,13 @@ const { courseHighlight } = PAGES.landing;
  */
 export function LandingCourseHighlight() {
   return (
-    <SectionContainer sx={{ py: { xs: 8, md: 12 } }}>
-      <PageContainer>
-        {/* 섹션 헤드 — overline + 대형 헤드라인 */}
+    <SectionContainer>
         <FadeTransition direction="up" isTriggerOnView>
-          <Box sx={{ mb: { xs: 6, md: 10 } }}>
-            <Typography
-              variant="overline"
-              sx={{ color: 'text.disabled', mb: 1.5, display: 'block' }}
-            >
-              Course
-            </Typography>
-            <Typography
-              variant="h1"
-              component="h2"
-              sx={{ fontWeight: 800 }}
-            >
-              {courseHighlight.headline}
-            </Typography>
-          </Box>
+          <SectionDivider label="Course" sx={{ mb: 3 }} />
+          <SectionTitle
+            headline={courseHighlight.headline}
+            sx={{ mb: { xs: 6, md: 10 } }}
+          />
         </FadeTransition>
 
         {/* 코스 카드 2열 */}
@@ -75,7 +63,6 @@ export function LandingCourseHighlight() {
             </Button>
           </Box>
         </FadeTransition>
-      </PageContainer>
     </SectionContainer>
   );
 }

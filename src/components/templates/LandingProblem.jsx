@@ -1,101 +1,81 @@
 'use client';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Grid';
 import { SectionContainer } from '../container/SectionContainer';
-import { PageContainer } from '../layout/PageContainer';
 import LineGrid from '../layout/LineGrid';
 import { StatementCard } from '../card/StatementCard';
 import FadeTransition from '../motion/FadeTransition';
+import ScrollRevealText from '../kinetic-typography/ScrollRevealText';
+import { SectionDivider } from '../typography/SectionDivider';
 import { PAGES } from '../../data/contents';
 
 const { problem } = PAGES.landing;
 
+const PERSONA_MEDIA = [
+  { poster: '/persona/canvas_designer.webp', video: '/persona/canvas_designer.mp4' },
+  { poster: '/persona/sandwitch_pm.webp', video: '/persona/sandwitch_pm.mp4' },
+  { poster: '/persona/pipeline_developer.webp', video: '/persona/pipeline_developer.mp4' },
+];
+
 /**
  * LandingProblem 섹션 템플릿
  *
- * "시장은 바뀌는데, 배울 곳이 없다" — 방문자의 문제를 정의하는 섹션.
- * 커리어 문제(페르소나별)와 학습 환경 문제를 카드 그리드로 배치한다.
- * overline 레이블 + 대형 헤드라인 + 카드 그리드 구조.
+ * 문제 정의 문단형(ScrollRevealText) + 페르소나별 카드 그리드.
  *
  * Example usage:
  * <LandingProblem />
  */
 export function LandingProblem() {
   return (
-    <SectionContainer sx={{ py: { xs: 8, md: 12 } }}>
-      <PageContainer>
-        {/* 섹션 헤드 — overline + 대형 헤드라인 */}
-        <FadeTransition direction="up" isTriggerOnView>
-          <Box sx={{ mb: { xs: 6, md: 10 } }}>
-            <Typography
-              variant="overline"
-              sx={{ color: 'text.disabled', mb: 1.5, display: 'block' }}
-            >
-              Problem
-            </Typography>
-            <Typography
-              variant="h1"
-              component="h2"
-              sx={{ fontWeight: 800 }}
-            >
-              {problem.headline}
-            </Typography>
-          </Box>
-        </FadeTransition>
-
-        {/* 커리어 문제 — 페르소나별 3컬럼 */}
-        <Box sx={{ mb: { xs: 6, md: 8 } }}>
-          <Typography
-            variant="caption"
-            sx={{
-              color: 'text.disabled',
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              fontWeight: 600,
-              mb: 3,
-              display: 'block',
-            }}
-          >
-            커리어 문제
-          </Typography>
-          <LineGrid container gap={96} borderColor="divider">
-            {problem.career.map((item, index) => (
-              <Grid key={item.persona} size={{ xs: 12, md: 4 }}>
-                <FadeTransition direction="up" delay={index * 100} isTriggerOnView>
-                  <StatementCard title={item.persona} description={item.text} />
-                </FadeTransition>
-              </Grid>
-            ))}
-          </LineGrid>
+    <SectionContainer>
+      {/* 문제 정의 — ScrollRevealText + 페르소나별 3컬럼 */}
+      <Stack spacing={12}>
+        <Box sx={{ mb: { xs: 4, md: 6 } }}>
+          <SectionDivider label="Problem" sx={{ mb: 3 }} />
+          <ScrollRevealText
+            text={problem.market}
+            variant="h1"
+            isSplitSentences={false}
+            sx={{ letterSpacing: '-0.02em', wordSpacing: '0.15em', '& .MuiTypography-root': { lineHeight: 1.71 } }}
+          />
         </Box>
-
-        {/* 학습 환경 문제 — 3컬럼 */}
-        <Box>
-          <Typography
-            variant="caption"
-            sx={{
-              color: 'text.disabled',
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              fontWeight: 600,
-              mb: 3,
-              display: 'block',
-            }}
-          >
-            학습 환경 문제
-          </Typography>
-          <LineGrid container gap={96} borderColor="divider">
-            {problem.learning.map((item, index) => (
-              <Grid key={item.problem} size={{ xs: 12, md: 4 }}>
-                <FadeTransition direction="up" delay={index * 100} isTriggerOnView>
-                  <StatementCard title={item.problem} description={item.text} />
-                </FadeTransition>
-              </Grid>
-            ))}
-          </LineGrid>
-        </Box>
-      </PageContainer>
+        <LineGrid container gap={96} borderColor="divider">
+          {problem.career.map((item, index) => (
+            <Grid key={item.persona} size={{ xs: 12, md: 4 }}>
+              <FadeTransition direction="up" delay={index * 100} isTriggerOnView>
+                <StatementCard
+                  title={item.persona}
+                  subtitle={item.subtitle}
+                  description={item.text}
+                  thumbnailSlot={
+                    <Box sx={{ width: '100%', aspectRatio: '4/3', overflow: 'hidden' }}>
+                      <Box
+                        component="video"
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        preload="none"
+                        poster={PERSONA_MEDIA[index].poster}
+                        sx={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          display: 'block',
+                          ...(index >= 1 && { transform: 'translateY(24px)' }),
+                        }}
+                      >
+                        <source src={PERSONA_MEDIA[index].video} type="video/mp4" />
+                      </Box>
+                    </Box>
+                  }
+                />
+              </FadeTransition>
+            </Grid>
+          ))}
+        </LineGrid>
+      </Stack>
     </SectionContainer>
   );
 }

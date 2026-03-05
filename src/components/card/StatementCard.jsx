@@ -14,6 +14,7 @@ import { CardContainer } from './CardContainer';
  * Props:
  * @param {node} thumbnailSlot - 썸네일 영역 커스텀 요소 [Optional]
  * @param {string} title - 카드 제목 [Required]
+ * @param {string} subtitle - 제목 아래 한 줄 요약 [Optional]
  * @param {string} description - 카드 설명 [Required]
  * @param {string} cardVariant - 카드 컨테이너 스타일 ('outlined' | 'editorial') [Optional, 기본값: 'editorial']
  * @param {object} sx - 추가 스타일 [Optional]
@@ -27,6 +28,7 @@ import { CardContainer } from './CardContainer';
 const StatementCard = forwardRef(function StatementCard({
   thumbnailSlot,
   title,
+  subtitle,
   description,
   cardVariant = 'editorial',
   sx,
@@ -40,7 +42,6 @@ const StatementCard = forwardRef(function StatementCard({
       sx={{ height: '100%', ...sx }}
       {...props}
     >
-      {/* 썸네일 1:1 */}
       {thumbnailSlot || (
         <Box
           sx={{
@@ -51,15 +52,25 @@ const StatementCard = forwardRef(function StatementCard({
           }}
         />
       )}
-      <Stack spacing={1.5} sx={{ pt: 2 }}>
+      <Stack spacing={4} sx={{ mt: 6, width: '100%' }}>
+        <Stack spacing={0}>
+          <Typography
+            variant="h4"
+            sx={{ fontWeight: 900 }}
+          >
+            {title}
+          </Typography>
+          {subtitle && (
+            <Typography
+              variant="h4"
+              sx={{ fontWeight: 400, mt: 1 }}
+            >
+              {subtitle}
+            </Typography>
+          )}
+        </Stack>
         <Typography
-          variant="h6"
-          sx={{ fontWeight: 800 }}
-        >
-          {title}
-        </Typography>
-        <Typography
-          variant="body2"
+          variant="body1"
           sx={{ color: 'text.secondary', lineHeight: 1.7 }}
         >
           {description}

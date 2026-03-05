@@ -1,12 +1,12 @@
 'use client';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { SectionContainer } from '../container/SectionContainer';
-import { PageContainer } from '../layout/PageContainer';
 import { PhiSplit } from '../layout/PhiSplit';
 import FadeTransition from '../motion/FadeTransition';
+import { SectionDivider } from '../typography/SectionDivider';
+import { SectionTitle } from '../typography/SectionTitle';
 import { PAGES } from '../../data/contents';
 
 const { dictionaryPreview } = PAGES.landing;
@@ -23,8 +23,7 @@ const { dictionaryPreview } = PAGES.landing;
  */
 export function LandingDictionaryPreview() {
   return (
-    <SectionContainer sx={{ py: { xs: 8, md: 12 } }}>
-      <PageContainer>
+    <SectionContainer>
         <FadeTransition direction="up" isTriggerOnView>
           <PhiSplit
             gap={6}
@@ -35,26 +34,12 @@ export function LandingDictionaryPreview() {
                 sx={{ justifyContent: 'center', height: '100%' }}
               >
                 <Box>
-                  <Typography
-                    variant="overline"
-                    sx={{ color: 'text.disabled', mb: 1.5, display: 'block' }}
-                  >
-                    Dictionary
-                  </Typography>
-                  <Typography
-                    variant="h1"
-                    component="h2"
-                    sx={{ fontWeight: 800 }}
-                  >
-                    {dictionaryPreview.headline}
-                  </Typography>
+                  <SectionDivider label="Dictionary" sx={{ mb: 3 }} />
+                  <SectionTitle
+                    headline={dictionaryPreview.headline}
+                    subtitle={dictionaryPreview.subCopy}
+                  />
                 </Box>
-                <Typography
-                  variant="body1"
-                  sx={{ color: 'text.secondary', maxWidth: '36ch' }}
-                >
-                  {dictionaryPreview.subCopy}
-                </Typography>
                 <Box>
                   <Button variant="text" href="/dictionary">
                     {dictionaryPreview.cta}
@@ -77,7 +62,6 @@ export function LandingDictionaryPreview() {
             }
           />
         </FadeTransition>
-      </PageContainer>
     </SectionContainer>
   );
 }

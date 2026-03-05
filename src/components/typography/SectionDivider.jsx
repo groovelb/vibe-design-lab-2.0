@@ -1,0 +1,97 @@
+'use client';
+import { forwardRef, useEffect, useRef, useState } from 'react';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+
+/**
+ * SectionDivider 컴포넌트
+ *
+ * overline 라벨 + 우측 수평선으로 섹션 경계를 표시한다.
+ * 뷰포트 진입 시 라인이 좌→우로 그려지는 애니메이션이 실행된다.
+ * 라벨에 배경색을 적용해 라인과 시각적으로 분리한다.
+ *
+ * @param {string} label - overline 텍스트 [Required]
+ * @param {number} duration - 라인 애니메이션 시간 (ms) [Optional, 기본값: 800]
+ * @param {object} sx - 추가 스타일 [Optional]
+ *
+ * Example usage:
+ * <SectionDivider label="Difference" />
+ */
+const SectionDivider = forwardRef(function SectionDivider({
+  label,
+  duration = 800,
+  sx,
+  ...props
+}, ref) {
+  const innerRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const el = innerRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(el);
+        }
+      },
+      { threshold: 0.1 },
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <Box
+      ref={(node) => {
+        innerRef.current = node;
+        if (typeof ref === 'function') ref(node);
+        else if (ref) ref.current = node;
+      }}
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 2,
+        ...sx,
+      }}
+      {...props}
+    >
+      <Typography
+        variant="overline"
+        sx={{
+          color: 'text.disabled',
+          bgcolor: 'background.default',
+          pr: 2,
+          flexShrink: 0,
+          opacity: isVisible ? 1 : 0.01,
+          transition: `opacity 400ms ease ${duration * 0.2}ms`,
+          '@media (prefers-reduced-motion: reduce)': {
+            transition: 'none',
+            opacity: 1,
+          },
+        }}
+      >
+        {label}
+      </Typography>
+      <Box
+        sx={{
+          flex: 1,
+          height: '1px',
+          bgcolor: 'divider',
+          transform: isVisible ? 'scaleX(1)' : 'scaleX(0)',
+          transformOrigin: 'left',
+          transition: `transform ${duration}ms cubic-bezier(0.4, 0, 0.2, 1)`,
+          '@media (prefers-reduced-motion: reduce)': {
+            transition: 'none',
+            transform: 'scaleX(1)',
+          },
+        }}
+      />
+    </Box>
+  );
+});
+
+export { SectionDivider };

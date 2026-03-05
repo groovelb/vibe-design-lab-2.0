@@ -1,12 +1,11 @@
 'use client';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import { SectionContainer } from '../container/SectionContainer';
-import { PageContainer } from '../layout/PageContainer';
 import Grid from '@mui/material/Grid';
+import { SectionContainer } from '../container/SectionContainer';
 import LineGrid from '../layout/LineGrid';
 import { CommunityActivityCard } from '../card/CommunityActivityCard';
 import FadeTransition from '../motion/FadeTransition';
+import { SectionDivider } from '../typography/SectionDivider';
+import { SectionTitle } from '../typography/SectionTitle';
 import { PAGES } from '../../data/contents';
 import { MOCK_COMMUNITY } from '../../data/landingMockData';
 
@@ -23,25 +22,13 @@ const { communitySnapshot } = PAGES.landing;
  */
 export function LandingCommunitySnapshot() {
   return (
-    <SectionContainer sx={{ py: { xs: 8, md: 12 } }}>
-      <PageContainer>
-        {/* 섹션 헤드 — overline + 대형 헤드라인 */}
+    <SectionContainer>
         <FadeTransition direction="up" isTriggerOnView>
-          <Box sx={{ mb: { xs: 6, md: 10 } }}>
-            <Typography
-              variant="overline"
-              sx={{ color: 'text.disabled', mb: 1.5, display: 'block' }}
-            >
-              Community
-            </Typography>
-            <Typography
-              variant="h1"
-              component="h2"
-              sx={{ fontWeight: 800 }}
-            >
-              {communitySnapshot.headline}
-            </Typography>
-          </Box>
+          <SectionDivider label="Community" sx={{ mb: 3 }} />
+          <SectionTitle
+            headline={communitySnapshot.headline}
+            sx={{ mb: { xs: 6, md: 10 } }}
+          />
         </FadeTransition>
 
         <FadeTransition direction="up" delay={200} isTriggerOnView>
@@ -60,7 +47,6 @@ export function LandingCommunitySnapshot() {
             ))}
           </LineGrid>
         </FadeTransition>
-      </PageContainer>
     </SectionContainer>
   );
 }

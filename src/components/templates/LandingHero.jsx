@@ -28,16 +28,13 @@ export function LandingHero() {
       <PageContainer
         sx={{
           minHeight: '100svh',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
+          pt: '30vh',
         }}
       >
         {/* 메인 헤드라인 — 브랜드 서체 (IBM Plex Sans) */}
         <FadeTransition direction="up" isTriggerOnView>
           <Typography
             variant="display"
-            sx={{ letterSpacing: '-0.05em', wordSpacing: '0.15em' }}
           >
             {hero.headline}
           </Typography>
@@ -46,7 +43,7 @@ export function LandingHero() {
         {/* 태그라인 */}
         <FadeTransition direction="up" delay={200} isTriggerOnView>
           <Typography
-            variant="h2"
+            variant="h3"
             sx={{
               color: 'text.secondary',
               fontWeight: 400,
@@ -64,7 +61,6 @@ export function LandingHero() {
               variant="contained"
               size="large"
               href="/course"
-              sx={{ px: 5, py: 1.5 }}
             >
               {footerCta.cta}
             </Button>

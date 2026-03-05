@@ -31,7 +31,7 @@ const FeatureCard = forwardRef(function FeatureCard({
   ...props
 }, ref) {
   return (
-    <Stack ref={ref} spacing={2} sx={sx} {...props}>
+    <Stack ref={ref} sx={sx} {...props}>
       {illustrationSlot || (
         <Box
           sx={{
@@ -42,12 +42,17 @@ const FeatureCard = forwardRef(function FeatureCard({
           }}
         />
       )}
-      <Typography variant="h4" sx={{ fontWeight: 800 }}>
-        {title}
-      </Typography>
-      <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.7 }}>
-        {description}
-      </Typography>
+      <Stack spacing={0} sx={{ mt: 6, width: '100%' }}>
+        <Typography variant="h4" sx={{ fontWeight: 900, textTransform: 'uppercase' }}>
+          {title}
+        </Typography>
+        <Typography
+          variant="h4"
+          sx={{ fontWeight: 400, mt: 1 }}
+        >
+          {description}
+        </Typography>
+      </Stack>
     </Stack>
   );
 });

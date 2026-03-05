@@ -1,4 +1,4 @@
-import { LandingPage } from '../../components/templates/LandingPage';
+import { LandingPage } from '../../components/page/LandingPage';
 
 export default {
   title: 'Page/Landing',
@@ -24,7 +24,6 @@ Hook (Hero) → Pain (Problem) → Solution (Difference) → Offer (Course Highl
  * ## 전체 페이지
  *
  * 8개 섹션이 조립된 Landing 페이지 전체 플로우.
- * AppShell(GNB) 안에서 스크롤하며 전환 퍼널을 경험한다.
  */
 export const FullPage = {
   render: () => <LandingPage />,
