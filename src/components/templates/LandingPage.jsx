@@ -36,7 +36,7 @@ export function LandingPage() {
   return (
     <AppShell
       logo={
-        <Typography variant="subtitle1" sx={{ fontWeight: 700, letterSpacing: '-0.5px' }}>
+        <Typography variant="h6" sx={{ fontWeight: 800, letterSpacing: '-0.02em' }}>
           {GNB_DATA.logo}
         </Typography>
       }

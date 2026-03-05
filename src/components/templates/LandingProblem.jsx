@@ -1,12 +1,11 @@
 'use client';
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import { SectionContainer } from '../container/SectionContainer';
 import { PageContainer } from '../layout/PageContainer';
 import LineGrid from '../layout/LineGrid';
-import { CardContainer } from '../card/CardContainer';
+import { StatementCard } from '../card/StatementCard';
 import FadeTransition from '../motion/FadeTransition';
 import { PAGES } from '../../data/contents';
 
@@ -38,7 +37,7 @@ export function LandingProblem() {
             <Typography
               variant="h1"
               component="h2"
-              sx={{ fontWeight: 800, maxWidth: '16ch', fontSize: { xs: '2rem', md: '3rem' } }}
+              sx={{ fontWeight: 800 }}
             >
               {problem.headline}
             </Typography>
@@ -60,29 +59,11 @@ export function LandingProblem() {
           >
             커리어 문제
           </Typography>
-          <LineGrid container gap={16} borderColor="divider">
+          <LineGrid container gap={96} borderColor="divider">
             {problem.career.map((item, index) => (
               <Grid key={item.persona} size={{ xs: 12, md: 4 }}>
                 <FadeTransition direction="up" delay={index * 100} isTriggerOnView>
-                  <CardContainer
-                    variant="editorial"
-                    sx={{ height: '100%', p: { xs: 3, md: 4 } }}
-                  >
-                    <Stack spacing={1.5}>
-                      <Typography
-                        variant="subtitle2"
-                        sx={{ color: 'text.primary', fontWeight: 700 }}
-                      >
-                        {item.persona}
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        sx={{ color: 'text.secondary', lineHeight: 1.7 }}
-                      >
-                        {item.text}
-                      </Typography>
-                    </Stack>
-                  </CardContainer>
+                  <StatementCard title={item.persona} description={item.text} />
                 </FadeTransition>
               </Grid>
             ))}
@@ -104,29 +85,11 @@ export function LandingProblem() {
           >
             학습 환경 문제
           </Typography>
-          <LineGrid container gap={16} borderColor="divider">
+          <LineGrid container gap={96} borderColor="divider">
             {problem.learning.map((item, index) => (
               <Grid key={item.problem} size={{ xs: 12, md: 4 }}>
                 <FadeTransition direction="up" delay={index * 100} isTriggerOnView>
-                  <CardContainer
-                    variant="editorial"
-                    sx={{ height: '100%', p: { xs: 3, md: 4 } }}
-                  >
-                    <Stack spacing={1.5}>
-                      <Typography
-                        variant="subtitle2"
-                        sx={{ color: 'text.primary', fontWeight: 700 }}
-                      >
-                        {item.problem}
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        sx={{ color: 'text.secondary', lineHeight: 1.7 }}
-                      >
-                        {item.text}
-                      </Typography>
-                    </Stack>
-                  </CardContainer>
+                  <StatementCard title={item.problem} description={item.text} />
                 </FadeTransition>
               </Grid>
             ))}

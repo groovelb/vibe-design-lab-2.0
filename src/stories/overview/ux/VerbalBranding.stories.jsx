@@ -110,7 +110,6 @@ export const Docs = {
                   <TableCell sx={ { fontWeight: 600, width: 60 } }>Step</TableCell>
                   <TableCell sx={ { fontWeight: 600 } }>Name</TableCell>
                   <TableCell sx={ { fontWeight: 600 } }>설명</TableCell>
-                  <TableCell sx={ { fontWeight: 600 } }>디테일</TableCell>
                   <TableCell sx={ { fontWeight: 600 } }>Short</TableCell>
                 </TableRow>
               </TableHead>
@@ -120,7 +119,6 @@ export const Docs = {
                     <TableCell sx={ { fontWeight: 600 } }>{ vp.step }</TableCell>
                     <TableCell sx={ { fontFamily: 'monospace', fontSize: 12, whiteSpace: 'nowrap' } }>{ vp.name }</TableCell>
                     <TableCell sx={ { fontSize: 13 } }>{ vp.description }</TableCell>
-                    <TableCell sx={ { fontSize: 13, color: 'text.secondary' } }>{ vp.detail }</TableCell>
                     <TableCell sx={ { fontSize: 13 } }>{ vp.shortVersion }</TableCell>
                   </TableRow>
                 )) }

@@ -3,9 +3,9 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { SectionContainer } from '../container/SectionContainer';
 import { PageContainer } from '../layout/PageContainer';
-import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Grid';
 import LineGrid from '../layout/LineGrid';
+import { FeatureCard } from '../card/FeatureCard';
 import FadeTransition from '../motion/FadeTransition';
 import { PAGES, VALUE_PROPOSITIONS } from '../../data/contents';
 
@@ -47,7 +47,7 @@ export function LandingDifference() {
               <Typography
                 variant="h1"
                 component="h2"
-                sx={{ fontWeight: 800, fontSize: { xs: '2rem', md: '3rem' } }}
+                sx={{ fontWeight: 800 }}
               >
                 {howDifferent.headline}
               </Typography>
@@ -67,26 +67,11 @@ export function LandingDifference() {
         </FadeTransition>
 
         {/* 가치 제안 — 3컬럼 */}
-        <LineGrid container gap={24} borderColor="divider">
+        <LineGrid container gap={96} borderColor="divider">
           {VALUE_PROPOSITIONS.map((vp, index) => (
             <Grid key={vp.name} size={{ xs: 12, md: 4 }}>
               <FadeTransition direction="up" delay={index * 100} isTriggerOnView>
-                <Stack spacing={2} sx={{ py: { xs: 3, md: 4 } }}>
-                  <Box
-                    sx={{
-                      width: '100%',
-                      height: 120,
-                      border: '1px dashed',
-                      borderColor: 'divider',
-                    }}
-                  />
-                  <Typography variant="h5" sx={{ fontWeight: 700 }}>
-                    {vp.name}
-                  </Typography>
-                  <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.7 }}>
-                    {vp.description}
-                  </Typography>
-                </Stack>
+                <FeatureCard title={vp.name} description={vp.description} />
               </FadeTransition>
             </Grid>
           ))}

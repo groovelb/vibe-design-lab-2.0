@@ -51,7 +51,6 @@ const TestimonialCard = forwardRef(function TestimonialCard({
     <Box
       ref={ref}
       sx={{
-        p: { xs: 3, md: 4 },
         ...(cardVariant === 'editorial'
           ? { backgroundColor: 'transparent', border: 'none' }
           : { backgroundColor: 'background.paper', border: 1, borderColor: 'divider' }),
@@ -59,12 +58,22 @@ const TestimonialCard = forwardRef(function TestimonialCard({
       }}
       {...props}
     >
-      <Stack spacing={2}>
+      {/* 썸네일 1:1 */}
+      <Box
+        sx={{
+          width: '100%',
+          aspectRatio: '1/1',
+          border: '1px dashed',
+          borderColor: 'divider',
+        }}
+      />
+      <Stack spacing={2} sx={{ pt: 2 }}>
         {/* 인용문 */}
         <QuotedContainer
-          variant="body1"
+          variant="h6"
           quoteSize="sm"
           position="inside"
+          sx={{ fontWeight: 700 }}
         >
           {displayQuote}
         </QuotedContainer>

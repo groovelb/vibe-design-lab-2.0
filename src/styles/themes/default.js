@@ -68,29 +68,29 @@ const typography = {
   h1: {
     fontFamily: suitFamily,
     fontWeight: 800,
-    fontSize: '2.5rem',
-    lineHeight: 1.3,
+    fontSize: '3.5rem',
+    lineHeight: 1.15,
     letterSpacing: '-0.02em',
   },
   h2: {
     fontFamily: suitFamily,
     fontWeight: 800,
-    fontSize: '2rem',
-    lineHeight: 1.3,
+    fontSize: '2.5rem',
+    lineHeight: 1.2,
     letterSpacing: '-0.02em',
   },
   h3: {
     fontFamily: suitFamily,
     fontWeight: 800,
-    fontSize: '1.75rem',
-    lineHeight: 1.35,
+    fontSize: '2rem',
+    lineHeight: 1.25,
     letterSpacing: '-0.01em',
   },
   h4: {
     fontFamily: suitFamily,
     fontWeight: 700,
     fontSize: '1.5rem',
-    lineHeight: 1.35,
+    lineHeight: 1.3,
     letterSpacing: '-0.01em',
   },
   h5: {
@@ -110,25 +110,25 @@ const typography = {
 
   // 본문 — SUIT (fontFamily 상속)
   body1: {
-    fontSize: '1rem',
-    lineHeight: 1.6,
+    fontSize: '1.125rem',
+    lineHeight: 1.7,
     letterSpacing: '0',
   },
   body2: {
-    fontSize: '0.875rem',
-    lineHeight: 1.6,
+    fontSize: '1rem',
+    lineHeight: 1.7,
     letterSpacing: '0',
   },
 
   // 부제목
   subtitle1: {
-    fontSize: '1rem',
+    fontSize: '1.125rem',
     fontWeight: 500,
     lineHeight: 1.5,
     letterSpacing: '0.01em',
   },
   subtitle2: {
-    fontSize: '0.875rem',
+    fontSize: '1rem',
     fontWeight: 500,
     lineHeight: 1.5,
     letterSpacing: '0.01em',
@@ -136,19 +136,19 @@ const typography = {
 
   // 기타
   button: {
-    fontSize: '0.875rem',
+    fontSize: '0.9375rem',
     fontWeight: 600,
     lineHeight: 1.75,
     letterSpacing: '0.02em',
     textTransform: 'none',
   },
   caption: {
-    fontSize: '0.75rem',
+    fontSize: '0.8125rem',
     lineHeight: 1.5,
     letterSpacing: '0.02em',
   },
   overline: {
-    fontSize: '0.75rem',
+    fontSize: '0.8125rem',
     fontWeight: 600,
     lineHeight: 2,
     letterSpacing: '0.08em',
@@ -159,8 +159,8 @@ const typography = {
   display: {
     fontFamily: brandFamily,
     fontWeight: 800,
-    fontSize: 'clamp(3rem, 5vw, 4rem)',
-    lineHeight: 1.2,
+    fontSize: 'clamp(4rem, 7vw, 6rem)',
+    lineHeight: 1.1,
     letterSpacing: '-0.02em',
   },
 

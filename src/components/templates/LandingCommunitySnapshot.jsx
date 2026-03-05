@@ -45,7 +45,7 @@ export function LandingCommunitySnapshot() {
         </FadeTransition>
 
         <FadeTransition direction="up" delay={200} isTriggerOnView>
-          <LineGrid container gap={16} borderColor="divider">
+          <LineGrid container gap={96} borderColor="divider">
             {MOCK_COMMUNITY.map((item, index) => (
               <Grid key={index} size={{ xs: 12, sm: 6, md: 3 }}>
                 <CommunityActivityCard

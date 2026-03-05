@@ -1,14 +1,12 @@
 'use client';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import { SectionContainer } from '../container/SectionContainer';
 import { PageContainer } from '../layout/PageContainer';
 import LineGrid from '../layout/LineGrid';
-import { CustomCard } from '../card/CustomCard';
-import { CohortBadge } from '../../common/ui/CohortBadge';
+import { CourseCard } from '../card/CourseCard';
 import Placeholder from '../../common/ui/Placeholder';
 import FadeTransition from '../motion/FadeTransition';
 import { PAGES } from '../../data/contents';
@@ -50,38 +48,20 @@ export function LandingCourseHighlight() {
         </FadeTransition>
 
         {/* 코스 카드 2열 */}
-        <LineGrid container gap={24} borderColor="divider">
+        <LineGrid container gap={96} borderColor="divider">
           {MOCK_COURSES.map((course, index) => (
             <Grid key={course.slug} size={{ xs: 12, md: 6 }}>
               <FadeTransition direction="up" delay={index * 150} isTriggerOnView>
-                <CustomCard
-                  variant="editorial"
-                  mediaSlot={<Placeholder.Media index={index} ratio="16/9" />}
-                  mediaRatio="16/9"
-                >
-                  <Stack spacing={2} sx={{ pt: 1 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <CohortBadge status={course.cohortStatus} size="sm" />
-                      <Typography variant="caption" sx={{ color: 'text.disabled' }}>
-                        {course.duration} · {course.chapters}챕터
-                      </Typography>
-                    </Box>
-                    <Typography variant="h5" sx={{ fontWeight: 700 }}>
-                      {course.title}
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                      {course.subtitle}
-                    </Typography>
-                    <Typography variant="caption" sx={{ color: 'text.disabled' }}>
-                      대상: {course.target}
-                    </Typography>
-                    <Box>
-                      <Button variant="outlined" size="small">
-                        {courseHighlight.ctaPrimary}
-                      </Button>
-                    </Box>
-                  </Stack>
-                </CustomCard>
+                <CourseCard
+                  mediaSlot={<Placeholder.Media index={index} ratio="1/1" />}
+                  cohortStatus={course.cohortStatus}
+                  duration={course.duration}
+                  chapters={course.chapters}
+                  title={course.title}
+                  subtitle={course.subtitle}
+                  target={course.target}
+                  ctaLabel={courseHighlight.ctaPrimary}
+                />
               </FadeTransition>
             </Grid>
           ))}

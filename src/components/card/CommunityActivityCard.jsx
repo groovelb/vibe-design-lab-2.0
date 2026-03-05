@@ -51,7 +51,6 @@ const CommunityActivityCard = forwardRef(function CommunityActivityCard({
     <Box
       ref={ref}
       sx={{
-        p: 3,
         ...(cardVariant === 'editorial'
           ? { backgroundColor: 'transparent', border: 'none' }
           : { border: 1, borderColor: 'divider', backgroundColor: 'background.paper' }),
@@ -59,7 +58,16 @@ const CommunityActivityCard = forwardRef(function CommunityActivityCard({
       }}
       {...props}
     >
-      <Stack spacing={1.5}>
+      {/* 썸네일 1:1 */}
+      <Box
+        sx={{
+          width: '100%',
+          aspectRatio: '1/1',
+          border: '1px dashed',
+          borderColor: 'divider',
+        }}
+      />
+      <Stack spacing={1.5} sx={{ pt: 2 }}>
         {/* 유형 레이블 */}
         <Chip
           label={config.label}
@@ -75,13 +83,13 @@ const CommunityActivityCard = forwardRef(function CommunityActivityCard({
 
         {/* 본문 미리보기 (3줄 line-clamp) */}
         <Typography
-          variant="body2"
+          variant="subtitle1"
           sx={{
             display: '-webkit-box',
             WebkitLineClamp: 3,
             WebkitBoxOrient: 'vertical',
             overflow: 'hidden',
-            color: 'text.primary',
+            fontWeight: 700,
           }}
         >
           {contentPreview}

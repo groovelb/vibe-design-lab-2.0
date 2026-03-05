@@ -343,7 +343,7 @@ export const Docs = {
                   </Typography>
                   { phil && (
                     <Typography variant="caption" color="text.secondary">
-                      { phil.shortDescription }
+                      { phil.description }
                     </Typography>
                   ) }
                 </Box>
@@ -409,7 +409,7 @@ export const Docs = {
                       { vp.description }
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
-                      { vp.detail }
+                      { vp.shortVersion }
                     </Typography>
                   </Box>
                 </Box>

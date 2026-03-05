@@ -46,7 +46,7 @@ export function LandingCourseReview() {
         </FadeTransition>
 
         {/* 후기 카드 3열 */}
-        <LineGrid container gap={24} borderColor="divider">
+        <LineGrid container gap={96} borderColor="divider">
           {MOCK_TESTIMONIALS.map((testimonial, index) => (
             <Grid key={testimonial.id} size={{ xs: 12, md: 4 }}>
               <FadeTransition direction="up" delay={index * 150} isTriggerOnView>
