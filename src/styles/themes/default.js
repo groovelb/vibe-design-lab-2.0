@@ -312,131 +312,105 @@ const components = {
 };
 
 // ============================================================
-// 10. Theme 생성 — cssVariables + colorSchemes
+// 10. Light Palette (보존 — 향후 라이트 모드 전환 시 사용)
+// ============================================================
+const lightPalette = {
+  primary: {
+    main: violetGray[950],
+    light: violetGray[700],
+    dark: '#000000',
+    contrastText: violetGray[50],
+  },
+  secondary: {
+    main: violetGray[700],
+    light: violetGray[500],
+    dark: violetGray[900],
+    contrastText: '#FFFFFF',
+  },
+  background: {
+    default: violetGray[50],
+    paper: '#ffffff',
+  },
+  text: {
+    primary: violetGray[950],
+    secondary: violetGray[700],
+    disabled: violetGray[200],
+  },
+  divider: violetGray[100],
+  action: {
+    active: violetGray[950],
+    hover: violetGray[100],
+    selected: violetGray[100],
+    disabled: violetGray[200],
+    disabledBackground: violetGray[100],
+    focus: violetGray[100],
+  },
+  grey: violetGray,
+};
+
+// ============================================================
+// 11. Theme 생성 — Dark 고정
 // ============================================================
 const defaultTheme = createTheme({
   cssVariables: true,
-  colorSchemes: {
-    dark: {
-      palette: {
-        primary: {
-          main: violetGray[50],
-          light: '#ffffff',
-          dark: violetGray[200],
-          contrastText: violetGray[950],
-        },
-        secondary: {
-          main: violetGray[200],
-          light: violetGray[100],
-          dark: violetGray[300],
-          contrastText: violetGray[950],
-        },
-        error: {
-          light: '#ef5350',
-          main: '#d32f2f',
-          dark: '#c62828',
-          contrastText: '#FFFFFF',
-        },
-        warning: {
-          light: '#ff9800',
-          main: '#ed6c02',
-          dark: '#e65100',
-          contrastText: '#FFFFFF',
-        },
-        success: {
-          light: '#4caf50',
-          main: '#2e7d32',
-          dark: '#1b5e20',
-          contrastText: '#FFFFFF',
-        },
-        info: {
-          light: '#03a9f4',
-          main: '#0288d1',
-          dark: '#01579b',
-          contrastText: '#FFFFFF',
-        },
-        background: {
-          default: violetGray[950],
-          paper: violetGray[900],
-        },
-        text: {
-          primary: violetGray[50],
-          secondary: violetGray[200],
-          disabled: violetGray[700],
-        },
-        divider: violetGray[800],
-        action: {
-          active: violetGray[200],
-          hover: violetGray[800],
-          selected: violetGray[800],
-          disabled: violetGray[700],
-          disabledBackground: violetGray[800],
-          focus: violetGray[800],
-        },
-        grey: violetGray,
-      },
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: violetGray[50],
+      light: '#ffffff',
+      dark: violetGray[200],
+      contrastText: violetGray[950],
     },
-    light: {
-      palette: {
-        primary: {
-          main: violetGray[950],
-          light: violetGray[700],
-          dark: '#000000',
-          contrastText: violetGray[50],
-        },
-        secondary: {
-          main: violetGray[700],
-          light: violetGray[500],
-          dark: violetGray[900],
-          contrastText: '#FFFFFF',
-        },
-        error: {
-          light: '#ef5350',
-          main: '#d32f2f',
-          dark: '#c62828',
-          contrastText: '#FFFFFF',
-        },
-        warning: {
-          light: '#ff9800',
-          main: '#ed6c02',
-          dark: '#e65100',
-          contrastText: '#FFFFFF',
-        },
-        success: {
-          light: '#4caf50',
-          main: '#2e7d32',
-          dark: '#1b5e20',
-          contrastText: '#FFFFFF',
-        },
-        info: {
-          light: '#03a9f4',
-          main: '#0288d1',
-          dark: '#01579b',
-          contrastText: '#FFFFFF',
-        },
-        background: {
-          default: violetGray[50],
-          paper: '#ffffff',
-        },
-        text: {
-          primary: violetGray[950],
-          secondary: violetGray[700],
-          disabled: violetGray[200],
-        },
-        divider: violetGray[100],
-        action: {
-          active: violetGray[950],
-          hover: violetGray[100],
-          selected: violetGray[100],
-          disabled: violetGray[200],
-          disabledBackground: violetGray[100],
-          focus: violetGray[100],
-        },
-        grey: violetGray,
-      },
+    secondary: {
+      main: violetGray[200],
+      light: violetGray[100],
+      dark: violetGray[300],
+      contrastText: violetGray[950],
     },
+    error: {
+      light: '#ef5350',
+      main: '#d32f2f',
+      dark: '#c62828',
+      contrastText: '#FFFFFF',
+    },
+    warning: {
+      light: '#ff9800',
+      main: '#ed6c02',
+      dark: '#e65100',
+      contrastText: '#FFFFFF',
+    },
+    success: {
+      light: '#4caf50',
+      main: '#2e7d32',
+      dark: '#1b5e20',
+      contrastText: '#FFFFFF',
+    },
+    info: {
+      light: '#03a9f4',
+      main: '#0288d1',
+      dark: '#01579b',
+      contrastText: '#FFFFFF',
+    },
+    background: {
+      default: violetGray[950],
+      paper: violetGray[900],
+    },
+    text: {
+      primary: violetGray[50],
+      secondary: violetGray[200],
+      disabled: violetGray[700],
+    },
+    divider: violetGray[800],
+    action: {
+      active: violetGray[200],
+      hover: violetGray[800],
+      selected: violetGray[800],
+      disabled: violetGray[700],
+      disabledBackground: violetGray[800],
+      focus: violetGray[800],
+    },
+    grey: violetGray,
   },
-  defaultColorScheme: 'dark',
   typography,
   spacing,
   shape,
@@ -474,6 +448,7 @@ export default defaultTheme;
 // 개별 토큰 내보내기 (문서화용)
 export {
   violetGray,
+  lightPalette,
   typography,
   spacing,
   shape,
