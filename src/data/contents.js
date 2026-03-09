@@ -56,7 +56,7 @@ export const PAGES = {
   landing: {
     hero: {
       headline: '사고와 구현의 주체를 일치시키는 디자인 언어',
-      subCopy: '생각한 사람이 직접 만듭니다. 바이브 코딩 위의 디자인 언어 체계를 연구합니다.',
+      subCopy: '바이브 코딩 위의 디자인 언어를 연구합니다.',
     },
     problem: {
       market: _PROBLEM.market.lines.map((l) => l.text).join(' '),

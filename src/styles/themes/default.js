@@ -164,11 +164,11 @@ const typography = {
   // 신규 variant — Display (Inter)
   display: {
     fontFamily: brandFamily,
-    fontWeight: 475,
+    fontWeight: 700,
     fontSize: 'clamp(4rem, 7vw, 5rem)',
     lineHeight: 1.1,
-    letterSpacing: '-0.05em',
-    wordSpacing: '0.05em',
+    letterSpacing: '-0.04em',
+    wordSpacing: '0.06em',
   },
 
   // 신규 variant — Code (IBM Plex Mono)
