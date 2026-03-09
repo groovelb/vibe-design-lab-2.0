@@ -12,6 +12,9 @@ import { VibeStandard } from '../../../assets/brandIllustration/VibeStandard';
 import { DesignAsBuild } from '../../../assets/brandIllustration/DesignAsBuild';
 import { SystemOverDrawingV2 } from '../../../assets/brandIllustration/SystemOverDrawingV2';
 import { DesignAsBuildV2 } from '../../../assets/brandIllustration/DesignAsBuildV2';
+import { SystemOverDrawingIso } from '../../../assets/brandIllustration/SystemOverDrawingIso';
+import { VibeStandardIso } from '../../../assets/brandIllustration/VibeStandardIso';
+import { DesignAsBuildIso } from '../../../assets/brandIllustration/DesignAsBuildIso';
 
 export default {
   title: 'Overview/UX/Brand Illustrations',
@@ -111,6 +114,58 @@ export const Docs = {
           LandingDifference 섹션의 FeatureCard에 들어갈 제너러티브 SVG 일러스트.
           모든 형태는 데이터·알고리즘·규칙으로 생성된다.
         </Typography>
+
+        {/* ════════════════════════════════════════════════════
+            Isometric System (공유 좌표계 기반)
+            ════════════════════════════════════════════════════ */}
+        <Typography variant="h5" sx={{ fontWeight: 700, mb: 1 }}>
+          Isometric System
+        </Typography>
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 4 }}>
+          동일 각도(~26.57°) · 동일 단위(8px) · 동일 프리미티브(Prism/Card)를 공유하는
+          아이소메트릭 좌표계 위에 구축된 3개 VP 일러스트.
+        </Typography>
+
+        {/* ── VP1 Iso: System Over Drawing ── */}
+        <SectionTitle
+          title="VP1 Iso — System Over Drawing"
+          description="&quot;기준을 먼저 설계하는 과정&quot; — 익스플로디드 레이어 스택: Grid → Tokens → Rules → Components → Result. 하단(기준)이 hero, 상단(결과물)이 subtle. 각 레이어에 실제 디자인 요소가 표현된다."
+        />
+        <IllustrationPanel
+          label="SystemOverDrawingIso"
+          sublabel="layers: 5 · w: 7u · exploded view · top face content"
+          maxWidth={560}
+        >
+          <SystemOverDrawingIso />
+        </IllustrationPanel>
+
+        {/* ── VP2 Iso: The Vibe Standard ── */}
+        <SectionTitle
+          title="VP2 Iso — The Vibe Standard"
+          description="&quot;감각을 언어로 번역한 체계&quot; — 토큰 레지스트리 모듈: 5개 슬롯이 동일 포맷(아이콘+이름+값+상태)으로 정렬. 같은 구조 = 표준."
+        />
+        <IllustrationPanel
+          label="VibeStandardIso"
+          sublabel="container: 7u×24u · slots: 5 · uniform format"
+          maxWidth={560}
+        >
+          <VibeStandardIso />
+        </IllustrationPanel>
+
+        {/* ── VP3 Iso: Design As Build ── */}
+        <SectionTitle
+          title="VP3 Iso — Design As Build"
+          description="&quot;설계가 곧 구현이 되는 장면&quot; — Card 컴포넌트를 4개 레이어(Container/Header/Content/Actions)로 분해한 익스플로디드 뷰. 좌측 구조 인덱스 + 우측 CSS 속성 어노테이션 + 상면 아이소메트릭 텍스트."
+        />
+        <IllustrationPanel
+          label="DesignAsBuildIso"
+          sublabel="layers: 4 · w: 7u · exploded view · top face content · CSS annotations"
+          maxWidth={560}
+        >
+          <DesignAsBuildIso />
+        </IllustrationPanel>
+
+        <Box sx={{ borderBottom: '1px solid', borderColor: 'divider', my: 8 }} />
 
         {/* ── VP1: System Over Drawing ── */}
         <SectionTitle

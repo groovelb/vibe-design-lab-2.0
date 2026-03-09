@@ -79,7 +79,7 @@ export const PAGES = {
       ],
       learning: _PROBLEM.learning.lines.map((l) => l.text).join(' '),
       learningDetails: [
-        { problem: 'VOD 한계', text: '혼자 듣는 VOD는 혼자 막히고 혼자 포기한다' },
+        { problem: 'VOD 한계', text: '혼자 wls듣는 VOD는 혼자 막히고 혼자 포기한다' },
         { problem: '도구 종속', text: '도구 사용법을 배워도 도구가 바뀌면 처음부터다' },
         { problem: '학습 단절', text: '코스가 끝나면 끝이다. 쌓이는 게 없다' },
       ],
@@ -87,6 +87,50 @@ export const PAGES = {
     howDifferent: {
       headline: '도구 이전에, 언어 체계.',
       subCopy: '도구는 바뀌어도 설계의 기준은 남습니다',
+      details: [
+        {
+          tabLabel: 'Design Context',
+          headline: '디자인 산출물이 AI의 컨텍스트가 된다',
+          description:
+            '기획서, UX 플로우, 레퍼런스 보드 — 디자이너가 이미 만드는 문서가 Claude Code의 설계 맥락이 됩니다. Storybook 위에서 디자인 시스템의 동작을 직접 확인하며, 의도와 구현 사이의 거리를 줄입니다.',
+        },
+        {
+          tabLabel: 'Design Taxonomy',
+          headline: '이름을 붙이면 의도가 전달된다',
+          description:
+            'Vibe Dictionary는 UX·UI 패턴을 택소노미로 분류합니다. 히어로 섹션, 카드 그리드, Bento 레이아웃 — 명명된 패턴은 AI에게도 동료에게도 같은 결과를 만듭니다. 모호한 프롬프트 대신 정밀한 디자인 어휘로 지시합니다.',
+        },
+        {
+          tabLabel: 'Meta-language',
+          headline: '설계의 상세도가 제품의 완성도를 결정한다',
+          description:
+            'UX 시나리오의 깊이가 데이터 모델과 API 구조를 결정합니다. 디자인 시스템의 토큰과 규칙이 창의적 스타일링의 정밀한 구현을 가능하게 합니다. 디자인은 화면의 일부가 아니라, 제품 전체를 설계하는 메타언어입니다.',
+        },
+      ],
+    },
+    learningMethod: {
+      headline: '어떻게 배우는가',
+      subCopy: 'VOD가 아니라 커뮤니티다',
+      methods: [
+        {
+          label: '커뮤니티 학습',
+          title: '코스 하나가 하나의 커뮤니티다',
+          description:
+            '챕터마다 동료의 질문과 결과물이 보인다. 혼자 듣고 혼자 포기하는 구조가 아니라, 동료 압력이 학습 동력이 된다.',
+        },
+        {
+          label: '맥락 질문 피드',
+          title: '질문은 맥락에 바로 연결된다',
+          description:
+            '게시판에 묻히지 않는다. 챕터별 질문 피드에서 같은 지점을 고민하는 동료의 시행착오가 보인다.',
+        },
+        {
+          label: '콘텐츠 주기',
+          title: '끝나면 끝이 아니다',
+          description:
+            '8주 코스 완주 후에도 커뮤니티에 남는다. 월 1회 예제 업데이트, 연 2회 커리큘럼 개정. 체계는 계속 쌓인다.',
+        },
+      ],
     },
     courseHighlight: {
       headline: '코스',
@@ -94,7 +138,9 @@ export const PAGES = {
       ctaSecondary: '코스 전체 보기 →',
     },
     courseReview: {
-      headline: '멤버가 말하는 경험',
+      headline: '많은 실무자들이 검증한 커리큘럼입니다.',
+      subtitle: '실제 수강생분들의 후기입니다',
+      webinarLabel: '웨비나 참여자',
     },
     dictionaryPreview: {
       headline: '도구가 바뀌어도 남는 체계',

@@ -3,7 +3,6 @@ import { forwardRef } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import { QuotedContainer } from '../typography/QuotedContainer';
 import AspectMedia from '../media/AspectMedia';
 
 /**
@@ -18,6 +17,8 @@ import AspectMedia from '../media/AspectMedia';
  * @param {string} memberName - 멤버 이름 [Required]
  * @param {string} memberRole - 역할 (예: "UX 디자이너, 3년차") [Optional]
  * @param {string} memberPersona - 페르소나 [Optional]
+ * @param {string|object} thumbnailSrc - 포트폴리오 썸네일 이미지 (URL 또는 Next.js static import) [Optional]
+ * @param {string} thumbnailAlt - 썸네일 대체 텍스트 [Optional]
  * @param {string} resultUrl - 결과물 URL [Optional]
  * @param {string} resultImage - 결과물 이미지 [Optional]
  * @param {string} variant - 표시 모드 ('compact' | 'full') [Optional, 기본값: 'compact']
@@ -37,6 +38,8 @@ const TestimonialCard = forwardRef(function TestimonialCard({
   memberName,
   memberRole,
   memberPersona,
+  thumbnailSrc,
+  thumbnailAlt,
   resultUrl,
   resultImage,
   variant = 'compact',
@@ -46,6 +49,7 @@ const TestimonialCard = forwardRef(function TestimonialCard({
 }, ref) {
   const isCompact = variant === 'compact';
   const displayQuote = isCompact && quoteShort ? quoteShort : quote;
+  const imgSrc = typeof thumbnailSrc === 'string' ? thumbnailSrc : thumbnailSrc?.src;
 
   return (
     <Box
@@ -58,52 +62,50 @@ const TestimonialCard = forwardRef(function TestimonialCard({
       }}
       {...props}
     >
-      {/* 썸네일 1:1 */}
-      <Box
-        sx={{
-          width: '100%',
-          aspectRatio: '1/1',
-          border: '1px dashed',
-          borderColor: 'divider',
-        }}
-      />
-      <Stack spacing={2} sx={{ pt: 2 }}>
-        {/* 인용문 */}
-        <QuotedContainer
-          variant="h6"
-          quoteSize="sm"
-          position="inside"
-          sx={{ fontWeight: 700 }}
-        >
-          {displayQuote}
-        </QuotedContainer>
+      {/* 썸네일 */}
+      {imgSrc ? (
+        <Box
+          component="img"
+          src={imgSrc}
+          alt={thumbnailAlt || `${memberName}의 결과물`}
+          sx={{
+            width: '100%',
+            aspectRatio: '1/1',
+            objectFit: 'cover',
+            display: 'block',
+          }}
+        />
+      ) : (
+        <Box
+          sx={{
+            width: '100%',
+            aspectRatio: '1/1',
+            border: '1px dashed',
+            borderColor: 'divider',
+          }}
+        />
+      )}
 
-        {/* 멤버 정보 */}
-        <Stack
-          direction="row"
-          spacing={1}
-          alignItems="center"
-          divider={
-            <Typography
-              component="span"
-              sx={{ color: 'text.disabled', fontSize: '0.75rem' }}
-            >
-              ·
-            </Typography>
-          }
-        >
-          <Typography variant="subtitle2">{memberName}</Typography>
-          {memberRole && (
+      <Stack spacing={1.5} sx={{ pt: 2 }}>
+        {/* 멤버 정보 — 이름 + 역할 수직 배치 */}
+        <Stack spacing={0.25}>
+          <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
+            {memberName}
+          </Typography>
+          {(memberRole || memberPersona) && (
             <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-              {memberRole}
-            </Typography>
-          )}
-          {memberPersona && (
-            <Typography variant="caption" sx={{ color: 'text.disabled' }}>
-              {memberPersona}
+              {[memberRole, memberPersona].filter(Boolean).join(' · ')}
             </Typography>
           )}
         </Stack>
+
+        {/* 인용문 */}
+        <Typography
+          variant="body2"
+          sx={{ color: 'text.secondary', lineHeight: 1.7 }}
+        >
+          {displayQuote}
+        </Typography>
 
         {/* 결과물 미리보기 (full variant에서만) */}
         {!isCompact && resultImage && (

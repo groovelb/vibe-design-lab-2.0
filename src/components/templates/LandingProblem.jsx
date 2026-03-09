@@ -12,11 +12,15 @@ import { PAGES } from '../../data/contents';
 
 const { problem } = PAGES.landing;
 
-const PERSONA_MEDIA = [
+const ALL_PERSONA_MEDIA = [
   { poster: '/persona/canvas_designer.webp', video: '/persona/canvas_designer.mp4' },
   { poster: '/persona/sandwitch_pm.webp', video: '/persona/sandwitch_pm.mp4' },
   { poster: '/persona/pipeline_developer.webp', video: '/persona/pipeline_developer.mp4' },
 ];
+
+// PM(index 1)은 온라인 1기에서 제외 — 데이터는 유지, UI에서만 필터링
+const VISIBLE_INDICES = [0, 2];
+const PERSONA_MEDIA = VISIBLE_INDICES.map((i) => ALL_PERSONA_MEDIA[i]);
 
 /**
  * LandingProblem 섹션 템플릿
@@ -41,8 +45,8 @@ export function LandingProblem() {
           />
         </Box>
         <LineGrid container gap={96} borderColor="divider">
-          {problem.career.map((item, index) => (
-            <Grid key={item.persona} size={{ xs: 12, md: 4 }}>
+          {problem.career.filter((_, i) => VISIBLE_INDICES.includes(i)).map((item, index) => (
+            <Grid key={item.persona} size={{ xs: 12, md: 6 }}>
               <FadeTransition direction="up" delay={index * 100} isTriggerOnView>
                 <StatementCard
                   title={item.persona}

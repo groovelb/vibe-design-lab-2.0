@@ -2,6 +2,7 @@
 import { LandingHero } from '../templates/LandingHero';
 import { LandingProblem } from '../templates/LandingProblem';
 import { LandingDifference } from '../templates/LandingDifference';
+import { LandingLearningMethod } from '../templates/LandingLearningMethod';
 import { LandingCourseHighlight } from '../templates/LandingCourseHighlight';
 import { LandingCourseReview } from '../templates/LandingCourseReview';
 import { LandingDictionaryPreview } from '../templates/LandingDictionaryPreview';
@@ -17,8 +18,9 @@ import { PageContainer } from '../layout/PageContainer';
  *
  * 퍼널 흐름:
  * Hook (Hero) → Pain (Problem) → Solution (Difference) →
- * Offer (Course Highlight) → Proof (Course Review) →
- * Trust (Dictionary) → Belonging (Community) → Final CTA
+ * Method (Learning Method) → Offer (Course Highlight) →
+ * Proof (Course Review) → Trust (Dictionary) →
+ * Belonging (Community) → Final CTA
  *
  * Example usage:
  * <LandingPage />
@@ -30,6 +32,7 @@ export function LandingPage() {
       <PageContainer>
         <LandingProblem />
         <LandingDifference />
+        <LandingLearningMethod />
         <LandingCourseHighlight />
         <LandingCourseReview />
         <LandingDictionaryPreview />

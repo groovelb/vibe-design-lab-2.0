@@ -1,5 +1,11 @@
 'use client';
+import { useState } from 'react';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
+import Avatar from '@mui/material/Avatar';
 import { SectionContainer } from '../container/SectionContainer';
 import LineGrid from '../layout/LineGrid';
 import { TestimonialCard } from '../card/TestimonialCard';
@@ -7,49 +13,166 @@ import FadeTransition from '../motion/FadeTransition';
 import { SectionDivider } from '../typography/SectionDivider';
 import { SectionTitle } from '../typography/SectionTitle';
 import { PAGES } from '../../data/contents';
-import { MOCK_TESTIMONIALS } from '../../data/landingMockData';
+import { courseReviews, webinarReviews } from '../../data/review';
 
 const { courseReview } = PAGES.landing;
+
+const VISIBLE_COURSE_COUNT = 3;
+const VISIBLE_WEBINAR_COUNT = 3;
+const TRUNCATE_LENGTH = 120;
+
+function truncateText(text, maxLength) {
+  if (text.length <= maxLength) return text;
+  return text.slice(0, maxLength) + '…';
+}
+
+function maskUserId(userId) {
+  if (userId.length <= 5) return userId;
+  return userId.slice(0, 3) + '***' + userId.slice(-2);
+}
+
+function formatRole(review) {
+  if (review.company) return `${review.role} · ${review.company}`;
+  return review.role;
+}
 
 /**
  * LandingCourseReview 섹션 템플릿
  *
- * "멤버가 말하는 경험" — 수강생 증언을 표시하는 섹션.
- * split 헤더: 좌측 overline + 대형 헤드라인.
- * 페르소나별(디자이너, PM, 개발자) 1명씩 3개의 TestimonialCard를 배치한다.
+ * 코스 수강생 후기 + 웨비나 참여자 후기 2단 구성.
+ * 코스 후기: 포트폴리오 썸네일 + 이름/직무 + 리뷰 텍스트 (3컬럼).
+ * 웨비나 후기: 아바타 + 마스킹된 유저ID + 플랫폼 + 리뷰 텍스트 (3컬럼).
  *
  * Example usage:
  * <LandingCourseReview />
  */
 export function LandingCourseReview() {
+  const [expandedCourse, setExpandedCourse] = useState({});
+  const [expandedWebinar, setExpandedWebinar] = useState({});
+
+  const visibleCourseReviews = courseReviews.slice(0, VISIBLE_COURSE_COUNT);
+  const visibleWebinarReviews = webinarReviews.slice(0, VISIBLE_WEBINAR_COUNT);
+
   return (
     <SectionContainer>
+      {/* ── 코스 후기 헤더 ── */}
+      <FadeTransition direction="up" isTriggerOnView>
+        <SectionDivider label="Review" sx={{ mb: 3 }} />
+        <SectionTitle
+          headline={courseReview.headline}
+          subtitle={courseReview.subtitle}
+          sx={{ mb: { xs: 6, md: 10 } }}
+        />
+      </FadeTransition>
+
+      {/* ── 코스 후기 카드 — 3컬럼 ── */}
+      <LineGrid container gap={96} borderColor="divider">
+        {visibleCourseReviews.map((review, index) => (
+          <Grid key={review.name} size={{ xs: 12, md: 4 }}>
+            <FadeTransition direction="up" delay={index * 150} isTriggerOnView>
+              <TestimonialCard
+                thumbnailSrc={review.image}
+                thumbnailAlt={`${review.name}의 결과물`}
+                quote={
+                  expandedCourse[index]
+                    ? review.content
+                    : truncateText(review.content, TRUNCATE_LENGTH)
+                }
+                memberName={review.name}
+                memberRole={formatRole(review)}
+                variant="compact"
+                cardVariant="editorial"
+              />
+              {review.content.length > TRUNCATE_LENGTH && (
+                <Button
+                  variant="text"
+                  size="small"
+                  onClick={() =>
+                    setExpandedCourse((prev) => ({
+                      ...prev,
+                      [index]: !prev[index],
+                    }))
+                  }
+                  sx={{ mt: 0.5, p: 0, minWidth: 0 }}
+                >
+                  {expandedCourse[index] ? '접기' : '더보기'}
+                </Button>
+              )}
+            </FadeTransition>
+          </Grid>
+        ))}
+      </LineGrid>
+
+      {/* ── 웨비나 참여자 후기 ── */}
+      <Box sx={{ mt: { xs: 8, md: 12 } }}>
         <FadeTransition direction="up" isTriggerOnView>
-          <SectionDivider label="Review" sx={{ mb: 3 }} />
-          <SectionTitle
-            headline={courseReview.headline}
-            sx={{ mb: { xs: 6, md: 10 } }}
+          <SectionDivider
+            label={courseReview.webinarLabel}
+            sx={{ mb: { xs: 4, md: 6 } }}
           />
         </FadeTransition>
 
-        {/* 후기 카드 3열 */}
         <LineGrid container gap={96} borderColor="divider">
-          {MOCK_TESTIMONIALS.map((testimonial, index) => (
-            <Grid key={testimonial.id} size={{ xs: 12, md: 4 }}>
-              <FadeTransition direction="up" delay={index * 150} isTriggerOnView>
-                <TestimonialCard
-                  quote={testimonial.quote}
-                  quoteShort={testimonial.quoteShort}
-                  memberName={testimonial.memberName}
-                  memberRole={testimonial.memberRole}
-                  variant="compact"
-                  cardVariant="editorial"
-                  sx={{ height: '100%' }}
-                />
+          {visibleWebinarReviews.map((review, index) => (
+            <Grid key={review.userId} size={{ xs: 12, md: 4 }}>
+              <FadeTransition direction="up" delay={index * 100} isTriggerOnView>
+                <Stack spacing={1.5}>
+                  {/* 유저 정보 */}
+                  <Stack direction="row" spacing={1.5} alignItems="center">
+                    <Avatar
+                      sx={{
+                        width: 36,
+                        height: 36,
+                        bgcolor: 'action.hover',
+                        fontSize: '0.75rem',
+                        color: 'text.disabled',
+                      }}
+                    />
+                    <Stack spacing={0}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                        @{maskUserId(review.userId)}
+                      </Typography>
+                      <Typography
+                        variant="caption"
+                        sx={{ color: 'text.disabled' }}
+                      >
+                        Threads
+                      </Typography>
+                    </Stack>
+                  </Stack>
+
+                  {/* 리뷰 본문 */}
+                  <Typography
+                    variant="body2"
+                    sx={{ color: 'text.secondary', lineHeight: 1.7 }}
+                  >
+                    {expandedWebinar[index]
+                      ? review.content
+                      : truncateText(review.content, TRUNCATE_LENGTH)}
+                  </Typography>
+
+                  {/* 더보기 */}
+                  {review.content.length > TRUNCATE_LENGTH && (
+                    <Button
+                      variant="text"
+                      size="small"
+                      onClick={() =>
+                        setExpandedWebinar((prev) => ({
+                          ...prev,
+                          [index]: !prev[index],
+                        }))
+                      }
+                      sx={{ p: 0, minWidth: 0, alignSelf: 'flex-start' }}
+                    >
+                      {expandedWebinar[index] ? '접기' : '더보기'}
+                    </Button>
+                  )}
+                </Stack>
               </FadeTransition>
             </Grid>
           ))}
         </LineGrid>
+      </Box>
     </SectionContainer>
   );
 }

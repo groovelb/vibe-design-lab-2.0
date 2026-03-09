@@ -6,31 +6,24 @@
  */
 
 // ============================================================
-// 코스 카드 (2개)
+// 코스 카드 (1개 — Vibe Design Starter Kit)
 // ============================================================
 
-export const MOCK_COURSES = [
+export const COURSES = [
   {
-    slug: 'vibe-coding-for-designers',
-    title: '디자이너를 위한 바이브 코딩',
-    subtitle: 'Figma에서 코드까지, 디자인 의도를 끝까지 통제하는 법',
-    target: '캔버스 디자이너',
+    slug: 'vibe-design-starter-kit',
+    title: 'Vibe Design Starter Kit',
+    subtitle: '디자인 자체를 구현 수단으로 활용하는 바이브 코딩 실전 코스',
+    target: '프로덕트 디자이너 · 프론트엔드 개발자',
     duration: '8주',
-    chapters: 12,
+    chapters: 4,
     cohortStatus: 'recruiting',
-    cohortNumber: 3,
-  },
-  {
-    slug: 'design-system-language',
-    title: '디자인 시스템 언어 체계',
-    subtitle: '토큰, 패턴, 네이밍 — AI가 알아듣는 디자인 언어를 설계한다',
-    target: 'PM · 개발자',
-    duration: '6주',
-    chapters: 9,
-    cohortStatus: 'upcoming',
     cohortNumber: 1,
   },
 ];
+
+/** @deprecated COURSES를 사용하세요 */
+export const MOCK_COURSES = COURSES;
 
 // ============================================================
 // 멤버 후기 (3개 — 페르소나별 1명)
