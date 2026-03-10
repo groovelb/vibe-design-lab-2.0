@@ -1,5 +1,6 @@
 import { LandingHero } from '../../components/templates/LandingHero';
 import { LandingProblem } from '../../components/templates/LandingProblem';
+import { LandingWhyVibeDesign } from '../../components/templates/LandingWhyVibeDesign';
 import { LandingDifference } from '../../components/templates/LandingDifference';
 import { LandingCourseHighlight } from '../../components/templates/LandingCourseHighlight';
 import { LandingCourseReview } from '../../components/templates/LandingCourseReview';
@@ -16,7 +17,7 @@ export default {
         component: `
 ## Landing 섹션 템플릿
 
-Landing 페이지를 구성하는 8개 섹션 템플릿.
+Landing 페이지를 구성하는 9개 섹션 템플릿.
 각 섹션은 전환 퍼널의 한 단계를 담당한다.
         `,
       },
@@ -36,38 +37,44 @@ export const S2_Problem = {
   render: () => <LandingProblem />,
 };
 
-/** S3. Solution — "VOD가 아니다" */
-export const S3_Difference = {
-  name: 'S3. Difference',
+/** S3. Why — "빠진 건 코딩이 아니라 디자인이다" */
+export const S3_WhyVibeDesign = {
+  name: 'S3. Why Vibe Design',
+  render: () => <LandingWhyVibeDesign />,
+};
+
+/** S4. Solution — "VOD가 아니다" */
+export const S4_Difference = {
+  name: 'S4. Difference',
   render: () => <LandingDifference />,
 };
 
-/** S4. Offer — "이 코스가 해결한다" */
-export const S4_CourseHighlight = {
-  name: 'S4. Course Highlight',
+/** S5. Offer — "이 코스가 해결한다" */
+export const S5_CourseHighlight = {
+  name: 'S5. Course Highlight',
   render: () => <LandingCourseHighlight />,
 };
 
-/** S5. Proof — "실제 멤버가 증명한다" */
-export const S5_CourseReview = {
-  name: 'S5. Course Review',
+/** S6. Proof — "실제 멤버가 증명한다" */
+export const S6_CourseReview = {
+  name: 'S6. Course Review',
   render: () => <LandingCourseReview />,
 };
 
-/** S6. Trust — "체계가 실재한다" */
-export const S6_DictionaryPreview = {
-  name: 'S6. Dictionary Preview',
+/** S7. Trust — "체계가 실재한다" */
+export const S7_DictionaryPreview = {
+  name: 'S7. Dictionary Preview',
   render: () => <LandingDictionaryPreview />,
 };
 
-/** S7. Belonging — "지금도 일어나고 있다" */
-export const S7_CommunitySnapshot = {
-  name: 'S7. Community Snapshot',
+/** S8. Belonging — "지금도 일어나고 있다" */
+export const S8_CommunitySnapshot = {
+  name: 'S8. Community Snapshot',
   render: () => <LandingCommunitySnapshot />,
 };
 
-/** S8. Final CTA — "시작합니다" */
-export const S8_FooterCTA = {
-  name: 'S8. Footer CTA',
+/** S9. Final CTA — "시작합니다" */
+export const S9_FooterCTA = {
+  name: 'S9. Footer CTA',
   render: () => <LandingFooterCTA />,
 };

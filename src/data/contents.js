@@ -10,6 +10,7 @@ import {
   BRAND as _BRAND,
   PERSONAS as _PERSONAS,
   PROBLEM_DEFINITION as _PROBLEM,
+  MYTH_BUSTING as _MYTHS,
   WEBSITE_COPY,
 } from './verbalIdentity';
 
@@ -87,6 +88,14 @@ export const PAGES = {
         { problem: 'VOD 한계', text: '혼자 wls듣는 VOD는 혼자 막히고 혼자 포기한다' },
         { problem: '도구 종속', text: '도구 사용법을 배워도 도구가 바뀌면 처음부터다' },
         { problem: '학습 단절', text: '코스가 끝나면 끝이다. 쌓이는 게 없다' },
+      ],
+    },
+    whyVibeDesign: {
+      statement: '그동안 디자인은 과소평가 당해왔습니다. 연출이 아닌 설계로서의 디자인은, 의도를 구현으로 바꾸는 가장 정밀한 언어입니다.',
+      myths: [
+        { label: '도구의 편견', conventional: _MYTHS[0].conventional, reversal: _MYTHS[0].reversal },
+        { label: '디자인의 편견', conventional: _MYTHS[1].conventional, reversal: _MYTHS[1].reversal },
+        { label: '스킬의 편견', conventional: _MYTHS[2].conventional, reversal: _MYTHS[2].reversal },
       ],
     },
     howDifferent: {

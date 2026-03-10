@@ -1,6 +1,7 @@
 'use client';
 import { LandingHero } from '../templates/LandingHero';
 import { LandingProblem } from '../templates/LandingProblem';
+import { LandingWhyVibeDesign } from '../templates/LandingWhyVibeDesign';
 import { LandingDifference } from '../templates/LandingDifference';
 import { LandingLearningMethod } from '../templates/LandingLearningMethod';
 import { LandingCourseHighlight } from '../templates/LandingCourseHighlight';
@@ -14,13 +15,13 @@ import { PageContainer } from '../layout/PageContainer';
  * LandingPage 컴포넌트
  *
  * VDL Landing 페이지 콘텐츠를 조립하는 페이지 컴포넌트.
- * 8개 섹션 템플릿으로 구성된 자체 완결형 전환 퍼널.
+ * 9개 섹션 템플릿으로 구성된 자체 완결형 전환 퍼널.
  *
  * 퍼널 흐름:
- * Hook (Hero) → Pain (Problem) → Solution (Difference) →
- * Method (Learning Method) → Offer (Course Highlight) →
- * Proof (Course Review) → Trust (Dictionary) →
- * Belonging (Community) → Final CTA
+ * Hook (Hero) → Pain (Problem) → Why (인식전환) →
+ * Solution (Difference) → Method (Learning Method) →
+ * Offer (Course Highlight) → Proof (Course Review) →
+ * Trust (Dictionary) → Belonging (Community) → Final CTA
  *
  * Example usage:
  * <LandingPage />
@@ -31,6 +32,7 @@ export function LandingPage() {
       <LandingHero />
       <PageContainer>
         <LandingProblem />
+        <LandingWhyVibeDesign />
         <LandingDifference />
         <LandingLearningMethod />
         <LandingCourseHighlight />

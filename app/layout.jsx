@@ -19,6 +19,9 @@ export default function RootLayout({ children }) {
       className={ `${inter.variable} ${suit.variable} ${ibmPlexMono.variable}` }
       suppressHydrationWarning
     >
+      <head>
+        <meta name="darkreader-lock" />
+      </head>
       <body>
         <InitColorSchemeScript attribute="data-mui-color-scheme" defaultMode="dark" />
         <ThemeRegistry>

@@ -34,6 +34,11 @@ suitStyle.textContent = `
 `;
 document.head.appendChild(suitStyle);
 
+// Dark Reader 확장 프로그램 차단
+const darkreaderLock = document.createElement('meta');
+darkreaderLock.name = 'darkreader-lock';
+document.head.appendChild(darkreaderLock);
+
 /** @type { import('@storybook/nextjs').Preview } */
 const preview = {
   parameters: {

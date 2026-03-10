@@ -13,7 +13,7 @@ VDL의 자체 완결형 전환 퍼널.
 방문자가 이 한 페이지만으로 서사를 완주한다.
 
 **퍼널 흐름:**
-Hook (Hero) → Pain (Problem) → Solution (Difference) → Offer (Course Highlight) → Proof (Course Review) → Trust (Dictionary) → Belonging (Community) → Final CTA
+Hook (Hero) → Pain (Problem) → Why (인식전환) → Solution (Difference) → Offer (Course Highlight) → Proof (Course Review) → Trust (Dictionary) → Belonging (Community) → Final CTA
         `,
       },
     },
