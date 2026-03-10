@@ -44,7 +44,7 @@ export function LandingProblem() {
             sx={{ letterSpacing: '-0.02em', wordSpacing: '0.15em', '& .MuiTypography-root': { lineHeight: 1.71 } }}
           />
         </Box>
-        <LineGrid container gap={96} borderColor="divider">
+        <LineGrid container gap={144} borderColor="divider">
           {problem.career.filter((_, i) => VISIBLE_INDICES.includes(i)).map((item, index) => (
             <Grid key={item.persona} size={{ xs: 12, md: 6 }}>
               <FadeTransition direction="up" delay={index * 100} isTriggerOnView>

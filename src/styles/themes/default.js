@@ -161,9 +161,9 @@ const typography = {
     textTransform: 'uppercase',
   },
 
-  // 신규 variant — Display (Inter)
+  // 신규 variant — Display (SUIT for 한글, Inter for 영문 fallback)
   display: {
-    fontFamily: brandFamily,
+    fontFamily: suitFamily,
     fontWeight: 700,
     fontSize: 'clamp(4rem, 7vw, 5rem)',
     lineHeight: 1.1,

@@ -55,8 +55,13 @@ export const PAGES = {
   // ----- Landing (/) -----
   landing: {
     hero: {
-      headline: '사고와 구현의 주체를 일치시키는 디자인 언어',
-      subCopy: '바이브 코딩 위의 디자인 언어를 연구합니다.',
+      headline: '바이브 코딩, 감으로 하지 않습니다',
+      subCopy: '바이브 코딩에서 작동하는 디자인 언어 체계를 배웁니다',
+      painPoints: [
+        { label: '의도의 설계', text: 'UX 설계로 정확한 의도를 전달합니다' },
+        { label: '정밀한 어휘', text: '디자인 택소노미로 AI 클리셰를 벗어납니다' },
+        { label: '구현의 설계도', text: '디자인 자체로 구현의 설계도를 완성합니다' },
+      ],
     },
     problem: {
       market: _PROBLEM.market.lines.map((l) => l.text).join(' '),

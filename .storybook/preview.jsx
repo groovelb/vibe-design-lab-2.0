@@ -79,7 +79,7 @@ const preview = {
     (Story) => (
       <ThemeProvider theme={defaultTheme}>
         <CssBaseline enableColorScheme />
-        <div style={ { width: '100%', paddingTop: '40px' } }>
+        <div style={ { width: '100%' } }>
           <Story />
         </div>
       </ThemeProvider>
