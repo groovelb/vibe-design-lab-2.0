@@ -2,6 +2,7 @@
 import { forwardRef, useEffect, useRef, useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import { PixelContainer } from '../container/PixelContainer';
 
 /**
  * SectionDivider 컴포넌트
@@ -19,7 +20,7 @@ import Typography from '@mui/material/Typography';
  */
 const SectionDivider = forwardRef(function SectionDivider({
   label,
-  duration = 800,
+  duration = 400,
   sx,
   ...props
 }, ref) {
@@ -54,28 +55,33 @@ const SectionDivider = forwardRef(function SectionDivider({
       sx={{
         display: 'flex',
         alignItems: 'center',
-        gap: 2,
+        gap: 0,
         ...sx,
       }}
       {...props}
     >
-      <Typography
-        variant="overline"
-        sx={{
-          color: 'text.disabled',
-          bgcolor: 'background.default',
-          pr: 2,
-          flexShrink: 0,
-          opacity: isVisible ? 1 : 0.01,
-          transition: `opacity 400ms ease ${duration * 0.2}ms`,
-          '@media (prefers-reduced-motion: reduce)': {
-            transition: 'none',
-            opacity: 1,
-          },
-        }}
+      <PixelContainer
+        direction="left"
+        pixelSize={4}
+        duration={600}
+        sx={{ flexShrink: 0, px: 2, py: 1 }}
       >
-        {label}
-      </Typography>
+        <Typography
+          variant="overline"
+          sx={{
+            color: 'text.disabled',
+            textAlign: 'center',
+            opacity: isVisible ? 1 : 0.01,
+            transition: `opacity 400ms ease ${duration * 0.2}ms`,
+            '@media (prefers-reduced-motion: reduce)': {
+              transition: 'none',
+              opacity: 1,
+            },
+          }}
+        >
+          {label}
+        </Typography>
+      </PixelContainer>
       <Box
         sx={{
           flex: 1,

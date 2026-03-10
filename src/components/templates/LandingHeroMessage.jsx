@@ -1,7 +1,7 @@
 'use client';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
+import { PixelButton } from '../input/PixelButton';
 import FadeTransition from '../motion/FadeTransition';
 import { PAGES } from '../../data/contents';
 
@@ -31,11 +31,9 @@ export function LandingHeroMessage() {
         </Typography>
       </FadeTransition>
 
-      <FadeTransition direction="up" delay={400} isTriggerOnView>
-        <Button variant="contained" size="large" href="/course" sx={{ mt: 8 }}>
-          {footerCta.cta}
-        </Button>
-      </FadeTransition>
+      <PixelButton size="large" pixelSize={2} href="/course" isTriggerOnView duration={400} sx={{ mt: 8 }}>
+        {footerCta.cta}
+      </PixelButton>
     </>
   );
 }

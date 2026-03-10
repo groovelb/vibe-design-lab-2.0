@@ -11,6 +11,7 @@ import {
   PERSONAS as _PERSONAS,
   PROBLEM_DEFINITION as _PROBLEM,
   MYTH_BUSTING as _MYTHS,
+  PHILOSOPHY as _PHILOSOPHY,
   WEBSITE_COPY,
 } from './verbalIdentity';
 
@@ -91,11 +92,11 @@ export const PAGES = {
       ],
     },
     whyVibeDesign: {
-      statement: '그동안 디자인은 과소평가 당해왔습니다. 연출이 아닌 설계로서의 디자인은, 의도를 구현으로 바꾸는 가장 정밀한 언어입니다.',
+      statement: '그동안 디자인은 과소평가 당해왔습니다. 연출이 아닌 설계로서의 디자인은, 바이브 코딩에서 가장 정확한 표현 수단입니다.',
       myths: [
-        { label: '도구의 편견', conventional: _MYTHS[0].conventional, reversal: _MYTHS[0].reversal },
-        { label: '디자인의 편견', conventional: _MYTHS[1].conventional, reversal: _MYTHS[1].reversal },
-        { label: '스킬의 편견', conventional: _MYTHS[2].conventional, reversal: _MYTHS[2].reversal },
+        { label: '도구의 편견', philosophy: _PHILOSOPHY[0].belief, conventional: '더 좋은 AI 모델이 나오면 결과물이 좋아진다', reversal: '결과를 바꾸는 건 모델의 성능이 아니라 내 의도를 날카롭게 깎는 훈련입니다. 해석의 여지가 없는 언어는 LLM에게 가장 좋은 설계도입니다.' },
+        { label: '디자인의 편견', philosophy: _PHILOSOPHY[2].belief, conventional: '일단 만들고, 디자인은 나중에 입히면 된다', reversal: '디자인은 설계와 구현을 동시에 담당하는 언어입니다. 기준을 정의하는 순간, 구현은 이미 시작됩니다.' },
+        { label: '스킬의 편견', philosophy: _PHILOSOPHY[1].belief, conventional: '새 스킬을 빨리 배워야 살아남는다', reversal: '스킬은 도구와 함께 바뀝니다. 도구가 바뀌어도 작동하는 건 경험이 축적된 언어 체계입니다.' },
       ],
     },
     howDifferent: {
@@ -123,26 +124,26 @@ export const PAGES = {
       ],
     },
     learningMethod: {
-      headline: '어떻게 배우는가',
-      subCopy: 'VOD가 아니라 커뮤니티다',
+      headline: '리드와 참여자가 함께 만들어갑니다.',
+      subCopy: '정적인 VOD가 아닌, 챌린지 중심 피어 학습',
       methods: [
         {
-          label: '커뮤니티 학습',
-          title: '코스 하나가 하나의 커뮤니티다',
+          label: '연결된 환경',
+          title: '리드와 참여자가 연결되있습니다',
           description:
-            '챕터마다 동료의 질문과 결과물이 보인다. 혼자 듣고 혼자 포기하는 구조가 아니라, 동료 압력이 학습 동력이 된다.',
+            'Discord와 학습 플랫폼에서 리드와 수강생이 실시간으로 연결됩니다. 챕터마다 챌린지를 수행하고, 서로의 진행 상황이 보입니다. 듣고 끝나는 VOD와 구조가 다릅니다.',
         },
         {
-          label: '맥락 질문 피드',
-          title: '질문은 맥락에 바로 연결된다',
+          label: '학습 경험 공유',
+          title: '모든 질의 응답이 기록됩니다',
           description:
-            '게시판에 묻히지 않는다. 챕터별 질문 피드에서 같은 지점을 고민하는 동료의 시행착오가 보인다.',
+            '질문은 해당 챕터에 바로 연결됩니다. 같은 지점을 고민한 동료의 질문과 시행착오도 함께 보입니다. 게시판에 묻히는 질문이 아니라, 맥락이 보존된 피어 학습 기록입니다.',
         },
         {
-          label: '콘텐츠 주기',
-          title: '끝나면 끝이 아니다',
+          label: '참여자 주도',
+          title: '커리큘럼에 참여자 의견이 반영됩니다',
           description:
-            '8주 코스 완주 후에도 커뮤니티에 남는다. 월 1회 예제 업데이트, 연 2회 커리큘럼 개정. 체계는 계속 쌓인다.',
+            '코스 완주 후에도 추가 웨비나에 참여하고, 연 2회 커리큘럼 개정에 직접 의견을 제시할 수 있습니다. 듣는 사람이 아니라 만드는 사람으로 남습니다.',
         },
       ],
     },

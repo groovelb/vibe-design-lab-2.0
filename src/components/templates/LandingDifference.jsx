@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
+import { PixelButton } from '../input/PixelButton';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import IconButton from '@mui/material/IconButton';
@@ -63,19 +63,14 @@ export function LandingDifference() {
                 description={vp.description}
               />
               {howDifferent.details?.[index] && (
-                <Button
-                  variant="contained"
+                <PixelButton
+                  isTriggerOnView
                   size="small"
                   onClick={() => setOpenIndex(index)}
-                  sx={{
-                    mt: 2,
-                    bgcolor: 'common.white',
-                    color: 'common.black',
-                    '&:hover': { bgcolor: 'grey.200' },
-                  }}
+                  sx={{ mt: 2 }}
                 >
                   자세히
-                </Button>
+                </PixelButton>
               )}
             </FadeTransition>
           </Grid>
