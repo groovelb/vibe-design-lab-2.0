@@ -199,15 +199,159 @@ export const PAGES = {
         cohort: '코호트',
       },
     },
+    hero: {
+      badge: '온라인 얼리버드 모집',
+      subCopy: '디자인 사고로 제품을 설계하는 바이브 코딩',
+      description: '최근 실리콘밸리에서는 바이브 코딩을 새로운 디자인 툴로 활용하며, 디자인을 "제품의 구조와 동작을 설계하는 언어"로 바라보고 있습니다. 즉 잘 설계된 디자인 산출물이 최고의 바이브 코딩 인풋이라는 관점인거죠.\n\n이 흐름의 시사점은 분명합니다. 디자이너와 개발자 모두 UX와 미감이라는 디자인 계층을 더 잘 이해해야합니다. 이번 코스는 준비된 Starter Kit과 함께 디자인 자체를 구현 수단으로 활용하는 연습을 하는걸 목표로 합니다.',
+      price: '1차 얼리버드 신청자 25% 할인',
+      priceNote: '오프라인 코스 피드백을 받아 최종 커리큘럼이 확정됩니다.',
+      ctaLabel: '온라인 얼리버드 신청',
+    },
+    learningGoals: {
+      dividerLabel: 'Learning Goals',
+      goals: [
+        {
+          label: '도구',
+          title: '바이브 코딩을 디자인 툴처럼',
+          badges: ['React.js', 'Storybook'],
+        },
+        {
+          label: 'AI 어시스턴트',
+          title: 'AI 어시스턴트를 실시간 멘토로',
+          badges: ['Cursor', 'Claude'],
+        },
+        {
+          label: '접근 방식',
+          title: '디자인 중심 사고로 명확하게',
+          badges: ['Figma', 'MUI', 'Storybook'],
+        },
+      ],
+    },
+    targetAudience: {
+      dividerLabel: 'Target',
+      headline: '이런분들께 추천하는 코스입니다.',
+      subCopy: '바이브 코딩 활용도가 높은 3개 직무에 최적화된 코스입니다.',
+    },
+    courseReview: {
+      dividerLabel: 'Review',
+      headline: '많은 실무자들이 검증한 커리큘럼입니다.',
+      subtitle: '실제 수강생분들의 후기입니다',
+      webinarLabel: '웨비나 참여자',
+    },
+    vision: {
+      dividerLabel: 'Vision',
+      headline: '탑티어 디자이너와 개발자는\n앞으로 어떻게 일할까?',
+      cards: [
+        {
+          title: '바이브 디자이너',
+          subtitle: '"디자인과 구현을 일체화"',
+          description: '바이브 코딩을 종합적인 디자인 툴로 활용합니다. 화면 구조와 톤을 설계한 뒤, 그 설계를 바로 동작하는 제품 화면까지 이어 붙이는 걸 목표로 합니다.',
+        },
+        {
+          title: '메이커 개발자',
+          subtitle: '"화면과 기능을 한 번에 설계"',
+          description: '바이브 코딩 환경에서 바로 사용자 경험을 설계하고 검증하는 작업 방식으로 활용합니다. 로직뿐만 아니라 디자인 규칙도 패턴화할 수 있다는걸 이해합니다.',
+        },
+      ],
+    },
+    showcase: {
+      dividerLabel: 'Showcase',
+      headline: '탑티어들은 매번\n처음부터 만들지 않습니다',
+      subCopy: '4만뷰 예제 4시간만에 만든 비결',
+      description: '준비된 스타터 키트를 출발점으로 삼았기에 개발까지 고작 4시간 안에 끝낼 수 있었습니다.\n무엇을 만들지를 좁혀 주고, "어떻게"는 미리 정리된 디자인 계층 안에서 해결합니다.',
+    },
+    role: {
+      dividerLabel: 'Role',
+      headline: '현실의 문제들을 해결해줍니다.',
+      cards: [
+        {
+          problem: '개발 환경 세팅, 시작부터 지치는 디자이너',
+          solution: '이미 세팅이 완료된 디자인 친화적 바이브 코딩환경',
+        },
+        {
+          problem: '디자인에 더 많은 시간을 쓰는 개발자',
+          solution: '커스텀과 조립하기 용이한 컴퍼넌트 라이브러리 제공.',
+        },
+        {
+          problem: 'AI스러운 디자인과 색감 문제',
+          solution: '브랜드 톤에 맞춘 디자인 시스템을 최적화 가이드 제공.',
+        },
+        {
+          problem: '프롬프트 누적이 산으로 가는 문제',
+          solution: '처음부터 계층화된 상태에서 시작, 효율적인 트러블 슈팅',
+        },
+      ],
+    },
+    composition: {
+      dividerLabel: 'Starter Kit',
+      headline: '스타터 키트 구성',
+      note: '* 구성 내용은 기수가 진행될수록 계속 업데이트 됩니다.',
+      items: [
+        {
+          title: '코드 스타터',
+          description: '개발환경 완료된 React + MUI + Storybook 템플릿',
+        },
+        {
+          title: '디자인 시스템',
+          description: 'UX 구조, UI 스타일, 토큰이 잡힌 레이어',
+        },
+        {
+          title: '컴포넌트 라이브러리',
+          description: '가이드 프롬프트와 함께 구성된 컴퍼넌트 세트',
+        },
+      ],
+      techBadges: ['React.js', 'MUI', 'Storybook'],
+    },
     curriculum: {
-      headline: '커리큘럼',
+      dividerLabel: 'Curriculum',
+      headline: '철저히 디자인 중심 사고로 시작합니다.',
+      note: '* 모든 세션은 온라인으로 진행됩니다.',
     },
-    learningEnvironment: {
-      headline: '이런 환경에서 배운다',
-      subCopy: '이전 코호트의 실제 학습 장면',
+    faq: {
+      dividerLabel: 'FAQ',
+      headline: '디자이너도 충분히 가능합니다, 개발자는 디자인 실력 up!',
     },
-    testimonials: {
-      headline: '멤버 이야기',
+    instructor: {
+      dividerLabel: 'Instructor',
+      headline: '10년차 디발자의 노하우를 전수해드립니다.',
+      projectsLabel: '참여 프로젝트',
+    },
+    schedule: {
+      dividerLabel: 'Schedule',
+      headline: '수업 일정 - 온라인 4주간 진행',
+    },
+    earlyBird: {
+      dividerLabel: 'Early Bird',
+      headline: '온라인 얼리버드 특별혜택',
+      subCopy: '얼리버드 기간에만 제공되는 특별 혜택입니다.',
+      benefits: [
+        {
+          title: 'DDD의 멘토링 가능',
+          description: '강사와 1:1 온라인 피드백 및 멘토링을 받을 수 있습니다.',
+        },
+        {
+          title: '얼리버드 할인 적용',
+          description: '정가 대비 할인된 가격으로 수강할 수 있습니다.',
+        },
+        {
+          title: '코스 피드백 기회',
+          description: '코스 커리큘럼에 의견을 반영할 기회를 드립니다.',
+        },
+      ],
+    },
+    cta: {
+      headline: '신청하세요',
+      ctaLabel: '온라인 얼리버드 신청',
+      webinar: {
+        label: '지난 웨비나 다시 보기',
+        description: '지난주 웨비나 영상을 통해 바이브 코딩 흐름을 미리 확인하세요.',
+        ctaLabel: '영상 보기',
+      },
+      inquiry: {
+        label: '강의 문의 및 팀 도입',
+        description: '강의 관련 문의나 팀 도입을 고민 중이라면 간단한 니즈를 알려주세요.',
+        ctaLabel: '이메일 보내기',
+      },
     },
     enrollment: {
       headline: '수강 신청',
@@ -215,6 +359,13 @@ export const PAGES = {
     },
     floatingCta: {
       label: '수강 신청하기',
+    },
+    learningEnvironment: {
+      headline: '이런 환경에서 배운다',
+      subCopy: '이전 코호트의 실제 학습 장면',
+    },
+    testimonials: {
+      headline: '멤버 이야기',
     },
   },
 

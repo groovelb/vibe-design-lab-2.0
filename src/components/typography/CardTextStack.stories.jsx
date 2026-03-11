@@ -9,6 +9,11 @@ export default {
     title: { control: 'text', description: '제목' },
     subtitle: { control: 'text', description: '부제목' },
     description: { control: 'text', description: '설명' },
+    size: {
+      control: 'radio',
+      options: ['md', 'lg'],
+      description: '타이포 사이즈 (md: h4, lg: h3)',
+    },
   },
 };
 
@@ -38,5 +43,15 @@ export const TitleWithDescription = {
   args: {
     title: '정확한 의미 전달',
     description: 'UX 설계로 구조화된 의도를 전달합니다',
+  },
+};
+
+export const Large = {
+  args: {
+    size: 'lg',
+    title: 'Vibe Design Starter Kit',
+    subtitle: '디자인 자체를 구현 수단으로 활용하는 바이브 코딩 실전 코스',
+    description:
+      '디자인 사고로 제품을 설계하는 바이브 코딩. 준비된 Starter Kit과 함께 디자인 자체를 구현 수단으로 활용하는 연습을 합니다.',
   },
 };

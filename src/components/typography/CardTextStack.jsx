@@ -12,6 +12,7 @@ import Typography from '@mui/material/Typography';
  * @param {string} title - 제목 [Required]
  * @param {string} subtitle - 부제목 [Optional]
  * @param {string} description - 설명 [Optional]
+ * @param {string} size - 타이포 사이즈 ('md' | 'lg') [Optional, 기본값: 'md']
  * @param {object} sx - 추가 스타일 [Optional]
  *
  * Example usage:
@@ -20,15 +21,24 @@ import Typography from '@mui/material/Typography';
  *   title="리드와 참여자가 연결되있습니다"
  *   description="Discord와 학습 플랫폼에서..."
  * />
+ * <CardTextStack size="lg" title="큰 제목" subtitle="큰 부제" />
  */
+const sizeMap = {
+  md: { title: 'h4', subtitle: 'h4', description: 'body1', titleUppercase: false },
+  lg: { title: 'h3', subtitle: 'h4', description: 'body1', titleUppercase: true },
+};
+
 const CardTextStack = forwardRef(function CardTextStack({
   label,
   title,
   subtitle,
   description,
+  size = 'md',
   sx,
   ...props
 }, ref) {
+  const variants = sizeMap[size] || sizeMap.md;
+
   return (
     <Stack ref={ref} spacing={2} sx={sx} {...props}>
       {label && (
@@ -44,18 +54,24 @@ const CardTextStack = forwardRef(function CardTextStack({
         </Typography>
       )}
       <Stack spacing={0}>
-        <Typography variant="h4" sx={{ fontWeight: 900 }}>
+        <Typography
+          variant={variants.title}
+          sx={{
+            fontWeight: 900,
+            ...(variants.titleUppercase && { textTransform: 'uppercase', letterSpacing: '0.02em' }),
+          }}
+        >
           {title}
         </Typography>
         {subtitle && (
-          <Typography variant="h4" sx={{ fontWeight: 400, mt: 1, wordBreak: 'keep-all' }}>
+          <Typography variant={variants.subtitle} sx={{ fontWeight: 400, mt: 1, wordBreak: 'keep-all' }}>
             {subtitle}
           </Typography>
         )}
       </Stack>
       {description && (
         <Typography
-          variant="body1"
+          variant={variants.description}
           sx={{ color: 'text.secondary', lineHeight: 1.7, wordBreak: 'keep-all' }}
         >
           {description}
