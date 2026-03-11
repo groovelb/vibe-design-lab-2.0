@@ -48,7 +48,7 @@ const FeatureCard = forwardRef(function FeatureCard({
         </Typography>
         <Typography
           variant="h4"
-          sx={{ fontWeight: 400, mt: 1 }}
+          sx={{ fontWeight: 400, mt: 1, wordBreak: 'keep-all' }}
         >
           {description}
         </Typography>

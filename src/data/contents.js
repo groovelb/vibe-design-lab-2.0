@@ -70,23 +70,23 @@ export const PAGES = {
       career: [
         {
           persona: _PERSONAS.canvasDesigner.label,
-          subtitle: '피그마 벗어나지 못하는 존재감.',
+          subtitle: '피그마 벗어나지 못하는 존재감',
           text: '결정권이 피그마 안에서만 존재합니다. 넘기는 순간 대체 가능한 포지션이 됩니다. 캔버스를 뛰어넘는 디자인 엔지니어가 생존합니다.',
         },
         {
           persona: _PERSONAS.sandwichPM.label,
-          subtitle: '보여줄 게 없어서 말로만 설득하는 한계.',
+          subtitle: '보여줄 게 없어서 말로만 설득하는 한계',
           text: '설득의 도구가 기획서와 말뿐입니다. 점점 의사결정 테이블에서 밀려납니다. 직접 증명하고 기술적 공감대를 주는 PM이 주목받습니다.',
         },
         {
           persona: _PERSONAS.pipelineDev.label,
-          subtitle: '작동은 하지만 왜 어색한지 모르는 답답함.',
+          subtitle: '작동은 하지만 왜 어색한지 모르는 답답함',
           text: '기능은 다 정상인데 왜 어색한지 설명을 못합니다. 디자인 설계 문제가 반복되는 개발작업을 늘려갑니다. 완성된 빌더로 전향이 필요합니다.',
         },
       ],
       learning: _PROBLEM.learning.lines.map((l) => l.text).join(' '),
       learningDetails: [
-        { problem: 'VOD 한계', text: '혼자 wls듣는 VOD는 혼자 막히고 혼자 포기한다' },
+        { problem: 'VOD 한계', text: '혼자 듣는 VOD는 혼자 막히고 혼자 포기한다' },
         { problem: '도구 종속', text: '도구 사용법을 배워도 도구가 바뀌면 처음부터다' },
         { problem: '학습 단절', text: '코스가 끝나면 끝이다. 쌓이는 게 없다' },
       ],
@@ -100,7 +100,7 @@ export const PAGES = {
       ],
     },
     howDifferent: {
-      headline: '도구 이전에, 언어 체계.',
+      headline: '도구 이전에, 언어 체계',
       subCopy: '도구는 바뀌어도 설계의 기준은 남습니다',
       details: [
         {
@@ -124,7 +124,7 @@ export const PAGES = {
       ],
     },
     learningMethod: {
-      headline: '리드와 참여자가 함께 만들어갑니다.',
+      headline: '리드와 참여자가 함께 만들어갑니다',
       subCopy: '정적인 VOD가 아닌, 챌린지 중심 피어 학습',
       methods: [
         {
@@ -145,6 +145,12 @@ export const PAGES = {
           description:
             '코스 완주 후에도 추가 웨비나에 참여하고, 연 2회 커리큘럼 개정에 직접 의견을 제시할 수 있습니다. 듣는 사람이 아니라 만드는 사람으로 남습니다.',
         },
+        {
+          label: '현업 중심 예제',
+          title: '한번 신기해하고 끝나는 예제가 아닙니다',
+          description:
+            '운영과 유지보수를 전제한 현업 수준의 예제를 다룹니다. 디자인 시스템의 확장, 데이터 구조의 변경, 컴포넌트의 유지보수 역량을 키웁니다.',
+        },
       ],
     },
     courseHighlight: {
@@ -153,7 +159,7 @@ export const PAGES = {
       ctaSecondary: '코스 전체 보기 →',
     },
     courseReview: {
-      headline: '많은 실무자들이 검증한 커리큘럼입니다.',
+      headline: '많은 실무자들이 검증한 커리큘럼입니다',
       subtitle: '실제 수강생분들의 후기입니다',
       webinarLabel: '웨비나 참여자',
     },

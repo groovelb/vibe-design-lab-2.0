@@ -357,6 +357,7 @@ export function MoodboardCard({
             display: '-webkit-box',
             WebkitLineClamp: 2,
             WebkitBoxOrient: 'vertical',
+            wordBreak: 'keep-all',
             overflow: 'hidden',
             lineHeight: 1.4,
             mb: 1.5,

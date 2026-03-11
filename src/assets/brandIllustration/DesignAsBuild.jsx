@@ -1,14 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 
 /**
  * DesignAsBuild — 브랜드 일러스트레이션
  *
- * "구현의 설계도가 되는 디자인 접근방식" (Design As Build)
- * 중심 노드(⊕)에서 좌우로 분기하는 대칭 구조.
+ * "설계가 곧 구현이다" (Design As Build)
+ * 그리드 위에 타원이 그려지고, 타원 경계가 지나는 셀이 활성화되며
+ * 곡선(디자인)이 그리드 좌표(구현)로 분해되는 장면을 시각화한다.
  *
- * 드로잉 시퀀스: 중심 ⊕ → 가까운 분기부터 바깥으로 좌우 동시 확장 → 화살표
+ * 드로잉 시퀀스: 중심점 → 그리드 → 타원 draw → 셀 활성화 → 어노테이션
  * hover 시 전체 시퀀스가 처음부터 다시 재생된다.
  *
  * Example usage:
@@ -20,62 +21,73 @@ export function DesignAsBuild(props) {
   const size = 400;
   const cx = size / 2;
   const cy = size / 2;
-  const r = 12;
-  const busOffset = 54;
-  const edgePad = 8;
-  const arrowLen = 4;
+  const grid = 16;
+  const cols = size / grid;
+  const rows = size / grid;
 
-  const branches = [
-    { offset: -128, style: 'solid', stagger: 4 },
-    { offset: -100, style: 'solid', stagger: 3 },
-    { offset: -74, style: 'dotted', stagger: 2 },
-    { offset: -50, style: 'solid', stagger: 1 },
-    { offset: -30, style: 'dashed', stagger: 0 },
-    { offset: 30, style: 'dashed', stagger: 0 },
-    { offset: 50, style: 'solid', stagger: 1 },
-    { offset: 74, style: 'dotted', stagger: 2 },
-    { offset: 100, style: 'solid', stagger: 3 },
-    { offset: 128, style: 'solid', stagger: 4 },
-  ];
+  /* ── 타원 파라미터 ── */
+  const rx = 152;
+  const ry = 88;
 
-  const getDash = (style) => {
-    if (style === 'dashed') return '6 4';
-    if (style === 'dotted') return '2 3';
-    return undefined;
-  };
+  /* ── 타원 경계를 지나는 셀 계산 ── */
+  const activeCells = useMemo(() => {
+    const cells = [];
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < cols; col++) {
+        const cellCx = col * grid + grid / 2;
+        const cellCy = row * grid + grid / 2;
 
-  const getStroke = (style) =>
-    style === 'solid' ? 'var(--vdl-700)' : 'var(--vdl-800)';
+        const corners = [
+          [col * grid, row * grid],
+          [col * grid + grid, row * grid],
+          [col * grid, row * grid + grid],
+          [col * grid + grid, row * grid + grid],
+        ];
 
-  const leftPath = (offset) => {
-    const targetY = cy + offset;
-    const turnX = cx - busOffset;
-    const dir = offset > 0 ? 1 : -1;
+        const ellipseVal = (x, y) =>
+          ((x - cx) * (x - cx)) / (rx * rx) + ((y - cy) * (y - cy)) / (ry * ry);
 
-    return [
-      `M ${cx} ${cy}`,
-      `H ${turnX + r}`,
-      `Q ${turnX} ${cy} ${turnX} ${cy + dir * r}`,
-      `V ${targetY - dir * r}`,
-      `Q ${turnX} ${targetY} ${turnX - r} ${targetY}`,
-      `H ${edgePad}`,
-    ].join(' ');
-  };
+        const values = corners.map(([x, y]) => ellipseVal(x, y));
+        const hasInside = values.some((v) => v <= 1);
+        const hasOutside = values.some((v) => v > 1);
 
-  const rightPath = (offset) => {
-    const targetY = cy + offset;
-    const turnX = cx + busOffset;
-    const dir = offset > 0 ? 1 : -1;
+        if (hasInside && hasOutside) {
+          const dist = Math.sqrt(
+            ((cellCx - cx) / rx) ** 2 + ((cellCy - cy) / ry) ** 2,
+          );
+          const angle = Math.atan2(cellCy - cy, cellCx - cx);
+          cells.push({ col, row, dist, angle });
+        }
+      }
+    }
+    return cells;
+  }, []);
 
-    return [
-      `M ${cx} ${cy}`,
-      `H ${turnX - r}`,
-      `Q ${turnX} ${cy} ${turnX} ${cy + dir * r}`,
-      `V ${targetY - dir * r}`,
-      `Q ${turnX} ${targetY} ${turnX + r} ${targetY}`,
-      `H ${size - edgePad}`,
-    ].join(' ');
-  };
+  /* ── 어노테이션 — 특정 셀에서 바깥으로 확장 ── */
+  const annotations = useMemo(() => {
+    if (activeCells.length === 0) return [];
+
+    const targets = [
+      { angleTarget: -Math.PI * 0.75, side: -1 },
+      { angleTarget: -Math.PI * 0.35, side: 1 },
+      { angleTarget: -Math.PI * 0.1, side: 1 },
+      { angleTarget: Math.PI * 0.15, side: 1 },
+      { angleTarget: Math.PI * 0.4, side: -1 },
+      { angleTarget: Math.PI * 0.8, side: -1 },
+    ];
+
+    return targets.map(({ angleTarget, side }) => {
+      const cell = activeCells.reduce((best, c) =>
+        Math.abs(c.angle - angleTarget) < Math.abs(best.angle - angleTarget)
+          ? c
+          : best,
+      );
+      const cellX = side === 1 ? (cell.col + 1) * grid : cell.col * grid;
+      const cellY = cell.row * grid + grid / 2;
+      const len = 14 + Math.floor(Math.random() * 8);
+      return { x: cellX, y: cellY, side, len };
+    });
+  }, [activeCells]);
 
   return (
     <svg
@@ -106,117 +118,118 @@ export function DesignAsBuild(props) {
       <rect width={size} height={size} fill="var(--vdl-950)" />
 
       <g key={animKey}>
-        {/* 1. 좌측 분기 — 가까운 것부터 */}
-        {branches.map((b, i) => {
-          const y = cy + b.offset;
-          const stroke = getStroke(b.style);
-          const delay = 300 + b.stagger * 75;
-          const isSolid = b.style === 'solid';
+        {/* 1. 그리드 — subtle 배경 */}
+        <g className="dab-fade" style={{ '--d': '800ms', '--t': '100ms' }}>
+          {Array.from({ length: cols - 1 }, (_, i) => (
+            <line
+              key={`gv-${i}`}
+              x1={(i + 1) * grid}
+              y1={0}
+              x2={(i + 1) * grid}
+              y2={size}
+              stroke="var(--vdl-800)"
+              strokeWidth={0.25}
+            />
+          ))}
+          {Array.from({ length: rows - 1 }, (_, i) => (
+            <line
+              key={`gh-${i}`}
+              x1={0}
+              y1={(i + 1) * grid}
+              x2={size}
+              y2={(i + 1) * grid}
+              stroke="var(--vdl-800)"
+              strokeWidth={0.25}
+            />
+          ))}
+        </g>
 
-          return (
-            <g key={`l-${i}`}>
-              <path
-                className={isSolid ? 'dab-draw' : 'dab-fade'}
-                d={leftPath(b.offset)}
-                fill="none"
-                stroke={stroke}
-                strokeWidth={0.5}
-                strokeDasharray={isSolid ? undefined : getDash(b.style)}
-                strokeLinecap="round"
-                style={
-                  isSolid
-                    ? { '--l': 400, '--d': '600ms', '--t': `${delay}ms` }
-                    : { '--d': '500ms', '--t': `${delay}ms` }
-                }
-              />
-              <polyline
-                className="dab-fade"
-                points={`${edgePad + arrowLen},${y - 2.5} ${edgePad},${y} ${edgePad + arrowLen},${y + 2.5}`}
-                fill="none"
-                stroke={stroke}
-                strokeWidth={0.5}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                style={{ '--d': '200ms', '--t': `${delay + 400}ms` }}
-              />
-            </g>
-          );
-        })}
-
-        {/* 2. 우측 분기 — 좌측과 동시에 (설계 = 구현) */}
-        {branches.map((b, i) => {
-          const y = cy + b.offset;
-          const stroke = getStroke(b.style);
-          const delay = 300 + b.stagger * 75;
-          const isSolid = b.style === 'solid';
-
-          return (
-            <g key={`r-${i}`}>
-              <path
-                className={isSolid ? 'dab-draw' : 'dab-fade'}
-                d={rightPath(b.offset)}
-                fill="none"
-                stroke={stroke}
-                strokeWidth={0.5}
-                strokeDasharray={isSolid ? undefined : getDash(b.style)}
-                strokeLinecap="round"
-                style={
-                  isSolid
-                    ? { '--l': 400, '--d': '600ms', '--t': `${delay}ms` }
-                    : { '--d': '500ms', '--t': `${delay}ms` }
-                }
-              />
-              <polyline
-                className="dab-fade"
-                points={`${size - edgePad - arrowLen},${y - 2.5} ${size - edgePad},${y} ${size - edgePad - arrowLen},${y + 2.5}`}
-                fill="none"
-                stroke={stroke}
-                strokeWidth={0.5}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                style={{ '--d': '200ms', '--t': `${delay + 400}ms` }}
-              />
-            </g>
-          );
-        })}
-
-        {/* 0. 중심 노드 — ⊕ 가장 먼저 */}
-        <circle
-          className="dab-fade"
+        {/* 2. 타원 — 디자인 표면 (draw in) */}
+        <ellipse
+          className="dab-draw"
           cx={cx}
           cy={cy}
-          r={8}
-          fill="var(--vdl-950)"
+          rx={rx}
+          ry={ry}
+          fill="none"
           stroke="var(--vdl-200)"
           strokeWidth={0.5}
-          style={{ '--d': '400ms', '--t': '0ms' }}
+          style={{
+            '--l': Math.ceil(2 * Math.PI * Math.sqrt((rx * rx + ry * ry) / 2)),
+            '--d': '800ms',
+            '--t': '400ms',
+          }}
         />
-        <line
-          className="dab-fade"
-          x1={cx - 4}
-          y1={cy}
-          x2={cx + 4}
-          y2={cy}
+
+        {/* 3. 활성 셀 — 타원 경계가 지나는 그리드 셀 */}
+        {activeCells.map((cell, i) => {
+          const delay = 900 + i * 8;
+          return (
+            <rect
+              key={`c-${i}`}
+              className="dab-fade"
+              x={cell.col * grid}
+              y={cell.row * grid}
+              width={grid}
+              height={grid}
+              fill="var(--vdl-700)"
+              style={{ '--d': '300ms', '--t': `${delay}ms` }}
+            />
+          );
+        })}
+
+        {/* 4. 타원 재드로우 — 활성 셀 위에 타원선이 다시 보이도록 */}
+        <ellipse
+          className="dab-draw"
+          cx={cx}
+          cy={cy}
+          rx={rx}
+          ry={ry}
+          fill="none"
           stroke="var(--vdl-200)"
           strokeWidth={0.5}
-          style={{ '--d': '300ms', '--t': '100ms' }}
+          style={{
+            '--l': Math.ceil(2 * Math.PI * Math.sqrt((rx * rx + ry * ry) / 2)),
+            '--d': '800ms',
+            '--t': '400ms',
+          }}
         />
-        <line
-          className="dab-fade"
-          x1={cx}
-          y1={cy - 4}
-          x2={cx}
-          y2={cy + 4}
-          stroke="var(--vdl-200)"
-          strokeWidth={0.5}
-          style={{ '--d': '300ms', '--t': '100ms' }}
-        />
+
+        {/* 5. 어노테이션 — 활성 셀에서 바깥으로 뻗는 Naming Line */}
+        {annotations.map((a, i) => {
+          const endX = a.x + a.side * a.len;
+          return (
+            <g key={`a-${i}`}>
+              <line
+                className="dab-draw"
+                x1={a.x}
+                y1={a.y}
+                x2={endX}
+                y2={a.y}
+                stroke="var(--vdl-200)"
+                strokeWidth={0.5}
+                strokeLinecap="round"
+                style={{ '--l': a.len, '--d': '300ms', '--t': `${1400 + i * 70}ms` }}
+              />
+              <circle
+                className="dab-fade"
+                cx={endX}
+                cy={a.y}
+                r={1.5}
+                fill="var(--vdl-200)"
+                style={{ '--d': '200ms', '--t': `${1500 + i * 70}ms` }}
+              />
+            </g>
+          );
+        })}
+
+        {/* 0. 중심점 */}
         <circle
           className="dab-fade"
           cx={cx}
           cy={cy}
           r={2.5}
-          fill="var(--vdl-50)"
+          fill="var(--vdl-200)"
           style={{ '--d': '300ms', '--t': '0ms' }}
         />
       </g>

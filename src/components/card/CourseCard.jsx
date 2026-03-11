@@ -86,7 +86,7 @@ const CourseCard = forwardRef(function CourseCard({
         </Typography>
 
         {subtitle && (
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+          <Typography variant="body2" sx={{ color: 'text.secondary', wordBreak: 'keep-all' }}>
             {subtitle}
           </Typography>
         )}

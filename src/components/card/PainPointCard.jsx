@@ -34,7 +34,7 @@ const PainPointCard = forwardRef(function PainPointCard({
       </Typography>
       <Typography
         variant="h5"
-        sx={{ color: 'text.secondary', lineHeight: 1.7 }}
+        sx={{ color: 'text.secondary', lineHeight: 1.7, wordBreak: 'keep-all' }}
       >
         {description}
       </Typography>

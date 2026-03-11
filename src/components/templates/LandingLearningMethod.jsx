@@ -34,7 +34,7 @@ export function LandingLearningMethod() {
 
       <LineGrid container gap={96} borderColor="divider">
         {learningMethod.methods.map((method, index) => (
-          <Grid key={method.label} size={{ xs: 12, md: 4 }}>
+          <Grid key={method.label} size={{ xs: 12, md: 6 }}>
             <FadeTransition direction="up" delay={index * 100} isTriggerOnView>
               <Stack spacing={2}>
                 <Typography

@@ -46,7 +46,7 @@ const MythCard = forwardRef(function MythCard({
       {/* Philosophy */}
       <Typography
         variant="h4"
-        sx={{ color: 'text.primary', fontWeight: 700, lineHeight: 1.5, mb: 4 }}
+        sx={{ color: 'text.primary', fontWeight: 700, lineHeight: 1.5, mb: 4, wordBreak: 'keep-all' }}
       >
         {philosophy}
       </Typography>
@@ -60,7 +60,7 @@ const MythCard = forwardRef(function MythCard({
       </Typography>
       <Typography
         variant="h5"
-        sx={{ color: 'text.primary', lineHeight: 1.7 }}
+        sx={{ color: 'text.primary', lineHeight: 1.7, wordBreak: 'keep-all' }}
       >
         {conventional}
       </Typography>
@@ -87,7 +87,7 @@ const MythCard = forwardRef(function MythCard({
       </Typography>
       <Typography
         variant="h5"
-        sx={{ color: 'text.primary', fontWeight: 700, lineHeight: 1.7 }}
+        sx={{ color: 'text.primary', fontWeight: 700, lineHeight: 1.7, wordBreak: 'keep-all' }}
       >
         {reversal}
       </Typography>

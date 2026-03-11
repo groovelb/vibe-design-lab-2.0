@@ -71,7 +71,7 @@ const StatementCard = forwardRef(function StatementCard({
         </Stack>
         <Typography
           variant="body1"
-          sx={{ color: 'text.secondary', lineHeight: 1.7 }}
+          sx={{ color: 'text.secondary', lineHeight: 1.7, wordBreak: 'keep-all' }}
         >
           {description}
         </Typography>

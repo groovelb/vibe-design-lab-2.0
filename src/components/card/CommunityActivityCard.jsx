@@ -90,6 +90,7 @@ const CommunityActivityCard = forwardRef(function CommunityActivityCard({
             WebkitBoxOrient: 'vertical',
             overflow: 'hidden',
             fontWeight: 700,
+            wordBreak: 'keep-all',
           }}
         >
           {contentPreview}

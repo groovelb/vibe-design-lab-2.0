@@ -102,7 +102,7 @@ const TestimonialCard = forwardRef(function TestimonialCard({
         {/* 인용문 */}
         <Typography
           variant="body2"
-          sx={{ color: 'text.secondary', lineHeight: 1.7 }}
+          sx={{ color: 'text.secondary', lineHeight: 1.7, wordBreak: 'keep-all' }}
         >
           {displayQuote}
         </Typography>
