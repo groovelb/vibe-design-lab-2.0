@@ -1,7 +1,6 @@
 'use client';
 import { forwardRef } from 'react';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+import { CardTextStack } from '../typography/CardTextStack';
 
 /**
  * PainPointCard 컴포넌트
@@ -25,20 +24,13 @@ const PainPointCard = forwardRef(function PainPointCard({
   ...props
 }, ref) {
   return (
-    <Box ref={ref} sx={sx} {...props}>
-      <Typography
-        variant="h4"
-        sx={{ fontWeight: 900, lineHeight: 2 }}
-      >
-        {label}
-      </Typography>
-      <Typography
-        variant="h5"
-        sx={{ color: 'text.secondary', lineHeight: 1.7, wordBreak: 'keep-all' }}
-      >
-        {description}
-      </Typography>
-    </Box>
+    <CardTextStack
+      ref={ref}
+      title={label}
+      description={description}
+      sx={sx}
+      {...props}
+    />
   );
 });
 

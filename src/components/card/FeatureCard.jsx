@@ -1,8 +1,8 @@
 'use client';
 import { forwardRef } from 'react';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
+import { CardTextStack } from '../typography/CardTextStack';
 
 /**
  * FeatureCard 컴포넌트
@@ -42,17 +42,11 @@ const FeatureCard = forwardRef(function FeatureCard({
           }}
         />
       )}
-      <Stack spacing={0} sx={{ mt: 6, width: '100%' }}>
-        <Typography variant="h4" sx={{ fontWeight: 900, textTransform: 'uppercase' }}>
-          {title}
-        </Typography>
-        <Typography
-          variant="h4"
-          sx={{ fontWeight: 400, mt: 1, wordBreak: 'keep-all' }}
-        >
-          {description}
-        </Typography>
-      </Stack>
+      <CardTextStack
+        title={title}
+        subtitle={description}
+        sx={{ mt: 6, width: '100%' }}
+      />
     </Stack>
   );
 });

@@ -1,9 +1,8 @@
 'use client';
 import { forwardRef } from 'react';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Stack from '@mui/material/Stack';
 import { CardContainer } from './CardContainer';
+import { CardTextStack } from '../typography/CardTextStack';
 
 /**
  * StatementCard 컴포넌트
@@ -52,30 +51,12 @@ const StatementCard = forwardRef(function StatementCard({
           }}
         />
       )}
-      <Stack spacing={4} sx={{ mt: 6, width: '100%' }}>
-        <Stack spacing={0}>
-          <Typography
-            variant="h4"
-            sx={{ fontWeight: 900 }}
-          >
-            {title}
-          </Typography>
-          {subtitle && (
-            <Typography
-              variant="h4"
-              sx={{ fontWeight: 400, mt: 1 }}
-            >
-              {subtitle}
-            </Typography>
-          )}
-        </Stack>
-        <Typography
-          variant="body1"
-          sx={{ color: 'text.secondary', lineHeight: 1.7, wordBreak: 'keep-all' }}
-        >
-          {description}
-        </Typography>
-      </Stack>
+      <CardTextStack
+        title={title}
+        subtitle={subtitle}
+        description={description}
+        sx={{ mt: 6, width: '100%' }}
+      />
     </CardContainer>
   );
 });
