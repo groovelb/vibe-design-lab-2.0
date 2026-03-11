@@ -108,7 +108,7 @@ export const Text = {
 /** 모든 Variant 비교 */
 export const AllVariants = {
   render: () => (
-    <Stack spacing={ 2 } direction="row">
+    <Stack spacing={2} direction="row">
       <Button variant="text">Text</Button>
       <Button variant="contained">Contained</Button>
       <Button variant="outlined">Outlined</Button>
@@ -119,7 +119,7 @@ export const AllVariants = {
 /** 색상 변형 - Primary, Secondary, Success, Error, Info, Warning */
 export const Colors = {
   render: () => (
-    <Stack spacing={ 2 } direction="row" flexWrap="wrap" useFlexGap>
+    <Stack spacing={2} direction="row" flexWrap="wrap" useFlexGap>
       <Button variant="contained" color="primary">Primary</Button>
       <Button variant="contained" color="secondary">Secondary</Button>
       <Button variant="contained" color="success">Success</Button>
@@ -133,7 +133,7 @@ export const Colors = {
 /** 크기 변형 - Small, Medium, Large */
 export const Sizes = {
   render: () => (
-    <Stack spacing={ 2 } direction="row" alignItems="center">
+    <Stack spacing={2} direction="row" alignItems="center">
       <Button variant="contained" size="small">Small</Button>
       <Button variant="contained" size="medium">Medium</Button>
       <Button variant="contained" size="large">Large</Button>
@@ -144,7 +144,7 @@ export const Sizes = {
 /** 비활성화 상태 */
 export const Disabled = {
   render: () => (
-    <Stack spacing={ 2 } direction="row">
+    <Stack spacing={2} direction="row">
       <Button variant="text" disabled>Text</Button>
       <Button variant="contained" disabled>Contained</Button>
       <Button variant="outlined" disabled>Outlined</Button>
