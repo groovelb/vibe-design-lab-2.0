@@ -24,16 +24,16 @@ const ILLUSTRATIONS = [SystemOverDrawing, VibeStandard, DesignAsBuild];
 const { howDifferent } = PAGES.landing;
 
 /**
- * LandingDifference 섹션 템플릿
+ * LandingSolution 섹션 템플릿
  *
  * VDL의 차별점을 설명하는 섹션.
  * VALUE_PROPOSITIONS 3컬럼 카드 + 각 카드의 "자세히" 버튼으로
  * howDifferent.details 모달을 열어 학습 내용의 구체적 증거를 보여준다.
  *
  * Example usage:
- * <LandingDifference />
+ * <LandingSolution />
  */
-export function LandingDifference() {
+export function LandingSolution() {
   const [openIndex, setOpenIndex] = useState(null);
 
   const activeDetail = openIndex !== null ? howDifferent.details?.[openIndex] : null;
@@ -41,7 +41,7 @@ export function LandingDifference() {
   return (
     <SectionContainer>
       <FadeTransition direction="up" isTriggerOnView>
-        <SectionDivider label="Difference" sx={{ mb: 3 }} />
+        <SectionDivider label="Solution" sx={{ mb: 3 }} />
         <SectionTitle
           headline={howDifferent.headline}
           subtitle={howDifferent.subCopy}

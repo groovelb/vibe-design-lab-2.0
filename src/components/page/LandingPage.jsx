@@ -2,7 +2,7 @@
 import { LandingHero } from '../templates/LandingHero';
 import { LandingProblem } from '../templates/LandingProblem';
 import { LandingWhyVibeDesign } from '../templates/LandingWhyVibeDesign';
-import { LandingDifference } from '../templates/LandingDifference';
+import { LandingSolution } from '../templates/LandingSolution';
 import { LandingLearningMethod } from '../templates/LandingLearningMethod';
 import { LandingCourseHighlight } from '../templates/LandingCourseHighlight';
 import { LandingCourseReview } from '../templates/LandingCourseReview';
@@ -33,7 +33,7 @@ export function LandingPage() {
       <PageContainer>
         <LandingProblem />
         {/* <LandingWhyVibeDesign /> */}
-        <LandingDifference />
+        <LandingSolution />
         <LandingLearningMethod />
         <LandingCourseHighlight />
         <LandingCourseReview />

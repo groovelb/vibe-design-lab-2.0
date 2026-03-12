@@ -38,7 +38,7 @@ export function LandingProblem() {
         <Box sx={{ mb: { xs: 4, md: 6 } }}>
           <SectionDivider label="Problem" sx={{ mb: 3 }} />
           <ScrollRevealText
-            text={problem.market}
+            text={problem.headline}
             variant="h1"
             isSplitSentences={false}
             sx={{ letterSpacing: '-0.02em', wordSpacing: '0.15em', '& .MuiTypography-root': { lineHeight: 1.71 } }}
@@ -46,11 +46,10 @@ export function LandingProblem() {
         </Box>
         <LineGrid container gap={144} borderColor="divider">
           {problem.career.filter((_, i) => VISIBLE_INDICES.includes(i)).map((item, index) => (
-            <Grid key={item.persona} size={{ xs: 12, md: 6 }}>
+            <Grid key={item.subtitle} size={{ xs: 12, md: 6 }}>
               <FadeTransition direction="up" delay={index * 100} isTriggerOnView>
                 <StatementCard
-                  title={item.persona}
-                  subtitle={item.subtitle}
+                  title={item.subtitle}
                   description={item.text}
                   thumbnailSlot={
                     <Box sx={{ width: '100%', aspectRatio: '4/3', overflow: 'hidden' }}>

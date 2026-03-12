@@ -22,15 +22,6 @@ export function LandingHeroMessage() {
         </Typography>
       </FadeTransition>
 
-      <FadeTransition direction="up" delay={200} isTriggerOnView>
-        <Typography
-          variant="h3"
-          sx={{ color: 'text.secondary', fontWeight: 400, lineHeight: 1.75 }}
-        >
-          {hero.subCopy}
-        </Typography>
-      </FadeTransition>
-
       <PixelButton size="large" pixelSize={2} href="/course" isTriggerOnView duration={400} sx={{ mt: 8 }}>
         {footerCta.cta}
       </PixelButton>

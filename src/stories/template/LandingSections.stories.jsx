@@ -1,7 +1,7 @@
 import { LandingHero } from '../../components/templates/LandingHero';
 import { LandingProblem } from '../../components/templates/LandingProblem';
 import { LandingWhyVibeDesign } from '../../components/templates/LandingWhyVibeDesign';
-import { LandingDifference } from '../../components/templates/LandingDifference';
+import { LandingSolution } from '../../components/templates/LandingSolution';
 import { LandingCourseHighlight } from '../../components/templates/LandingCourseHighlight';
 import { LandingCourseReview } from '../../components/templates/LandingCourseReview';
 import { LandingDictionaryPreview } from '../../components/templates/LandingDictionaryPreview';
@@ -43,10 +43,10 @@ export const S3_WhyVibeDesign = {
   render: () => <LandingWhyVibeDesign />,
 };
 
-/** S4. Solution — "VOD가 아니다" */
-export const S4_Difference = {
-  name: 'S4. Difference',
-  render: () => <LandingDifference />,
+/** S4. Solution — "구현은 언어를 따른다" */
+export const S4_Solution = {
+  name: 'S4. Solution',
+  render: () => <LandingSolution />,
 };
 
 /** S5. Offer — "이 코스가 해결한다" */

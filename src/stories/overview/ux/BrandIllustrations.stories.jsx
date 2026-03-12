@@ -111,7 +111,7 @@ export const Docs = {
           Brand Illustrations — Value Propositions
         </Typography>
         <Typography variant="body1" color="text.secondary" sx={{ mb: 6 }}>
-          LandingDifference 섹션의 FeatureCard에 들어갈 제너러티브 SVG 일러스트.
+          LandingSolution 섹션의 FeatureCard에 들어갈 제너러티브 SVG 일러스트.
           모든 형태는 데이터·알고리즘·규칙으로 생성된다.
         </Typography>
 

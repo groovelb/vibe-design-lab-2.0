@@ -70,10 +70,11 @@ function ScrollRevealText({
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  /** 문장 단위 분리 ('. ' 기준) */
+  /** 문장 단위 분리 ('\n' 항상 분리 + '. ' 옵션) */
+  const lines = text.split('\n');
   const sentences = isSplitSentences
-    ? text.split('. ').map((s, i, arr) => (i < arr.length - 1 ? s + '.' : s))
-    : [text];
+    ? lines.flatMap((line) => line.split('. ').map((s, i, arr) => (i < arr.length - 1 ? s + '.' : s)))
+    : lines;
 
   /** 전체 글자 수 계산 */
   const totalChars = sentences.reduce((sum, s) => sum + s.length, 0);
@@ -89,7 +90,7 @@ function ScrollRevealText({
           variant={ variant }
           sx={ {
             lineHeight: 1.9,
-            mb: { xs: 2, md: 3 },
+            mb: 0,
             wordBreak: 'keep-all',
           } }
         >

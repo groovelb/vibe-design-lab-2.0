@@ -13,6 +13,7 @@ import Typography from '@mui/material/Typography';
  * @param {string} subtitle - 부제목 [Optional]
  * @param {string} description - 설명 [Optional]
  * @param {string} size - 타이포 사이즈 ('md' | 'lg') [Optional, 기본값: 'md']
+ * @param {boolean} isTitleUppercase - 영문 타이틀 대문자 여부 [Optional]
  * @param {object} sx - 추가 스타일 [Optional]
  *
  * Example usage:
@@ -34,10 +35,12 @@ const CardTextStack = forwardRef(function CardTextStack({
   subtitle,
   description,
   size = 'md',
+  isTitleUppercase,
   sx,
   ...props
 }, ref) {
   const variants = sizeMap[size] || sizeMap.md;
+  const shouldUppercase = isTitleUppercase ?? variants.titleUppercase;
 
   return (
     <Stack ref={ref} spacing={2} sx={sx} {...props}>
@@ -58,7 +61,7 @@ const CardTextStack = forwardRef(function CardTextStack({
           variant={variants.title}
           sx={{
             fontWeight: 900,
-            ...(variants.titleUppercase && { textTransform: 'uppercase', letterSpacing: '0.02em' }),
+            ...(shouldUppercase && { textTransform: 'uppercase', letterSpacing: '0.02em' }),
           }}
         >
           {title}

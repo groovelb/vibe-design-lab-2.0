@@ -45,6 +45,7 @@ const FeatureCard = forwardRef(function FeatureCard({
       <CardTextStack
         title={title}
         subtitle={description}
+        isTitleUppercase
         sx={{ mt: 6, width: '100%' }}
       />
     </Stack>
