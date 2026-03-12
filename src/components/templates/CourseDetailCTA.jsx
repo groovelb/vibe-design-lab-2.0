@@ -54,7 +54,7 @@ const CourseDetailCTA = forwardRef(function CourseDetailCTA(props, ref) {
             <Stack spacing={2}>
               <Stack direction="row" spacing={1} alignItems="center">
                 <Video size={16} />
-                <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+                <Typography variant="overline" sx={{ color: 'text.secondary' }}>
                   Case Study
                 </Typography>
               </Stack>
@@ -84,7 +84,7 @@ const CourseDetailCTA = forwardRef(function CourseDetailCTA(props, ref) {
             <Stack spacing={2}>
               <Stack direction="row" spacing={1} alignItems="center">
                 <Mail size={16} />
-                <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+                <Typography variant="overline" sx={{ color: 'text.secondary' }}>
                   Q&A
                 </Typography>
               </Stack>
@@ -133,14 +133,14 @@ const CourseDetailCTA = forwardRef(function CourseDetailCTA(props, ref) {
                 />
               </Stack>
               <Stack spacing={0.5}>
-                <Typography variant="caption" sx={{ color: 'text.disabled' }}>
+                <Typography variant="caption" sx={{ color: 'text.secondary' }}>
                   수강료
                 </Typography>
                 <Typography variant="h5" sx={{ fontWeight: 700 }}>
                   {hero.price}
                 </Typography>
               </Stack>
-              <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                 {hero.priceNote}
               </Typography>
             </Stack>

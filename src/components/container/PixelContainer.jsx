@@ -117,7 +117,7 @@ const PixelContainer = forwardRef(function PixelContainer({
     ctx.fillStyle = resolvedColor;
     for (const pixel of pixelsRef.current) {
       if (p >= pixel.threshold) {
-        ctx.fillRect(pixel.x * pixelSize, pixel.y * pixelSize, pixelSize, pixelSize);
+        ctx.fillRect(pixel.x * pixelSize, pixel.y * pixelSize, pixelSize + 1, pixelSize + 1);
       }
     }
   }, [pixelSize, resolvedColor, generatePixels, direction]);

@@ -38,7 +38,7 @@ export function CourseDetailVision() {
             <FadeTransition direction="up" delay={index * 150} isTriggerOnView>
               <Stack spacing={3}>
                 {/* 번호 */}
-                <Typography variant="h3" sx={{ fontWeight: 800, color: 'text.disabled' }}>
+                <Typography variant="h3" sx={{ fontWeight: 800, color: 'text.secondary' }}>
                   {index + 1}
                 </Typography>
                 {/* 비디오 placeholder */}

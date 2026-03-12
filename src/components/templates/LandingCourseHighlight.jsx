@@ -6,7 +6,8 @@ import { SectionDivider } from '../typography/SectionDivider';
 import { SectionTitle } from '../typography/SectionTitle';
 import { PAGES } from '../../data/contents';
 import { COURSES } from '../../data/landingMockData';
-import testImg from '../../assets/course/test.png';
+import coursePoster from '../../assets/course/course_thumbnail_line.png';
+import courseVideo from '../../assets/course/course_thumbnail_line.mp4';
 
 const { courseHighlight } = PAGES.landing;
 
@@ -34,7 +35,8 @@ export function LandingCourseHighlight() {
 
         <FadeTransition direction="up" isTriggerOnView>
           <CourseDetailCard
-            posterSrc={testImg.src || testImg}
+            videoSrc={courseVideo.src || courseVideo}
+            posterSrc={coursePoster.src || coursePoster}
             cohortStatus={course.cohortStatus}
             duration={course.duration}
             chapters={course.chapters}

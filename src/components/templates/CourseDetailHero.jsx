@@ -91,7 +91,7 @@ export function CourseDetailHero() {
                 <Stack spacing={3}>
                   {/* 상단 안내 */}
                   <Stack spacing={1}>
-                    <Typography variant="caption" sx={{ color: 'text.disabled' }}>
+                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
                       오프라인 3기 진행중
                     </Typography>
                     <Typography variant="h5" sx={{ fontWeight: 700 }}>
@@ -104,7 +104,7 @@ export function CourseDetailHero() {
 
                   {/* 가격 */}
                   <Stack spacing={1}>
-                    <Typography variant="caption" sx={{ color: 'text.disabled' }}>
+                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
                       수강료
                     </Typography>
                     <Typography variant="h6" sx={{ fontWeight: 700 }}>

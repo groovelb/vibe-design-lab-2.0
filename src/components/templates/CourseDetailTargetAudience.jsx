@@ -38,7 +38,7 @@ export function CourseDetailTargetAudience() {
             <FadeTransition direction="up" delay={index * 100} isTriggerOnView>
               <Stack spacing={3}>
                 {/* 번호 */}
-                <Typography variant="h3" sx={{ fontWeight: 800, color: 'text.disabled' }}>
+                <Typography variant="h3" sx={{ fontWeight: 800, color: 'text.secondary' }}>
                   {index + 1}
                 </Typography>
 

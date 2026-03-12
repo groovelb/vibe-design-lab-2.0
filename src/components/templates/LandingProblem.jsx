@@ -66,6 +66,7 @@ export function LandingProblem() {
                           height: '100%',
                           objectFit: 'cover',
                           display: 'block',
+                          mixBlendMode: 'lighten',
                           ...(index >= 1 && { transform: 'translateY(24px)' }),
                         }}
                       >

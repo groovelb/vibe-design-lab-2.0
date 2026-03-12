@@ -37,12 +37,12 @@ export function CourseDetailRole() {
             <FadeTransition direction="up" delay={index * 100} isTriggerOnView>
               <Stack spacing={2}>
                 <Stack direction="row" spacing={1} alignItems="center">
-                  <Typography variant="body2" sx={{ color: 'text.disabled', fontWeight: 700 }}>
+                  <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 700 }}>
                     ✕
                   </Typography>
                   <Typography
                     variant="body2"
-                    sx={{ color: 'text.disabled' }}
+                    sx={{ color: 'text.secondary' }}
                   >
                     {card.problem}
                   </Typography>

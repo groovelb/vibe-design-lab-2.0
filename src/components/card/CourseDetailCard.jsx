@@ -111,44 +111,48 @@ const CourseDetailCard = forwardRef(function CourseDetailCard({
     <Grid ref={ref} container spacing={{ xs: 4, md: 6 }} sx={sx} {...props}>
       {/* 미디어 영역 */}
       <Grid size={{ xs: 12, md: 6 }}>
-        <Box sx={{ overflow: 'hidden' }}>
+        <Box sx={{ overflow: 'hidden', bgcolor: '#09080b', '& video': { mixBlendMode: 'lighten' } }}>
           {renderMedia()}
         </Box>
       </Grid>
 
       {/* 콘텐츠 영역 */}
       <Grid size={{ xs: 12, md: 6 }}>
-        <Stack spacing={3} sx={{ height: '100%', justifyContent: 'center' }}>
-          {/* 코호트 배지 + 메타 정보 */}
-          {(cohortStatus || metaParts.length > 0) && (
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              {cohortStatus && <CohortBadge status={cohortStatus} size="md" sx={{ borderRadius: 0 }} />}
-              {metaParts.length > 0 && (
-                <Typography variant="caption" sx={{ color: 'text.disabled' }}>
-                  {metaParts.join(' · ')}
-                </Typography>
-              )}
-            </Box>
-          )}
+        <Stack spacing={3} sx={{ height: '100%', justifyContent: 'space-between' }}>
+          {/* 상단: 텍스트 콘텐츠 */}
+          <Stack spacing={3}>
+            {/* 코호트 배지 + 메타 정보 */}
+            {(cohortStatus || metaParts.length > 0) && (
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                {cohortStatus && <CohortBadge status={cohortStatus} size="md" sx={{ borderRadius: 0 }} />}
+                {metaParts.length > 0 && (
+                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                    {metaParts.join(' · ')}
+                  </Typography>
+                )}
+              </Box>
+            )}
 
-          <CardTextStack
-            size="lg"
-            title={title}
-            subtitle={subtitle}
-            description={description}
-          />
+            <CardTextStack
+              size="lg"
+              title={title}
+              subtitle={subtitle}
+              description={description}
+            />
 
-          {target && (
-            <Typography variant="caption" sx={{ color: 'text.disabled' }}>
-              대상: {target}
-            </Typography>
-          )}
+            {target && (
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                대상: {target}
+              </Typography>
+            )}
+          </Stack>
 
+          {/* 하단: CTA 버튼 */}
           {ctaLabel && (
             <Box>
               <Button
-                variant="outlined"
-                size="small"
+                variant="contained"
+                size="large"
                 href={ctaHref}
                 onClick={onCtaClick}
               >
