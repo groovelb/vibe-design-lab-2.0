@@ -26,6 +26,25 @@ export default {
   },
 };
 
+const PERSONA_ILLUSTRATIONS = [
+  {
+    fig: 'PERSONA 1',
+    title: 'Canvas Designer',
+    description: 'Line art — 디자인 캔버스 위에서 직접 손을 대고 만드는 디자이너. 도구가 아니라 캔버스 위에서 살고 있는 존재.',
+    src: '/persona/canvas_designer_line.png',
+    style: 'White contour line art, isometric, dark violet-gray background',
+    prompt: 'Pure white contour line art illustration in isometric perspective. Every form is defined exclusively by thin, consistent white outline strokes on a very dark near-black violet-gray background. A young woman with her hair in a bun, seen from behind, standing in front of a large floating isometric design tool interface.',
+  },
+  {
+    fig: 'PERSONA 2',
+    title: 'Pipeline Developer',
+    description: 'Line art — 개발 파이프라인 컨베이어 위에 앉아 코딩하는 개발자. 공정의 일부이자 운영자.',
+    src: '/persona/pipeline_developer_line.png',
+    style: 'White contour line art, isometric, dark violet-gray background',
+    prompt: 'Pure white contour line art illustration in isometric perspective. A young man wearing a cap sits cross-legged on top of an isometric assembly-line conveyor belt, with a keyboard on his lap. Behind him, a horizontal development pipeline stretches as a mechanical conveyor system.',
+  },
+];
+
 const REFERENCE_ILLUSTRATIONS = [
   {
     fig: 'FIG 0.2',
@@ -122,6 +141,122 @@ const ReferenceCard = ({ fig, title, description, Illustration }) => (
       <Typography variant="body2" color="text.secondary" sx={ { fontSize: 13 } }>
         { description }
       </Typography>
+    </Box>
+  </Box>
+);
+
+/**
+ * 페르소나 일러스트 프리뷰 카드 (래스터 이미지)
+ *
+ * @param {string} fig - PERSONA 번호 [Required]
+ * @param {string} title - 일러스트 제목 [Required]
+ * @param {string} description - 설명 [Required]
+ * @param {string} src - 이미지 경로 [Required]
+ * @param {string} style - 스타일 명세 [Required]
+ * @param {string} prompt - 생성에 사용된 프롬프트 요약 [Optional]
+ *
+ * Example usage:
+ * <PersonaCard fig="PERSONA 1" title="Canvas Designer" description="..." src="/persona/canvas_designer_line.png" style="..." />
+ */
+const PersonaCard = ({ fig, title, description, src, style, prompt }) => (
+  <Box
+    sx={ {
+      border: '1px solid',
+      borderColor: 'divider',
+      borderRadius: 1,
+      overflow: 'hidden',
+      mb: 2,
+    } }
+  >
+    <Box
+      sx={ {
+        bgcolor: 'hsl(260, 20%, 4%)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        p: 4,
+        minHeight: 280,
+        position: 'relative',
+      } }
+    >
+      <Typography
+        variant="caption"
+        sx={ {
+          position: 'absolute',
+          top: 12,
+          left: 16,
+          color: 'rgba(255,255,255,0.3)',
+          fontFamily: 'monospace',
+          fontSize: 11,
+        } }
+      >
+        { fig }
+      </Typography>
+      <Box
+        component="img"
+        src={ src }
+        alt={ title }
+        sx={ {
+          maxWidth: '100%',
+          maxHeight: 400,
+          height: 'auto',
+          objectFit: 'contain',
+        } }
+      />
+    </Box>
+    <Box sx={ { p: 2 } }>
+      <Box sx={ { display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 } }>
+        <Typography variant="subtitle2" sx={ { fontWeight: 700 } }>
+          { title }
+        </Typography>
+        <Chip
+          label="Nano Banana"
+          size="small"
+          color="warning"
+          variant="outlined"
+          sx={ { fontSize: 11, height: 20 } }
+        />
+      </Box>
+      <Typography variant="body2" color="text.secondary" sx={ { fontSize: 13, mb: 1 } }>
+        { description }
+      </Typography>
+      <Box sx={ { display: 'flex', gap: 1, mb: 0.5 } }>
+        <Typography
+          variant="caption"
+          sx={ { fontWeight: 600, minWidth: 50, color: 'text.secondary' } }
+        >
+          Style
+        </Typography>
+        <Typography
+          variant="caption"
+          sx={ { fontFamily: 'monospace', color: 'text.secondary' } }
+        >
+          { style }
+        </Typography>
+      </Box>
+      { prompt && (
+        <Box
+          sx={ {
+            mt: 1,
+            p: 1.5,
+            bgcolor: 'action.hover',
+            borderRadius: 0.5,
+          } }
+        >
+          <Typography
+            variant="caption"
+            sx={ {
+              fontFamily: 'monospace',
+              fontSize: 11,
+              lineHeight: 1.6,
+              color: 'text.secondary',
+              display: 'block',
+            } }
+          >
+            { prompt }
+          </Typography>
+        </Box>
+      ) }
     </Box>
   </Box>
 );
@@ -242,6 +377,25 @@ export const Docs = {
           각 에셋이 무엇을 보여주고, 어디서 어떻게 쓰이는지 정의합니다.
           실제 이미지 제작은 별도 — 여기서는 제작 명세를 정리합니다.
         </Typography>
+
+        {/* ── Persona 일러스트 (Nano Banana) ── */}
+        <SectionTitle
+          title="Persona 일러스트"
+          description="VDL의 두 핵심 페르소나를 시각화한 라인아트 일러스트입니다. Gemini 2.5 Flash Image (Nano Banana)로 생성. 다크 배경(hsl 260 20% 4%) 위 흰색 컨투어 라인만으로 구성됩니다."
+        />
+        { PERSONA_ILLUSTRATIONS.map((item) => (
+          <PersonaCard
+            key={ item.fig }
+            fig={ item.fig }
+            title={ item.title }
+            description={ item.description }
+            src={ item.src }
+            style={ item.style }
+            prompt={ item.prompt }
+          />
+        )) }
+
+        <Divider sx={ { my: 4 } } />
 
         {/* ── 0. 레퍼런스 일러스트 ── */}
         <SectionTitle

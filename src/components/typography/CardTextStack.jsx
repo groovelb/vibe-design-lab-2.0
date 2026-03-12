@@ -43,12 +43,12 @@ const CardTextStack = forwardRef(function CardTextStack({
   const shouldUppercase = isTitleUppercase ?? variants.titleUppercase;
 
   return (
-    <Stack ref={ref} spacing={2} sx={sx} {...props}>
+    <Stack ref={ref} spacing={1} sx={sx} {...props}>
       {label && (
         <Typography
           variant="caption"
           sx={{
-            color: 'text.disabled',
+            color: 'text.secondary',
             textTransform: 'uppercase',
             letterSpacing: '0.08em',
           }}
