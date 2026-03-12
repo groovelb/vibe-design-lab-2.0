@@ -13,9 +13,9 @@ import { PAGES } from '../../data/contents';
 const { problem } = PAGES.landing;
 
 const ALL_PERSONA_MEDIA = [
-  { poster: '/persona/canvas_designer.webp', video: '/persona/canvas_designer.mp4' },
+  { poster: '/persona/p1.png', video: '/persona/p1.mp4' },
   { poster: '/persona/sandwitch_pm.webp', video: '/persona/sandwitch_pm.mp4' },
-  { poster: '/persona/pipeline_developer.webp', video: '/persona/pipeline_developer.mp4' },
+  { poster: '/persona/p2.png', video: '/persona/p2.mp4' },
 ];
 
 // PM(index 1)은 온라인 1기에서 제외 — 데이터는 유지, UI에서만 필터링
@@ -52,7 +52,7 @@ export function LandingProblem() {
                   title={item.subtitle}
                   description={item.text}
                   thumbnailSlot={
-                    <Box sx={{ width: '100%', aspectRatio: '4/3', overflow: 'hidden' }}>
+                    <Box sx={{ width: '100%', aspectRatio: '4/3', overflow: 'hidden', bgcolor: '#09080b' }}>
                       <Box
                         component="video"
                         autoPlay

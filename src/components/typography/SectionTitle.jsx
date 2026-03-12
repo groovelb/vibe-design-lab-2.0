@@ -25,7 +25,7 @@ const SectionTitle = forwardRef(function SectionTitle({
   return (
     <Box ref={ref} sx={sx} {...props}>
       <Typography
-        variant="h1"
+        variant="h2"
         component="h2"
         sx={{ fontWeight: 800 }}
       >
@@ -33,9 +33,9 @@ const SectionTitle = forwardRef(function SectionTitle({
       </Typography>
       {subtitle && (
         <Typography
-          variant="h2"
+          variant="h3"
           component="p"
-          sx={{ color: 'text.secondary', mt: 2 }}
+          sx={{ color: 'text.secondary', mt: 1, fontWeight: 400 }}
         >
           {subtitle}
         </Typography>

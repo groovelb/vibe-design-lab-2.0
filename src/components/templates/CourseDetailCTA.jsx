@@ -4,17 +4,15 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
 import { SectionContainer } from '../container/SectionContainer';
 import { SectionDivider } from '../typography/SectionDivider';
 import { SectionTitle } from '../typography/SectionTitle';
-import { CohortBadge } from '../../common/ui/CohortBadge';
 import FadeTransition from '../motion/FadeTransition';
 import { PAGES } from '../../data/contents';
-import { COURSES } from '../../data/landingMockData';
 import { Mail, Video } from 'lucide-react';
 
 const { cta, hero } = PAGES.courseDetail;
-const course = COURSES[0];
 
 /**
  * CourseDetailCTA 섹션 템플릿
@@ -108,42 +106,49 @@ const CourseDetailCTA = forwardRef(function CourseDetailCTA(props, ref) {
 
       {/* 최종 가격 + CTA */}
       <FadeTransition direction="up" delay={200} isTriggerOnView>
-        <Stack
-          spacing={3}
-          alignItems="center"
+        <Box
           sx={{
-            py: { xs: 6, md: 8 },
-            px: 3,
-            backgroundColor: 'background.paper',
-            textAlign: 'center',
+            p: { xs: 4, md: 5 },
+            border: 1,
+            borderColor: 'divider',
           }}
         >
-          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-            <CohortBadge status={course.cohortStatus} />
-            <Typography variant="caption" sx={{ color: 'text.disabled' }}>
-              오프라인 3기 진행중
-            </Typography>
-          </Box>
-          <Typography variant="h4" sx={{ fontWeight: 800 }}>
-            {course.title}
-          </Typography>
-          <Stack spacing={0.5} alignItems="center">
-            <Typography variant="h6" sx={{ fontWeight: 700 }}>
-              {hero.price}
-            </Typography>
-            <Typography variant="caption" sx={{ color: 'text.disabled' }}>
-              {hero.priceNote}
-            </Typography>
-          </Stack>
-          <Stack direction="row" spacing={2}>
-            <Button variant="text" size="small">
-              문의하기
-            </Button>
-            <Button variant="contained" size="large">
+          <Stack
+            direction={{ xs: 'column', md: 'row' }}
+            justifyContent="space-between"
+            alignItems={{ md: 'center' }}
+            spacing={3}
+          >
+            <Stack spacing={1.5}>
+              <Stack direction="row" spacing={1} flexWrap="wrap">
+                <Chip
+                  label="오프라인 3기 진행중 정원 마감"
+                  size="small"
+                  sx={{ bgcolor: 'action.hover', color: 'text.secondary', fontSize: '0.75rem' }}
+                />
+                <Chip
+                  label="온라인 얼리버드 모집 중"
+                  size="small"
+                  sx={{ bgcolor: 'error.main', color: 'error.contrastText', fontSize: '0.75rem' }}
+                />
+              </Stack>
+              <Stack spacing={0.5}>
+                <Typography variant="caption" sx={{ color: 'text.disabled' }}>
+                  수강료
+                </Typography>
+                <Typography variant="h5" sx={{ fontWeight: 700 }}>
+                  {hero.price}
+                </Typography>
+              </Stack>
+              <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+                {hero.priceNote}
+              </Typography>
+            </Stack>
+            <Button variant="contained" size="large" sx={{ flexShrink: 0 }}>
               {cta.ctaLabel}
             </Button>
           </Stack>
-        </Stack>
+        </Box>
       </FadeTransition>
     </SectionContainer>
   );

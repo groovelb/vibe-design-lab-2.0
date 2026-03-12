@@ -37,6 +37,10 @@ export function CourseDetailVision() {
           <Grid key={card.title} size={{ xs: 12, md: 6 }}>
             <FadeTransition direction="up" delay={index * 150} isTriggerOnView>
               <Stack spacing={3}>
+                {/* 번호 */}
+                <Typography variant="h3" sx={{ fontWeight: 800, color: 'text.disabled' }}>
+                  {index + 1}
+                </Typography>
                 {/* 비디오 placeholder */}
                 <Box
                   sx={{

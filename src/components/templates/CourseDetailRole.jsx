@@ -36,15 +36,17 @@ export function CourseDetailRole() {
           <Grid key={card.problem} size={{ xs: 12, md: 6 }}>
             <FadeTransition direction="up" delay={index * 100} isTriggerOnView>
               <Stack spacing={2}>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: 'text.disabled',
-                    textDecoration: 'line-through',
-                  }}
-                >
-                  {card.problem}
-                </Typography>
+                <Stack direction="row" spacing={1} alignItems="center">
+                  <Typography variant="body2" sx={{ color: 'text.disabled', fontWeight: 700 }}>
+                    ✕
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{ color: 'text.disabled' }}
+                  >
+                    {card.problem}
+                  </Typography>
+                </Stack>
                 <Typography variant="h6" sx={{ fontWeight: 700 }}>
                   {card.solution}
                 </Typography>
