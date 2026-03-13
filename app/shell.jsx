@@ -26,7 +26,7 @@ export default function SiteShell({ children }) {
   return (
     <AppShell
       logo={
-        <Typography variant="h6" sx={{ fontWeight: 800, letterSpacing: '-0.02em' }}>
+        <Typography variant="h6" sx={{ fontFamily: 'Inter, sans-serif', fontWeight: 800, letterSpacing: '-0.02em', textTransform: 'uppercase' }}>
           {GNB_DATA.logo}
         </Typography>
       }

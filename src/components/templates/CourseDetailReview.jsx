@@ -81,6 +81,7 @@ export function CourseDetailReview() {
                 memberRole={formatRole(review)}
                 variant="compact"
                 cardVariant="editorial"
+                mediaRatio="auto"
               />
               {review.content.length > TRUNCATE_LENGTH && (
                 <Button

@@ -84,7 +84,7 @@ export function DesignAsBuild(props) {
       );
       const cellX = side === 1 ? (cell.col + 1) * grid : cell.col * grid;
       const cellY = cell.row * grid + grid / 2;
-      const len = 14 + Math.floor(Math.random() * 8);
+      const len = 14 + ((cell.col * 7 + cell.row * 13) % 8);
       return { x: cellX, y: cellY, side, len };
     });
   }, [activeCells]);

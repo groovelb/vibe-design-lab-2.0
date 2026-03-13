@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
 import { SectionContainer } from '../container/SectionContainer';
+import { CarouselContainer } from '../container/CarouselContainer';
 import LineGrid from '../layout/LineGrid';
 import { TestimonialCard } from '../card/TestimonialCard';
 import FadeTransition from '../motion/FadeTransition';
@@ -17,14 +18,7 @@ import { courseReviews, webinarReviews } from '../../data/review';
 
 const { courseReview } = PAGES.landing;
 
-const VISIBLE_COURSE_COUNT = 3;
-const VISIBLE_WEBINAR_COUNT = 3;
-const TRUNCATE_LENGTH = 120;
-
-function truncateText(text, maxLength) {
-  if (text.length <= maxLength) return text;
-  return text.slice(0, maxLength) + '…';
-}
+const VISIBLE_WEBINAR_COUNT = 4;
 
 function maskUserId(userId) {
   if (userId.length <= 5) return userId;
@@ -39,19 +33,19 @@ function formatRole(review) {
 /**
  * LandingCourseReview 섹션 템플릿
  *
- * 코스 수강생 후기 + 웨비나 참여자 후기 2단 구성.
- * 코스 후기: 포트폴리오 썸네일 + 이름/직무 + 리뷰 텍스트 (3컬럼).
- * 웨비나 후기: 아바타 + 마스킹된 유저ID + 플랫폼 + 리뷰 텍스트 (3컬럼).
+ * 코스 수강생 후기: CarouselContainer 4col, 리뷰 텍스트 3줄 클램프.
+ * 웨비나 참여자 후기: 4col 그리드 전체 표시, 하단 접기/더보기 토글.
  *
  * Example usage:
  * <LandingCourseReview />
  */
 export function LandingCourseReview() {
   const [expandedCourse, setExpandedCourse] = useState({});
-  const [expandedWebinar, setExpandedWebinar] = useState({});
+  const [isWebinarExpanded, setIsWebinarExpanded] = useState(false);
 
-  const visibleCourseReviews = courseReviews.slice(0, VISIBLE_COURSE_COUNT);
-  const visibleWebinarReviews = webinarReviews.slice(0, VISIBLE_WEBINAR_COUNT);
+  const visibleWebinarReviews = isWebinarExpanded
+    ? webinarReviews
+    : webinarReviews.slice(0, VISIBLE_WEBINAR_COUNT);
 
   return (
     <SectionContainer>
@@ -65,45 +59,53 @@ export function LandingCourseReview() {
         />
       </FadeTransition>
 
-      {/* ── 코스 후기 카드 — 3컬럼 ── */}
-      <LineGrid container gap={96} borderColor="divider">
-        {visibleCourseReviews.map((review, index) => (
-          <Grid key={review.name} size={{ xs: 12, md: 4 }}>
-            <FadeTransition direction="up" delay={index * 150} isTriggerOnView>
-              <TestimonialCard
-                thumbnailSrc={review.image}
-                thumbnailAlt={`${review.name}의 결과물`}
-                quote={
-                  expandedCourse[index]
-                    ? review.content
-                    : truncateText(review.content, TRUNCATE_LENGTH)
-                }
-                memberName={review.name}
-                memberRole={formatRole(review)}
-                variant="compact"
-                cardVariant="editorial"
-              />
-              {review.content.length > TRUNCATE_LENGTH && (
-                <Button
-                  variant="text"
-                  size="small"
-                  onClick={() =>
-                    setExpandedCourse((prev) => ({
-                      ...prev,
-                      [index]: !prev[index],
-                    }))
-                  }
-                  sx={{ mt: 0.5, p: 0, minWidth: 0 }}
-                >
-                  {expandedCourse[index] ? '접기' : '더보기'}
-                </Button>
-              )}
-            </FadeTransition>
-          </Grid>
-        ))}
-      </LineGrid>
+      {/* ── 코스 후기 — 4col 캐러셀, 3줄 클램프 ── */}
+      <CarouselContainer
+        items={courseReviews}
+        visible={{ xs: 1, sm: 2, md: 4 }}
+        gap={24}
+        hasDivider
+        navPosition="outside"
+        renderItem={(review, index) => (
+          <Box>
+            <TestimonialCard
+              thumbnailSrc={review.image}
+              thumbnailAlt={`${review.name}의 결과물`}
+              quote={review.content}
+              memberName={review.name}
+              memberRole={formatRole(review)}
+              variant="compact"
+              cardVariant="editorial"
+              mediaRatio="auto"
+              sx={{
+                ...(!expandedCourse[index] && {
+                  '& .MuiTypography-body2': {
+                    display: '-webkit-box',
+                    WebkitLineClamp: 3,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden',
+                  },
+                }),
+              }}
+            />
+            <Button
+              variant="text"
+              size="small"
+              onClick={() =>
+                setExpandedCourse((prev) => ({
+                  ...prev,
+                  [index]: !prev[index],
+                }))
+              }
+              sx={{ mt: 0.5, p: 0, minWidth: 0 }}
+            >
+              {expandedCourse[index] ? '접기' : '더보기'}
+            </Button>
+          </Box>
+        )}
+      />
 
-      {/* ── 웨비나 참여자 후기 ── */}
+      {/* ── 웨비나 참여자 후기 — 4col 그리드, 접기/더보기 ── */}
       <Box sx={{ mt: { xs: 8, md: 12 } }}>
         <FadeTransition direction="up" isTriggerOnView>
           <SectionDivider
@@ -112,12 +114,11 @@ export function LandingCourseReview() {
           />
         </FadeTransition>
 
-        <LineGrid container gap={96} borderColor="divider">
+        <LineGrid container gap={48} borderColor="divider">
           {visibleWebinarReviews.map((review, index) => (
-            <Grid key={review.userId} size={{ xs: 12, md: 4 }}>
-              <FadeTransition direction="up" delay={index * 100} isTriggerOnView>
+            <Grid key={review.userId} size={{ xs: 12, sm: 6, md: 3 }}>
+              <FadeTransition direction="up" delay={index * 80} isTriggerOnView>
                 <Stack spacing={1.5}>
-                  {/* 유저 정보 */}
                   <Stack direction="row" spacing={1.5} alignItems="center">
                     <Avatar
                       sx={{
@@ -125,7 +126,7 @@ export function LandingCourseReview() {
                         height: 36,
                         bgcolor: 'action.hover',
                         fontSize: '0.75rem',
-                        color: 'text.disabled',
+                        color: 'text.secondary',
                       }}
                     />
                     <Stack spacing={0}>
@@ -134,44 +135,43 @@ export function LandingCourseReview() {
                       </Typography>
                       <Typography
                         variant="caption"
-                        sx={{ color: 'text.disabled' }}
+                        sx={{ color: 'text.secondary' }}
                       >
                         Threads
                       </Typography>
                     </Stack>
                   </Stack>
 
-                  {/* 리뷰 본문 */}
                   <Typography
                     variant="body2"
-                    sx={{ color: 'text.secondary', lineHeight: 1.7 }}
+                    sx={{
+                      color: 'text.secondary',
+                      lineHeight: 1.7,
+                      display: '-webkit-box',
+                      WebkitLineClamp: 3,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden',
+                    }}
                   >
-                    {expandedWebinar[index]
-                      ? review.content
-                      : truncateText(review.content, TRUNCATE_LENGTH)}
+                    {review.content}
                   </Typography>
-
-                  {/* 더보기 */}
-                  {review.content.length > TRUNCATE_LENGTH && (
-                    <Button
-                      variant="text"
-                      size="small"
-                      onClick={() =>
-                        setExpandedWebinar((prev) => ({
-                          ...prev,
-                          [index]: !prev[index],
-                        }))
-                      }
-                      sx={{ p: 0, minWidth: 0, alignSelf: 'flex-start' }}
-                    >
-                      {expandedWebinar[index] ? '접기' : '더보기'}
-                    </Button>
-                  )}
                 </Stack>
               </FadeTransition>
             </Grid>
           ))}
         </LineGrid>
+
+        {webinarReviews.length > VISIBLE_WEBINAR_COUNT && (
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => setIsWebinarExpanded((prev) => !prev)}
+            >
+              {isWebinarExpanded ? '접기' : `더보기 (${webinarReviews.length - VISIBLE_WEBINAR_COUNT})`}
+            </Button>
+          </Box>
+        )}
       </Box>
     </SectionContainer>
   );

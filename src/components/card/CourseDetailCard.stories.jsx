@@ -1,7 +1,7 @@
 import Placeholder from '../../common/ui/Placeholder';
 import { CourseDetailCard } from './CourseDetailCard';
 import courseThumbnail from '../../assets/course/coure_thumbnail_starterkit.png';
-import courseVideo from '../../assets/course/coure_thumbnail_starterkit.mp4';
+const courseVideo = '/assets/course/coure_thumbnail_starterkit.mp4';
 
 export default {
   title: 'Component/3. Card/CourseDetailCard',

@@ -32,13 +32,13 @@ export function LandingPage() {
       <LandingHero />
       <PageContainer>
         <LandingProblem />
-        {/* <LandingWhyVibeDesign /> */}
+        <LandingWhyVibeDesign />
         <LandingSolution />
         <LandingLearningMethod />
         <LandingCourseHighlight />
         <LandingCourseReview />
-        <LandingDictionaryPreview />
-        <LandingCommunitySnapshot />
+        {/* <LandingDictionaryPreview /> */}
+        {/* <LandingCommunitySnapshot /> */}
         <LandingFooterCTA />
       </PageContainer>
     </>

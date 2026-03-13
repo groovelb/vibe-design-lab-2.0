@@ -187,7 +187,7 @@ const CarouselContainer = forwardRef(function CarouselContainer({
    */
   const navOffset = navPosition === 'inside'
     ? { xs: 8, sm: 12, md: 16 }
-    : { xs: -40, sm: -48, md: -56 };
+    : { xs: -20, sm: -24, md: -48 };
 
   /**
    * 아이콘 크기 (반응형)
@@ -202,7 +202,9 @@ const CarouselContainer = forwardRef(function CarouselContainer({
         width: '100%',
         maxWidth: '100%',
         minWidth: 0,
-        overflow: navPosition === 'outside' ? 'visible' : 'hidden',
+        overflow: navPosition === 'outside'
+          ? { xs: 'hidden', md: 'visible' }
+          : 'hidden',
         ...sx,
       }}
       {...props}

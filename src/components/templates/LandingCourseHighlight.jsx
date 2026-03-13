@@ -7,7 +7,8 @@ import { SectionTitle } from '../typography/SectionTitle';
 import { PAGES } from '../../data/contents';
 import { COURSES } from '../../data/landingMockData';
 import coursePoster from '../../assets/course/course_thumbnail_line.png';
-import courseVideo from '../../assets/course/course_thumbnail_line.mp4';
+
+const courseVideo = '/assets/course/course_thumbnail_line.mp4';
 
 const { courseHighlight } = PAGES.landing;
 
@@ -35,7 +36,7 @@ export function LandingCourseHighlight() {
 
         <FadeTransition direction="up" isTriggerOnView>
           <CourseDetailCard
-            videoSrc={courseVideo.src || courseVideo}
+            videoSrc={courseVideo}
             posterSrc={coursePoster.src || coursePoster}
             cohortStatus={course.cohortStatus}
             duration={course.duration}

@@ -23,6 +23,7 @@ import AspectMedia from '../media/AspectMedia';
  * @param {string} resultImage - 결과물 이미지 [Optional]
  * @param {string} variant - 표시 모드 ('compact' | 'full') [Optional, 기본값: 'compact']
  * @param {string} cardVariant - 카드 컨테이너 스타일 ('outlined' | 'editorial') [Optional, 기본값: 'outlined']
+ * @param {string} mediaRatio - 썸네일 비율 ('1/1' | '4/3' | '16/9' | 'auto') [Optional, 기본값: '1/1']
  * @param {object} sx - 추가 스타일 [Optional]
  *
  * Example usage:
@@ -44,6 +45,7 @@ const TestimonialCard = forwardRef(function TestimonialCard({
   resultImage,
   variant = 'compact',
   cardVariant = 'outlined',
+  mediaRatio = '1/1',
   sx,
   ...props
 }, ref) {
@@ -68,18 +70,16 @@ const TestimonialCard = forwardRef(function TestimonialCard({
           component="img"
           src={imgSrc}
           alt={thumbnailAlt || `${memberName}의 결과물`}
-          sx={{
-            width: '100%',
-            aspectRatio: '1/1',
-            objectFit: 'cover',
-            display: 'block',
-          }}
+          sx={mediaRatio === 'auto'
+            ? { display: 'block', width: '100%', height: 'auto', objectFit: 'contain', aspectRatio: 'auto' }
+            : { width: '100%', aspectRatio: mediaRatio, objectFit: 'cover', display: 'block' }
+          }
         />
       ) : (
         <Box
           sx={{
             width: '100%',
-            aspectRatio: '1/1',
+            ...(mediaRatio !== 'auto' && { aspectRatio: mediaRatio }),
             border: '1px dashed',
             borderColor: 'divider',
           }}
