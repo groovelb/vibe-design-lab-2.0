@@ -1,7 +1,7 @@
 'use client';
 import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { SectionContainer } from '../container/SectionContainer';
-import { FitText } from '../typography/FitText';
 import ScrollRevealText from '../kinetic-typography/ScrollRevealText';
 import { PAGES } from '../../data/contents';
 
@@ -28,9 +28,18 @@ export function LandingWhyVibeDesign() {
         alignItems: 'center',
       }}
     >
-      <Box sx={{ width: '100%', mb: { xs: 4, md: 6 } }}>
-        <FitText text="Why Vibe Design" variant="headline" />
-      </Box>
+      <Typography
+        variant="h4"
+        sx={{
+          fontFamily: 'Inter, sans-serif',
+          fontWeight: 800,
+          textTransform: 'uppercase',
+          letterSpacing: '0.1em',
+          mb: { xs: 4, md: 6 },
+        }}
+      >
+        VIBE DESIGN LAB
+      </Typography>
       <ScrollRevealText
         text={whyVibeDesign.statement}
         variant="display"

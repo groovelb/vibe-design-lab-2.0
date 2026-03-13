@@ -39,8 +39,8 @@ const GENERATION_CONFIG = {
   maxOutputTokens: 8192,
   responseModalities: ['IMAGE'],
   imageConfig: {
-    aspectRatio: '1:1',
-    imageSize: '2K',
+    aspectRatio: '4:3',
+    imageSize: '4K',
     numberOfImages: 2,
   },
 };
@@ -69,23 +69,22 @@ const SUBJECTS = [
     // VP1: System Over Drawing — "결과물보다 기준을 먼저 설계합니다"
     name: 'system-over-drawing',
     prompt: `\
-${BASE_PROMPT}
+Recreate this reference image as a LANDSCAPE 4:3 illustration, centered in the frame and filling the full canvas, with these modifications:
 
-Use the reference image as a LAYOUT and FORM guide: match its spread-out map composition, the way objects occupy different spatial zones, and how connection lines with node dots link them. But draw completely different objects as described below.
+1. COLOR: All strokes in cool off-white RGB(244, 244, 246) instead of gold/amber. Background solid RGB(10, 8, 12).
 
-Subject: Design tokens converging into a component — the system that makes the drawing.
+2. TEXT: Replace "CLAUDE CODE" with nothing (remove it). Replace "AESTHETICS GUIDELINES" with "DESIGN SYSTEM". Keep all 5 right-side layer labels as they are.
 
-CENTER — the largest object, like the reference's central "SKILL.md" platform. A thick rounded-corner slab with layered depth. On its top surface, a simplified component structure: a header bar area, a content region subdivided into 2-3 sections, and a small action area at the bottom. Slightly abstracted — recognizable as a UI component but rendered as clean geometric subdivisions, not a literal screenshot. Rich internal wireframe lines showing the component's inner grid and structure.
+3. SIMPLIFY each layer's surface content:
+   - Typography: just "Ag" letterforms floating above the slab
+   - Color & Theme: a neat row of 5 small outline circles on the surface — a color palette
+   - Motion: 1-2 simple curved lines
+   - Spatial Composition: a clean simple grid
+   - Background & Detail: plain minimal slab
 
-LOWER-LEFT — like the reference's "Aesthetics Guidelines" stacked layers. A Typography token: 3 thin slabs fanned vertically with visible thickness and page-like edges. Each slab has horizontal rules of different weight on its surface — representing type scale. Compact, clearly a "stack of standards."
+4. Remove background blueprint grid. Keep dimension lines on the left side. Keep node dots.
 
-UPPER-LEFT — like the reference's "Design Thinking" module. A Spacing token: an open shallow box with visible depth, containing a neat internal grid of crossing lines forming equal cells. Looks like a precision measurement tray.
-
-LOWER-RIGHT — a Color token: 3 small cylindrical volumes (like stacked coins or lenses) arranged in a stepped diagonal, each a different height. Simple, distinct silhouette.
-
-Connection lines from each token to the center component, routed cleanly along isometric axes without crossing. Small circular node markers at every junction where a line meets an object.
-
-Total: 4 objects + 3 connection lines. Nothing else in the scene.`,
+5. No color fills anywhere — pure outline strokes only. Keep the same isometric angle, slab thickness, rounded corners, and line quality as the reference.`,
   },
   {
     // VP2: The Vibe Standard — "AI가 알아듣는 표준 디자인 언어 체계"
@@ -147,7 +146,8 @@ Nothing else. No side objects. The vertical input-pipeline-output is the entire 
 ];
 
 // ── 스타일 레퍼런스 이미지 ────────────────────────────────
-const STYLE_REFERENCE = join(ROOT_DIR, 'src', 'reference', 'isometric', 'Generated Image March 06, 2026 - 5_40PM.png');
+// 원본 레퍼런스 (중앙 정렬 구도)
+const STYLE_REFERENCE = join(ROOT_DIR, 'src', 'reference', 'isometric', 'Generated Image March 06, 2026 - 5_52PM (1).png');
 
 async function imageToBase64(filepath) {
   const buffer = await readFile(filepath);
@@ -181,8 +181,15 @@ async function generateImage(subject) {
     for (const part of parts) {
       if (part.inlineData) {
         const ext = part.inlineData.mimeType === 'image/png' ? 'png' : 'webp';
-        const suffix = savedCount === 0 ? '' : `_v${savedCount + 1}`;
-        const filename = `${subject.name}${suffix}.${ext}`;
+        // 버전 넘버링: 기존 파일 확인 후 다음 번호 부여
+        const { readdirSync } = await import('fs');
+        const existing = readdirSync(OUTPUT_DIR).filter(f => f.startsWith(subject.name) && f.includes('_v'));
+        const maxVersion = existing.reduce((max, f) => {
+          const match = f.match(/_v(\d+)\./);
+          return match ? Math.max(max, parseInt(match[1])) : max;
+        }, 0);
+        const version = maxVersion + 1 + savedCount;
+        const filename = `${subject.name}_v${version}.${ext}`;
         const filepath = join(OUTPUT_DIR, filename);
 
         await writeFile(filepath, Buffer.from(part.inlineData.data, 'base64'));
