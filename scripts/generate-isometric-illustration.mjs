@@ -89,34 +89,26 @@ Recreate this reference image as a LANDSCAPE 4:3 illustration, centered in the f
   {
     // VP2: The Vibe Standard — "AI가 알아듣는 표준 디자인 언어 체계"
     name: 'vibe-standard',
+    // remix mode: sends v2 + v3 as dual reference
+    remix: true,
+    remix: true,
+    remixRefs: [
+      'src/assets/isometric/vibe-standard_v6.png',  // REF A: node quality + tree structure
+    ],
     prompt: `\
-${BASE_PROMPT}
+Reference image A shows a taxonomy tree with premium-quality isometric node objects. Each node is a polished 3D slab with generous rounded corners and unique symbolic inner detail.
 
-Subject: A taxonomy shelf where named standard components are organized — "naming creates consistency."
+Create a NEW version that preserves A's node quality but rearranges the tree layout into ISOMETRIC DEPTH PERSPECTIVE:
 
-The composition is a 3-row isometric shelving unit (like an open bookshelf or display rack seen from the front-left), each shelf is a thin horizontal platform:
+- Same nodes, same shapes, same refined quality as reference A
+- But arrange them on an isometric ground plane viewed from above-left at 30°
+- Root at upper-back, level 2 spreading forward-left and forward-right along 30° diagonals, level 3 even further forward and wider
+- Connection lines follow isometric diagonal axes with filled junction dots
+- The composition fills the full 4:3 canvas with generous spacing
 
-TOP SHELF — holds 3 small wireframe objects clearly spaced apart:
-- A small rounded-rectangle (Button shape)
-- A small rectangle with an inner circle (Avatar/Badge shape)
-- A small horizontal bar with a triangle on one end (Input field with dropdown indicator)
+The key difference from reference A: instead of a FRONTAL symmetric diamond, the tree RECEDES INTO DEPTH — the root is small and far away at the back, the leaf nodes are close and large at the front. Like looking down a hallway of nodes.
 
-MIDDLE SHELF — holds 3 different wireframe objects:
-- A taller rectangle divided into top media + bottom text area (Card shape)
-- A horizontal strip with 3 evenly spaced dots (Tab bar / Navigation shape)
-- A small square with an X in the corner (Modal/Dialog shape)
-
-BOTTOM SHELF — holds 2 wider wireframe objects:
-- A wide rectangle divided into 2 columns (Grid layout shape)
-- A tall narrow rectangle with stacked horizontal sections (Page scaffold shape)
-
-Each shelf has a small rectangular tag hanging from its front edge — representing the taxonomy label/name for that row's category.
-
-In front of the shelf unit, one component (a Card wireframe) is mid-flight, being placed onto an empty spot on the middle shelf. A dashed line traces its path from a floating position to its target slot. Glow dot at the target landing position.
-
-The shelf structure itself has clear vertical supports on both sides connecting all 3 shelves — the scaffolding of the taxonomy system.
-
-Nothing else. No extra mechanisms. The structure IS the message: named shelves organize components into a consistent standard.`,
+Off-white strokes on dark background. No text. No fills. Two stroke weights.`,
   },
   {
     // VP3: Design As Build — "구현의 설계도가 되는 디자인 접근방식"
@@ -158,17 +150,30 @@ async function imageToBase64(filepath) {
 async function generateImage(subject) {
   console.log(`\n⏳ Generating: ${subject.name}...`);
 
-  const refBase64 = await imageToBase64(STYLE_REFERENCE);
-  const refMime = STYLE_REFERENCE.endsWith('.png') ? 'image/png' : 'image/jpeg';
+  const parts = [];
+
+  if (subject.remix && subject.remixRefs) {
+    // remix mode: 여러 레퍼런스 이미지를 전송 (ROOT_DIR 기준 경로)
+    for (const ref of subject.remixRefs) {
+      const resolved = join(ROOT_DIR, ref);
+      const refBase64 = await imageToBase64(resolved);
+      const refMime = ref.endsWith('.png') ? 'image/png' : 'image/jpeg';
+      parts.push({ inlineData: { mimeType: refMime, data: refBase64 } });
+    }
+  } else {
+    // 기본 모드: 단일 스타일 레퍼런스
+    const refBase64 = await imageToBase64(STYLE_REFERENCE);
+    const refMime = STYLE_REFERENCE.endsWith('.png') ? 'image/png' : 'image/jpeg';
+    parts.push({ inlineData: { mimeType: refMime, data: refBase64 } });
+  }
+
+  parts.push({ text: subject.prompt });
 
   const response = await ai.models.generateContent({
     model: MODEL,
     contents: [{
       role: 'user',
-      parts: [
-        { inlineData: { mimeType: refMime, data: refBase64 } },
-        { text: subject.prompt },
-      ],
+      parts,
     }],
     generationConfig: GENERATION_CONFIG,
   });

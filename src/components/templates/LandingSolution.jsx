@@ -18,10 +18,10 @@ import { ConstructButton } from '../motion/ConstructButton';
 import { COL_STAGGER, VISUAL_LEAD } from '../motion/constants';
 import { PAGES, VALUE_PROPOSITIONS } from '../../data/contents';
 import { SystemOverDrawingV3 } from '../../assets/brandIllustration/SystemOverDrawingV3';
-import { VibeStandard } from '../../assets/brandIllustration/VibeStandard';
+import { VibeStandardTree } from '../../assets/brandIllustration/VibeStandardTree';
 import { DesignAsBuild } from '../../assets/brandIllustration/DesignAsBuild';
 
-const ILLUSTRATIONS = [SystemOverDrawingV3, VibeStandard, DesignAsBuild];
+const ILLUSTRATIONS = [SystemOverDrawingV3, VibeStandardTree, DesignAsBuild];
 
 const { howDifferent } = PAGES.landing;
 
