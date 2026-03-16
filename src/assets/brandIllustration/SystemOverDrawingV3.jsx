@@ -1,6 +1,6 @@
 'use client';
 
-import { forwardRef } from 'react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
 import { namingLine, r } from './isometricGrid';
 
 /**
@@ -13,8 +13,11 @@ import { namingLine, r } from './isometricGrid';
  * @param {object} props - SVG props passthrough [Optional]
  */
 
-const VB_W = 600;
-const VB_H = 450;
+const VB_PAD = 24;
+const VB_X = 83;
+const VB_Y = 45;
+const VB_W = 400;
+const VB_H = 330;
 const O_Y = 288;       // 수직 기준점 (unchanged)
 const RIGHT_X = 372;  // 우측정렬 기준점 — 모든 슬래브 right vertex x
 
@@ -281,6 +284,20 @@ function TopFaceContent({ id }) {
 // ── Main Component ──
 
 const SystemOverDrawingV3 = forwardRef((props, ref) => {
+  const innerRef = useRef(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const el = innerRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setInView(true); io.disconnect(); } },
+      { threshold: 0.2 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   const layers = LAYERS.map((l) => ({
     ...l,
     p: buildRectSlab(l.iz, l.fw, l.fd),
@@ -288,9 +305,13 @@ const SystemOverDrawingV3 = forwardRef((props, ref) => {
 
   return (
     <svg
-      ref={ref}
+      ref={(node) => {
+        innerRef.current = node;
+        if (typeof ref === 'function') ref(node);
+        else if (ref) ref.current = node;
+      }}
       xmlns="http://www.w3.org/2000/svg"
-      viewBox={`0 0 ${VB_W} ${VB_H}`}
+      viewBox={`${VB_X} ${VB_Y} ${VB_W} ${VB_H}`}
       fill="none"
       {...props}
     >
@@ -300,15 +321,16 @@ const SystemOverDrawingV3 = forwardRef((props, ref) => {
           from { opacity: 0.01; transform: translateY(16px); }
           to   { opacity: 1;    transform: translateY(0); }
         }
+        .sod3-hidden { opacity: 0.01; }
         .sod3-layer {
           opacity: 0.01;
           animation: sod3-enter 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
-        .sod3-l0 { animation-delay: 0s; }
-        .sod3-l1 { animation-delay: 0.12s; }
-        .sod3-l2 { animation-delay: 0.24s; }
-        .sod3-l3 { animation-delay: 0.36s; }
-        .sod3-l4 { animation-delay: 0.48s; }
+        .sod3-l0 { animation-delay: 0.8s; }
+        .sod3-l1 { animation-delay: 0.6s; }
+        .sod3-l2 { animation-delay: 0.4s; }
+        .sod3-l3 { animation-delay: 0.2s; }
+        .sod3-l4 { animation-delay: 0s; }
         @media (prefers-reduced-motion: reduce) {
           .sod3-layer { animation: none; opacity: 1; }
         }
@@ -316,8 +338,8 @@ const SystemOverDrawingV3 = forwardRef((props, ref) => {
       <defs>
         <filter
           id="sod3s"
-          x="-40"
-          y="-40"
+          x={VB_X - 40}
+          y={VB_Y - 40}
           width={VB_W + 80}
           height={VB_H + 80}
           colorInterpolationFilters="sRGB"
@@ -350,7 +372,7 @@ const SystemOverDrawingV3 = forwardRef((props, ref) => {
         const nl = namingLine(anchor.x + 5, anchor.y, 40);
 
         return (
-          <g key={l.id} className={`sod3-layer sod3-l${i}`}>
+          <g key={l.id} className={inView ? `sod3-layer sod3-l${i}` : 'sod3-hidden'}>
             {/* Container */}
             <g filter="url(#sod3s)">
               <path

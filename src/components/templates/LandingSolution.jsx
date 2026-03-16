@@ -17,11 +17,11 @@ import { ConstructBlock } from '../motion/ConstructBlock';
 import { ConstructButton } from '../motion/ConstructButton';
 import { COL_STAGGER, VISUAL_LEAD } from '../motion/constants';
 import { PAGES, VALUE_PROPOSITIONS } from '../../data/contents';
-import { SystemOverDrawing } from '../../assets/brandIllustration/SystemOverDrawing';
+import { SystemOverDrawingV3 } from '../../assets/brandIllustration/SystemOverDrawingV3';
 import { VibeStandard } from '../../assets/brandIllustration/VibeStandard';
 import { DesignAsBuild } from '../../assets/brandIllustration/DesignAsBuild';
 
-const ILLUSTRATIONS = [SystemOverDrawing, VibeStandard, DesignAsBuild];
+const ILLUSTRATIONS = [SystemOverDrawingV3, VibeStandard, DesignAsBuild];
 
 const { howDifferent } = PAGES.landing;
 
