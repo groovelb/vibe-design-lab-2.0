@@ -159,42 +159,52 @@ function TopFaceContent({ id }) {
 
   switch (id) {
     case 'background': {
-      // Diagonal hatching — background texture representation
+      // Diagonal hatching — depth gradient (back→front: subtle→visible)
       const step = 5;
       const hatchLines = [];
       for (let d = step; d < iw + ih; d += step) {
-        hatchLines.push({
+        const l = {
           x1: pad + Math.max(0, d - ih),
           y1: pad + Math.min(d, ih),
           x2: pad + Math.min(d, iw),
           y2: pad + Math.max(0, d - iw),
-        });
+        };
+        const avgPos = (l.x1 + l.x2 + l.y1 + l.y2) / 4;
+        const t = Math.min(1, (avgPos - pad) / (iw * 0.7));
+        l.opacity = 0.12 + t * 0.38;
+        hatchLines.push(l);
       }
       return (
-        <g fill="none" stroke="white" strokeWidth={SW}>
-          <rect x={pad} y={pad} width={iw} height={ih} rx="3" />
+        <g fill="none" strokeWidth={SW}>
+          <rect x={pad} y={pad} width={iw} height={ih} rx="3"
+            stroke="white" />
           {hatchLines.map((l, i) => (
-            <line key={i} x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} opacity="0.3" />
+            <line key={i} x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2}
+              stroke="var(--vdl-700)" opacity={l.opacity} />
           ))}
         </g>
       );
     }
 
-    case 'spatial':
+    case 'spatial': {
+      // Grid — non-uniform spacing for rhythm
+      const vCols = [0.18, 0.38, 0.62, 0.82];
+      const hRows = [0.22, 0.48, 0.78];
       return (
-        <g fill="none" stroke="white" strokeWidth={SW}>
-          <rect
-            x={pad} y={pad} width={iw} height={ih}
-            rx="3"
-          />
-          {[0.2, 0.4, 0.6, 0.8].map((u) => (
-            <line key={`v${u}`} x1={FW * u} y1={pad} x2={FW * u} y2={FD - pad} />
+        <g fill="none" strokeWidth={SW}>
+          <rect x={pad} y={pad} width={iw} height={ih} rx="3"
+            stroke="white" />
+          {vCols.map((u) => (
+            <line key={`v${u}`} x1={FW * u} y1={pad} x2={FW * u} y2={FD - pad}
+              stroke="var(--vdl-700)" opacity={u > 0.5 ? 0.7 : 0.4} />
           ))}
-          {[0.25, 0.5, 0.75].map((v) => (
-            <line key={`h${v}`} x1={pad} y1={FD * v} x2={FW - pad} y2={FD * v} />
+          {hRows.map((v) => (
+            <line key={`h${v}`} x1={pad} y1={FD * v} x2={FW - pad} y2={FD * v}
+              stroke="var(--vdl-700)" opacity={v > 0.5 ? 0.7 : 0.4} />
           ))}
         </g>
       );
+    }
 
     case 'motion': {
       // Cubic Bezier curve visualization with control handles
@@ -205,39 +215,43 @@ function TopFaceContent({ id }) {
 
       return (
         <g fill="none">
-          {/* Control handle lines */}
+          {/* Control handle lines (internal → subtle) */}
           <line x1={p0.x} y1={p0.y} x2={p1.x} y2={p1.y}
-            stroke="white" strokeWidth={SW} opacity="0.4" strokeDasharray="2 2" />
+            stroke="var(--vdl-700)" strokeWidth={SW} strokeDasharray="2 2" />
           <line x1={p3.x} y1={p3.y} x2={p2.x} y2={p2.y}
-            stroke="white" strokeWidth={SW} opacity="0.4" strokeDasharray="2 2" />
-          {/* Bezier curve */}
+            stroke="var(--vdl-700)" strokeWidth={SW} strokeDasharray="2 2" />
+          {/* Bezier curve (silhouette → white) */}
           <path
             d={`M${p0.x} ${p0.y}C${p1.x} ${p1.y} ${p2.x} ${p2.y} ${p3.x} ${p3.y}`}
             stroke="white" strokeWidth={SW} strokeLinecap="round"
           />
-          {/* Anchor points (filled) */}
+          {/* Anchor points (silhouette → white) */}
           <circle cx={p0.x} cy={p0.y} r={2} fill="white" />
-          <circle cx={p3.x} cy={p3.y} r={2} fill="white" />
-          {/* Control points (hollow) */}
-          <circle cx={p1.x} cy={p1.y} r={1.5} stroke="white" strokeWidth={SW} />
-          <circle cx={p2.x} cy={p2.y} r={1.5} stroke="white" strokeWidth={SW} />
+          <circle cx={p3.x} cy={p3.y} r={2.5} fill="white" />
+          {/* Control points (internal → subtle) */}
+          <circle cx={p1.x} cy={p1.y} r={1.5} stroke="var(--vdl-700)" strokeWidth={SW} />
+          <circle cx={p2.x} cy={p2.y} r={1.8} stroke="var(--vdl-700)" strokeWidth={SW} />
         </g>
       );
     }
 
-    case 'color':
+    case 'color': {
+      // Circle sizes with rhythm: crescendo toward front
+      const radii = [3.5, 4.5, 3.8, 5.5, 4, 5, 3.5];
       return (
-        <g fill="none" stroke="white" strokeWidth={SW}>
-          {[0, 1, 2, 3, 4, 5, 6].map((i) => (
+        <g fill="none" strokeWidth={SW}>
+          {radii.map((cr, i) => (
             <circle
               key={i}
               cx={pad + 6 + i * ((iw - 12) / 6)}
               cy={FD - pad * 2.5}
-              r={5}
+              r={cr}
+              stroke="white"
             />
           ))}
         </g>
       );
+    }
 
     case 'typography': {
       // Garamond Bold — thick strokes converted to filled closed paths
@@ -274,7 +288,7 @@ function TopFaceContent({ id }) {
 
       return (
         <g fill="white" stroke="white" strokeWidth={SW}>
-          {/* "A" — filled closed paths preserving Garamond form */}
+          {/* "A" */}
           <g transform={`translate(${aX}, ${pad})`}>
             <path d={aLeftLeg} />
             <path d={aRightLeg} />
@@ -282,7 +296,7 @@ function TopFaceContent({ id }) {
             <path d={aLeftSerif} />
             <path d={aRightSerif} />
           </g>
-          {/* "g" — filled closed paths preserving double-story form */}
+          {/* "g" */}
           <g transform={`translate(${r(gX)}, ${r(gY)})`}>
             <path d={gBowl} fillRule="evenodd" />
             <path d={gEar} />
@@ -372,7 +386,7 @@ const SystemOverDrawingV3 = forwardRef((props, ref) => {
           <path
             d={l.p.vLine}
             fill="none"
-            stroke="white"
+            stroke="var(--vdl-800)"
             strokeWidth={SW}
             strokeLinecap="round"
             clipPath={`url(#sod3-clip-${l.id})`}
@@ -380,7 +394,7 @@ const SystemOverDrawingV3 = forwardRef((props, ref) => {
           <path
             d={l.p.frontEdge}
             fill="none"
-            stroke="white"
+            stroke="var(--vdl-800)"
             strokeWidth={SW}
             strokeLinecap="round"
             clipPath={`url(#sod3-clip-${l.id})`}

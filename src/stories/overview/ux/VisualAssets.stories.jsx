@@ -100,16 +100,16 @@ const PHILOSOPHY_ILLUSTRATIONS = [
  */
 const ReferenceCard = ({ fig, title, description, Illustration }) => (
   <Box
-    sx={ {
+    sx={{
       border: '1px solid',
       borderColor: 'divider',
       borderRadius: 1,
       overflow: 'hidden',
       mb: 2,
-    } }
+    }}
   >
     <Box
-      sx={ {
+      sx={{
         bgcolor: '#08090A',
         display: 'flex',
         alignItems: 'center',
@@ -117,29 +117,29 @@ const ReferenceCard = ({ fig, title, description, Illustration }) => (
         p: 4,
         minHeight: 280,
         position: 'relative',
-      } }
+      }}
     >
       <Typography
         variant="caption"
-        sx={ {
+        sx={{
           position: 'absolute',
           top: 12,
           left: 16,
           color: 'rgba(255,255,255,0.3)',
           fontFamily: 'monospace',
           fontSize: 11,
-        } }
+        }}
       >
-        { fig }
+        {fig}
       </Typography>
-      <Illustration style={ { maxWidth: '100%', height: 'auto' } } />
+      <Illustration style={{ maxWidth: '100%', height: 'auto' }} />
     </Box>
-    <Box sx={ { p: 2 } }>
-      <Typography variant="subtitle2" sx={ { fontWeight: 700, mb: 0.5 } }>
-        { title }
+    <Box sx={{ p: 2 }}>
+      <Typography variant="subtitle2" sx={{ fontWeight: 700, mb: 0.5 }}>
+        {title}
       </Typography>
-      <Typography variant="body2" color="text.secondary" sx={ { fontSize: 13 } }>
-        { description }
+      <Typography variant="body2" color="text.secondary" sx={{ fontSize: 13 }}>
+        {description}
       </Typography>
     </Box>
   </Box>
@@ -160,16 +160,16 @@ const ReferenceCard = ({ fig, title, description, Illustration }) => (
  */
 const PersonaCard = ({ fig, title, description, src, style, prompt }) => (
   <Box
-    sx={ {
+    sx={{
       border: '1px solid',
       borderColor: 'divider',
       borderRadius: 1,
       overflow: 'hidden',
       mb: 2,
-    } }
+    }}
   >
     <Box
-      sx={ {
+      sx={{
         bgcolor: 'hsl(260, 20%, 4%)',
         display: 'flex',
         alignItems: 'center',
@@ -177,86 +177,86 @@ const PersonaCard = ({ fig, title, description, src, style, prompt }) => (
         p: 4,
         minHeight: 280,
         position: 'relative',
-      } }
+      }}
     >
       <Typography
         variant="caption"
-        sx={ {
+        sx={{
           position: 'absolute',
           top: 12,
           left: 16,
           color: 'rgba(255,255,255,0.3)',
           fontFamily: 'monospace',
           fontSize: 11,
-        } }
+        }}
       >
-        { fig }
+        {fig}
       </Typography>
       <Box
         component="img"
-        src={ src }
-        alt={ title }
-        sx={ {
+        src={src}
+        alt={title}
+        sx={{
           maxWidth: '100%',
           maxHeight: 400,
           height: 'auto',
           objectFit: 'contain',
-        } }
+        }}
       />
     </Box>
-    <Box sx={ { p: 2 } }>
-      <Box sx={ { display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 } }>
-        <Typography variant="subtitle2" sx={ { fontWeight: 700 } }>
-          { title }
+    <Box sx={{ p: 2 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
+        <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
+          {title}
         </Typography>
         <Chip
           label="Nano Banana"
           size="small"
           color="warning"
           variant="outlined"
-          sx={ { fontSize: 11, height: 20 } }
+          sx={{ fontSize: 11, height: 20 }}
         />
       </Box>
-      <Typography variant="body2" color="text.secondary" sx={ { fontSize: 13, mb: 1 } }>
-        { description }
+      <Typography variant="body2" color="text.secondary" sx={{ fontSize: 13, mb: 1 }}>
+        {description}
       </Typography>
-      <Box sx={ { display: 'flex', gap: 1, mb: 0.5 } }>
+      <Box sx={{ display: 'flex', gap: 1, mb: 0.5 }}>
         <Typography
           variant="caption"
-          sx={ { fontWeight: 600, minWidth: 50, color: 'text.secondary' } }
+          sx={{ fontWeight: 600, minWidth: 50, color: 'text.secondary' }}
         >
           Style
         </Typography>
         <Typography
           variant="caption"
-          sx={ { fontFamily: 'monospace', color: 'text.secondary' } }
+          sx={{ fontFamily: 'monospace', color: 'text.secondary' }}
         >
-          { style }
+          {style}
         </Typography>
       </Box>
-      { prompt && (
+      {prompt && (
         <Box
-          sx={ {
+          sx={{
             mt: 1,
             p: 1.5,
             bgcolor: 'action.hover',
             borderRadius: 0.5,
-          } }
+          }}
         >
           <Typography
             variant="caption"
-            sx={ {
+            sx={{
               fontFamily: 'monospace',
               fontSize: 11,
               lineHeight: 1.6,
               color: 'text.secondary',
               display: 'block',
-            } }
+            }}
           >
-            { prompt }
+            {prompt}
           </Typography>
         </Box>
-      ) }
+      )}
     </Box>
   </Box>
 );
@@ -277,82 +277,82 @@ const PersonaCard = ({ fig, title, description, src, style, prompt }) => (
  */
 const AssetCard = ({ name, description, usage, tags = [], meta = [], children }) => (
   <Box
-    sx={ {
+    sx={{
       p: 2.5,
       border: '1px solid',
       borderColor: 'divider',
       borderRadius: 1,
       mb: 2,
-    } }
+    }}
   >
     {/* 타이틀 + 태그 */}
-    <Box sx={ { display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 } }>
-      <Typography variant="h6" sx={ { fontWeight: 700, fontSize: 16 } }>
-        { name }
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
+      <Typography variant="h6" sx={{ fontWeight: 700, fontSize: 16 }}>
+        {name}
       </Typography>
-      { tags.map((tag) => (
+      {tags.map((tag) => (
         <Chip
-          key={ tag.label }
-          label={ tag.label }
+          key={tag.label}
+          label={tag.label}
           size="small"
-          color={ tag.color || 'default' }
+          color={tag.color || 'default'}
           variant="outlined"
-          sx={ { fontSize: 11, height: 20 } }
+          sx={{ fontSize: 11, height: 20 }}
         />
-      )) }
+      ))}
     </Box>
 
     {/* 무엇을 보여주는지 */}
-    <Typography variant="body2" sx={ { mb: 1.5, lineHeight: 1.6 } }>
-      { description }
+    <Typography variant="body2" sx={{ mb: 1.5, lineHeight: 1.6 }}>
+      {description}
     </Typography>
 
     {/* 추가 메타 (params, style, transform 등) */}
-    { meta.length > 0 && (
-      <Box sx={ { mb: 1.5 } }>
-        { meta.map((m) => (
-          <Box key={ m.label } sx={ { display: 'flex', gap: 1, mb: 0.5 } }>
+    {meta.length > 0 && (
+      <Box sx={{ mb: 1.5 }}>
+        {meta.map((m) => (
+          <Box key={m.label} sx={{ display: 'flex', gap: 1, mb: 0.5 }}>
             <Typography
               variant="caption"
-              sx={ { fontWeight: 600, minWidth: 60, color: 'text.secondary' } }
+              sx={{ fontWeight: 600, minWidth: 60, color: 'text.secondary' }}
             >
-              { m.label }
+              {m.label}
             </Typography>
             <Typography
               variant="caption"
-              sx={ { fontFamily: 'monospace', color: 'text.secondary' } }
+              sx={{ fontFamily: 'monospace', color: 'text.secondary' }}
             >
-              { m.value }
+              {m.value}
             </Typography>
           </Box>
-        )) }
+        ))}
       </Box>
-    ) }
+    )}
 
     {/* 어디서 어떻게 쓰이는지 */}
     <Box
-      sx={ {
+      sx={{
         display: 'flex',
         alignItems: 'flex-start',
         gap: 1,
         pt: 1.5,
         borderTop: '1px solid',
         borderColor: 'divider',
-      } }
+      }}
     >
       <Typography
         variant="caption"
-        sx={ { fontWeight: 600, color: 'text.secondary', minWidth: 40, pt: 0.25 } }
+        sx={{ fontWeight: 600, color: 'text.secondary', minWidth: 40, pt: 0.25 }}
       >
         용도
       </Typography>
-      <Typography variant="body2" color="text.secondary" sx={ { fontSize: 13 } }>
-        { usage }
+      <Typography variant="body2" color="text.secondary" sx={{ fontSize: 13 }}>
+        {usage}
       </Typography>
     </Box>
 
     {/* children (연결 정보 등) */}
-    { children }
+    {children}
   </Box>
 );
 
@@ -369,10 +369,10 @@ export const Docs = {
         version="1.0"
       />
       <PageContainer>
-        <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
+        <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
           Visual Assets
         </Typography>
-        <Typography variant="body1" color="text.secondary" sx={ { mb: 4 } }>
+        <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
           VDL 브랜드 시각 자산 카탈로그입니다.
           각 에셋이 무엇을 보여주고, 어디서 어떻게 쓰이는지 정의합니다.
           실제 이미지 제작은 별도 — 여기서는 제작 명세를 정리합니다.
@@ -383,99 +383,99 @@ export const Docs = {
           title="Persona 일러스트"
           description="VDL의 두 핵심 페르소나를 시각화한 라인아트 일러스트입니다. Gemini 2.5 Flash Image (Nano Banana)로 생성. 다크 배경(hsl 260 20% 4%) 위 흰색 컨투어 라인만으로 구성됩니다."
         />
-        { PERSONA_ILLUSTRATIONS.map((item) => (
+        {PERSONA_ILLUSTRATIONS.map((item) => (
           <PersonaCard
-            key={ item.fig }
-            fig={ item.fig }
-            title={ item.title }
-            description={ item.description }
-            src={ item.src }
-            style={ item.style }
-            prompt={ item.prompt }
+            key={item.fig}
+            fig={item.fig}
+            title={item.title}
+            description={item.description}
+            src={item.src}
+            style={item.style}
+            prompt={item.prompt}
           />
-        )) }
+        ))}
 
-        <Divider sx={ { my: 4 } } />
+        <Divider sx={{ my: 4 }} />
 
         {/* ── 0. 레퍼런스 일러스트 ── */}
         <SectionTitle
           title="레퍼런스 일러스트"
           description="Linear 스타일의 아이소메트릭 SVG 일러스트 3종입니다. 다크 배경 위에 세밀한 스트로크 라인으로 구성된 비주얼 레퍼런스입니다."
         />
-        { REFERENCE_ILLUSTRATIONS.map((item) => (
+        {REFERENCE_ILLUSTRATIONS.map((item) => (
           <ReferenceCard
-            key={ item.fig }
-            fig={ item.fig }
-            title={ item.title }
-            description={ item.description }
-            Illustration={ item.Illustration }
+            key={item.fig}
+            fig={item.fig}
+            title={item.title}
+            description={item.description}
+            Illustration={item.Illustration}
           />
-        )) }
+        ))}
 
-        <Divider sx={ { my: 4 } } />
+        <Divider sx={{ my: 4 }} />
 
         {/* ── 1. 그래픽 모티프 ── */}
         <SectionTitle
           title="그래픽 모티프"
           description="VDL 비쥬얼의 최소 패턴 단위입니다. 로고, 일러스트, SNS 콘텐츠 등 모든 시각물에 반복 등장하며 브랜드 일관성을 만드는 기본 문법입니다."
         />
-        { VISUAL_ASSETS.motifs.map((item) => (
+        {VISUAL_ASSETS.motifs.map((item) => (
           <AssetCard
-            key={ item.id }
-            name={ item.name }
-            description={ item.description }
-            usage={ item.usage }
-            meta={ item.params ? [{ label: 'Params', value: item.params }] : [] }
+            key={item.id}
+            name={item.name}
+            description={item.description}
+            usage={item.usage}
+            meta={item.params ? [{ label: 'Params', value: item.params }] : []}
           />
-        )) }
+        ))}
 
-        <Divider sx={ { my: 4 } } />
+        <Divider sx={{ my: 4 }} />
 
         {/* ── 3. 키 일러스트레이션 ── */}
         <SectionTitle
           title="키 일러스트레이션"
           description="VDL 세계관의 핵심 장면 3종입니다. 브랜드의 정체성을 한 장면으로 압축한 대표 시각물입니다."
         />
-        { VISUAL_ASSETS.keyIllustrations.map((item) => (
+        {VISUAL_ASSETS.keyIllustrations.map((item) => (
           <AssetCard
-            key={ item.id }
-            name={ item.name }
-            description={ item.description }
-            usage={ item.usage }
-            tags={ [
+            key={item.id}
+            name={item.name}
+            description={item.description}
+            usage={item.usage}
+            tags={[
               { label: item.priority === 'high' ? 'High Priority' : 'Medium', color: item.priority === 'high' ? 'error' : 'default' },
-            ] }
-            meta={ [
+            ]}
+            meta={[
               { label: 'Style', value: item.style },
-            ] }
+            ]}
           />
-        )) }
+        ))}
 
-        <Divider sx={ { my: 4 } } />
+        <Divider sx={{ my: 4 }} />
 
         {/* ── 4. Philosophy 일러스트 ── */}
         <SectionTitle
           title="Philosophy 일러스트"
           description="VDL의 세 가지 신념 각각을 시각화합니다. 각 신념이 말하는 바를 한 장면으로 증명하는 일러스트입니다."
         />
-        { VISUAL_ASSETS.philosophy.map((item) => {
+        {VISUAL_ASSETS.philosophy.map((item) => {
           const phil = PHILOSOPHY.find((p) => p.id === item.id.replace('phil-', ''));
           return (
             <AssetCard
-              key={ item.id }
-              name={ item.name }
-              description={ item.description }
-              usage={ `Brand Story Philosophy 섹션 — "${item.belief}" 신념의 시각적 증명` }
-              tags={ [
+              key={item.id}
+              name={item.name}
+              description={item.description}
+              usage={`Brand Story Philosophy 섹션 — "${item.belief}" 신념의 시각적 증명`}
+              tags={[
                 { label: item.derivedValue, color: 'primary' },
-              ] }
-              meta={ [
+              ]}
+              meta={[
                 { label: 'Style', value: item.style },
-              ] }
+              ]}
             >
               {/* 연결된 Philosophy 원문 */}
               <Box
-                sx={ {
+                sx={{
                   mt: 1.5,
                   pt: 1,
                   borderTop: '1px dashed',
@@ -483,66 +483,66 @@ export const Docs = {
                   display: 'flex',
                   gap: 1,
                   alignItems: 'flex-start',
-                } }
+                }}
               >
                 <Typography
                   variant="caption"
-                  sx={ { fontWeight: 600, color: 'text.secondary', minWidth: 40, pt: 0.25 } }
+                  sx={{ fontWeight: 600, color: 'text.secondary', minWidth: 40, pt: 0.25 }}
                 >
                   신념
                 </Typography>
                 <Box>
-                  <Typography variant="body2" sx={ { fontWeight: 600, fontSize: 13 } }>
-                    { item.belief }
+                  <Typography variant="body2" sx={{ fontWeight: 600, fontSize: 13 }}>
+                    {item.belief}
                   </Typography>
-                  { phil && (
+                  {phil && (
                     <Typography variant="caption" color="text.secondary">
-                      { phil.description }
+                      {phil.description}
                     </Typography>
-                  ) }
+                  )}
                 </Box>
               </Box>
             </AssetCard>
           );
-        }) }
+        })}
 
         {/* Philosophy 일러스트 프리뷰 */}
-        { PHILOSOPHY_ILLUSTRATIONS.map((item) => (
+        {PHILOSOPHY_ILLUSTRATIONS.map((item) => (
           <ReferenceCard
-            key={ item.fig }
-            fig={ item.fig }
-            title={ item.title }
-            description={ item.description }
-            Illustration={ item.Illustration }
+            key={item.fig}
+            fig={item.fig}
+            title={item.title}
+            description={item.description}
+            Illustration={item.Illustration}
           />
-        )) }
+        ))}
 
-        <Divider sx={ { my: 4 } } />
+        <Divider sx={{ my: 4 }} />
 
         {/* ── 5. Value Proposition 일러스트 ── */}
         <SectionTitle
           title="Value Proposition 일러스트"
           description="VDL의 세 단계 가치 제안(System Over Drawing → The Vibe Standard → Design As Build)을 각각 시각화합니다."
         />
-        { VISUAL_ASSETS.valueProposition.map((item) => {
+        {VISUAL_ASSETS.valueProposition.map((item) => {
           const vp = VALUE_PROPOSITIONS.find((v) => v.step === item.step);
           return (
             <AssetCard
-              key={ item.id }
-              name={ `Step ${item.step}. ${item.name}` }
-              description={ item.visualConcept }
-              usage={ `Brand Story VP 섹션 — "${item.description}"의 시각적 표현` }
-              tags={ [
+              key={item.id}
+              name={`Step ${item.step}. ${item.name}`}
+              description={item.visualConcept}
+              usage={`Brand Story VP 섹션 — "${item.description}"의 시각적 표현`}
+              tags={[
                 { label: `Step ${item.step}`, color: 'secondary' },
-              ] }
-              meta={ [
+              ]}
+              meta={[
                 { label: 'Style', value: item.style },
-              ] }
+              ]}
             >
               {/* 연결된 VP 원문 */}
-              { vp && (
+              {vp && (
                 <Box
-                  sx={ {
+                  sx={{
                     mt: 1.5,
                     pt: 1,
                     borderTop: '1px dashed',
@@ -550,103 +550,103 @@ export const Docs = {
                     display: 'flex',
                     gap: 1,
                     alignItems: 'flex-start',
-                  } }
+                  }}
                 >
                   <Typography
                     variant="caption"
-                    sx={ { fontWeight: 600, color: 'text.secondary', minWidth: 40, pt: 0.25 } }
+                    sx={{ fontWeight: 600, color: 'text.secondary', minWidth: 40, pt: 0.25 }}
                   >
                     VP
                   </Typography>
                   <Box>
-                    <Typography variant="body2" sx={ { fontWeight: 600, fontSize: 13 } }>
-                      { vp.description }
+                    <Typography variant="body2" sx={{ fontWeight: 600, fontSize: 13 }}>
+                      {vp.description}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
-                      { vp.shortVersion }
+                      {vp.shortVersion}
                     </Typography>
                   </Box>
                 </Box>
-              ) }
+              )}
             </AssetCard>
           );
-        }) }
+        })}
 
-        <Divider sx={ { my: 4 } } />
+        <Divider sx={{ my: 4 }} />
 
         {/* ── 6. Myth-Busting 시각 자산 ── */}
         <SectionTitle
           title="Myth-Busting 시각 자산"
           description="VDL이 반전시키는 3가지 통념 각각을 시각적으로 증명하는 장면입니다. 통념의 허점을 한 눈에 보여주는 비교 구도를 사용합니다."
         />
-        { VISUAL_ASSETS.mythBusting.map((item) => {
+        {VISUAL_ASSETS.mythBusting.map((item) => {
           const myth = MYTH_BUSTING.find((m) => m.id === item.id.replace('myth-', ''));
           return (
             <AssetCard
-              key={ item.id }
-              name={ item.myth }
-              description={ item.visualConcept }
-              usage={ `Landing, Brand Story, SNS — "${item.philosophyRef}" 철학과 연결된 편견 반전 장면` }
-              tags={ [
+              key={item.id}
+              name={item.myth}
+              description={item.visualConcept}
+              usage={`Landing, Brand Story, SNS — "${item.philosophyRef}" 철학과 연결된 편견 반전 장면`}
+              tags={[
                 { label: item.philosophyRef, color: 'warning' },
-              ] }
+              ]}
             >
               {/* 연결된 Myth-Busting 원문 */}
-              { myth && (
+              {myth && (
                 <Box
-                  sx={ {
+                  sx={{
                     mt: 1.5,
                     pt: 1,
                     borderTop: '1px dashed',
                     borderColor: 'divider',
-                  } }
+                  }}
                 >
-                  <Box sx={ { display: 'flex', gap: 1, mb: 0.5 } }>
+                  <Box sx={{ display: 'flex', gap: 1, mb: 0.5 }}>
                     <Typography
                       variant="caption"
-                      sx={ { fontWeight: 600, color: 'text.secondary', minWidth: 40, pt: 0.25 } }
+                      sx={{ fontWeight: 600, color: 'text.secondary', minWidth: 40, pt: 0.25 }}
                     >
                       반전
                     </Typography>
-                    <Typography variant="body2" sx={ { fontSize: 13 } }>
-                      { myth.reversal }
+                    <Typography variant="body2" sx={{ fontSize: 13 }}>
+                      {myth.reversal}
                     </Typography>
                   </Box>
-                  <Box sx={ { display: 'flex', gap: 1 } }>
+                  <Box sx={{ display: 'flex', gap: 1 }}>
                     <Typography
                       variant="caption"
-                      sx={ { fontWeight: 600, color: 'text.secondary', minWidth: 40, pt: 0.25 } }
+                      sx={{ fontWeight: 600, color: 'text.secondary', minWidth: 40, pt: 0.25 }}
                     >
                       핵심
                     </Typography>
-                    <Typography variant="caption" color="text.secondary" sx={ { fontStyle: 'italic' } }>
-                      { myth.keyPhrase }
+                    <Typography variant="caption" color="text.secondary" sx={{ fontStyle: 'italic' }}>
+                      {myth.keyPhrase}
                     </Typography>
                   </Box>
                 </Box>
-              ) }
+              )}
             </AssetCard>
           );
-        }) }
+        })}
 
-        <Divider sx={ { my: 4 } } />
+        <Divider sx={{ my: 4 }} />
 
         {/* ── 7. SNS 콘텐츠 템플릿 ── */}
         <SectionTitle
           title="SNS 콘텐츠 템플릿"
           description="VDL SNS 콘텐츠의 4가지 시각 패턴입니다. 모든 템플릿은 Grid 배경 위에 구성되며, VDL 톤앤매너를 유지합니다."
         />
-        { VISUAL_ASSETS.snsTemplates.map((item) => (
+        {VISUAL_ASSETS.snsTemplates.map((item) => (
           <AssetCard
-            key={ item.id }
-            name={ item.pattern }
-            description={ item.description }
-            usage={ `Instagram, X, LinkedIn 등 SNS 채널` }
-            meta={ [
+            key={item.id}
+            name={item.pattern}
+            description={item.description}
+            usage={`Instagram, X, LinkedIn 등 SNS 채널`}
+            meta={[
               { label: 'Style', value: item.style },
-            ] }
+            ]}
           />
-        )) }
+        ))}
       </PageContainer>
     </>
   ),
