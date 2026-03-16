@@ -52,9 +52,8 @@ function buildRectSlab(iz, fw, fd) {
 
   const frontTop = { x: cx + fw - fd, y: topY + (fw + fd) / 2 };
 
-  // "정면에서 보면 radius 8 사각형" — 4개 코너, 수직선 직선
-  // v[0], v[3]: Q-curve (다이아몬드 꼭대기/바닥)
-  // 우측 v[1]+v[2]: C-curve, 좌측 v[4]+v[5]: C-curve (면 접선 연속)
+  // 윗면·밑면 동일 형태 — 6개 꼭짓점 전부 face-edge 대칭 Q-curve
+  // 수직 이음선 = 직선 (face rounding 끝점끼리 연결)
   const s5 = Math.sqrt(5);
   const cuf = CR * 2 / s5;  // face edge 방향 x-offset
   const cvf = CR / s5;       // face edge 방향 y-offset
@@ -63,14 +62,24 @@ function buildRectSlab(iz, fw, fd) {
     `M${r(v[0].x - cuf)} ${r(v[0].y + cvf)}`,
     `Q${r(v[0].x)} ${r(v[0].y)} ${r(v[0].x + cuf)} ${r(v[0].y + cvf)}`,
     `L${r(v[1].x - cuf)} ${r(v[1].y - cvf)}`,
-    `C${r(v[1].x)} ${r(v[1].y)} ${r(v[2].x)} ${r(v[2].y)} ${r(v[2].x - cuf)} ${r(v[2].y + cvf)}`,
+    `Q${r(v[1].x)} ${r(v[1].y)} ${r(v[1].x - cuf)} ${r(v[1].y + cvf)}`,
+    `L${r(v[2].x - cuf)} ${r(v[2].y - cvf)}`,
+    `Q${r(v[2].x)} ${r(v[2].y)} ${r(v[2].x - cuf)} ${r(v[2].y + cvf)}`,
     `L${r(v[3].x + cuf)} ${r(v[3].y - cvf)}`,
     `Q${r(v[3].x)} ${r(v[3].y)} ${r(v[3].x - cuf)} ${r(v[3].y - cvf)}`,
     `L${r(v[4].x + cuf)} ${r(v[4].y + cvf)}`,
-    `C${r(v[4].x)} ${r(v[4].y)} ${r(v[5].x)} ${r(v[5].y)} ${r(v[5].x + cuf)} ${r(v[5].y - cvf)}`,
+    `Q${r(v[4].x)} ${r(v[4].y)} ${r(v[4].x + cuf)} ${r(v[4].y - cvf)}`,
+    `L${r(v[5].x + cuf)} ${r(v[5].y + cvf)}`,
+    `Q${r(v[5].x)} ${r(v[5].y)} ${r(v[5].x + cuf)} ${r(v[5].y - cvf)}`,
     'Z',
   ].join('');
-  const vLine = `M${r(v[5].x)} ${r(v[5].y)}L${r(frontTop.x)} ${r(frontTop.y)}L${r(v[1].x)} ${r(v[1].y)}`;
+  // vLine: frontTop도 윗면 꼭짓점이므로 Q-curve 라운딩
+  const vLine = [
+    `M${r(v[5].x)} ${r(v[5].y)}`,
+    `L${r(frontTop.x - cuf)} ${r(frontTop.y - cvf)}`,
+    `Q${r(frontTop.x)} ${r(frontTop.y)} ${r(frontTop.x + cuf)} ${r(frontTop.y - cvf)}`,
+    `L${r(v[1].x)} ${r(v[1].y)}`,
+  ].join('');
   const frontEdge = `M${r(frontTop.x)} ${r(frontTop.y)}L${r(v[3].x)} ${r(v[3].y)}`;
 
   // 스케일된 topTransform: BASE (FW×FD) flat 좌표 → 실제 fw×fd 슬래브 상면 매핑

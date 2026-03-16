@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { PixelButton } from '../input/PixelButton';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import IconButton from '@mui/material/IconButton';
@@ -10,16 +9,17 @@ import Grid from '@mui/material/Grid';
 import CloseIcon from '@mui/icons-material/Close';
 import { SectionContainer } from '../container/SectionContainer';
 import LineGrid from '../layout/LineGrid';
-import FadeTransition from '../motion/FadeTransition';
 import { SectionDivider } from '../typography/SectionDivider';
 import { SectionTitle } from '../typography/SectionTitle';
-import { CardTextStack } from '../typography/CardTextStack';
+import { AreaConstruct } from '../motion/AreaConstruct';
+import { ConstructType } from '../motion/ConstructType';
+import { ConstructBlock } from '../motion/ConstructBlock';
+import { ConstructButton } from '../motion/ConstructButton';
 import { COL_STAGGER, VISUAL_LEAD } from '../motion/constants';
 import { PAGES, VALUE_PROPOSITIONS } from '../../data/contents';
 import { SystemOverDrawing } from '../../assets/brandIllustration/SystemOverDrawing';
 import { VibeStandard } from '../../assets/brandIllustration/VibeStandard';
 import { DesignAsBuild } from '../../assets/brandIllustration/DesignAsBuild';
-import { AreaConstruct } from '../motion/AreaConstruct';
 
 const ILLUSTRATIONS = [SystemOverDrawing, VibeStandard, DesignAsBuild];
 
@@ -42,50 +42,52 @@ export function LandingSolution() {
 
   return (
     <SectionContainer>
-      <FadeTransition direction="up" isTriggerOnView threshold={0.5}>
-        <SectionDivider label="Solution" sx={{ mb: 3 }} />
-        <SectionTitle
-          headline={howDifferent.headline}
-          subtitle={howDifferent.subCopy}
-          sx={{ mb: { xs: 6, md: 10 } }}
-        />
-      </FadeTransition>
+      <SectionDivider label="Solution" sx={{ mb: 3 }} />
+      <SectionTitle
+        headline={howDifferent.headline}
+        subtitle={howDifferent.subCopy}
+        sx={{ mb: { xs: 6, md: 10 } }}
+      />
 
       {/* 가치 제안 — 3컬럼 + 자세히 버튼 */}
       <LineGrid container gap={96} borderColor="divider">
-        {VALUE_PROPOSITIONS.map((vp, index) => (
-          <Grid key={vp.name} size={{ xs: 12, md: 4 }}>
-            {(() => {
-              const Illustration = ILLUSTRATIONS[index];
-              const colDelay = (index % 3) * COL_STAGGER;
-              return (
-                <>
-                  <AreaConstruct isTriggerOnView delay={colDelay}>
-                    <Illustration />
-                  </AreaConstruct>
-                  <FadeTransition direction="up" delay={colDelay + VISUAL_LEAD} isTriggerOnView threshold={0.5}>
-                    <CardTextStack
-                      title={vp.name}
-                      subtitle={vp.description}
-                      isTitleUppercase
-                      sx={{ mt: 6, width: '100%' }}
-                    />
-                    {howDifferent.details?.[index] && (
-                      <PixelButton
-                        isTriggerOnView
-                        size="small"
-                        onClick={() => setOpenIndex(index)}
-                        sx={{ mt: 2 }}
-                      >
-                        자세히
-                      </PixelButton>
-                    )}
-                  </FadeTransition>
-                </>
-              );
-            })()}
-          </Grid>
-        ))}
+        {VALUE_PROPOSITIONS.map((vp, index) => {
+          const Illustration = ILLUSTRATIONS[index];
+          const colDelay = (index % 3) * COL_STAGGER;
+          return (
+            <Grid key={vp.name} size={{ xs: 12, md: 4 }}>
+              <AreaConstruct isTriggerOnView delay={colDelay}>
+                <Illustration />
+              </AreaConstruct>
+              <Box sx={{ mt: 6 }}>
+                <ConstructType
+                  text={vp.name}
+                  variant="h4"
+                  typingSpeed={20}
+                  delay={colDelay + VISUAL_LEAD}
+                  sx={{ '& .MuiTypography-root': { fontWeight: 900, textTransform: 'uppercase' } }}
+                />
+                <ConstructBlock
+                  text={vp.description}
+                  variant="body1"
+                  duration={800}
+                  delay={colDelay + VISUAL_LEAD + 200}
+                  sx={{ mt: 1 }}
+                />
+                {howDifferent.details?.[index] && (
+                  <ConstructButton
+                    size="small"
+                    delay={colDelay + VISUAL_LEAD + 400}
+                    onClick={() => setOpenIndex(index)}
+                    sx={{ mt: 2 }}
+                  >
+                    자세히
+                  </ConstructButton>
+                )}
+              </Box>
+            </Grid>
+          );
+        })}
       </LineGrid>
 
       {/* 상세 모달 */}
@@ -106,7 +108,6 @@ export function LandingSolution() {
       >
         {activeDetail && (
           <DialogContent sx={{ p: { xs: 3, md: 6 } }}>
-            {/* 닫기 */}
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 3 }}>
               <IconButton
                 onClick={() => setOpenIndex(null)}
@@ -117,7 +118,6 @@ export function LandingSolution() {
               </IconButton>
             </Box>
 
-            {/* 헤드라인(좌) + 설명(우) — 1:1 */}
             <Box
               sx={{
                 display: 'flex',
@@ -151,7 +151,6 @@ export function LandingSolution() {
               </Box>
             </Box>
 
-            {/* 풀폭 비주얼 슬롯 */}
             <Box
               sx={{
                 mt: { xs: 4, md: 6 },
