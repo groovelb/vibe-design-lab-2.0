@@ -1,5 +1,6 @@
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import { themes } from 'storybook/theming';
 
 import { defaultTheme } from '../src/styles/themes';
 
@@ -48,6 +49,9 @@ const preview = {
         date: /Date$/i,
       },
     },
+    docs: {
+      theme: themes.dark,
+    },
     a11y: {
       test: 'todo',
     },
@@ -84,7 +88,7 @@ const preview = {
     (Story) => (
       <ThemeProvider theme={defaultTheme}>
         <CssBaseline enableColorScheme />
-        <div style={ { width: '100%' } }>
+        <div data-mui-color-scheme="dark" style={ { width: '100%' } }>
           <Story />
         </div>
       </ThemeProvider>

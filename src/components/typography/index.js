@@ -33,3 +33,6 @@ export {
 
 // QuotedContainer - 장식적 인용 부호가 있는 인용문
 export { QuotedContainer } from './QuotedContainer.jsx';
+
+// VdlLogo - VIBE DESIGN LAB 브랜드 로고 (타이핑 애니메이션)
+export { VdlLogo } from './VdlLogo.jsx';

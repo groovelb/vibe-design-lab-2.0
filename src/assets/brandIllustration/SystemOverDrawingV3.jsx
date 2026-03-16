@@ -15,19 +15,21 @@ import { namingLine, r } from './isometricGrid';
 
 const VB_W = 600;
 const VB_H = 450;
-const O = { x: 260, y: 370 };
+const O_Y = 288;       // 수직 기준점 (unchanged)
+const RIGHT_X = 372;  // 우측정렬 기준점 — 모든 슬래브 right vertex x
 
-const FW = 150;    // flat width (iso-X, rightward) in px
-const FD = 100;    // flat depth (iso-Y, leftward) in px
-const BH = 16;     // body height in px
-const CR = 8;      // corner radius in px
+const FW = 97;     // TopFaceContent flat 좌표 기준 폭 (변경 금지)
+const FD = 65;     // TopFaceContent flat 좌표 기준 깊이 (변경 금지)
+const BH = 11;
+const CR = 4;
 
+// 측정: 아래 레이어일수록 큰 슬래브, 우측정렬, 간격 좁게
 const LAYERS = [
-  { iz: 0,  id: 'background', label: 'BACKGROUND\n& DETAIL',  stroke: 'var(--vdl-600)', sw: 1.2 },
-  { iz: 7,  id: 'spatial',    label: 'SPATIAL\nCOMPOSITION',  stroke: 'var(--vdl-600)', sw: 1.2 },
-  { iz: 14, id: 'motion',     label: 'MOTION',                stroke: 'var(--vdl-600)', sw: 1.2 },
-  { iz: 21, id: 'color',      label: 'COLOR & THEME',         stroke: 'var(--vdl-200)', sw: 0.8 },
-  { iz: 28, id: 'typography', label: 'TYPOGRAPHY',            stroke: 'var(--vdl-200)', sw: 0.8 },
+  { iz: 0,  id: 'background', label: 'BACKGROUND\n& DETAIL',  stroke: 'var(--vdl-600)', sw: 1.0, fw: 159, fd: 106 },
+  { iz: 5,  id: 'spatial',    label: 'SPATIAL\nCOMPOSITION',  stroke: 'var(--vdl-600)', sw: 1.0, fw: 150, fd: 100 },
+  { iz: 10, id: 'motion',     label: 'MOTION',                stroke: 'var(--vdl-600)', sw: 1.0, fw: 141, fd: 94  },
+  { iz: 15, id: 'color',      label: 'COLOR & THEME',         stroke: 'var(--vdl-200)', sw: 0.8, fw: 132, fd: 88  },
+  { iz: 20, id: 'typography', label: 'TYPOGRAPHY',            stroke: 'var(--vdl-200)', sw: 0.8, fw: 123, fd: 82  },
 ];
 
 // ── Rounded Hexagonal Path ──
@@ -58,30 +60,34 @@ function roundedHex(verts, cr) {
 
 // ── Rectangular Isometric Slab ──
 
-function buildRectSlab(iz) {
+function buildRectSlab(iz, fw, fd) {
   const UNIT = 8;
-  const baseY = O.y - iz * UNIT;
-  const cx = O.x;
-  const topY = baseY - (FW + FD) / 4 - BH;
+  const baseY = O_Y - iz * UNIT;
+  const cx = RIGHT_X - fw; // 우측정렬: right vertex = RIGHT_X
+  const topY = baseY - (fw + fd) / 4 - BH;
 
   const v = [
     { x: cx,           y: topY },
-    { x: cx + FW,      y: topY + FW / 2 },
-    { x: cx + FW,      y: topY + FW / 2 + BH },
-    { x: cx + FW - FD, y: topY + (FW + FD) / 2 + BH },
-    { x: cx - FD,      y: topY + FD / 2 + BH },
-    { x: cx - FD,      y: topY + FD / 2 },
+    { x: cx + fw,      y: topY + fw / 2 },
+    { x: cx + fw,      y: topY + fw / 2 + BH },
+    { x: cx + fw - fd, y: topY + (fw + fd) / 2 + BH },
+    { x: cx - fd,      y: topY + fd / 2 + BH },
+    { x: cx - fd,      y: topY + fd / 2 },
   ];
 
   const outline = roundedHex(v, CR);
-  const frontTop = { x: cx + FW - FD, y: topY + (FW + FD) / 2 };
+  const frontTop = { x: cx + fw - fd, y: topY + (fw + fd) / 2 };
   const vLine = `M${r(v[5].x)} ${r(v[5].y)}L${r(frontTop.x)} ${r(frontTop.y)}L${r(v[1].x)} ${r(v[1].y)}`;
   const frontEdge = `M${r(frontTop.x)} ${r(frontTop.y)}L${r(v[3].x)} ${r(v[3].y)}`;
-  const topTransform = `matrix(1, 0.5, -1, 0.5, ${r(cx)}, ${r(topY)})`;
+
+  // 스케일된 topTransform: BASE (FW×FD) flat 좌표 → 실제 fw×fd 슬래브 상면 매핑
+  const sx = fw / FW;
+  const sy = fd / FD;
+  const topTransform = `matrix(${r(sx)}, ${r(sx / 2)}, ${r(-sy)}, ${r(sy / 2)}, ${r(cx)}, ${r(topY)})`;
 
   return {
     outline, vLine, frontEdge, topTransform,
-    fw: FW, fd: FD, bh: BH, cx, topY,
+    fw, fd, bh: BH, cx, topY,
     verts: v, frontTop,
     top: v[0],
     right: v[1],
@@ -89,17 +95,17 @@ function buildRectSlab(iz) {
     frontBottom: v[3],
     leftBottom: v[4],
     left: v[5],
-    rightMid: { x: cx + FW, y: topY + FW / 2 + BH / 2 },
-    leftMid: { x: cx - FD, y: topY + FD / 2 + BH / 2 },
+    rightMid: { x: cx + fw, y: topY + fw / 2 + BH / 2 },
+    leftMid: { x: cx - fd, y: topY + fd / 2 + BH / 2 },
   };
 }
 
 // ── Top Face Content (FW × FD flat coordinate space) ──
 
 function TopFaceContent({ id }) {
-  const pad = 10;
-  const iw = FW - 2 * pad; // inner width = 130
-  const ih = FD - 2 * pad; // inner height = 80
+  const pad = 6;
+  const iw = FW - 2 * pad; // 85
+  const ih = FD - 2 * pad; // 53
 
   switch (id) {
     case 'background':
@@ -107,12 +113,12 @@ function TopFaceContent({ id }) {
         <g fill="none" stroke="var(--vdl-800)">
           <rect
             x={pad} y={pad} width={iw} height={ih}
-            rx="4" strokeWidth="0.8"
+            rx="3" strokeWidth="0.6"
           />
           <rect
-            x={pad + 15} y={pad + 12}
-            width={iw - 30} height={ih - 24}
-            rx="2" strokeWidth="0.5" opacity="0.5"
+            x={pad + 10} y={pad + 8}
+            width={iw - 20} height={ih - 16}
+            rx="1.5" strokeWidth="0.4" opacity="0.5"
           />
         </g>
       );
@@ -122,10 +128,10 @@ function TopFaceContent({ id }) {
         <g>
           <rect
             x={pad} y={pad} width={iw} height={ih}
-            rx="4"
-            stroke="var(--vdl-600)" fill="none" strokeWidth="0.8"
+            rx="3"
+            stroke="var(--vdl-600)" fill="none" strokeWidth="0.6"
           />
-          <g stroke="var(--vdl-600)" strokeWidth="0.7">
+          <g stroke="var(--vdl-600)" strokeWidth="0.5">
             {[0.2, 0.4, 0.6, 0.8].map((u) => (
               <line key={`v${u}`} x1={FW * u} y1={pad} x2={FW * u} y2={FD - pad} />
             ))}
@@ -140,53 +146,80 @@ function TopFaceContent({ id }) {
       return (
         <g fill="none">
           <path
-            d={`M${pad + 5} ${FD * 0.72}Q${FW * 0.35} ${FD * 0.05} ${FW - pad - 5} ${FD * 0.45}`}
-            stroke="var(--vdl-600)" strokeWidth="1.8" strokeLinecap="round"
+            d={`M${pad + 3} ${FD * 0.72}Q${FW * 0.35} ${FD * 0.05} ${FW - pad - 3} ${FD * 0.45}`}
+            stroke="var(--vdl-600)" strokeWidth="1.2" strokeLinecap="round"
           />
-          <circle cx={FW * 0.48} cy={FD * 0.28} r="5"
-            stroke="var(--vdl-600)" strokeWidth="1.0"
+          <circle cx={FW * 0.48} cy={FD * 0.28} r="3.5"
+            stroke="var(--vdl-600)" strokeWidth="0.8"
           />
           <path
-            d={`M${FW - pad - 18} ${FD * 0.37}L${FW - pad - 5} ${FD * 0.45}L${FW - pad - 15} ${FD * 0.55}`}
-            stroke="var(--vdl-600)" strokeWidth="1.0" strokeLinecap="round" strokeLinejoin="round"
+            d={`M${FW - pad - 12} ${FD * 0.37}L${FW - pad - 3} ${FD * 0.45}L${FW - pad - 10} ${FD * 0.55}`}
+            stroke="var(--vdl-600)" strokeWidth="0.8" strokeLinecap="round" strokeLinejoin="round"
           />
         </g>
       );
 
     case 'color':
       return (
-        <g fill="none" stroke="var(--vdl-200)" strokeWidth="1.2">
+        <g fill="none" stroke="var(--vdl-200)" strokeWidth="0.9">
           {[0, 1, 2, 3, 4, 5, 6].map((i) => (
             <circle
               key={i}
-              cx={pad + 10 + i * ((iw - 20) / 6)}
+              cx={pad + 6 + i * ((iw - 12) / 6)}
               cy={FD * 0.5}
-              r={8}
+              r={5}
             />
           ))}
         </g>
       );
 
     case 'typography': {
-      // Bold "Ag" filling the slab face — heavy/black weight
-      const aH = ih;           // 80px
-      const aW = aH * 0.7;    // 56px
-      const sw = 7;            // heavy stroke
-      const gR = 16;
-      const gSw = 6;
-      const gX = pad + 8 + aW + 8;
-      const gY = pad + aH * 0.25;
+      // Garamond Bold — bracketed serifs, double-story g, moderate thick/thin
+      const aH = ih;           // 53px — cap height
+      const aW = aH * 0.78;   // 41px — Garamond A: 약간 좁은 비율
+      const swThick = 5.5;    // thick stroke (Garamond: 부드러운 대비)
+      const swThin = 2.5;     // thin stroke
+      const sf = 4.5;         // serif 돌출 길이
+      const sfH = 2;          // serif 두께
+      const aX = pad + 3;
+      // g 파라미터
+      const gBowlR = 8;       // upper bowl 반지름
+      const gLoopRx = 9;      // lower loop 가로 반지름
+      const gLoopRy = 7;      // lower loop 세로 반지름
+      const gSw = 4;          // g 획 두께
+      const gX = aX + aW + 5;
+      const gY = pad + aH * 0.08;
       return (
-        <g fill="none" stroke="var(--vdl-200)" strokeLinecap="round" strokeLinejoin="round">
-          {/* "A" */}
-          <g transform={`translate(${pad + 8}, ${pad})`}>
-            <path d={`M0 ${aH}L${r(aW / 2)} 0L${r(aW)} ${aH}`} strokeWidth={sw} />
-            <path d={`M${r(aW * 0.16)} ${r(aH * 0.65)}L${r(aW * 0.84)} ${r(aH * 0.65)}`} strokeWidth={sw} />
+        <g fill="none" stroke="var(--vdl-200)">
+          {/* "A" — Garamond: bracketed serifs, cupped apex */}
+          <g transform={`translate(${aX}, ${pad})`} strokeLinecap="butt">
+            {/* left leg (thin) */}
+            <path d={`M${r(sf)} ${aH}L${r(aW / 2)} 0`} strokeWidth={swThin} />
+            {/* right leg (thick) */}
+            <path d={`M${r(aW / 2)} 0L${r(aW - sf)} ${aH}`} strokeWidth={swThick} />
+            {/* crossbar (thin) */}
+            <path d={`M${r(aW * 0.2)} ${r(aH * 0.58)}L${r(aW * 0.8)} ${r(aH * 0.58)}`} strokeWidth={swThin} />
+            {/* left foot serif — bracketed */}
+            <path d={`M${r(-sf * 0.3)} ${aH}Q${r(sf * 0.5)} ${r(aH - 1.5)} ${r(sf * 2)} ${aH}`} strokeWidth={sfH} />
+            {/* right foot serif — bracketed */}
+            <path d={`M${r(aW - sf * 2)} ${aH}Q${r(aW - sf * 0.5)} ${r(aH - 1.5)} ${r(aW + sf * 0.3)} ${aH}`} strokeWidth={sfH} />
           </g>
-          {/* "g" */}
-          <g transform={`translate(${r(gX)}, ${r(gY)})`}>
-            <circle cx={gR} cy={gR} r={gR} strokeWidth={gSw} />
-            <path d={`M${gR * 2} 3L${gR * 2} ${r(gR * 2.8)}Q${gR * 2} ${r(gR * 3.7)} ${gR} ${r(gR * 3.7)}`} strokeWidth={gSw} />
+          {/* "g" — Garamond double-story: upper bowl + ear + link + lower loop */}
+          <g transform={`translate(${r(gX)}, ${r(gY)})`} strokeLinecap="round" strokeLinejoin="round">
+            {/* upper bowl */}
+            <circle cx={gBowlR} cy={gBowlR} r={gBowlR} strokeWidth={gSw} />
+            {/* ear */}
+            <path d={`M${r(gBowlR * 1.65)} ${r(gBowlR * 0.2)}L${r(gBowlR * 2.15)} ${r(-gBowlR * 0.15)}`} strokeWidth={2} />
+            {/* right stem (link) */}
+            <path d={`M${gBowlR * 2} ${r(gBowlR * 0.5)}L${gBowlR * 2} ${r(gBowlR * 2 + gLoopRy)}`} strokeWidth={gSw} />
+            {/* lower loop — closed oval */}
+            <ellipse
+              cx={gBowlR}
+              cy={r(gBowlR * 2 + gLoopRy)}
+              rx={gLoopRx}
+              ry={gLoopRy}
+              strokeWidth={r(gSw * 0.8)}
+            />
           </g>
         </g>
       );
@@ -202,7 +235,7 @@ function TopFaceContent({ id }) {
 const SystemOverDrawingV3 = forwardRef((props, ref) => {
   const layers = LAYERS.map((l) => ({
     ...l,
-    p: buildRectSlab(l.iz),
+    p: buildRectSlab(l.iz, l.fw, l.fd),
   }));
 
   return (
