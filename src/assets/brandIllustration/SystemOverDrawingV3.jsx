@@ -158,20 +158,27 @@ function TopFaceContent({ id }) {
   const ih = FD - 2 * pad; // 53
 
   switch (id) {
-    case 'background':
+    case 'background': {
+      // Diagonal hatching — background texture representation
+      const step = 5;
+      const hatchLines = [];
+      for (let d = step; d < iw + ih; d += step) {
+        hatchLines.push({
+          x1: pad + Math.max(0, d - ih),
+          y1: pad + Math.min(d, ih),
+          x2: pad + Math.min(d, iw),
+          y2: pad + Math.max(0, d - iw),
+        });
+      }
       return (
         <g fill="none" stroke="white" strokeWidth={SW}>
-          <rect
-            x={pad} y={pad} width={iw} height={ih}
-            rx="3"
-          />
-          <rect
-            x={pad + 10} y={pad + 8}
-            width={iw - 20} height={ih - 16}
-            rx="1.5" opacity="0.5"
-          />
+          <rect x={pad} y={pad} width={iw} height={ih} rx="3" />
+          {hatchLines.map((l, i) => (
+            <line key={i} x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} opacity="0.3" />
+          ))}
         </g>
       );
+    }
 
     case 'spatial':
       return (
