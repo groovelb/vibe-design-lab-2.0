@@ -45,59 +45,32 @@ function roundedRectShape(w, h, r) {
 }
 
 /**
- * Slab geometry: ExtrudeGeometry rotated so it lies flat in XZ with height along Y.
- *
- * After rotateX(-π/2): shape XY → XZ, extrusion Z → Y(up).
- * Bottom face at y=0, top face at y=BH*S.
+ * Rounded slab mesh geometry.
+ * ExtrudeGeometry rotated so it lies flat in XZ with height along Y.
  */
-function createSlabGeometry(fw, fd) {
+function createRoundedSlab(fw, fd) {
   const shape = roundedRectShape(fw * S, fd * S, CR * S);
   const geo = new THREE.ExtrudeGeometry(shape, {
     depth: BH * S,
     bevelEnabled: false,
     curveSegments: 12,
   });
+  // rotateX(-π/2): shape XY → XZ, extrusion Z → Y(up)
   geo.rotateX(-Math.PI / 2);
   return geo;
 }
 
 /**
- * Vertical edge lines at straight-section endpoints.
- *
- * EdgesGeometry captures top/bottom outlines (90° face transitions)
- * but misses vertical edges (smooth rounded corner transitions).
- *
- * We add 8 vertical lines at the points where straight sections
- * meet rounded arcs. These positions are exactly on the mesh surface
- * and at vertices shared with the EdgesGeometry outlines, ensuring
- * seamless visual connection.
+ * Sharp box edge geometry.
+ * BoxGeometry → EdgesGeometry produces clean 12-edge wireframe.
+ * Overlaid on rounded mesh for structural edge lines.
  */
-function createVerticalEdges(fw, fd) {
-  const hw = fw * S / 2;
-  const hd = fd * S / 2;
-  const h = BH * S;
-  const r = CR * S;
-
-  // 8 transition points: 2 per corner (end of each straight section)
-  // After rotateX(-π/2): shape (x, y) → world (x, *, -y)
-  const positions = new Float32Array([
-    // Right side: ends at front and back corners
-    hw, 0, hd - r,     hw, h, hd - r,      // right→front-right
-    hw, 0, -(hd - r),  hw, h, -(hd - r),   // right→back-right
-    // Front side: ends at right and left corners
-    hw - r, 0, hd,     hw - r, h, hd,      // front→front-right
-    -(hw - r), 0, hd,  -(hw - r), h, hd,   // front→front-left
-    // Left side: ends at front and back corners
-    -hw, 0, hd - r,    -hw, h, hd - r,     // left→front-left
-    -hw, 0, -(hd - r), -hw, h, -(hd - r),  // left→back-left
-    // Back side: ends at right and left corners
-    hw - r, 0, -hd,    hw - r, h, -hd,     // back→back-right
-    -(hw - r), 0, -hd, -(hw - r), h, -hd,  // back→back-left
-  ]);
-
-  const geo = new THREE.BufferGeometry();
-  geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-  return geo;
+function createBoxEdges(fw, fd) {
+  const box = new THREE.BoxGeometry(fw * S, BH * S, fd * S);
+  box.translate(0, BH * S / 2, 0); // bottom at y=0
+  const edges = new THREE.EdgesGeometry(box);
+  box.dispose(); // only need the edge geometry
+  return edges;
 }
 
 /* ── Component ────────────────────────────────────────────── */
@@ -105,8 +78,9 @@ function createVerticalEdges(fw, fd) {
 /**
  * SystemOverDrawingGL — Three.js 아이소메트릭 분해도
  *
- * OrthographicCamera + EdgesGeometry로 5개 디자인 토큰 레이어의
- * 구조를 정확하게 렌더링. 슬래브 비율·간격·우측정렬.
+ * 5개 디자인 토큰 레이어를 OrthographicCamera로 렌더링.
+ * Fill: ExtrudeGeometry(roundedRect) — 라운드 코너 실루엣.
+ * Edges: BoxGeometry → EdgesGeometry — 12개 구조적 에지.
  *
  * @param {object} sx - MUI sx 스타일 오버라이드 [Optional]
  */
@@ -132,12 +106,11 @@ function SystemOverDrawingGL({ sx, ...props }) {
       0.1, 100,
     );
 
-    // Scene centroid (average of all slab centers)
+    // Scene centroid
     const cxScene = LAYERS.reduce((a, l) => a - (l.fw + l.fd) * S / 2, 0) / LAYERS.length;
     const cyScene = LAYERS.reduce((a, l) => a + l.iz * UNIT * S, 0) / LAYERS.length + BH * S / 2;
 
     // Dimetric 2:1: camera at target + d*(1, √(2/3), 1)
-    // This produces exact 26.57° (atan 1/2) screen slopes
     const d = 20;
     camera.position.set(cxScene + d, cyScene + d * Math.sqrt(2 / 3), d);
     camera.lookAt(cxScene, cyScene, 0);
@@ -156,34 +129,24 @@ function SystemOverDrawingGL({ sx, ...props }) {
       polygonOffsetUnits: 1,
     });
     const edgeMat = new THREE.LineBasicMaterial({ color: EDGE });
-    // Separate material for vertical edges — depthTest off to prevent
-    // z-fighting with mesh surface at shared positions
-    const vertMat = new THREE.LineBasicMaterial({ color: EDGE, depthTest: false });
 
     /* ── Build slabs ── */
     const geometries = [];
 
     LAYERS.forEach((l) => {
       const group = new THREE.Group();
-      const geo = createSlabGeometry(l.fw, l.fd);
-      geometries.push(geo);
 
-      // Fill mesh
-      group.add(new THREE.Mesh(geo, fillMat));
+      // Rounded fill mesh
+      const fillGeo = createRoundedSlab(l.fw, l.fd);
+      geometries.push(fillGeo);
+      group.add(new THREE.Mesh(fillGeo, fillMat));
 
-      // Wireframe edges (threshold 15°: captures 90° face transitions,
-      // excludes rounded corner sub-segments)
-      const eGeo = new THREE.EdgesGeometry(geo, 15);
-      geometries.push(eGeo);
-      group.add(new THREE.LineSegments(eGeo, edgeMat));
+      // Structural edge wireframe (sharp box, overlaid)
+      const edgeGeo = createBoxEdges(l.fw, l.fd);
+      geometries.push(edgeGeo);
+      group.add(new THREE.LineSegments(edgeGeo, edgeMat));
 
-      // Vertical edges at straight-section endpoints
-      const vGeo = createVerticalEdges(l.fw, l.fd);
-      geometries.push(vGeo);
-      group.add(new THREE.LineSegments(vGeo, vertMat));
-
-      // Right-aligned: back-right-top vertex screen X = constant for all slabs
-      // px = -(fw + fd) * S / 2 ensures this
+      // Right-aligned positioning
       group.position.set(-(l.fw + l.fd) * S / 2, l.iz * UNIT * S, 0);
       group.name = l.id;
       scene.add(group);
@@ -212,7 +175,6 @@ function SystemOverDrawingGL({ sx, ...props }) {
       renderer.dispose();
       fillMat.dispose();
       edgeMat.dispose();
-      vertMat.dispose();
       geometries.forEach((g) => g.dispose());
     };
   }, []);

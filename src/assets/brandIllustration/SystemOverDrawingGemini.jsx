@@ -17,6 +17,9 @@ const VB_H = 450;
 const O_Y = 288;
 const RIGHT_X = 372;
 
+const FW = 97;     // Reference Flat Width
+const FD = 65;     // Reference Flat Depth
+
 const BH = 11;
 const CR = 8;
 const SW = 0.5;
@@ -101,7 +104,161 @@ function buildRectSlab(iz, fw, fd) {
   const pC_M = { x: C.x, y: C.y - 0.5 * cvf };
   const frontEdge = `M${r(pC_M.x)} ${r(pC_M.y)}L${r(pC_M.x)} ${r(Sy(pC_M.y))}`;
 
-  return { outline, vLine, frontEdge };
+  return { outline, vLine, frontEdge, cx, topY };
+}
+
+// ── Helpers for Vector Typography ──
+function lineToFill(x1, y1, x2, y2, w) {
+  const dx = x2 - x1, dy = y2 - y1;
+  const len = Math.sqrt(dx * dx + dy * dy);
+  const hw = w / 2;
+  const nx = (-dy / len) * hw, ny = (dx / len) * hw;
+  return `M${r(x1+nx)} ${r(y1+ny)}L${r(x2+nx)} ${r(y2+ny)}L${r(x2-nx)} ${r(y2-ny)}L${r(x1-nx)} ${r(y1-ny)}Z`;
+}
+
+function ringPath(cx, cy, R, sw) {
+  const ro = R + sw / 2, ri = Math.max(0, R - sw / 2);
+  return `M${r(cx-ro)} ${r(cy)}A${r(ro)} ${r(ro)} 0 1 1 ${r(cx+ro)} ${r(cy)}A${r(ro)} ${r(ro)} 0 1 1 ${r(cx-ro)} ${r(cy)}Z`
+    + `M${r(cx-ri)} ${r(cy)}A${r(ri)} ${r(ri)} 0 1 0 ${r(cx+ri)} ${r(cy)}A${r(ri)} ${r(ri)} 0 1 0 ${r(cx-ri)} ${r(cy)}Z`;
+}
+
+function ellipseRingPath(cx, cy, rx, ry, sw) {
+  const rox = rx + sw / 2, roy = ry + sw / 2;
+  const rix = Math.max(0, rx - sw / 2), riy = Math.max(0, ry - sw / 2);
+  return `M${r(cx-rox)} ${r(cy)}A${r(rox)} ${r(roy)} 0 1 1 ${r(cx+rox)} ${r(cy)}A${r(rox)} ${r(roy)} 0 1 1 ${r(cx-rox)} ${r(cy)}Z`
+    + `M${r(cx-rix)} ${r(cy)}A${r(rix)} ${r(riy)} 0 1 0 ${r(cx+rix)} ${r(cy)}A${r(rix)} ${r(riy)} 0 1 0 ${r(cx-rix)} ${r(cy)}Z`;
+}
+
+function TopFaceContent({ id, fw, fd, cx, topY }) {
+  const sx = fw / FW;
+  const sy = fd / FD;
+  const topTransform = `matrix(${r(sx)}, ${r(sx / 2)}, ${r(-sy)}, ${r(sy / 2)}, ${r(cx)}, ${r(topY)})`;
+
+  const pad = 6;
+  const ih = FD - 2 * pad; // 53
+  const iw = FW - 2 * pad; // 85
+
+  switch (id) {
+    case 'background':
+      return (
+        <g transform={topTransform} fill="none" stroke="white" strokeWidth={SW}>
+          <rect
+            x={pad} y={pad} width={iw} height={ih}
+            rx="3"
+          />
+          <rect
+            x={pad + 10} y={pad + 8}
+            width={iw - 20} height={ih - 16}
+            rx="1.5" opacity="0.5"
+          />
+        </g>
+      );
+
+    case 'spatial':
+      return (
+        <g transform={topTransform} fill="none" stroke="white" strokeWidth={SW}>
+          <rect
+            x={pad} y={pad} width={iw} height={ih}
+            rx="3"
+          />
+          {[0.2, 0.4, 0.6, 0.8].map((u) => (
+            <line key={`v${u}`} x1={FW * u} y1={pad} x2={FW * u} y2={FD - pad} />
+          ))}
+          {[0.25, 0.5, 0.75].map((v) => (
+            <line key={`h${v}`} x1={pad} y1={FD * v} x2={FW - pad} y2={FD * v} />
+          ))}
+        </g>
+      );
+
+    case 'motion':
+      return (
+        <g transform={topTransform} fill="none">
+          <path
+            d={`M${pad + 3} ${FD * 0.72}Q${FW * 0.35} ${FD * 0.05} ${FW - pad - 3} ${FD * 0.45}`}
+            stroke="white" strokeWidth={SW} strokeLinecap="round"
+          />
+          <circle cx={FW * 0.48} cy={FD * 0.28} r="3.5"
+            stroke="white" strokeWidth={SW}
+          />
+          <path
+            d={`M${FW - pad - 12} ${FD * 0.37}L${FW - pad - 3} ${FD * 0.45}L${FW - pad - 10} ${FD * 0.55}`}
+            stroke="white" strokeWidth={SW} strokeLinecap="round" strokeLinejoin="round"
+          />
+        </g>
+      );
+
+    case 'color': {
+      const cy = FD - pad * 2.5; // Bottom aligned (larger value in flat space)
+      const r_circ = 6.5;          // Re-adjusted radius to prevent overlaps
+      const spacing = 1.0;         // Small visual gap between circles
+      
+      return (
+        <g transform={topTransform} fill="white" stroke="white" strokeWidth="0.5">
+          {[0, 1, 2, 3, 4, 5, 6].map((i) => (
+            <circle
+              key={i}
+              cx={pad + 8 + i * (r_circ * 2 + spacing)}
+              cy={cy}
+              r={r_circ}
+            />
+          ))}
+        </g>
+      );
+    }
+
+    case 'typography': {
+      const aH = ih;           
+      const aW = aH * 0.78;   // 41
+      const swThick = 5.5;    
+      const swThin = 2.5;     
+      const sf = 4.5;         
+      const sfH = 2;          
+      const aX = pad + 3;
+      
+      const gBowlR = 8;
+      const gLoopRx = 9;
+      const gLoopRy = 7;
+      const gSw = 4;
+      const gX = aX + aW + 5;
+      const gY = pad + aH * 0.08;
+
+      const aLeftLeg = lineToFill(sf, aH, aW / 2, 0, swThin);
+      const aRightLeg = lineToFill(aW / 2, 0, aW - sf, aH, swThick);
+      const aCrossbar = lineToFill(aW * 0.2, aH * 0.58, aW * 0.8, aH * 0.58, swThin);
+      
+      const hw = sfH / 2;
+      const aLeftSerif = `M${r(-sf * 0.3)} ${r(aH - hw)}Q${r(sf * 0.5)} ${r(aH - 1.5 - hw)} ${r(sf * 2)} ${r(aH - hw)}`
+        + `L${r(sf * 2)} ${r(aH + hw)}Q${r(sf * 0.5)} ${r(aH - 1.5 + hw)} ${r(-sf * 0.3)} ${r(aH + hw)}Z`;
+      const aRightSerif = `M${r(aW - sf * 2)} ${r(aH - hw)}Q${r(aW - sf * 0.5)} ${r(aH - 1.5 - hw)} ${r(aW + sf * 0.3)} ${r(aH - hw)}`
+        + `L${r(aW + sf * 0.3)} ${r(aH + hw)}Q${r(aW - sf * 0.5)} ${r(aH - 1.5 + hw)} ${r(aW - sf * 2)} ${r(aH + hw)}Z`;
+
+      const gBowl = ringPath(gBowlR, gBowlR, gBowlR, gSw);
+      const gEar = lineToFill(gBowlR * 1.65, gBowlR * 0.2, gBowlR * 2.15, -gBowlR * 0.15, 2);
+      const gStem = lineToFill(gBowlR * 2, gBowlR * 0.5, gBowlR * 2, gBowlR * 2 + gLoopRy, gSw);
+      const gLoop = ellipseRingPath(gBowlR, gBowlR * 2 + gLoopRy, gLoopRx, gLoopRy, gSw * 0.8);
+
+      return (
+        <g transform={topTransform} fill="white" stroke="white" strokeWidth="0.5">
+          <g transform={`translate(${aX}, ${pad})`}>
+            <path d={aLeftLeg} />
+            <path d={aRightLeg} />
+            <path d={aCrossbar} />
+            <path d={aLeftSerif} />
+            <path d={aRightSerif} />
+          </g>
+          <g transform={`translate(${r(gX)}, ${r(gY)})`}>
+            <path d={gBowl} fillRule="evenodd" />
+            <path d={gEar} />
+            <path d={gStem} />
+            <path d={gLoop} fillRule="evenodd" />
+          </g>
+        </g>
+      );
+    }
+    
+    default:
+      return null;
+  }
 }
 
 // ── Main Component ──
@@ -176,6 +333,9 @@ const SystemOverDrawingGemini = forwardRef((props, ref) => {
             strokeLinecap="round"
             clipPath={`url(#sod-gemini-clip-${l.id})`}
           />
+          
+          {/* Top Face Content dynamically matching Layer ID */}
+          <TopFaceContent id={l.id} fw={l.fw} fd={l.fd} cx={l.p.cx} topY={l.p.topY} />
         </g>
       ))}
     </svg>

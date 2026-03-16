@@ -33,7 +33,10 @@ const LAYERS = [
   { iz: 20, id: 'typography', label: 'TYPOGRAPHY',            stroke: 'white', sw: SW, fw: 123, fd: 82  },
 ];
 
-// ── Rectangular Isometric Slab ──
+// ── Rectangular Isometric Slab (Gemini 방식) ──
+// 윗면 4꼭짓점(A,B,C,D) 패럴러그램 라운딩
+// B(우), D(좌): 반분 Q-curve 2개 + 수직 직선으로 연결
+// A(상), C(하): face↔face Q-curve
 
 function buildRectSlab(iz, fw, fd) {
   const UNIT = 8;
@@ -41,55 +44,70 @@ function buildRectSlab(iz, fw, fd) {
   const cx = RIGHT_X - fw;
   const topY = baseY - (fw + fd) / 4 - BH;
 
-  const v = [
-    { x: cx,           y: topY },             // v[0] 윗면 꼭대기
-    { x: cx + fw,      y: topY + fw / 2 },    // v[1] 우측
-    { x: cx + fw,      y: topY + fw / 2 + BH }, // v[2] 우측 하단
-    { x: cx + fw - fd, y: topY + (fw + fd) / 2 + BH }, // v[3] 아랫면 앞꼭대기
-    { x: cx - fd,      y: topY + fd / 2 + BH },  // v[4] 좌측 하단
-    { x: cx - fd,      y: topY + fd / 2 },    // v[5] 좌측
-  ];
+  // 윗면 4꼭짓점
+  const A = { x: cx, y: topY };
+  const B = { x: cx + fw, y: topY + fw / 2 };
+  const C = { x: cx + fw - fd, y: topY + (fw + fd) / 2 };
+  const D = { x: cx - fd, y: topY + fd / 2 };
 
-  const frontTop = { x: cx + fw - fd, y: topY + (fw + fd) / 2 };
-
-  // v[0], v[3]: face↔face Q-curve (대칭, 127° 내각 → CR로 충분)
-  // v[1], v[2], v[4], v[5]: face→vertical 비대칭 타원형 C-curve
-  //   면 방향 확장 R_FACE=18 (여유 충분), 수직 확장 crv=BH/3 (직선 유지)
   const s5 = Math.sqrt(5);
-  const cuf = CR * 2 / s5;        // face↔face Q-curve offset (7.16)
-  const cvf = CR / s5;            // (3.58)
-  const R_FACE = 18;              // 비대칭 타원: 면 모서리 방향 반지름 (시각적 곡률 ~3.4px)
-  const cuf2 = R_FACE * 2 / s5;  // face→vertical C-curve face-edge X offset (16.1)
-  const cvf2 = R_FACE / s5;      // face-edge Y offset (8.05)
-  const crv = Math.min(CR, BH / 3); // vertical offset (3.67, 옆면 직선 1/3 확보)
-  const K = 0.55;
-  const iK = 1 - K;
+  const cuf = CR * 2 / s5;
+  const cvf = CR / s5;
+
+  // A (상) — face↔face
+  const pA1 = { x: A.x - cuf, y: A.y + cvf };
+  const pA2 = { x: A.x + cuf, y: A.y + cvf };
+
+  // B (우) — 반분 Q-curve: 상반 + 수직 + 하반
+  const pB1 = { x: B.x - cuf, y: B.y - cvf };
+  const pB2 = { x: B.x - cuf, y: B.y + cvf };
+  const pB_R = { x: B.x - 0.5 * cuf, y: B.y };
+  const qB1 = { x: B.x - 0.5 * cuf, y: B.y - 0.5 * cvf };
+  const qB2 = { x: B.x - 0.5 * cuf, y: B.y + 0.5 * cvf };
+
+  // C (전면/하) — face↔face
+  const pC1 = { x: C.x + cuf, y: C.y - cvf };
+  const pC2 = { x: C.x - cuf, y: C.y - cvf };
+
+  // D (좌) — 반분 Q-curve: 하반 + 수직 + 상반
+  const pD1 = { x: D.x + cuf, y: D.y + cvf };
+  const pD2 = { x: D.x + cuf, y: D.y - cvf };
+  const pD_L = { x: D.x + 0.5 * cuf, y: D.y };
+  const qD1 = { x: D.x + 0.5 * cuf, y: D.y + 0.5 * cvf };
+  const qD2 = { x: D.x + 0.5 * cuf, y: D.y - 0.5 * cvf };
+
+  const Sy = (y) => y + BH;
 
   const outline = [
-    `M${r(v[0].x - cuf)} ${r(v[0].y + cvf)}`,
-    `Q${r(v[0].x)} ${r(v[0].y)} ${r(v[0].x + cuf)} ${r(v[0].y + cvf)}`,
-    `L${r(v[1].x - cuf2)} ${r(v[1].y - cvf2)}`,
-    `C${r(v[1].x - cuf2 * iK)} ${r(v[1].y - cvf2 * iK)} ${r(v[1].x)} ${r(v[1].y + crv * iK)} ${r(v[1].x)} ${r(v[1].y + crv)}`,
-    `L${r(v[2].x)} ${r(v[2].y - crv)}`,
-    `C${r(v[2].x)} ${r(v[2].y - crv * iK)} ${r(v[2].x - cuf2 * iK)} ${r(v[2].y + cvf2 * iK)} ${r(v[2].x - cuf2)} ${r(v[2].y + cvf2)}`,
-    `L${r(v[3].x + cuf)} ${r(v[3].y - cvf)}`,
-    `Q${r(v[3].x)} ${r(v[3].y)} ${r(v[3].x - cuf)} ${r(v[3].y - cvf)}`,
-    `L${r(v[4].x + cuf2)} ${r(v[4].y + cvf2)}`,
-    `C${r(v[4].x + cuf2 * iK)} ${r(v[4].y + cvf2 * iK)} ${r(v[4].x)} ${r(v[4].y - crv * iK)} ${r(v[4].x)} ${r(v[4].y - crv)}`,
-    `L${r(v[5].x)} ${r(v[5].y + crv)}`,
-    `C${r(v[5].x)} ${r(v[5].y + crv * iK)} ${r(v[5].x + cuf2 * iK)} ${r(v[5].y - cvf2 * iK)} ${r(v[5].x + cuf2)} ${r(v[5].y - cvf2)}`,
+    `M${r(pA1.x)} ${r(pA1.y)}`,
+    `Q${r(A.x)} ${r(A.y)} ${r(pA2.x)} ${r(pA2.y)}`,
+    `L${r(pB1.x)} ${r(pB1.y)}`,
+    `Q${r(qB1.x)} ${r(qB1.y)} ${r(pB_R.x)} ${r(pB_R.y)}`,
+    `L${r(pB_R.x)} ${r(Sy(pB_R.y))}`,
+    `Q${r(qB2.x)} ${r(Sy(qB2.y))} ${r(pB2.x)} ${r(Sy(pB2.y))}`,
+    `L${r(pC1.x)} ${r(Sy(pC1.y))}`,
+    `Q${r(C.x)} ${r(Sy(C.y))} ${r(pC2.x)} ${r(Sy(pC2.y))}`,
+    `L${r(pD1.x)} ${r(Sy(pD1.y))}`,
+    `Q${r(qD1.x)} ${r(Sy(qD1.y))} ${r(pD_L.x)} ${r(Sy(pD_L.y))}`,
+    `L${r(pD_L.x)} ${r(pD_L.y)}`,
+    `Q${r(qD2.x)} ${r(qD2.y)} ${r(pD2.x)} ${r(pD2.y)}`,
     'Z',
   ].join('');
-  // vLine: frontTop도 윗면 꼭짓점이므로 Q-curve 라운딩
-  const vLine = [
-    `M${r(v[5].x)} ${r(v[5].y)}`,
-    `L${r(frontTop.x - cuf)} ${r(frontTop.y - cvf)}`,
-    `Q${r(frontTop.x)} ${r(frontTop.y)} ${r(frontTop.x + cuf)} ${r(frontTop.y - cvf)}`,
-    `L${r(v[1].x)} ${r(v[1].y)}`,
-  ].join('');
-  const frontEdge = `M${r(frontTop.x)} ${r(frontTop.y)}L${r(v[3].x)} ${r(v[3].y)}`;
 
-  // 스케일된 topTransform: BASE (FW×FD) flat 좌표 → 실제 fw×fd 슬래브 상면 매핑
+  // vLine: D하반 → C(frontTop) Q-curve → B하반
+  const vLine = [
+    `M${r(pD_L.x)} ${r(pD_L.y)}`,
+    `Q${r(qD1.x)} ${r(qD1.y)} ${r(pD1.x)} ${r(pD1.y)}`,
+    `L${r(pC2.x)} ${r(pC2.y)}`,
+    `Q${r(C.x)} ${r(C.y)} ${r(pC1.x)} ${r(pC1.y)}`,
+    `L${r(pB2.x)} ${r(pB2.y)}`,
+    `Q${r(qB2.x)} ${r(qB2.y)} ${r(pB_R.x)} ${r(pB_R.y)}`,
+  ].join('');
+
+  const pC_M = { x: C.x, y: C.y - 0.5 * cvf };
+  const frontEdge = `M${r(pC_M.x)} ${r(pC_M.y)}L${r(pC_M.x)} ${r(Sy(pC_M.y))}`;
+
+  // topTransform: BASE (FW×FD) flat 좌표 → 실제 fw×fd 슬래브 상면 매핑
   const sx = fw / FW;
   const sy = fd / FD;
   const topTransform = `matrix(${r(sx)}, ${r(sx / 2)}, ${r(-sy)}, ${r(sy / 2)}, ${r(cx)}, ${r(topY)})`;
@@ -97,15 +115,15 @@ function buildRectSlab(iz, fw, fd) {
   return {
     outline, vLine, frontEdge, topTransform,
     fw, fd, bh: BH, cx, topY,
-    verts: v, frontTop,
-    top: v[0],
-    right: v[1],
-    rightBottom: v[2],
-    frontBottom: v[3],
-    leftBottom: v[4],
-    left: v[5],
-    rightMid: { x: cx + fw, y: topY + fw / 2 + BH / 2 },
-    leftMid: { x: cx - fd, y: topY + fd / 2 + BH / 2 },
+    frontTop: C,
+    top: A,
+    right: B,
+    rightBottom: { x: B.x, y: Sy(B.y) },
+    frontBottom: { x: C.x, y: Sy(C.y) },
+    leftBottom: { x: D.x, y: Sy(D.y) },
+    left: D,
+    rightMid: { x: pB_R.x, y: pB_R.y + BH / 2 },
+    leftMid: { x: pD_L.x, y: pD_L.y + BH / 2 },
   };
 }
 
@@ -171,22 +189,34 @@ function TopFaceContent({ id }) {
         </g>
       );
 
-    case 'motion':
+    case 'motion': {
+      // Cubic Bezier curve visualization with control handles
+      const p0 = { x: pad + 3, y: FD * 0.85 };
+      const p1 = { x: FW * 0.35, y: FD * 0.38 };
+      const p2 = { x: FW * 0.65, y: FD * 0.85 };
+      const p3 = { x: FW - pad - 3, y: FD * 0.45 };
+
       return (
         <g fill="none">
+          {/* Control handle lines */}
+          <line x1={p0.x} y1={p0.y} x2={p1.x} y2={p1.y}
+            stroke="white" strokeWidth={SW} opacity="0.4" strokeDasharray="2 2" />
+          <line x1={p3.x} y1={p3.y} x2={p2.x} y2={p2.y}
+            stroke="white" strokeWidth={SW} opacity="0.4" strokeDasharray="2 2" />
+          {/* Bezier curve */}
           <path
-            d={`M${pad + 3} ${FD * 0.72}Q${FW * 0.35} ${FD * 0.05} ${FW - pad - 3} ${FD * 0.45}`}
+            d={`M${p0.x} ${p0.y}C${p1.x} ${p1.y} ${p2.x} ${p2.y} ${p3.x} ${p3.y}`}
             stroke="white" strokeWidth={SW} strokeLinecap="round"
           />
-          <circle cx={FW * 0.48} cy={FD * 0.28} r="3.5"
-            stroke="white" strokeWidth={SW}
-          />
-          <path
-            d={`M${FW - pad - 12} ${FD * 0.37}L${FW - pad - 3} ${FD * 0.45}L${FW - pad - 10} ${FD * 0.55}`}
-            stroke="white" strokeWidth={SW} strokeLinecap="round" strokeLinejoin="round"
-          />
+          {/* Anchor points (filled) */}
+          <circle cx={p0.x} cy={p0.y} r={2} fill="white" />
+          <circle cx={p3.x} cy={p3.y} r={2} fill="white" />
+          {/* Control points (hollow) */}
+          <circle cx={p1.x} cy={p1.y} r={1.5} stroke="white" strokeWidth={SW} />
+          <circle cx={p2.x} cy={p2.y} r={1.5} stroke="white" strokeWidth={SW} />
         </g>
       );
+    }
 
     case 'color':
       return (
@@ -195,7 +225,7 @@ function TopFaceContent({ id }) {
             <circle
               key={i}
               cx={pad + 6 + i * ((iw - 12) / 6)}
-              cy={FD * 0.5}
+              cy={FD - pad * 2.5}
               r={5}
             />
           ))}
