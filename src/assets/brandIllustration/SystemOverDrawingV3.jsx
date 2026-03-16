@@ -21,7 +21,7 @@ const RIGHT_X = 372;  // 우측정렬 기준점 — 모든 슬래브 right verte
 const FW = 97;     // TopFaceContent flat 좌표 기준 폭 (변경 금지)
 const FD = 65;     // TopFaceContent flat 좌표 기준 깊이 (변경 금지)
 const BH = 11;
-const CR = 4;
+const CR = 8;
 const SW = 0.5; // 통일 헤어라인 스트로크
 
 // 측정: 아래 레이어일수록 큰 슬래브, 우측정렬, 간격 좁게
@@ -33,51 +33,43 @@ const LAYERS = [
   { iz: 20, id: 'typography', label: 'TYPOGRAPHY',            stroke: 'white', sw: SW, fw: 123, fd: 82  },
 ];
 
-// ── Rounded Hexagonal Path ──
-
-function roundedHex(verts, cr) {
-  const n = verts.length;
-  const u = [];
-  for (let i = 0; i < n; i++) {
-    const next = verts[(i + 1) % n];
-    const dx = next.x - verts[i].x;
-    const dy = next.y - verts[i].y;
-    const len = Math.sqrt(dx * dx + dy * dy);
-    u.push({ ux: dx / len, uy: dy / len });
-  }
-  let d = '';
-  for (let i = 0; i < n; i++) {
-    const prev = (i + n - 1) % n;
-    const vt = verts[i];
-    const bx = r(vt.x - cr * u[prev].ux);
-    const by = r(vt.y - cr * u[prev].uy);
-    const ax = r(vt.x + cr * u[i].ux);
-    const ay = r(vt.y + cr * u[i].uy);
-    d += i === 0 ? `M${bx} ${by}` : `L${bx} ${by}`;
-    d += `Q${r(vt.x)} ${r(vt.y)} ${ax} ${ay}`;
-  }
-  return d + 'Z';
-}
-
 // ── Rectangular Isometric Slab ──
 
 function buildRectSlab(iz, fw, fd) {
   const UNIT = 8;
   const baseY = O_Y - iz * UNIT;
-  const cx = RIGHT_X - fw; // 우측정렬: right vertex = RIGHT_X
+  const cx = RIGHT_X - fw;
   const topY = baseY - (fw + fd) / 4 - BH;
 
   const v = [
-    { x: cx,           y: topY },
-    { x: cx + fw,      y: topY + fw / 2 },
-    { x: cx + fw,      y: topY + fw / 2 + BH },
-    { x: cx + fw - fd, y: topY + (fw + fd) / 2 + BH },
-    { x: cx - fd,      y: topY + fd / 2 + BH },
-    { x: cx - fd,      y: topY + fd / 2 },
+    { x: cx,           y: topY },             // v[0] 윗면 꼭대기
+    { x: cx + fw,      y: topY + fw / 2 },    // v[1] 우측
+    { x: cx + fw,      y: topY + fw / 2 + BH }, // v[2] 우측 하단
+    { x: cx + fw - fd, y: topY + (fw + fd) / 2 + BH }, // v[3] 아랫면 앞꼭대기
+    { x: cx - fd,      y: topY + fd / 2 + BH },  // v[4] 좌측 하단
+    { x: cx - fd,      y: topY + fd / 2 },    // v[5] 좌측
   ];
 
-  const outline = roundedHex(v, CR);
   const frontTop = { x: cx + fw - fd, y: topY + (fw + fd) / 2 };
+
+  // "정면에서 보면 radius 8 사각형" — 4개 코너, 수직선 직선
+  // v[0], v[3]: Q-curve (다이아몬드 꼭대기/바닥)
+  // 우측 v[1]+v[2]: C-curve, 좌측 v[4]+v[5]: C-curve (면 접선 연속)
+  const s5 = Math.sqrt(5);
+  const cuf = CR * 2 / s5;  // face edge 방향 x-offset
+  const cvf = CR / s5;       // face edge 방향 y-offset
+
+  const outline = [
+    `M${r(v[0].x - cuf)} ${r(v[0].y + cvf)}`,
+    `Q${r(v[0].x)} ${r(v[0].y)} ${r(v[0].x + cuf)} ${r(v[0].y + cvf)}`,
+    `L${r(v[1].x - cuf)} ${r(v[1].y - cvf)}`,
+    `C${r(v[1].x)} ${r(v[1].y)} ${r(v[2].x)} ${r(v[2].y)} ${r(v[2].x - cuf)} ${r(v[2].y + cvf)}`,
+    `L${r(v[3].x + cuf)} ${r(v[3].y - cvf)}`,
+    `Q${r(v[3].x)} ${r(v[3].y)} ${r(v[3].x - cuf)} ${r(v[3].y - cvf)}`,
+    `L${r(v[4].x + cuf)} ${r(v[4].y + cvf)}`,
+    `C${r(v[4].x)} ${r(v[4].y)} ${r(v[5].x)} ${r(v[5].y)} ${r(v[5].x + cuf)} ${r(v[5].y - cvf)}`,
+    'Z',
+  ].join('');
   const vLine = `M${r(v[5].x)} ${r(v[5].y)}L${r(frontTop.x)} ${r(frontTop.y)}L${r(v[1].x)} ${r(v[1].y)}`;
   const frontEdge = `M${r(frontTop.x)} ${r(frontTop.y)}L${r(v[3].x)} ${r(v[3].y)}`;
 

@@ -16,9 +16,9 @@ export default {
       options: ['body1', 'body2', 'h4', 'h5', 'subtitle1'],
       description: 'MUI Typography variant',
     },
-    typingSpeed: {
-      control: { type: 'number', min: 10, max: 200, step: 5 },
-      description: '스캔 속도 (문자당 ms)',
+    duration: {
+      control: { type: 'number', min: 200, max: 3000, step: 100 },
+      description: '스캔 소요시간 (ms)',
     },
     isTriggerOnView: {
       control: 'boolean',
@@ -38,7 +38,7 @@ export const Default = {
   args: {
     text: SAMPLE_TEXT,
     variant: 'body1',
-    typingSpeed: 30,
+    duration: 800,
     isTriggerOnView: false,
     delay: 0,
   },
@@ -53,8 +53,8 @@ export const NarrowContainer = {
   render: () => (
     <Box sx={{ maxWidth: 300 }}>
       <ConstructBlock
-        text="좁은 컨테이너에서 자연스럽게 줄바꿈되며, 각 visual line마다 스캔 커서가 동시에 sweep합니다."
-        typingSpeed={20}
+        text="좁은 컨테이너에서 자연스럽게 줄바꿈되며, 수직 라인이 sweep하면서 텍스트가 리빌됩니다."
+        duration={1000}
         isTriggerOnView={false}
       />
     </Box>
@@ -66,13 +66,13 @@ export const StaggeredDelay = {
     <Stack spacing={4} sx={{ maxWidth: 600 }}>
       <ConstructBlock
         text="첫 번째 문단이 등장합니다. 시스템 위에서 만드는 디자인."
-        typingSpeed={30}
+        duration={600}
         isTriggerOnView={false}
         delay={0}
       />
       <ConstructBlock
         text="두 번째 문단이 뒤따릅니다. 바이브 코딩의 시작."
-        typingSpeed={30}
+        duration={600}
         isTriggerOnView={false}
         delay={1000}
       />

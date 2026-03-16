@@ -40,7 +40,7 @@ const AreaConstruct = forwardRef(function AreaConstruct(
     else if (forwardedRef) forwardedRef.current = el;
   };
 
-  const showContent = phase === 'done';
+  const showContent = phase === 'reveal' || phase === 'done';
 
   return (
     <Box ref={mergedRef} sx={{ position: 'relative', ...sx }} {...props}>

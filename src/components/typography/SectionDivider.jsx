@@ -1,19 +1,19 @@
 'use client';
-import { forwardRef, useState } from 'react';
+import { forwardRef } from 'react';
 import Box from '@mui/material/Box';
 import { useInView } from '../../hooks/useInView';
 import Typography from '@mui/material/Typography';
-import { PixelContainer } from '../container/PixelContainer';
+import { AreaConstruct } from '../motion/AreaConstruct';
 
 /**
  * SectionDivider 컴포넌트
  *
  * overline 라벨 + 우측 수평선으로 섹션 경계를 표시한다.
+ * 라벨은 AreaConstruct로 래핑되어 ■ → 바운딩 박스 확장 → 라벨 페이드인.
  * 뷰포트 진입 시 라인이 좌→우로 그려지는 애니메이션이 실행된다.
- * 라벨에 배경색을 적용해 라인과 시각적으로 분리한다.
  *
  * @param {string} label - overline 텍스트 [Required]
- * @param {number} duration - 라인 애니메이션 시간 (ms) [Optional, 기본값: 800]
+ * @param {number} duration - 라인 애니메이션 시간 (ms) [Optional, 기본값: 400]
  * @param {object} sx - 추가 스타일 [Optional]
  *
  * Example usage:
@@ -42,28 +42,19 @@ const SectionDivider = forwardRef(function SectionDivider({
       }}
       {...props}
     >
-      <PixelContainer
-        direction="left"
-        pixelSize={4}
-        duration={600}
-        sx={{ flexShrink: 0, px: 2, py: 1 }}
+      <AreaConstruct
+        isTriggerOnView
+        sx={{ flexShrink: 0, display: 'inline-flex' }}
       >
-        <Typography
-          variant="overline"
-          sx={{
-            color: 'text.disabled',
-            textAlign: 'center',
-            opacity: isVisible ? 1 : 0.01,
-            transition: `opacity 400ms ease ${duration * 0.2}ms`,
-            '@media (prefers-reduced-motion: reduce)': {
-              transition: 'none',
-              opacity: 1,
-            },
-          }}
-        >
-          {label}
-        </Typography>
-      </PixelContainer>
+        <Box sx={{ px: 2, py: 1, bgcolor: 'text.primary' }}>
+          <Typography
+            variant="overline"
+            sx={{ color: 'text.disabled', textAlign: 'center' }}
+          >
+            {label}
+          </Typography>
+        </Box>
+      </AreaConstruct>
       <Box
         sx={{
           flex: 1,

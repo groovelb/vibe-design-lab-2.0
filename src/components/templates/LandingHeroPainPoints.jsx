@@ -59,7 +59,7 @@ export function LandingHeroPainPoints() {
                 <ConstructBlock
                   text={point.text}
                   variant="body1"
-                  typingSpeed={30}
+                  duration={800}
                   isTriggerOnView={false}
                   delay={blockDelay}
                   sx={{ mt: 2 }}
