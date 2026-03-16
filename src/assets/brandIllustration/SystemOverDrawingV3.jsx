@@ -52,25 +52,32 @@ function buildRectSlab(iz, fw, fd) {
 
   const frontTop = { x: cx + fw - fd, y: topY + (fw + fd) / 2 };
 
-  // 윗면·밑면 동일 형태 — 6개 꼭짓점 전부 face-edge 대칭 Q-curve
-  // 수직 이음선 = 직선 (face rounding 끝점끼리 연결)
+  // v[0], v[3]: face↔face Q-curve (대칭, 127° 내각 → CR로 충분)
+  // v[1], v[2], v[4], v[5]: face→vertical 비대칭 타원형 C-curve
+  //   면 방향 확장 R_FACE=18 (여유 충분), 수직 확장 crv=BH/3 (직선 유지)
   const s5 = Math.sqrt(5);
-  const cuf = CR * 2 / s5;  // face edge 방향 x-offset
-  const cvf = CR / s5;       // face edge 방향 y-offset
+  const cuf = CR * 2 / s5;        // face↔face Q-curve offset (7.16)
+  const cvf = CR / s5;            // (3.58)
+  const R_FACE = 18;              // 비대칭 타원: 면 모서리 방향 반지름 (시각적 곡률 ~3.4px)
+  const cuf2 = R_FACE * 2 / s5;  // face→vertical C-curve face-edge X offset (16.1)
+  const cvf2 = R_FACE / s5;      // face-edge Y offset (8.05)
+  const crv = Math.min(CR, BH / 3); // vertical offset (3.67, 옆면 직선 1/3 확보)
+  const K = 0.55;
+  const iK = 1 - K;
 
   const outline = [
     `M${r(v[0].x - cuf)} ${r(v[0].y + cvf)}`,
     `Q${r(v[0].x)} ${r(v[0].y)} ${r(v[0].x + cuf)} ${r(v[0].y + cvf)}`,
-    `L${r(v[1].x - cuf)} ${r(v[1].y - cvf)}`,
-    `Q${r(v[1].x)} ${r(v[1].y)} ${r(v[1].x - cuf)} ${r(v[1].y + cvf)}`,
-    `L${r(v[2].x - cuf)} ${r(v[2].y - cvf)}`,
-    `Q${r(v[2].x)} ${r(v[2].y)} ${r(v[2].x - cuf)} ${r(v[2].y + cvf)}`,
+    `L${r(v[1].x - cuf2)} ${r(v[1].y - cvf2)}`,
+    `C${r(v[1].x - cuf2 * iK)} ${r(v[1].y - cvf2 * iK)} ${r(v[1].x)} ${r(v[1].y + crv * iK)} ${r(v[1].x)} ${r(v[1].y + crv)}`,
+    `L${r(v[2].x)} ${r(v[2].y - crv)}`,
+    `C${r(v[2].x)} ${r(v[2].y - crv * iK)} ${r(v[2].x - cuf2 * iK)} ${r(v[2].y + cvf2 * iK)} ${r(v[2].x - cuf2)} ${r(v[2].y + cvf2)}`,
     `L${r(v[3].x + cuf)} ${r(v[3].y - cvf)}`,
     `Q${r(v[3].x)} ${r(v[3].y)} ${r(v[3].x - cuf)} ${r(v[3].y - cvf)}`,
-    `L${r(v[4].x + cuf)} ${r(v[4].y + cvf)}`,
-    `Q${r(v[4].x)} ${r(v[4].y)} ${r(v[4].x + cuf)} ${r(v[4].y - cvf)}`,
-    `L${r(v[5].x + cuf)} ${r(v[5].y + cvf)}`,
-    `Q${r(v[5].x)} ${r(v[5].y)} ${r(v[5].x + cuf)} ${r(v[5].y - cvf)}`,
+    `L${r(v[4].x + cuf2)} ${r(v[4].y + cvf2)}`,
+    `C${r(v[4].x + cuf2 * iK)} ${r(v[4].y + cvf2 * iK)} ${r(v[4].x)} ${r(v[4].y - crv * iK)} ${r(v[4].x)} ${r(v[4].y - crv)}`,
+    `L${r(v[5].x)} ${r(v[5].y + crv)}`,
+    `C${r(v[5].x)} ${r(v[5].y + crv * iK)} ${r(v[5].x + cuf2 * iK)} ${r(v[5].y - cvf2 * iK)} ${r(v[5].x + cuf2)} ${r(v[5].y - cvf2)}`,
     'Z',
   ].join('');
   // vLine: frontTop도 윗면 꼭짓점이므로 Q-curve 라운딩

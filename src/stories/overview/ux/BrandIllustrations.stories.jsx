@@ -14,6 +14,9 @@ import { SystemOverDrawingV2 } from '../../../assets/brandIllustration/SystemOve
 import { DesignAsBuildV2 } from '../../../assets/brandIllustration/DesignAsBuildV2';
 import { SystemOverDrawingIso } from '../../../assets/brandIllustration/SystemOverDrawingIso';
 import { SystemOverDrawingV3 } from '../../../assets/brandIllustration/SystemOverDrawingV3';
+import { SystemOverDrawingV6 } from '../../../assets/brandIllustration/SystemOverDrawingV6';
+import { SystemOverDrawingGemini } from '../../../assets/brandIllustration/SystemOverDrawingGemini';
+import { SystemOverDrawingGL } from '../../../assets/brandIllustration/SystemOverDrawingGL';
 import { VibeStandardIso } from '../../../assets/brandIllustration/VibeStandardIso';
 import { DesignAsBuildIso } from '../../../assets/brandIllustration/DesignAsBuildIso';
 
@@ -151,6 +154,45 @@ export const Docs = {
           maxWidth={600}
         >
           <SystemOverDrawingV3 />
+        </IllustrationPanel>
+
+        {/* ── VP1 V6: System Over Drawing (Containers Only) ── */}
+        <SectionTitle
+          title="VP1 V6 — System Over Drawing (Containers Only)"
+          description="&quot;기준을 먼저 설계하는 과정&quot; — 5개 디자인 토큰 레이어의 컨테이너(슬래브 외형)만 구현. 상면 콘텐츠·네이밍 라인·치수선 미포함."
+        />
+        <IllustrationPanel
+          label="SystemOverDrawingV6"
+          sublabel="layers: 5 · RoundedSlab · containers only"
+          maxWidth={600}
+        >
+          <SystemOverDrawingV6 />
+        </IllustrationPanel>
+
+        {/* ── VP1 Gemini: System Over Drawing (Containers Only) ── */}
+        <SectionTitle
+          title="VP1 Gemini — System Over Drawing (Containers Only)"
+          description="&quot;기준을 먼저 설계하는 과정&quot; — Gemini 버전에 맞춘 5개 디자인 토큰 컨테이너 렌더링. 구조적 토대만 남겨 시각화의 기본 뼈대를 보여줍니다."
+        />
+        <IllustrationPanel
+          label="SystemOverDrawingGemini"
+          sublabel="layers: 5 · RoundedSlab · gemini version"
+          maxWidth={600}
+        >
+          <SystemOverDrawingGemini />
+        </IllustrationPanel>
+
+        {/* ── VP1 GL: System Over Drawing (Three.js) ── */}
+        <SectionTitle
+          title="VP1 GL — System Over Drawing (Three.js)"
+          description="Three.js OrthographicCamera + EdgesGeometry 기반. 수동 아이소메트릭 수학 없이 카메라가 투영을 자동 처리. 구조적 정확성 검증용."
+        />
+        <IllustrationPanel
+          label="SystemOverDrawingGL"
+          sublabel="Three.js · OrthographicCamera · dimetric 2:1 · EdgesGeometry"
+          maxWidth={600}
+        >
+          <SystemOverDrawingGL sx={{ height: 450 }} />
         </IllustrationPanel>
 
         {/* ── VP2 Iso: The Vibe Standard ── */}
