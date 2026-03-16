@@ -13,6 +13,7 @@ import { DesignAsBuild } from '../../../assets/brandIllustration/DesignAsBuild';
 import { SystemOverDrawingV2 } from '../../../assets/brandIllustration/SystemOverDrawingV2';
 import { DesignAsBuildV2 } from '../../../assets/brandIllustration/DesignAsBuildV2';
 import { SystemOverDrawingIso } from '../../../assets/brandIllustration/SystemOverDrawingIso';
+import { SystemOverDrawingV3 } from '../../../assets/brandIllustration/SystemOverDrawingV3';
 import { VibeStandardIso } from '../../../assets/brandIllustration/VibeStandardIso';
 import { DesignAsBuildIso } from '../../../assets/brandIllustration/DesignAsBuildIso';
 
@@ -137,6 +138,19 @@ export const Docs = {
           maxWidth={560}
         >
           <SystemOverDrawingIso />
+        </IllustrationPanel>
+
+        {/* ── VP1 V3: System Over Drawing (RoundedSlab) ── */}
+        <SectionTitle
+          title="VP1 V3 — System Over Drawing (RoundedSlab)"
+          description="&quot;기준을 먼저 설계하는 과정&quot; — RoundedSlab 프리미티브 사용, NB2 생성 system-over-drawing_v7.png 기반 SVG 변환. 5개 디자인 토큰 레이어가 합쳐지기 직전의 분해도."
+        />
+        <IllustrationPanel
+          label="SystemOverDrawingV3"
+          sublabel="layers: 5 · RoundedSlab · w: 8u · h: 1u · cornerR: 0.6u"
+          maxWidth={600}
+        >
+          <SystemOverDrawingV3 />
         </IllustrationPanel>
 
         {/* ── VP2 Iso: The Vibe Standard ── */}

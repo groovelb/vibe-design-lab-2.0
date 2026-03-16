@@ -26,7 +26,7 @@ export function LandingCourseHighlight() {
 
   return (
     <SectionContainer>
-        <FadeTransition direction="up" isTriggerOnView>
+        <FadeTransition direction="up" isTriggerOnView threshold={0.5}>
           <SectionDivider label="Course" sx={{ mb: 3 }} />
           <SectionTitle
             headline={courseHighlight.headline}
@@ -34,7 +34,7 @@ export function LandingCourseHighlight() {
           />
         </FadeTransition>
 
-        <FadeTransition direction="up" isTriggerOnView>
+        <FadeTransition direction="up" isTriggerOnView threshold={0.5}>
           <CourseDetailCard
             videoSrc={courseVideo}
             posterSrc={coursePoster.src || coursePoster}

@@ -10,14 +10,16 @@ import Grid from '@mui/material/Grid';
 import CloseIcon from '@mui/icons-material/Close';
 import { SectionContainer } from '../container/SectionContainer';
 import LineGrid from '../layout/LineGrid';
-import { FeatureCard } from '../card/FeatureCard';
 import FadeTransition from '../motion/FadeTransition';
 import { SectionDivider } from '../typography/SectionDivider';
 import { SectionTitle } from '../typography/SectionTitle';
+import { CardTextStack } from '../typography/CardTextStack';
+import { COL_STAGGER, VISUAL_LEAD } from '../motion/constants';
 import { PAGES, VALUE_PROPOSITIONS } from '../../data/contents';
 import { SystemOverDrawing } from '../../assets/brandIllustration/SystemOverDrawing';
 import { VibeStandard } from '../../assets/brandIllustration/VibeStandard';
 import { DesignAsBuild } from '../../assets/brandIllustration/DesignAsBuild';
+import { DynamicTagConstruct } from '../motion/DynamicTagConstruct';
 
 const ILLUSTRATIONS = [SystemOverDrawing, VibeStandard, DesignAsBuild];
 
@@ -40,7 +42,7 @@ export function LandingSolution() {
 
   return (
     <SectionContainer>
-      <FadeTransition direction="up" isTriggerOnView>
+      <FadeTransition direction="up" isTriggerOnView threshold={0.5}>
         <SectionDivider label="Solution" sx={{ mb: 3 }} />
         <SectionTitle
           headline={howDifferent.headline}
@@ -53,26 +55,35 @@ export function LandingSolution() {
       <LineGrid container gap={96} borderColor="divider">
         {VALUE_PROPOSITIONS.map((vp, index) => (
           <Grid key={vp.name} size={{ xs: 12, md: 4 }}>
-            <FadeTransition direction="up" delay={index * 100} isTriggerOnView>
-              <FeatureCard
-                illustrationSlot={(() => {
-                  const Illustration = ILLUSTRATIONS[index];
-                  return <Illustration />;
-                })()}
-                title={vp.name}
-                description={vp.description}
-              />
-              {howDifferent.details?.[index] && (
-                <PixelButton
-                  isTriggerOnView
-                  size="small"
-                  onClick={() => setOpenIndex(index)}
-                  sx={{ mt: 2 }}
-                >
-                  자세히
-                </PixelButton>
-              )}
-            </FadeTransition>
+            {(() => {
+              const Illustration = ILLUSTRATIONS[index];
+              const colDelay = (index % 3) * COL_STAGGER;
+              return (
+                <>
+                  <DynamicTagConstruct isTriggerOnView delay={colDelay}>
+                    <Illustration />
+                  </DynamicTagConstruct>
+                  <FadeTransition direction="up" delay={colDelay + VISUAL_LEAD} isTriggerOnView threshold={0.5}>
+                    <CardTextStack
+                      title={vp.name}
+                      subtitle={vp.description}
+                      isTitleUppercase
+                      sx={{ mt: 6, width: '100%' }}
+                    />
+                    {howDifferent.details?.[index] && (
+                      <PixelButton
+                        isTriggerOnView
+                        size="small"
+                        onClick={() => setOpenIndex(index)}
+                        sx={{ mt: 2 }}
+                      >
+                        자세히
+                      </PixelButton>
+                    )}
+                  </FadeTransition>
+                </>
+              );
+            })()}
           </Grid>
         ))}
       </LineGrid>

@@ -6,4 +6,5 @@
  */
 
 // 공통 훅
+export { useInView } from './useInView';
 export { useSnackbar } from './useSnackbar';

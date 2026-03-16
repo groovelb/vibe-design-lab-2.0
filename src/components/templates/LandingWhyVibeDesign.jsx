@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { SectionContainer } from '../container/SectionContainer';
 import ScrollRevealText from '../kinetic-typography/ScrollRevealText';
+import FadeTransition from '../motion/FadeTransition';
 import { PAGES } from '../../data/contents';
 
 const { whyVibeDesign } = PAGES.landing;
@@ -28,18 +29,20 @@ export function LandingWhyVibeDesign() {
         alignItems: 'center',
       }}
     >
-      <Typography
-        variant="h4"
-        sx={{
-          fontFamily: 'Inter, sans-serif',
-          fontWeight: 800,
-          textTransform: 'uppercase',
-          letterSpacing: '0.1em',
-          mb: { xs: 4, md: 6 },
-        }}
-      >
-        VIBE DESIGN LAB
-      </Typography>
+      <FadeTransition direction="up" isTriggerOnView threshold={0.5}>
+        <Typography
+          variant="h2"
+          sx={{
+            fontFamily: 'Inter, sans-serif',
+            fontWeight: 900,
+            textTransform: 'uppercase',
+            letterSpacing: '0.02em',
+            mb: { xs: 4, md: 6 },
+          }}
+        >
+          VIBE DESIGN LAB
+        </Typography>
+      </FadeTransition>
       <ScrollRevealText
         text={whyVibeDesign.statement}
         variant="display"

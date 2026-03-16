@@ -7,6 +7,7 @@ import { SectionDivider } from '../typography/SectionDivider';
 import { SectionTitle } from '../typography/SectionTitle';
 import { MethodCard } from '../card/MethodCard';
 import { Network, BookOpenText, UsersRound, Layers } from 'lucide-react';
+import { COL_STAGGER } from '../motion/constants';
 import { PAGES } from '../../data/contents';
 
 const { learningMethod } = PAGES.landing;
@@ -26,7 +27,7 @@ const METHOD_ICONS = [Network, BookOpenText, UsersRound, Layers];
 export function LandingLearningMethod() {
   return (
     <SectionContainer>
-      <FadeTransition direction="up" isTriggerOnView>
+      <FadeTransition direction="up" isTriggerOnView threshold={0.5}>
         <SectionDivider label="Method" sx={{ mb: 3 }} />
         <SectionTitle
           headline={learningMethod.headline}
@@ -38,7 +39,7 @@ export function LandingLearningMethod() {
       <LineGrid container gap={120} borderColor="divider">
         {learningMethod.methods.map((method, index) => (
           <Grid key={method.label} size={{ xs: 12, md: 6 }}>
-            <FadeTransition direction="up" delay={index * 100} isTriggerOnView>
+            <FadeTransition direction="up" delay={(index % 2) * COL_STAGGER} isTriggerOnView threshold={0.5}>
               <MethodCard
                 icon={METHOD_ICONS[index]}
                 label={method.label}

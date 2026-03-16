@@ -2,6 +2,7 @@
 import { forwardRef, useRef, useEffect, useCallback, useMemo } from 'react';
 import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material/styles';
+import { useInView } from '../../hooks/useInView';
 
 /** linear */
 const linear = (t) => t;
@@ -130,48 +131,34 @@ const PixelContainer = forwardRef(function PixelContainer({
     }
   }, [controlledProgress, drawCanvas]);
 
+  /** 뷰포트 진입 감지 */
+  const [inViewRef, isInView] = useInView({
+    trigger: 0.1,
+    delay,
+    isEnabled: controlledProgress === undefined && isTriggerOnView,
+  });
+
   /** 뷰포트 진입 시 애니메이션 */
   useEffect(() => {
-    if (controlledProgress !== undefined || !isTriggerOnView) return;
-    const container = containerRef.current;
-    if (!container) return;
+    if (!isInView || controlledProgress !== undefined) return;
 
     let rafId;
-    let delayId;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          const startAnimation = () => {
-            const startTime = performance.now();
-            const animate = (now) => {
-              const elapsed = now - startTime;
-              const t = Math.min(1, elapsed / duration);
-              progressRef.current = linear(t);
-              drawCanvas();
-              if (t < 1) {
-                rafId = requestAnimationFrame(animate);
-              }
-            };
-            rafId = requestAnimationFrame(animate);
-          };
-          if (delay > 0) {
-            delayId = setTimeout(startAnimation, delay);
-          } else {
-            startAnimation();
-          }
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 },
-    );
-    observer.observe(container);
+    const startTime = performance.now();
+    const animate = (now) => {
+      const elapsed = now - startTime;
+      const t = Math.min(1, elapsed / duration);
+      progressRef.current = linear(t);
+      drawCanvas();
+      if (t < 1) {
+        rafId = requestAnimationFrame(animate);
+      }
+    };
+    rafId = requestAnimationFrame(animate);
 
     return () => {
-      observer.disconnect();
-      if (delayId) clearTimeout(delayId);
       if (rafId) cancelAnimationFrame(rafId);
     };
-  }, [controlledProgress, isTriggerOnView, duration, delay, drawCanvas]);
+  }, [isInView, controlledProgress, duration, drawCanvas]);
 
   /** hover 시 progress 0.9~1 왕복 애니메이션 */
   useEffect(() => {
@@ -213,9 +200,10 @@ const PixelContainer = forwardRef(function PixelContainer({
   /** ref 병합 */
   const setRefs = useCallback((node) => {
     containerRef.current = node;
+    inViewRef(node);
     if (typeof ref === 'function') ref(node);
     else if (ref) ref.current = node;
-  }, [ref]);
+  }, [ref, inViewRef]);
 
   return (
     <Box

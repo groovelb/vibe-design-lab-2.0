@@ -13,6 +13,7 @@ import { TestimonialCard } from '../card/TestimonialCard';
 import FadeTransition from '../motion/FadeTransition';
 import { SectionDivider } from '../typography/SectionDivider';
 import { SectionTitle } from '../typography/SectionTitle';
+import { COL_STAGGER } from '../motion/constants';
 import { PAGES } from '../../data/contents';
 import { courseReviews, webinarReviews } from '../../data/review';
 
@@ -50,7 +51,7 @@ export function LandingCourseReview() {
   return (
     <SectionContainer>
       {/* ── 코스 후기 헤더 ── */}
-      <FadeTransition direction="up" isTriggerOnView>
+      <FadeTransition direction="up" isTriggerOnView threshold={0.5}>
         <SectionDivider label="Review" sx={{ mb: 3 }} />
         <SectionTitle
           headline={courseReview.headline}
@@ -60,6 +61,7 @@ export function LandingCourseReview() {
       </FadeTransition>
 
       {/* ── 코스 후기 — 4col 캐러셀, 3줄 클램프 ── */}
+      <FadeTransition direction="up" isTriggerOnView threshold={0.5}>
       <CarouselContainer
         items={courseReviews}
         visible={{ xs: 1, sm: 2, md: 4 }}
@@ -104,10 +106,11 @@ export function LandingCourseReview() {
           </Box>
         )}
       />
+      </FadeTransition>
 
       {/* ── 웨비나 참여자 후기 — 4col 그리드, 접기/더보기 ── */}
       <Box sx={{ mt: { xs: 8, md: 12 } }}>
-        <FadeTransition direction="up" isTriggerOnView>
+        <FadeTransition direction="up" isTriggerOnView threshold={0.5}>
           <SectionDivider
             label={courseReview.webinarLabel}
             sx={{ mb: { xs: 4, md: 6 } }}
@@ -117,7 +120,7 @@ export function LandingCourseReview() {
         <LineGrid container gap={48} borderColor="divider">
           {visibleWebinarReviews.map((review, index) => (
             <Grid key={review.userId} size={{ xs: 12, sm: 6, md: 3 }}>
-              <FadeTransition direction="up" delay={index * 80} isTriggerOnView>
+              <FadeTransition direction="up" delay={(index % 4) * COL_STAGGER} isTriggerOnView threshold={0.5}>
                 <Stack spacing={1.5}>
                   <Stack direction="row" spacing={1.5} alignItems="center">
                     <Avatar

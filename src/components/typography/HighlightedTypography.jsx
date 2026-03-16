@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useRef, useState, Children, cloneElement, isValidElement } from 'react';
 import { Box, Typography, useTheme } from '@mui/material';
+import { useInView } from '../../hooks/useInView';
 import { keyframes } from '@mui/material/styles';
 
 /**
@@ -301,30 +302,11 @@ export function HighlightedTypography({
   sx,
   ...props
 }) {
-  const containerRef = useRef(null);
-  const [isVisible, setIsVisible] = useState(!animated);
-
-  // Intersection Observer로 viewport 진입 감지
-  useEffect(() => {
-    if (!animated) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold }
-    );
-
-    const container = containerRef.current;
-    if (container) {
-      observer.observe(container);
-    }
-
-    return () => observer.disconnect();
-  }, [animated, threshold]);
+  const [containerRef, inView] = useInView({
+    trigger: threshold,
+    isEnabled: animated,
+  });
+  const isVisible = animated ? inView : true;
 
   // children에 isVisible prop 전달
   const enhancedChildren = Children.map(children, (child) => {

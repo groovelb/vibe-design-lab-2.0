@@ -1,6 +1,7 @@
 'use client';
-import { forwardRef, useEffect, useRef, useState } from 'react';
+import { forwardRef, useState } from 'react';
 import Box from '@mui/material/Box';
+import { useInView } from '../../hooks/useInView';
 import Typography from '@mui/material/Typography';
 import { PixelContainer } from '../container/PixelContainer';
 
@@ -24,31 +25,12 @@ const SectionDivider = forwardRef(function SectionDivider({
   sx,
   ...props
 }, ref) {
-  const innerRef = useRef(null);
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const el = innerRef.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.unobserve(el);
-        }
-      },
-      { threshold: 0.1 },
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+  const [inViewRef, isVisible] = useInView({ trigger: 0.1 });
 
   return (
     <Box
       ref={(node) => {
-        innerRef.current = node;
+        inViewRef(node);
         if (typeof ref === 'function') ref(node);
         else if (ref) ref.current = node;
       }}

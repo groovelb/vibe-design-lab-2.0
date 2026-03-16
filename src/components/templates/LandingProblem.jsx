@@ -4,10 +4,12 @@ import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Grid';
 import { SectionContainer } from '../container/SectionContainer';
 import LineGrid from '../layout/LineGrid';
-import { StatementCard } from '../card/StatementCard';
 import FadeTransition from '../motion/FadeTransition';
+import { DynamicTagConstruct } from '../motion/DynamicTagConstruct';
 import ScrollRevealText from '../kinetic-typography/ScrollRevealText';
 import { SectionDivider } from '../typography/SectionDivider';
+import { CardTextStack } from '../typography/CardTextStack';
+import { COL_STAGGER, VISUAL_LEAD } from '../motion/constants';
 import { PAGES } from '../../data/contents';
 
 const { problem } = PAGES.landing;
@@ -36,7 +38,9 @@ export function LandingProblem() {
       {/* 문제 정의 — ScrollRevealText + 페르소나별 3컬럼 */}
       <Stack spacing={12}>
         <Box sx={{ mb: { xs: 4, md: 6 } }}>
-          <SectionDivider label="Problem" sx={{ mb: 3 }} />
+          <FadeTransition direction="up" isTriggerOnView threshold={0.5}>
+            <SectionDivider label="Problem" sx={{ mb: 3 }} />
+          </FadeTransition>
           <ScrollRevealText
             text={problem.headline}
             variant="h1"
@@ -47,35 +51,43 @@ export function LandingProblem() {
         <LineGrid container gap={144} borderColor="divider">
           {problem.career.filter((_, i) => VISIBLE_INDICES.includes(i)).map((item, index) => (
             <Grid key={item.subtitle} size={{ xs: 12, md: 6 }}>
-              <FadeTransition direction="up" delay={index * 100} isTriggerOnView>
-                <StatementCard
-                  title={item.subtitle}
-                  description={item.text}
-                  thumbnailSlot={
-                    <Box sx={{ width: '100%', aspectRatio: '4/3', overflow: 'hidden', bgcolor: '#09080b' }}>
-                      <Box
-                        component="video"
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        preload="none"
-                        poster={PERSONA_MEDIA[index].poster}
-                        sx={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover',
-                          display: 'block',
-                          mixBlendMode: 'lighten',
-                          ...(index >= 1 && { transform: 'translateY(24px)' }),
-                        }}
-                      >
-                        <source src={PERSONA_MEDIA[index].video} type="video/mp4" />
+              {(() => {
+                const colDelay = (index % 2) * COL_STAGGER;
+                return (
+                  <>
+                    <DynamicTagConstruct isTriggerOnView delay={colDelay}>
+                      <Box sx={{ width: '100%', aspectRatio: '4/3', overflow: 'hidden', bgcolor: '#09080b' }}>
+                        <Box
+                          component="video"
+                          autoPlay
+                          loop
+                          muted
+                          playsInline
+                          preload="none"
+                          poster={PERSONA_MEDIA[index].poster}
+                          sx={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
+                            display: 'block',
+                            mixBlendMode: 'lighten',
+                            ...(index >= 1 && { transform: 'translateY(24px)' }),
+                          }}
+                        >
+                          <source src={PERSONA_MEDIA[index].video} type="video/mp4" />
+                        </Box>
                       </Box>
-                    </Box>
-                  }
-                />
-              </FadeTransition>
+                    </DynamicTagConstruct>
+                    <FadeTransition direction="up" delay={colDelay + VISUAL_LEAD} isTriggerOnView threshold={0.5}>
+                      <CardTextStack
+                        title={item.subtitle}
+                        description={item.text}
+                        sx={{ mt: 6, width: '100%' }}
+                      />
+                    </FadeTransition>
+                  </>
+                );
+              })()}
             </Grid>
           ))}
         </LineGrid>

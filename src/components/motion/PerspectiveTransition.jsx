@@ -1,6 +1,7 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
+import { useInView } from '../../hooks/useInView';
 
 /**
  * PerspectiveTransition 컴포넌트
@@ -45,28 +46,11 @@ function PerspectiveTransition({
   threshold = 0.1,
   sx = {},
 }) {
-  const ref = useRef(null);
+  const [inViewRef, isTriggered] = useInView({
+    trigger: threshold,
+    isEnabled: isTriggerOnView,
+  });
   const [isVisible, setIsVisible] = useState(false);
-
-  /** IntersectionObserver 기반 뷰포트 진입 감지 */
-  useEffect(() => {
-    if (!isTriggerOnView) return;
-    const el = ref.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.unobserve(el);
-        }
-      },
-      { threshold },
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [isTriggerOnView, threshold]);
 
   /** 마운트 후 다음 프레임에서 상태 전환 → CSS transition 발동 */
   useEffect(() => {
@@ -77,11 +61,11 @@ function PerspectiveTransition({
     return () => cancelAnimationFrame(raf);
   }, [isIn, isTriggerOnView]);
 
-  const isActive = isVisible;
+  const isActive = isTriggerOnView ? isTriggered : isVisible;
 
   return (
     <Box
-      ref={ ref }
+      ref={ inViewRef }
       sx={ {
         perspective: `${perspective}px`,
         ...sx,

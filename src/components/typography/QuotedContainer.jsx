@@ -1,6 +1,7 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { Box, Typography } from '@mui/material';
+import { useInView } from '../../hooks/useInView';
 import { keyframes } from '@mui/material/styles';
 
 /**
@@ -83,30 +84,11 @@ export function QuotedContainer({
   sx,
   ...props
 }) {
-  const containerRef = useRef(null);
-  const [isVisible, setIsVisible] = useState(!animated);
-
-  // Viewport 진입 감지
-  useEffect(() => {
-    if (!animated) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.3 }
-    );
-
-    const container = containerRef.current;
-    if (container) {
-      observer.observe(container);
-    }
-
-    return () => observer.disconnect();
-  }, [animated]);
+  const [containerRef, inView] = useInView({
+    trigger: 0.3,
+    isEnabled: animated,
+  });
+  const isVisible = animated ? inView : true;
 
   // 아이콘 크기 매핑 (px)
   const iconSizes = {

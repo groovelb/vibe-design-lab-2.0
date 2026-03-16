@@ -193,6 +193,83 @@ function floorGrid(rangeX, rangeY, step, origin) {
   return { xLines, yLines };
 }
 
+// ── Rounded Slab (둥근 모서리 아이소메트릭 슬래브) ──
+
+/**
+ * Rounded Slab SVG paths — 둥근 모서리 육각 아이소메트릭 슬래브
+ *
+ * @param {number} ix - X 위치 [Required]
+ * @param {number} iy - Y 위치 [Required]
+ * @param {number} iz - Z 위치 [Required]
+ * @param {number} w - 반폭 (iso 단위) [Required]
+ * @param {number} h - 높이 (iso 단위) [Required]
+ * @param {number} cornerR - 모서리 반경 (iso 단위) [Required]
+ * @param {object} origin - 원점 [Required]
+ * @returns {object}
+ */
+function roundedSlab(ix, iy, iz, w, h, cornerR, origin) {
+  const hd = w * UNIT;
+  const bh = h * UNIT;
+  const cr = cornerR * UNIT;
+
+  const base = isoToScreen(ix, iy, iz, origin);
+  const cx = base.x;
+  const topY = base.y - hd / 2 - bh;
+
+  const v = [
+    { x: cx,      y: topY },
+    { x: cx + hd, y: topY + hd / 2 },
+    { x: cx + hd, y: topY + hd / 2 + bh },
+    { x: cx,      y: topY + hd + bh },
+    { x: cx - hd, y: topY + hd / 2 + bh },
+    { x: cx - hd, y: topY + hd / 2 },
+  ];
+
+  const outline = _roundedHex(v, cr);
+  const frontTop = { x: cx, y: topY + hd };
+  const vLine = `M${r(v[5].x)} ${r(v[5].y)}L${r(frontTop.x)} ${r(frontTop.y)}L${r(v[1].x)} ${r(v[1].y)}`;
+  const frontEdge = `M${r(frontTop.x)} ${r(frontTop.y)}L${r(v[3].x)} ${r(v[3].y)}`;
+  const topTransform = `matrix(1, 0.5, -1, 0.5, ${r(cx)}, ${r(topY)})`;
+
+  return {
+    outline, vLine, frontEdge, topTransform,
+    hd, bh, cx, topY,
+    verts: v, frontTop,
+    top: v[0],
+    right: v[1],
+    rightBottom: v[2],
+    frontBottom: v[3],
+    leftBottom: v[4],
+    left: v[5],
+    rightMid: { x: cx + hd, y: topY + hd / 2 + bh / 2 },
+    leftMid: { x: cx - hd, y: topY + hd / 2 + bh / 2 },
+  };
+}
+
+function _roundedHex(verts, cr) {
+  const n = verts.length;
+  const u = [];
+  for (let i = 0; i < n; i++) {
+    const next = verts[(i + 1) % n];
+    const dx = next.x - verts[i].x;
+    const dy = next.y - verts[i].y;
+    const len = Math.sqrt(dx * dx + dy * dy);
+    u.push({ ux: dx / len, uy: dy / len });
+  }
+  let d = '';
+  for (let i = 0; i < n; i++) {
+    const prev = (i + n - 1) % n;
+    const vt = verts[i];
+    const bx = r(vt.x - cr * u[prev].ux);
+    const by = r(vt.y - cr * u[prev].uy);
+    const ax = r(vt.x + cr * u[i].ux);
+    const ay = r(vt.y + cr * u[i].uy);
+    d += i === 0 ? `M${bx} ${by}` : `L${bx} ${by}`;
+    d += `Q${r(vt.x)} ${r(vt.y)} ${ax} ${ay}`;
+  }
+  return d + 'Z';
+}
+
 export {
   UNIT, r,
   isoToScreen,
@@ -202,4 +279,5 @@ export {
   namingLine,
   dimensionLine,
   floorGrid,
+  roundedSlab,
 };

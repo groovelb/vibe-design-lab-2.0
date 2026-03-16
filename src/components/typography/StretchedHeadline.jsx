@@ -1,6 +1,7 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { Box } from '@mui/material';
+import { useInView } from '../../hooks/useInView';
 
 /**
  * StretchedHeadline 컴포넌트
@@ -44,33 +45,13 @@ export function StretchedHeadline({
   sx,
   ...props
 }) {
-  const containerRef = useRef(null);
-  const [isAnimated, setIsAnimated] = useState(false);
+  const [containerRef, isAnimated] = useInView({
+    trigger: 0.3,
+    isEnabled: variant === 'animated',
+  });
 
   // 단어 분리
   const words = text.trim().split(/\s+/);
-
-  // 애니메이션 트리거 (viewport 진입 시)
-  useEffect(() => {
-    if (variant !== 'animated') return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsAnimated(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.3 }
-    );
-
-    const container = containerRef.current;
-    if (container) {
-      observer.observe(container);
-    }
-
-    return () => observer.disconnect();
-  }, [variant]);
 
   // fillWidth가 true일 때 - space-between 방식
   if (fillWidth) {

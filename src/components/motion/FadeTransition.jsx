@@ -1,6 +1,7 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
+import { useInView } from '../../hooks/useInView';
 
 /** 방향별 초기 transform offset 계산 */
 function getTranslate(direction, distance) {
@@ -54,42 +55,18 @@ function FadeTransition({
   easing = 'cubic-bezier(0.4, 0, 0.2, 1)',
   sx = {},
 }) {
-  const ref = useRef(null);
-  const [isVisible, setIsVisible] = useState(!isTriggerOnView && isIn);
-
-  /** IntersectionObserver 기반 뷰포트 진입 감지 */
-  useEffect(() => {
-    if (!isTriggerOnView) return;
-    const el = ref.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.unobserve(el);
-        }
-      },
-      { threshold },
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [isTriggerOnView, threshold]);
-
-  /** isIn prop 변경에 따른 상태 동기화 */
-  useEffect(() => {
-    if (!isTriggerOnView) {
-      setIsVisible(isIn);
-    }
-  }, [isIn, isTriggerOnView]);
+  const [inViewRef, isTriggered] = useInView({
+    trigger: threshold,
+    isEnabled: isTriggerOnView,
+  });
+  const isVisible = isTriggerOnView ? isTriggered : isIn;
 
   const isActive = isVisible;
   const transform = isActive ? 'none' : getTranslate(direction, distance);
 
   return (
     <Box
-      ref={ ref }
+      ref={ inViewRef }
       sx={ {
         opacity: isActive ? 1 : 0.01,
         transform,

@@ -21,7 +21,7 @@ const { footerCta } = PAGES.landing;
 export function LandingFooterCTA() {
   return (
     <SectionContainer>
-        <FadeTransition direction="up" isTriggerOnView>
+        <FadeTransition direction="up" isTriggerOnView threshold={0.5}>
           <Box
             sx={{
               display: 'flex',
