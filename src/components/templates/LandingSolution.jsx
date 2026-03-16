@@ -19,7 +19,7 @@ import { PAGES, VALUE_PROPOSITIONS } from '../../data/contents';
 import { SystemOverDrawing } from '../../assets/brandIllustration/SystemOverDrawing';
 import { VibeStandard } from '../../assets/brandIllustration/VibeStandard';
 import { DesignAsBuild } from '../../assets/brandIllustration/DesignAsBuild';
-import { DynamicTagConstruct } from '../motion/DynamicTagConstruct';
+import { AreaConstruct } from '../motion/AreaConstruct';
 
 const ILLUSTRATIONS = [SystemOverDrawing, VibeStandard, DesignAsBuild];
 
@@ -60,9 +60,9 @@ export function LandingSolution() {
               const colDelay = (index % 3) * COL_STAGGER;
               return (
                 <>
-                  <DynamicTagConstruct isTriggerOnView delay={colDelay}>
+                  <AreaConstruct isTriggerOnView delay={colDelay}>
                     <Illustration />
-                  </DynamicTagConstruct>
+                  </AreaConstruct>
                   <FadeTransition direction="up" delay={colDelay + VISUAL_LEAD} isTriggerOnView threshold={0.5}>
                     <CardTextStack
                       title={vp.name}

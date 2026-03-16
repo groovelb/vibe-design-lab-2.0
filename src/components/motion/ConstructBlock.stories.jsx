@@ -17,12 +17,8 @@ export default {
       description: 'MUI Typography variant',
     },
     typingSpeed: {
-      control: { type: 'number', min: 5, max: 100, step: 5 },
-      description: '스캔 속도 — 문자당 딜레이 (ms)',
-    },
-    isSplitSentences: {
-      control: 'boolean',
-      description: '문장 단위 분할 여부 (false면 줄바꿈 기준)',
+      control: { type: 'number', min: 10, max: 200, step: 5 },
+      description: '스캔 속도 (문자당 ms)',
     },
     isTriggerOnView: {
       control: 'boolean',
@@ -43,7 +39,6 @@ export const Default = {
     text: SAMPLE_TEXT,
     variant: 'body1',
     typingSpeed: 30,
-    isSplitSentences: true,
     isTriggerOnView: false,
     delay: 0,
   },
@@ -54,17 +49,14 @@ export const Default = {
   ),
 };
 
-export const NewlineSplit = {
-  args: {
-    text: '그리기 전에 기준을 먼저 세운다\n디자인은 시스템이다\n코드는 표현의 도구다',
-    variant: 'h4',
-    typingSpeed: 25,
-    isSplitSentences: false,
-    isTriggerOnView: false,
-  },
-  render: (args) => (
-    <Box sx={{ maxWidth: 600 }}>
-      <ConstructBlock {...args} />
+export const NarrowContainer = {
+  render: () => (
+    <Box sx={{ maxWidth: 300 }}>
+      <ConstructBlock
+        text="좁은 컨테이너에서 자연스럽게 줄바꿈되며, 각 visual line마다 스캔 커서가 동시에 sweep합니다."
+        typingSpeed={20}
+        isTriggerOnView={false}
+      />
     </Box>
   ),
 };
@@ -74,15 +66,15 @@ export const StaggeredDelay = {
     <Stack spacing={4} sx={{ maxWidth: 600 }}>
       <ConstructBlock
         text="첫 번째 문단이 등장합니다. 시스템 위에서 만드는 디자인."
-        typingSpeed={25}
+        typingSpeed={30}
         isTriggerOnView={false}
         delay={0}
       />
       <ConstructBlock
         text="두 번째 문단이 뒤따릅니다. 바이브 코딩의 시작."
-        typingSpeed={25}
+        typingSpeed={30}
         isTriggerOnView={false}
-        delay={2000}
+        delay={1000}
       />
     </Stack>
   ),

@@ -22,7 +22,7 @@ import { ConstructCursor } from './ConstructCursor';
  * <ConstructType text="VIBE DESIGN LAB" variant="h2" isTriggerOnView />
  */
 const ConstructType = forwardRef(function ConstructType(
-  { text, variant = 'h2', typingSpeed = 60, isTriggerOnView = true, delay = 0, sx, ...props },
+  { text, variant = 'h2', typingSpeed = 30, isTriggerOnView = true, delay = 0, sx, ...props },
   forwardedRef,
 ) {
   const [inViewRef, isInView] = useInView({

@@ -2,14 +2,15 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { CURSOR_SIZE, CURSOR_Y_RANGE, EASE_OUT } from './constants';
+import { CURSOR_RATIO, EASE_OUT, WORD_DELAY_MULTIPLIER } from './constants';
 
 /**
  * ConstructCursor 컴포넌트
  *
  * Construct 브랜드 키 비주얼의 타이핑 커서 프리미티브.
- * ■ (6×6)가 좌→우로 이동하며 문자를 순차 등장시킨다.
+ * ■가 좌→우로 이동하며 문자를 순차 등장시킨다.
  * 디지털 메타포를 위해 커서 Y 위치가 랜덤하게 점프한다.
+ * 커서 크기는 폰트 사이즈에 비례하며, word 간 이동 시 3배 딜레이.
  * ConstructType, ConstructBlock에서 내부적으로 사용.
  *
  * @param {string} text - 렌더링할 텍스트 [Required]
@@ -21,34 +22,39 @@ import { CURSOR_SIZE, CURSOR_Y_RANGE, EASE_OUT } from './constants';
  * Example usage:
  * <ConstructCursor text="VIBE DESIGN" isActive typingSpeed={60} />
  */
-function ConstructCursor({ text, variant = 'h2', typingSpeed = 60, isActive = false, onComplete }) {
+function ConstructCursor({ text, variant = 'h2', typingSpeed = 30, isActive = false, onComplete }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDone, setIsDone] = useState(false);
+  const [cursorSize, setCursorSize] = useState(6);
   const hasStartedRef = useRef(false);
   const textRef = useRef(null);
   const charWidthsRef = useRef([]);
+  const timeoutRef = useRef(null);
 
   const chars = useMemo(() => text.split(''), [text]);
 
-  /** 랜덤 Y 오프셋 배열 — text 변경 시 재생성 */
-  const yOffsets = useMemo(() => {
-    const offsets = [];
-    let currentY = 0;
+  /** 랜덤 Y 그리드 오프셋 배열 — lineHeight 6등분 그리드에서 랜덤 선택 */
+  const yGridIndices = useMemo(() => {
+    const indices = [];
+    let currentSlot = 0;
     let nextJump = 2 + Math.floor(Math.random() * 3);
     let count = 0;
     for (let i = 0; i < chars.length; i++) {
       if (count >= nextJump) {
-        currentY = (Math.random() * 2 - 1) * CURSOR_Y_RANGE;
+        let next;
+        do { next = Math.floor(Math.random() * 6); } while (next === currentSlot);
+        currentSlot = next;
         nextJump = 2 + Math.floor(Math.random() * 3);
         count = 0;
       }
-      offsets.push(currentY);
+      indices.push(currentSlot);
       count++;
     }
-    return offsets;
+    if (indices.length > 0) indices[indices.length - 1] = 5;
+    return indices;
   }, [chars]);
 
-  /** 문자별 누적 너비 측정 */
+  /** 문자별 누적 너비 측정 + 폰트 비례 커서 크기 계산 */
   useEffect(() => {
     const el = textRef.current;
     if (!el) return;
@@ -61,42 +67,46 @@ function ConstructCursor({ text, variant = 'h2', typingSpeed = 60, isActive = fa
     });
     widths.push(cumulative);
     charWidthsRef.current = widths;
+
+    const fontSize = parseFloat(getComputedStyle(el).fontSize);
+    setCursorSize(Math.round(fontSize * CURSOR_RATIO));
   }, [text, variant]);
 
-  /** 타이핑 진행 */
+  /** 타이핑 진행 — word 간 3배 딜레이 */
   useEffect(() => {
     if (!isActive || hasStartedRef.current) return;
     hasStartedRef.current = true;
 
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => {
-        const next = prev + 1;
-        if (next >= chars.length) {
-          clearInterval(interval);
-          setTimeout(() => {
-            setIsDone(true);
-            onComplete?.();
-          }, 150);
-          return chars.length;
-        }
-        return next;
-      });
-    }, typingSpeed);
+    const tick = (idx) => {
+      if (idx >= chars.length) {
+        timeoutRef.current = setTimeout(() => {
+          setIsDone(true);
+          onComplete?.();
+        }, 150);
+        return;
+      }
+      setCurrentIndex(idx + 1);
+      const delay = chars[idx] === ' ' ? typingSpeed * WORD_DELAY_MULTIPLIER : typingSpeed;
+      timeoutRef.current = setTimeout(() => tick(idx + 1), delay);
+    };
 
-    return () => clearInterval(interval);
-  }, [isActive, chars.length, typingSpeed, onComplete]);
+    timeoutRef.current = setTimeout(() => tick(0), typingSpeed);
+
+    return () => clearTimeout(timeoutRef.current);
+  }, [isActive, chars, typingSpeed, onComplete]);
 
   /** 리셋 (text 변경 시) */
   useEffect(() => {
     hasStartedRef.current = false;
     setCurrentIndex(0);
     setIsDone(false);
+    clearTimeout(timeoutRef.current);
   }, [text]);
 
   const lineHeight = textRef.current?.offsetHeight || 0;
   const cursorX = charWidthsRef.current[currentIndex] || 0;
-  const cursorYRatio = currentIndex < yOffsets.length ? yOffsets[currentIndex] : 0;
-  const cursorY = lineHeight * cursorYRatio;
+  const gridSlot = yGridIndices[Math.min(currentIndex, yGridIndices.length - 1)] || 0;
+  const cursorY = lineHeight > 0 ? (gridSlot / 5) * lineHeight - lineHeight / 2 : 0;
   const isCursorVisible = isActive && !isDone;
 
   return (
@@ -107,7 +117,7 @@ function ConstructCursor({ text, variant = 'h2', typingSpeed = 60, isActive = fa
         component="div"
         aria-label={text}
         sx={{
-          whiteSpace: 'pre',
+          whiteSpace: 'nowrap',
           '@media (prefers-reduced-motion: reduce)': {
             '& > span': { opacity: '1 !important', transition: 'none !important' },
           },
@@ -134,8 +144,8 @@ function ConstructCursor({ text, variant = 'h2', typingSpeed = 60, isActive = fa
           position: 'absolute',
           top: '50%',
           left: 0,
-          width: CURSOR_SIZE,
-          height: CURSOR_SIZE,
+          width: cursorSize,
+          height: cursorSize,
           backgroundColor: 'primary.main',
           transform: `translate3d(${cursorX}px, calc(-50% + ${cursorY}px), 0)`,
           opacity: isCursorVisible ? 1 : 0.01,

@@ -22,14 +22,15 @@ const FW = 97;     // TopFaceContent flat 좌표 기준 폭 (변경 금지)
 const FD = 65;     // TopFaceContent flat 좌표 기준 깊이 (변경 금지)
 const BH = 11;
 const CR = 4;
+const SW = 0.5; // 통일 헤어라인 스트로크
 
 // 측정: 아래 레이어일수록 큰 슬래브, 우측정렬, 간격 좁게
 const LAYERS = [
-  { iz: 0,  id: 'background', label: 'BACKGROUND\n& DETAIL',  stroke: 'var(--vdl-600)', sw: 1.0, fw: 159, fd: 106 },
-  { iz: 5,  id: 'spatial',    label: 'SPATIAL\nCOMPOSITION',  stroke: 'var(--vdl-600)', sw: 1.0, fw: 150, fd: 100 },
-  { iz: 10, id: 'motion',     label: 'MOTION',                stroke: 'var(--vdl-600)', sw: 1.0, fw: 141, fd: 94  },
-  { iz: 15, id: 'color',      label: 'COLOR & THEME',         stroke: 'var(--vdl-200)', sw: 0.8, fw: 132, fd: 88  },
-  { iz: 20, id: 'typography', label: 'TYPOGRAPHY',            stroke: 'var(--vdl-200)', sw: 0.8, fw: 123, fd: 82  },
+  { iz: 0,  id: 'background', label: 'BACKGROUND\n& DETAIL',  stroke: 'white', sw: SW, fw: 159, fd: 106 },
+  { iz: 5,  id: 'spatial',    label: 'SPATIAL\nCOMPOSITION',  stroke: 'white', sw: SW, fw: 150, fd: 100 },
+  { iz: 10, id: 'motion',     label: 'MOTION',                stroke: 'white', sw: SW, fw: 141, fd: 94  },
+  { iz: 15, id: 'color',      label: 'COLOR & THEME',         stroke: 'white', sw: SW, fw: 132, fd: 88  },
+  { iz: 20, id: 'typography', label: 'TYPOGRAPHY',            stroke: 'white', sw: SW, fw: 123, fd: 82  },
 ];
 
 // ── Rounded Hexagonal Path ──
@@ -100,6 +101,29 @@ function buildRectSlab(iz, fw, fd) {
   };
 }
 
+// ── Stroke → Fill Helpers (thick stroke → closed filled path) ──
+
+function lineToFill(x1, y1, x2, y2, w) {
+  const dx = x2 - x1, dy = y2 - y1;
+  const len = Math.sqrt(dx * dx + dy * dy);
+  const hw = w / 2;
+  const nx = (-dy / len) * hw, ny = (dx / len) * hw;
+  return `M${r(x1+nx)} ${r(y1+ny)}L${r(x2+nx)} ${r(y2+ny)}L${r(x2-nx)} ${r(y2-ny)}L${r(x1-nx)} ${r(y1-ny)}Z`;
+}
+
+function ringPath(cx, cy, R, sw) {
+  const ro = R + sw / 2, ri = Math.max(0, R - sw / 2);
+  return `M${r(cx-ro)} ${r(cy)}A${r(ro)} ${r(ro)} 0 1 1 ${r(cx+ro)} ${r(cy)}A${r(ro)} ${r(ro)} 0 1 1 ${r(cx-ro)} ${r(cy)}Z`
+    + `M${r(cx-ri)} ${r(cy)}A${r(ri)} ${r(ri)} 0 1 0 ${r(cx+ri)} ${r(cy)}A${r(ri)} ${r(ri)} 0 1 0 ${r(cx-ri)} ${r(cy)}Z`;
+}
+
+function ellipseRingPath(cx, cy, rx, ry, sw) {
+  const rox = rx + sw / 2, roy = ry + sw / 2;
+  const rix = Math.max(0, rx - sw / 2), riy = Math.max(0, ry - sw / 2);
+  return `M${r(cx-rox)} ${r(cy)}A${r(rox)} ${r(roy)} 0 1 1 ${r(cx+rox)} ${r(cy)}A${r(rox)} ${r(roy)} 0 1 1 ${r(cx-rox)} ${r(cy)}Z`
+    + `M${r(cx-rix)} ${r(cy)}A${r(rix)} ${r(riy)} 0 1 0 ${r(cx+rix)} ${r(cy)}A${r(rix)} ${r(riy)} 0 1 0 ${r(cx-rix)} ${r(cy)}Z`;
+}
+
 // ── Top Face Content (FW × FD flat coordinate space) ──
 
 function TopFaceContent({ id }) {
@@ -110,35 +134,32 @@ function TopFaceContent({ id }) {
   switch (id) {
     case 'background':
       return (
-        <g fill="none" stroke="var(--vdl-800)">
+        <g fill="none" stroke="white" strokeWidth={SW}>
           <rect
             x={pad} y={pad} width={iw} height={ih}
-            rx="3" strokeWidth="0.6"
+            rx="3"
           />
           <rect
             x={pad + 10} y={pad + 8}
             width={iw - 20} height={ih - 16}
-            rx="1.5" strokeWidth="0.4" opacity="0.5"
+            rx="1.5" opacity="0.5"
           />
         </g>
       );
 
     case 'spatial':
       return (
-        <g>
+        <g fill="none" stroke="white" strokeWidth={SW}>
           <rect
             x={pad} y={pad} width={iw} height={ih}
             rx="3"
-            stroke="var(--vdl-600)" fill="none" strokeWidth="0.6"
           />
-          <g stroke="var(--vdl-600)" strokeWidth="0.5">
-            {[0.2, 0.4, 0.6, 0.8].map((u) => (
-              <line key={`v${u}`} x1={FW * u} y1={pad} x2={FW * u} y2={FD - pad} />
-            ))}
-            {[0.25, 0.5, 0.75].map((v) => (
-              <line key={`h${v}`} x1={pad} y1={FD * v} x2={FW - pad} y2={FD * v} />
-            ))}
-          </g>
+          {[0.2, 0.4, 0.6, 0.8].map((u) => (
+            <line key={`v${u}`} x1={FW * u} y1={pad} x2={FW * u} y2={FD - pad} />
+          ))}
+          {[0.25, 0.5, 0.75].map((v) => (
+            <line key={`h${v}`} x1={pad} y1={FD * v} x2={FW - pad} y2={FD * v} />
+          ))}
         </g>
       );
 
@@ -147,21 +168,21 @@ function TopFaceContent({ id }) {
         <g fill="none">
           <path
             d={`M${pad + 3} ${FD * 0.72}Q${FW * 0.35} ${FD * 0.05} ${FW - pad - 3} ${FD * 0.45}`}
-            stroke="var(--vdl-600)" strokeWidth="1.2" strokeLinecap="round"
+            stroke="white" strokeWidth={SW} strokeLinecap="round"
           />
           <circle cx={FW * 0.48} cy={FD * 0.28} r="3.5"
-            stroke="var(--vdl-600)" strokeWidth="0.8"
+            stroke="white" strokeWidth={SW}
           />
           <path
             d={`M${FW - pad - 12} ${FD * 0.37}L${FW - pad - 3} ${FD * 0.45}L${FW - pad - 10} ${FD * 0.55}`}
-            stroke="var(--vdl-600)" strokeWidth="0.8" strokeLinecap="round" strokeLinejoin="round"
+            stroke="white" strokeWidth={SW} strokeLinecap="round" strokeLinejoin="round"
           />
         </g>
       );
 
     case 'color':
       return (
-        <g fill="none" stroke="var(--vdl-200)" strokeWidth="0.9">
+        <g fill="none" stroke="white" strokeWidth={SW}>
           {[0, 1, 2, 3, 4, 5, 6].map((i) => (
             <circle
               key={i}
@@ -174,52 +195,54 @@ function TopFaceContent({ id }) {
       );
 
     case 'typography': {
-      // Garamond Bold — bracketed serifs, double-story g, moderate thick/thin
+      // Garamond Bold — thick strokes converted to filled closed paths
       const aH = ih;           // 53px — cap height
-      const aW = aH * 0.78;   // 41px — Garamond A: 약간 좁은 비율
-      const swThick = 5.5;    // thick stroke (Garamond: 부드러운 대비)
-      const swThin = 2.5;     // thin stroke
-      const sf = 4.5;         // serif 돌출 길이
-      const sfH = 2;          // serif 두께
+      const aW = aH * 0.78;   // 41px
+      const swThick = 5.5;    // fill width (was thick stroke)
+      const swThin = 2.5;     // fill width (was thin stroke)
+      const sf = 4.5;         // serif length
+      const sfH = 2;          // serif fill height
       const aX = pad + 3;
-      // g 파라미터
-      const gBowlR = 8;       // upper bowl 반지름
-      const gLoopRx = 9;      // lower loop 가로 반지름
-      const gLoopRy = 7;      // lower loop 세로 반지름
-      const gSw = 4;          // g 획 두께
+      const gBowlR = 8;
+      const gLoopRx = 9;
+      const gLoopRy = 7;
+      const gSw = 4;
       const gX = aX + aW + 5;
       const gY = pad + aH * 0.08;
+
+      // "A" — filled closed paths
+      const aLeftLeg = lineToFill(sf, aH, aW / 2, 0, swThin);
+      const aRightLeg = lineToFill(aW / 2, 0, aW - sf, aH, swThick);
+      const aCrossbar = lineToFill(aW * 0.2, aH * 0.58, aW * 0.8, aH * 0.58, swThin);
+      // Serifs: Q bezier → filled ribbon (offset ±sfH/2 in Y)
+      const hw = sfH / 2;
+      const aLeftSerif = `M${r(-sf * 0.3)} ${r(aH - hw)}Q${r(sf * 0.5)} ${r(aH - 1.5 - hw)} ${r(sf * 2)} ${r(aH - hw)}`
+        + `L${r(sf * 2)} ${r(aH + hw)}Q${r(sf * 0.5)} ${r(aH - 1.5 + hw)} ${r(-sf * 0.3)} ${r(aH + hw)}Z`;
+      const aRightSerif = `M${r(aW - sf * 2)} ${r(aH - hw)}Q${r(aW - sf * 0.5)} ${r(aH - 1.5 - hw)} ${r(aW + sf * 0.3)} ${r(aH - hw)}`
+        + `L${r(aW + sf * 0.3)} ${r(aH + hw)}Q${r(aW - sf * 0.5)} ${r(aH - 1.5 + hw)} ${r(aW - sf * 2)} ${r(aH + hw)}Z`;
+
+      // "g" — filled closed paths
+      const gBowl = ringPath(gBowlR, gBowlR, gBowlR, gSw);
+      const gEar = lineToFill(gBowlR * 1.65, gBowlR * 0.2, gBowlR * 2.15, -gBowlR * 0.15, 2);
+      const gStem = lineToFill(gBowlR * 2, gBowlR * 0.5, gBowlR * 2, gBowlR * 2 + gLoopRy, gSw);
+      const gLoop = ellipseRingPath(gBowlR, gBowlR * 2 + gLoopRy, gLoopRx, gLoopRy, gSw * 0.8);
+
       return (
-        <g fill="none" stroke="var(--vdl-200)">
-          {/* "A" — Garamond: bracketed serifs, cupped apex */}
-          <g transform={`translate(${aX}, ${pad})`} strokeLinecap="butt">
-            {/* left leg (thin) */}
-            <path d={`M${r(sf)} ${aH}L${r(aW / 2)} 0`} strokeWidth={swThin} />
-            {/* right leg (thick) */}
-            <path d={`M${r(aW / 2)} 0L${r(aW - sf)} ${aH}`} strokeWidth={swThick} />
-            {/* crossbar (thin) */}
-            <path d={`M${r(aW * 0.2)} ${r(aH * 0.58)}L${r(aW * 0.8)} ${r(aH * 0.58)}`} strokeWidth={swThin} />
-            {/* left foot serif — bracketed */}
-            <path d={`M${r(-sf * 0.3)} ${aH}Q${r(sf * 0.5)} ${r(aH - 1.5)} ${r(sf * 2)} ${aH}`} strokeWidth={sfH} />
-            {/* right foot serif — bracketed */}
-            <path d={`M${r(aW - sf * 2)} ${aH}Q${r(aW - sf * 0.5)} ${r(aH - 1.5)} ${r(aW + sf * 0.3)} ${aH}`} strokeWidth={sfH} />
+        <g fill="white" stroke="white" strokeWidth={SW}>
+          {/* "A" — filled closed paths preserving Garamond form */}
+          <g transform={`translate(${aX}, ${pad})`}>
+            <path d={aLeftLeg} />
+            <path d={aRightLeg} />
+            <path d={aCrossbar} />
+            <path d={aLeftSerif} />
+            <path d={aRightSerif} />
           </g>
-          {/* "g" — Garamond double-story: upper bowl + ear + link + lower loop */}
-          <g transform={`translate(${r(gX)}, ${r(gY)})`} strokeLinecap="round" strokeLinejoin="round">
-            {/* upper bowl */}
-            <circle cx={gBowlR} cy={gBowlR} r={gBowlR} strokeWidth={gSw} />
-            {/* ear */}
-            <path d={`M${r(gBowlR * 1.65)} ${r(gBowlR * 0.2)}L${r(gBowlR * 2.15)} ${r(-gBowlR * 0.15)}`} strokeWidth={2} />
-            {/* right stem (link) */}
-            <path d={`M${gBowlR * 2} ${r(gBowlR * 0.5)}L${gBowlR * 2} ${r(gBowlR * 2 + gLoopRy)}`} strokeWidth={gSw} />
-            {/* lower loop — closed oval */}
-            <ellipse
-              cx={gBowlR}
-              cy={r(gBowlR * 2 + gLoopRy)}
-              rx={gLoopRx}
-              ry={gLoopRy}
-              strokeWidth={r(gSw * 0.8)}
-            />
+          {/* "g" — filled closed paths preserving double-story form */}
+          <g transform={`translate(${r(gX)}, ${r(gY)})`}>
+            <path d={gBowl} fillRule="evenodd" />
+            <path d={gEar} />
+            <path d={gStem} />
+            <path d={gLoop} fillRule="evenodd" />
           </g>
         </g>
       );
@@ -269,13 +292,19 @@ const SystemOverDrawingV3 = forwardRef((props, ref) => {
           <feBlend in2="bg" result="shadow" />
           <feBlend in="SourceGraphic" in2="shadow" result="shape" />
         </filter>
+        {/* 슬래브별 clipPath — vLine/frontEdge가 rounded corner 밖으로 삐져나오지 않도록 */}
+        {layers.map((l) => (
+          <clipPath key={l.id} id={`sod3-clip-${l.id}`}>
+            <path d={l.p.outline} />
+          </clipPath>
+        ))}
       </defs>
 
       {/* ── Title ── */}
       <text
         x="20"
         y="30"
-        fill="var(--vdl-200)"
+        fill="white"
         fontSize="14"
         fontFamily="monospace"
         fontWeight="bold"
@@ -298,16 +327,18 @@ const SystemOverDrawingV3 = forwardRef((props, ref) => {
           <path
             d={l.p.vLine}
             fill="none"
-            stroke="var(--vdl-800)"
-            strokeWidth="0.5"
+            stroke="white"
+            strokeWidth={SW}
             strokeLinecap="round"
+            clipPath={`url(#sod3-clip-${l.id})`}
           />
           <path
             d={l.p.frontEdge}
             fill="none"
-            stroke="var(--vdl-800)"
-            strokeWidth="0.5"
+            stroke="white"
+            strokeWidth={SW}
             strokeLinecap="round"
+            clipPath={`url(#sod3-clip-${l.id})`}
           />
           <g transform={l.p.topTransform}>
             <TopFaceContent id={l.id} />
@@ -319,16 +350,16 @@ const SystemOverDrawingV3 = forwardRef((props, ref) => {
       {layers.map((l) => {
         const anchor = l.p.rightMid;
         const nl = namingLine(anchor.x + 5, anchor.y, 80);
-        const isHero = l.stroke === 'var(--vdl-200)';
-        const dotFill = isHero ? 'var(--vdl-200)' : 'var(--vdl-700)';
-        const lineStroke = isHero ? 'var(--vdl-200)' : 'var(--vdl-700)';
-        const textFill = isHero ? 'var(--vdl-200)' : 'var(--vdl-600)';
+        const isHero = l.stroke === 'white';
+        const dotFill = isHero ? 'white' : 'white';
+        const lineStroke = isHero ? 'white' : 'white';
+        const textFill = isHero ? 'white' : 'white';
         const labelLines = l.label.split('\n');
 
         return (
           <g key={`nl-${l.id}`}>
             <circle cx={nl.dot.cx} cy={nl.dot.cy} r="1.8" fill={dotFill} />
-            <path d={nl.line} stroke={lineStroke} strokeWidth="0.5" />
+            <path d={nl.line} stroke={lineStroke} strokeWidth={SW} />
             {labelLines.map((line, j) => (
               <text
                 key={j}
@@ -357,14 +388,14 @@ const SystemOverDrawingV3 = forwardRef((props, ref) => {
         const dimValues = ['0.36"', '0.56"', '0.56"', '0.56"'];
 
         return (
-          <g key={`dim-${i}`} stroke="var(--vdl-800)" strokeWidth="0.3">
+          <g key={`dim-${i}`} stroke="white" strokeWidth={SW}>
             <line x1={x} y1={y1} x2={x} y2={y2} />
             <line x1={x - tw} y1={y1} x2={x + tw} y2={y1} />
             <line x1={x - tw} y1={y2} x2={x + tw} y2={y2} />
             <text
               x={x - 3}
               y={(y1 + y2) / 2}
-              fill="var(--vdl-800)"
+              fill="white"
               fontSize="5"
               fontFamily="monospace"
               dominantBaseline="middle"
@@ -384,14 +415,14 @@ const SystemOverDrawingV3 = forwardRef((props, ref) => {
         const x2 = topLayer.p.right.x;
         const th = 3;
         return (
-          <g stroke="var(--vdl-800)" strokeWidth="0.3">
+          <g stroke="white" strokeWidth={SW}>
             <line x1={x1} y1={y} x2={x2} y2={y} />
             <line x1={x1} y1={y - th} x2={x1} y2={y + th} />
             <line x1={x2} y1={y - th} x2={x2} y2={y + th} />
             <text
               x={(x1 + x2) / 2}
               y={y - 5}
-              fill="var(--vdl-800)"
+              fill="white"
               fontSize="5"
               fontFamily="monospace"
               dominantBaseline="middle"
@@ -412,7 +443,7 @@ const SystemOverDrawingV3 = forwardRef((props, ref) => {
             <text
               x={x - 3}
               y={btm.p.frontBottom.y - 6}
-              fill="var(--vdl-800)"
+              fill="white"
               fontSize="5"
               fontFamily="monospace"
               dominantBaseline="middle"
@@ -423,7 +454,7 @@ const SystemOverDrawingV3 = forwardRef((props, ref) => {
             <text
               x={x - 3}
               y={btm.p.frontBottom.y + 4}
-              fill="var(--vdl-800)"
+              fill="white"
               fontSize="5"
               fontFamily="monospace"
               dominantBaseline="middle"

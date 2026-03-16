@@ -17,7 +17,9 @@ export const T = { tag: 80, scatter: 250, settle: 40, reveal: 150 };
 
 /* ── ConstructCursor 시스템 ── */
 
-/** ConstructCursor 크기 (px) — 타이핑 커서로 사용되는 ■ */
-export const CURSOR_SIZE = 6;
+/** ConstructCursor 크기 비율 — fontSize × CURSOR_RATIO = 커서 크기 (px) */
+export const CURSOR_RATIO = 0.35;
+/** ConstructCursor word 간 딜레이 배수 — 공백에서 typingSpeed × 이 값 */
+export const WORD_DELAY_MULTIPLIER = 2;
 /** ConstructCursor Y 점프 최대 범위 (lineHeight 비율) */
 export const CURSOR_Y_RANGE = 0.25;

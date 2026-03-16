@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid';
 import { SectionContainer } from '../container/SectionContainer';
 import LineGrid from '../layout/LineGrid';
 import FadeTransition from '../motion/FadeTransition';
-import { DynamicTagConstruct } from '../motion/DynamicTagConstruct';
+import { AreaConstruct } from '../motion/AreaConstruct';
 import ScrollRevealText from '../kinetic-typography/ScrollRevealText';
 import { SectionDivider } from '../typography/SectionDivider';
 import { CardTextStack } from '../typography/CardTextStack';
@@ -55,7 +55,7 @@ export function LandingProblem() {
                 const colDelay = (index % 2) * COL_STAGGER;
                 return (
                   <>
-                    <DynamicTagConstruct isTriggerOnView delay={colDelay}>
+                    <AreaConstruct isTriggerOnView delay={colDelay}>
                       <Box sx={{ width: '100%', aspectRatio: '4/3', overflow: 'hidden', bgcolor: '#09080b' }}>
                         <Box
                           component="video"
@@ -77,7 +77,7 @@ export function LandingProblem() {
                           <source src={PERSONA_MEDIA[index].video} type="video/mp4" />
                         </Box>
                       </Box>
-                    </DynamicTagConstruct>
+                    </AreaConstruct>
                     <FadeTransition direction="up" delay={colDelay + VISUAL_LEAD} isTriggerOnView threshold={0.5}>
                       <CardTextStack
                         title={item.subtitle}
