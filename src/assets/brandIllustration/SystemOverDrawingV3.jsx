@@ -26,11 +26,11 @@ const SW = 0.5; // 통일 헤어라인 스트로크
 
 // 측정: 아래 레이어일수록 큰 슬래브, 우측정렬, 간격 좁게
 const LAYERS = [
-  { iz: 0,  id: 'background', label: 'BACKGROUND\n& DETAIL',  stroke: 'white', sw: SW, fw: 159, fd: 106 },
-  { iz: 5,  id: 'spatial',    label: 'SPATIAL\nCOMPOSITION',  stroke: 'white', sw: SW, fw: 150, fd: 100 },
-  { iz: 10, id: 'motion',     label: 'MOTION',                stroke: 'white', sw: SW, fw: 141, fd: 94  },
-  { iz: 15, id: 'color',      label: 'COLOR & THEME',         stroke: 'white', sw: SW, fw: 132, fd: 88  },
-  { iz: 20, id: 'typography', label: 'TYPOGRAPHY',            stroke: 'white', sw: SW, fw: 123, fd: 82  },
+  { iz: 0,  id: 'background', label: 'BACKGROUND',   stroke: 'white', sw: SW, fw: 159, fd: 106 },
+  { iz: 5,  id: 'spatial',    label: 'LAYOUT',       stroke: 'white', sw: SW, fw: 142, fd: 95  },
+  { iz: 10, id: 'motion',     label: 'MOTION',       stroke: 'white', sw: SW, fw: 125, fd: 84  },
+  { iz: 15, id: 'color',      label: 'COLOR TOKEN',  stroke: 'white', sw: SW, fw: 108, fd: 73  },
+  { iz: 20, id: 'typography', label: 'TYPOGRAPHY',   stroke: 'white', sw: SW, fw: 105, fd: 70  },
 ];
 
 // ── Rectangular Isometric Slab (Gemini 방식) ──
@@ -236,16 +236,20 @@ function TopFaceContent({ id }) {
     }
 
     case 'color': {
-      // Circle sizes with rhythm: crescendo toward front
-      const radii = [3.5, 4.5, 3.8, 5.5, 4, 5, 3.5];
+      // Actual violet-gray scale swatches
+      const swatches = [
+        'var(--vdl-50)',  'var(--vdl-100)', 'var(--vdl-200)',
+        'var(--vdl-400)', 'var(--vdl-600)', 'var(--vdl-800)', 'var(--vdl-950)',
+      ];
       return (
-        <g fill="none" strokeWidth={SW}>
-          {radii.map((cr, i) => (
+        <g strokeWidth={SW}>
+          {swatches.map((c, i) => (
             <circle
               key={i}
               cx={pad + 6 + i * ((iw - 12) / 6)}
               cy={FD - pad * 2.5}
-              r={cr}
+              r={5}
+              fill={c}
               stroke="white"
             />
           ))}
@@ -254,56 +258,18 @@ function TopFaceContent({ id }) {
     }
 
     case 'typography': {
-      // Garamond Bold — thick strokes converted to filled closed paths
-      const aH = ih;           // 53px — cap height
-      const aW = aH * 0.78;   // 41px
-      const swThick = 5.5;    // fill width (was thick stroke)
-      const swThin = 2.5;     // fill width (was thin stroke)
-      const sf = 4.5;         // serif length
-      const sfH = 2;          // serif fill height
-      const aX = pad + 3;
-      const gBowlR = 8;
-      const gLoopRx = 9;
-      const gLoopRy = 7;
-      const gSw = 4;
-      const gX = aX + aW + 5;
-      const gY = pad + aH * 0.08;
-
-      // "A" — filled closed paths
-      const aLeftLeg = lineToFill(sf, aH, aW / 2, 0, swThin);
-      const aRightLeg = lineToFill(aW / 2, 0, aW - sf, aH, swThick);
-      const aCrossbar = lineToFill(aW * 0.2, aH * 0.58, aW * 0.8, aH * 0.58, swThin);
-      // Serifs: Q bezier → filled ribbon (offset ±sfH/2 in Y)
-      const hw = sfH / 2;
-      const aLeftSerif = `M${r(-sf * 0.3)} ${r(aH - hw)}Q${r(sf * 0.5)} ${r(aH - 1.5 - hw)} ${r(sf * 2)} ${r(aH - hw)}`
-        + `L${r(sf * 2)} ${r(aH + hw)}Q${r(sf * 0.5)} ${r(aH - 1.5 + hw)} ${r(-sf * 0.3)} ${r(aH + hw)}Z`;
-      const aRightSerif = `M${r(aW - sf * 2)} ${r(aH - hw)}Q${r(aW - sf * 0.5)} ${r(aH - 1.5 - hw)} ${r(aW + sf * 0.3)} ${r(aH - hw)}`
-        + `L${r(aW + sf * 0.3)} ${r(aH + hw)}Q${r(aW - sf * 0.5)} ${r(aH - 1.5 + hw)} ${r(aW - sf * 2)} ${r(aH + hw)}Z`;
-
-      // "g" — filled closed paths
-      const gBowl = ringPath(gBowlR, gBowlR, gBowlR, gSw);
-      const gEar = lineToFill(gBowlR * 1.65, gBowlR * 0.2, gBowlR * 2.15, -gBowlR * 0.15, 2);
-      const gStem = lineToFill(gBowlR * 2, gBowlR * 0.5, gBowlR * 2, gBowlR * 2 + gLoopRy, gSw);
-      const gLoop = ellipseRingPath(gBowlR, gBowlR * 2 + gLoopRy, gLoopRx, gLoopRy, gSw * 0.8);
-
+      const fontSize = ih * 0.64;
       return (
-        <g fill="white" stroke="white" strokeWidth={SW}>
-          {/* "A" */}
-          <g transform={`translate(${aX}, ${pad})`}>
-            <path d={aLeftLeg} />
-            <path d={aRightLeg} />
-            <path d={aCrossbar} />
-            <path d={aLeftSerif} />
-            <path d={aRightSerif} />
-          </g>
-          {/* "g" */}
-          <g transform={`translate(${r(gX)}, ${r(gY)})`}>
-            <path d={gBowl} fillRule="evenodd" />
-            <path d={gEar} />
-            <path d={gStem} />
-            <path d={gLoop} fillRule="evenodd" />
-          </g>
-        </g>
+        <text
+          x={pad}
+          y={FD * 0.5 + fontSize * 0.35}
+          fill="white"
+          fontSize={fontSize}
+          fontFamily="'DM Serif Display', serif"
+          fontWeight="400"
+        >
+          VIBE
+        </text>
       );
     }
 
@@ -328,6 +294,25 @@ const SystemOverDrawingV3 = forwardRef((props, ref) => {
       fill="none"
       {...props}
     >
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&display=swap');
+        @keyframes sod3-enter {
+          from { opacity: 0.01; transform: translateY(16px); }
+          to   { opacity: 1;    transform: translateY(0); }
+        }
+        .sod3-layer {
+          opacity: 0.01;
+          animation: sod3-enter 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .sod3-l0 { animation-delay: 0s; }
+        .sod3-l1 { animation-delay: 0.12s; }
+        .sod3-l2 { animation-delay: 0.24s; }
+        .sod3-l3 { animation-delay: 0.36s; }
+        .sod3-l4 { animation-delay: 0.48s; }
+        @media (prefers-reduced-motion: reduce) {
+          .sod3-layer { animation: none; opacity: 1; }
+        }
+      `}</style>
       <defs>
         <filter
           id="sod3s"
@@ -359,171 +344,60 @@ const SystemOverDrawingV3 = forwardRef((props, ref) => {
         ))}
       </defs>
 
-      {/* ── Title ── */}
-      <text
-        x="20"
-        y="30"
-        fill="white"
-        fontSize="14"
-        fontFamily="monospace"
-        fontWeight="bold"
-        letterSpacing="2.5"
-      >
-        <tspan x="20" dy="0">DESIGN</tspan>
-        <tspan x="20" dy="16">SYSTEM</tspan>
-      </text>
-
-      {/* ── Layers (back→front: background → typography) ── */}
-      {layers.map((l) => (
-        <g key={l.id} filter="url(#sod3s)">
-          <path
-            d={l.p.outline}
-            fill="var(--vdl-950)"
-            stroke={l.stroke}
-            strokeWidth={l.sw}
-            strokeLinejoin="round"
-          />
-          <path
-            d={l.p.vLine}
-            fill="none"
-            stroke="var(--vdl-800)"
-            strokeWidth={SW}
-            strokeLinecap="round"
-            clipPath={`url(#sod3-clip-${l.id})`}
-          />
-          <path
-            d={l.p.frontEdge}
-            fill="none"
-            stroke="var(--vdl-800)"
-            strokeWidth={SW}
-            strokeLinecap="round"
-            clipPath={`url(#sod3-clip-${l.id})`}
-          />
-          <g transform={l.p.topTransform}>
-            <TopFaceContent id={l.id} />
-          </g>
-        </g>
-      ))}
-
-      {/* ── Naming Lines & Labels ── */}
-      {layers.map((l) => {
+      {/* ── Layers + Naming Lines (staggered entrance) ── */}
+      {layers.map((l, i) => {
         const anchor = l.p.rightMid;
-        const nl = namingLine(anchor.x + 5, anchor.y, 80);
-        const isHero = l.stroke === 'white';
-        const dotFill = isHero ? 'white' : 'white';
-        const lineStroke = isHero ? 'white' : 'white';
-        const textFill = isHero ? 'white' : 'white';
-        const labelLines = l.label.split('\n');
+        const nl = namingLine(anchor.x + 5, anchor.y, 40);
 
         return (
-          <g key={`nl-${l.id}`}>
-            <circle cx={nl.dot.cx} cy={nl.dot.cy} r="1.8" fill={dotFill} />
-            <path d={nl.line} stroke={lineStroke} strokeWidth={SW} />
-            {labelLines.map((line, j) => (
-              <text
-                key={j}
-                x={nl.labelAnchor.x}
-                y={nl.labelAnchor.y + j * 10 - ((labelLines.length - 1) * 10) / 2}
-                fill={textFill}
-                fontSize="7.5"
-                fontFamily="monospace"
-                fontWeight="bold"
-                dominantBaseline="middle"
-              >
-                {line}
-              </text>
-            ))}
-          </g>
-        );
-      })}
-
-      {/* ── Dimension Lines (left side) ── */}
-      {layers.slice(0, -1).map((l, i) => {
-        const nextL = layers[i + 1];
-        const x = l.p.left.x - 15;
-        const y1 = l.p.left.y;
-        const y2 = nextL.p.leftBottom.y;
-        const tw = 3;
-        const dimValues = ['0.36"', '0.56"', '0.56"', '0.56"'];
-
-        return (
-          <g key={`dim-${i}`} stroke="white" strokeWidth={SW}>
-            <line x1={x} y1={y1} x2={x} y2={y2} />
-            <line x1={x - tw} y1={y1} x2={x + tw} y2={y1} />
-            <line x1={x - tw} y1={y2} x2={x + tw} y2={y2} />
+          <g key={l.id} className={`sod3-layer sod3-l${i}`}>
+            {/* Container */}
+            <g filter="url(#sod3s)">
+              <path
+                d={l.p.outline}
+                fill="var(--vdl-950)"
+                stroke={l.stroke}
+                strokeWidth={l.sw}
+                strokeLinejoin="round"
+              />
+              <path
+                d={l.p.vLine}
+                fill="none"
+                stroke="var(--vdl-800)"
+                strokeWidth={SW}
+                strokeLinecap="round"
+                clipPath={`url(#sod3-clip-${l.id})`}
+              />
+              <path
+                d={l.p.frontEdge}
+                fill="none"
+                stroke="var(--vdl-800)"
+                strokeWidth={SW}
+                strokeLinecap="round"
+                clipPath={`url(#sod3-clip-${l.id})`}
+              />
+              <g transform={l.p.topTransform}>
+                <TopFaceContent id={l.id} />
+              </g>
+            </g>
+            {/* Naming Line & Label */}
+            <circle cx={nl.dot.cx} cy={nl.dot.cy} r="1.8" fill="white" />
+            <path d={nl.line} stroke="white" strokeWidth={SW} />
             <text
-              x={x - 3}
-              y={(y1 + y2) / 2}
+              x={nl.labelAnchor.x}
+              y={nl.labelAnchor.y}
               fill="white"
-              fontSize="5"
+              fontSize="7.5"
               fontFamily="monospace"
+              fontWeight="bold"
               dominantBaseline="middle"
-              textAnchor="end"
             >
-              {dimValues[i]}
+              {l.label}
             </text>
           </g>
         );
       })}
 
-      {/* ── Top Width Dimension ── */}
-      {(() => {
-        const topLayer = layers[layers.length - 1];
-        const y = topLayer.p.top.y - 8;
-        const x1 = topLayer.p.left.x;
-        const x2 = topLayer.p.right.x;
-        const th = 3;
-        return (
-          <g stroke="white" strokeWidth={SW}>
-            <line x1={x1} y1={y} x2={x2} y2={y} />
-            <line x1={x1} y1={y - th} x2={x1} y2={y + th} />
-            <line x1={x2} y1={y - th} x2={x2} y2={y + th} />
-            <text
-              x={(x1 + x2) / 2}
-              y={y - 5}
-              fill="white"
-              fontSize="5"
-              fontFamily="monospace"
-              dominantBaseline="middle"
-              textAnchor="middle"
-            >
-              5.86&quot;
-            </text>
-          </g>
-        );
-      })()}
-
-      {/* ── Bottom markers ── */}
-      {(() => {
-        const btm = layers[0];
-        const x = btm.p.left.x - 15;
-        return (
-          <>
-            <text
-              x={x - 3}
-              y={btm.p.frontBottom.y - 6}
-              fill="white"
-              fontSize="5"
-              fontFamily="monospace"
-              dominantBaseline="middle"
-              textAnchor="end"
-            >
-              18°
-            </text>
-            <text
-              x={x - 3}
-              y={btm.p.frontBottom.y + 4}
-              fill="white"
-              fontSize="5"
-              fontFamily="monospace"
-              dominantBaseline="middle"
-              textAnchor="end"
-            >
-              180°
-            </text>
-          </>
-        );
-      })()}
     </svg>
   );
 });
