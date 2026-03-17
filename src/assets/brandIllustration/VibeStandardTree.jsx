@@ -1,183 +1,277 @@
 'use client';
 
 import { forwardRef, useEffect, useRef, useState } from 'react';
-import { isoToScreen, roundedSlab, r } from './isometricGrid';
+import { isoToScreen, r } from './isometricGrid';
 
 /**
  * VP2 — Vibe Standard Tree
  *
  * 디자인 언어 체계의 택소노미 트리를 아이소메트릭 노드로 시각화.
- * roundedSlab + isoToScreen으로 구도를 수학적으로 보장.
+ * v10 레퍼런스 이미지(1408×768) 픽셀 측정값 기반 좌표.
  *
  * @param {object} props - SVG props passthrough [Optional]
  */
 
-const VB_X = 65;
-const VB_Y = 15;
-const VB_W = 270;
-const VB_H = 215;
+const VB_X = 30;
+const VB_Y = -54;
+const VB_W = 380;
+const VB_H = 314;
 const SW = 0.5;
 
-const ORIGIN = { x: 200, y: 130 };
+const ORIGIN = { x: 220, y: 40 };
 
-// ── 밝기 계층 ────────────────────────────────────────────
-const LEVEL_STYLE = {
-  0: { outline: 'white',          internal: 'var(--vdl-300)' },
-  1: { outline: 'var(--vdl-200)', internal: 'var(--vdl-400)' },
-  2: { outline: 'var(--vdl-400)', internal: 'var(--vdl-500)' },
-};
+const CONN_STROKE = 'var(--vdl-800)';
+const CONN_DOT = 'var(--vdl-800)';
 
-// ── 트리 노드 데이터 ──────────────────────────────────────
+// ── Slab builder (V3 buildRectSlab 구조 동일) ──────────────
+// Q-curve rounding: B/D split (upper+vert+lower), A/C face↔face
+
+function buildVstSlab(ix, iy, iz, w, h, cornerR, origin) {
+  const UNIT = 8;
+  const hd = w * UNIT;
+  const bh = h * UNIT;
+  const cr = cornerR * UNIT;
+
+  const base = isoToScreen(ix, iy, iz, origin);
+  const cx = base.x;
+  const topY = base.y - hd / 2 - bh;
+
+  // Top face 4 vertices (symmetric: fw = fd = hd)
+  const A = { x: cx, y: topY };
+  const B = { x: cx + hd, y: topY + hd / 2 };
+  const C = { x: cx, y: topY + hd };
+  const D = { x: cx - hd, y: topY + hd / 2 };
+
+  const s5 = Math.sqrt(5);
+  const cuf = cr * 2 / s5;
+  const cvf = cr / s5;
+
+  // A (top) — face↔face
+  const pA1 = { x: A.x - cuf, y: A.y + cvf };
+  const pA2 = { x: A.x + cuf, y: A.y + cvf };
+
+  // B (right) — split: upper + vert + lower
+  const pB1 = { x: B.x - cuf, y: B.y - cvf };
+  const pB2 = { x: B.x - cuf, y: B.y + cvf };
+  const pB_R = { x: B.x - 0.5 * cuf, y: B.y };
+  const qB1 = { x: B.x - 0.5 * cuf, y: B.y - 0.5 * cvf };
+  const qB2 = { x: B.x - 0.5 * cuf, y: B.y + 0.5 * cvf };
+
+  // C (front) — face↔face
+  const pC1 = { x: C.x + cuf, y: C.y - cvf };
+  const pC2 = { x: C.x - cuf, y: C.y - cvf };
+
+  // D (left) — split: lower + vert + upper
+  const pD1 = { x: D.x + cuf, y: D.y + cvf };
+  const pD2 = { x: D.x + cuf, y: D.y - cvf };
+  const pD_L = { x: D.x + 0.5 * cuf, y: D.y };
+  const qD1 = { x: D.x + 0.5 * cuf, y: D.y + 0.5 * cvf };
+  const qD2 = { x: D.x + 0.5 * cuf, y: D.y - 0.5 * cvf };
+
+  const Sy = (y) => y + bh;
+
+  const outline = [
+    `M${r(pA1.x)} ${r(pA1.y)}`,
+    `Q${r(A.x)} ${r(A.y)} ${r(pA2.x)} ${r(pA2.y)}`,
+    `L${r(pB1.x)} ${r(pB1.y)}`,
+    `Q${r(qB1.x)} ${r(qB1.y)} ${r(pB_R.x)} ${r(pB_R.y)}`,
+    `L${r(pB_R.x)} ${r(Sy(pB_R.y))}`,
+    `Q${r(qB2.x)} ${r(Sy(qB2.y))} ${r(pB2.x)} ${r(Sy(pB2.y))}`,
+    `L${r(pC1.x)} ${r(Sy(pC1.y))}`,
+    `Q${r(C.x)} ${r(Sy(C.y))} ${r(pC2.x)} ${r(Sy(pC2.y))}`,
+    `L${r(pD1.x)} ${r(Sy(pD1.y))}`,
+    `Q${r(qD1.x)} ${r(Sy(qD1.y))} ${r(pD_L.x)} ${r(Sy(pD_L.y))}`,
+    `L${r(pD_L.x)} ${r(pD_L.y)}`,
+    `Q${r(qD2.x)} ${r(qD2.y)} ${r(pD2.x)} ${r(pD2.y)}`,
+    'Z',
+  ].join('');
+
+  const vLine = [
+    `M${r(pD_L.x)} ${r(pD_L.y)}`,
+    `Q${r(qD1.x)} ${r(qD1.y)} ${r(pD1.x)} ${r(pD1.y)}`,
+    `L${r(pC2.x)} ${r(pC2.y)}`,
+    `Q${r(C.x)} ${r(C.y)} ${r(pC1.x)} ${r(pC1.y)}`,
+    `L${r(pB2.x)} ${r(pB2.y)}`,
+    `Q${r(qB2.x)} ${r(qB2.y)} ${r(pB_R.x)} ${r(pB_R.y)}`,
+  ].join('');
+
+  const pC_M = { x: C.x, y: C.y - 0.5 * cvf };
+  const frontEdge = `M${r(pC_M.x)} ${r(pC_M.y)}L${r(pC_M.x)} ${r(Sy(pC_M.y))}`;
+
+  const topTransform = `matrix(1, 0.5, -1, 0.5, ${r(cx)}, ${r(topY)})`;
+
+  return {
+    outline, vLine, frontEdge, topTransform,
+    hd, bh, cx, topY,
+    top: A,
+    right: B,
+    rightBottom: { x: B.x, y: Sy(B.y) },
+    frontTop: C,
+    frontBottom: { x: C.x, y: Sy(C.y) },
+    leftBottom: { x: D.x, y: Sy(D.y) },
+    left: D,
+    rightMid: { x: pB_R.x, y: pB_R.y + bh / 2 },
+    leftMid: { x: pD_L.x, y: pD_L.y + bh / 2 },
+  };
+}
+
+// ── 트리 노드 데이터 ────────────────────────────────────
 const TREE_NODES = [
-  // L0 Root
-  { id: 'root', level: 0, ix: 0, iy: 0, iz: 8, w: 5.5, h: 0.8, cr: 0.8, type: 'dashboard', parent: null },
+  // L0 Root (iz=0)
+  { id: 'root', level: 0, ix: 0, iy: 0, iz: 0, w: 5.1, h: 1.48, cr: 0.85, type: 'dashboard', parent: null },
 
-  // L1 Categories (iz=3)
-  { id: 'l1a', level: 1, ix: -2, iy: 6,  iz: 3, w: 3.5, h: 0.6, cr: 0.6, type: 'browser',    parent: 'root' },
-  { id: 'l1b', level: 1, ix: 1,  iy: 5,  iz: 3, w: 3.5, h: 0.6, cr: 0.6, type: 'tablet',     parent: 'root' },
-  { id: 'l1c', level: 1, ix: 5,  iy: 1,  iz: 3, w: 3.5, h: 0.6, cr: 0.6, type: 'artboard',   parent: 'root' },
-  { id: 'l1d', level: 1, ix: 6,  iy: -2, iz: 3, w: 3.5, h: 0.6, cr: 0.6, type: 'splitPanel', parent: 'root' },
+  // L1 Categories (iz=-12, 수직 간격 확대)
+  { id: 'l1a', level: 1, ix: -8.5,  iy: 8.5,  iz: -12, w: 3.65, h: 1.25, cr: 0.65, type: 'browser',    parent: 'root' },
+  { id: 'l1b', level: 1, ix: -2.85, iy: 2.85, iz: -12, w: 3.65, h: 1.25, cr: 0.65, type: 'sCurve',     parent: 'root' },
+  { id: 'l1c', level: 1, ix: 2.85,  iy: -2.85,iz: -12, w: 3.65, h: 1.25, cr: 0.65, type: 'artboard',   parent: 'root' },
+  { id: 'l1d', level: 1, ix: 8.5,   iy: -8.5, iz: -12, w: 3.65, h: 1.25, cr: 0.65, type: 'splitPanel', parent: 'root' },
 
-  // L2 Sub-categories (iz=-1)
-  { id: 'l2a1', level: 2, ix: -2, iy: 10, iz: -1, w: 2.5, h: 0.4, cr: 0.5, type: 'pill',    parent: 'l1a' },
-  { id: 'l2a2', level: 2, ix: 0,  iy: 10, iz: -1, w: 2.5, h: 0.4, cr: 0.5, type: 'card',    parent: 'l1a' },
-  { id: 'l2b1', level: 2, ix: 2,  iy: 8,  iz: -1, w: 2.5, h: 0.4, cr: 0.5, type: 'list',    parent: 'l1b' },
-  { id: 'l2b2', level: 2, ix: 5,  iy: 7,  iz: -1, w: 2.5, h: 0.4, cr: 0.5, type: 'wave',    parent: 'l1b' },
-  { id: 'l2c1', level: 2, ix: 7,  iy: 5,  iz: -1, w: 2.5, h: 0.4, cr: 0.5, type: 'grid',    parent: 'l1c' },
-  { id: 'l2c2', level: 2, ix: 8,  iy: 2,  iz: -1, w: 2.5, h: 0.4, cr: 0.5, type: 'letterA', parent: 'l1c' },
-  { id: 'l2d1', level: 2, ix: 10, iy: 0,  iz: -1, w: 2.5, h: 0.4, cr: 0.5, type: 'circles', parent: 'l1d' },
-  { id: 'l2d2', level: 2, ix: 10, iy: -2, iz: -1, w: 2.5, h: 0.4, cr: 0.5, type: 'chevron', parent: 'l1d' },
+  // L2 Sub-categories (iz=-22, 축소, L1 부모 ix 기준 ±1.5 대칭)
+  { id: 'l2a1', level: 2, ix: -10,   iy: 10,   iz: -22, w: 1.8, h: 1.25, cr: 0.35, type: 'pill',     parent: 'l1a' },
+  { id: 'l2a2', level: 2, ix: -7,    iy: 7,    iz: -22, w: 1.8, h: 1.25, cr: 0.35, type: 'diagonal', parent: 'l1a' },
+  { id: 'l2b1', level: 2, ix: -4.35, iy: 4.35, iz: -22, w: 1.8, h: 1.25, cr: 0.35, type: 'zigzag',  parent: 'l1b' },
+  { id: 'l2b2', level: 2, ix: -1.35, iy: 1.35, iz: -22, w: 1.8, h: 1.25, cr: 0.35, type: 'list',    parent: 'l1b' },
+  { id: 'l2c1', level: 2, ix: 1.35,  iy: -1.35,iz: -22, w: 1.8, h: 1.25, cr: 0.35, type: 'grid',    parent: 'l1c' },
+  { id: 'l2c2', level: 2, ix: 4.35,  iy: -4.35,iz: -22, w: 1.8, h: 1.25, cr: 0.35, type: 'letterA', parent: 'l1c' },
+  { id: 'l2d1', level: 2, ix: 7,     iy: -7,   iz: -22, w: 1.8, h: 1.25, cr: 0.35, type: 'circles', parent: 'l1d' },
+  { id: 'l2d2', level: 2, ix: 10,    iy: -10,  iz: -22, w: 1.8, h: 1.25, cr: 0.35, type: 'chevron', parent: 'l1d' },
 ];
 
-// L3 Leaf dots (slab 없음)
+// L3 Leaf dots (iz=-26, L2 부모 직하)
 const LEAF_DOTS = [
-  { id: 'l3a', ix: -1, iy: 13, iz: -4, parent: 'l2a1' },
-  { id: 'l3b', ix: 5,  iy: 9,  iz: -4, parent: 'l2b2' },
-  { id: 'l3c', ix: 9,  iy: 5,  iz: -4, parent: 'l2c1' },
-  { id: 'l3d', ix: 13, iy: -1, iz: -4, parent: 'l2d2' },
+  { id: 'l3a', ix: -10,   iy: 10,   iz: -26, parent: 'l2a1' },
+  { id: 'l3b', ix: -1.35, iy: 1.35, iz: -26, parent: 'l2b2' },
+  { id: 'l3c', ix: 1.35,  iy: -1.35,iz: -26, parent: 'l2c1' },
+  { id: 'l3d', ix: 10,    iy: -10,  iz: -26, parent: 'l2d2' },
 ];
 
 // ── Top Face Content (flat hd×hd 좌표계) ────────────────
 // topTransform이 flat → isometric으로 변환
 
-function TopFaceContent({ type, hd, stroke }) {
-  const p = hd * 0.18;
+function TopFaceContent({ type, hd }) {
+  const p = hd * 0.15;
   const s = hd - 2 * p;
+  const W = 'white';
+  const S = 'var(--vdl-700)';
 
   switch (type) {
     case 'dashboard': {
-      const g = s / 3;
+      const divX = p + s * 0.35;
+      const gridX = divX + 1.5;
+      const gridW = p + s - gridX;
+      const gCol = gridW / 3;
+      const gRow = s / 3;
       return (
         <g fill="none" strokeWidth={SW}>
-          <rect x={p} y={p} width={s} height={s} rx={2} stroke={stroke} />
-          <line x1={p + g} y1={p} x2={p + g} y2={p + s} stroke={stroke} opacity={0.5} />
-          <line x1={p + 2 * g} y1={p} x2={p + 2 * g} y2={p + s} stroke={stroke} opacity={0.5} />
-          <line x1={p} y1={p + g} x2={p + s} y2={p + g} stroke={stroke} opacity={0.5} />
-          <line x1={p} y1={p + 2 * g} x2={p + s} y2={p + 2 * g} stroke={stroke} opacity={0.5} />
-          <circle cx={p + s * 0.25} cy={p + s * 0.83} r={1.2} fill={stroke} />
-          <circle cx={p + s * 0.5} cy={p + s * 0.83} r={1.2} fill={stroke} />
+          <line x1={p + 1} y1={p + s * 0.12} x2={p + s * 0.18} y2={p + s * 0.12} stroke={W} opacity={0.5} />
+          <circle cx={p + s * 0.06} cy={p + s * 0.82} r={0.9} fill={S} />
+          <circle cx={p + s * 0.13} cy={p + s * 0.82} r={0.9} fill={S} />
+          <circle cx={p + s * 0.20} cy={p + s * 0.82} r={0.9} fill={S} />
+          <circle cx={p + s * 0.27} cy={p + s * 0.82} r={0.9} fill={S} />
+          <line x1={divX} y1={p} x2={divX} y2={p + s} stroke={S} opacity={0.5} />
+          <rect x={gridX} y={p} width={gridW} height={s} rx={1} stroke={W} opacity={0.5} />
+          <line x1={gridX + gCol} y1={p} x2={gridX + gCol} y2={p + s} stroke={S} opacity={0.4} />
+          <line x1={gridX + 2 * gCol} y1={p} x2={gridX + 2 * gCol} y2={p + s} stroke={S} opacity={0.4} />
+          <line x1={gridX} y1={p + gRow} x2={gridX + gridW} y2={p + gRow} stroke={S} opacity={0.4} />
+          <line x1={gridX} y1={p + 2 * gRow} x2={gridX + gridW} y2={p + 2 * gRow} stroke={S} opacity={0.4} />
         </g>
       );
     }
     case 'browser':
       return (
         <g fill="none" strokeWidth={SW}>
-          <rect x={p} y={p} width={s} height={s} rx={1.5} stroke={stroke} />
-          <line x1={p} y1={p + s * 0.22} x2={p + s} y2={p + s * 0.22} stroke={stroke} />
-          <circle cx={p + 2.5} cy={p + s * 0.11} r={0.8} fill={stroke} />
-          <circle cx={p + 5} cy={p + s * 0.11} r={0.8} fill={stroke} />
-          <circle cx={p + 7.5} cy={p + s * 0.11} r={0.8} fill={stroke} />
+          <rect x={p} y={p} width={s} height={s} rx={1.5} stroke={W} />
+          <line x1={p} y1={p + s * 0.2} x2={p + s} y2={p + s * 0.2} stroke={W} />
+          <circle cx={p + 2.5} cy={p + s * 0.1} r={0.7} fill={S} />
+          <circle cx={p + 5} cy={p + s * 0.1} r={0.7} fill={S} />
+          <circle cx={p + 7.5} cy={p + s * 0.1} r={0.7} fill={S} />
+          <line x1={p + 2} y1={p + s * 0.45} x2={p + s - 2} y2={p + s * 0.45} stroke={S} opacity={0.5} />
+          <line x1={p + 2} y1={p + s * 0.65} x2={p + s * 0.55} y2={p + s * 0.65} stroke={S} opacity={0.5} />
         </g>
       );
-    case 'tablet':
+    case 'sCurve':
       return (
         <g fill="none" strokeWidth={SW}>
-          <rect x={p} y={p} width={s} height={s} rx={2} stroke={stroke} />
+          <rect x={p} y={p} width={s} height={s} rx={1.5} stroke={S} opacity={0.4} />
           <path
-            d={`M${p + s * 0.2} ${p + s * 0.7}Q${p + s * 0.5} ${p + s * 0.2} ${p + s * 0.8} ${p + s * 0.5}`}
-            stroke={stroke} opacity={0.7}
+            d={`M${p + s * 0.1} ${p + s * 0.78}C${p + s * 0.35} ${p + s * 0.05} ${p + s * 0.65} ${p + s * 0.95} ${p + s * 0.9} ${p + s * 0.22}`}
+            stroke={W} strokeWidth={SW * 1.5} strokeLinecap="round"
           />
         </g>
       );
-    case 'artboard': {
-      const m = 2.5;
+    case 'artboard':
       return (
         <g fill="none" strokeWidth={SW}>
-          <rect x={p} y={p} width={s} height={s} rx={1} stroke={stroke} />
-          <path d={`M${p + m} ${p}v${m} M${p} ${p + m}h${m}`} stroke={stroke} opacity={0.6} />
-          <path d={`M${p + s - m} ${p}v${m} M${p + s} ${p + m}h${-m}`} stroke={stroke} opacity={0.6} />
-          <path d={`M${p + m} ${p + s}v${-m} M${p} ${p + s - m}h${m}`} stroke={stroke} opacity={0.6} />
-          <path d={`M${p + s - m} ${p + s}v${-m} M${p + s} ${p + s - m}h${-m}`} stroke={stroke} opacity={0.6} />
+          <rect x={p} y={p} width={s} height={s} rx={1.5} stroke={W} opacity={0.35} />
         </g>
       );
-    }
     case 'splitPanel':
       return (
         <g fill="none" strokeWidth={SW}>
-          <rect x={p} y={p} width={s} height={s} rx={1} stroke={stroke} />
-          <line x1={p + s / 2} y1={p + 2} x2={p + s / 2} y2={p + s - 2} stroke={stroke} opacity={0.7} />
+          <rect x={p} y={p} width={s} height={s} rx={1} stroke={W} />
+          <line x1={p + s * 0.5} y1={p + 2} x2={p + s * 0.5} y2={p + s - 2} stroke={S} opacity={0.7} />
         </g>
       );
     case 'pill':
       return (
-        <rect x={p} y={p + s * 0.25} width={s} height={s * 0.5} rx={s * 0.25}
-          stroke={stroke} strokeWidth={SW} fill="none" />
+        <rect x={p + 1} y={p + s * 0.3} width={s - 2} height={s * 0.4} rx={s * 0.2}
+          stroke={W} strokeWidth={SW} fill="none" />
       );
-    case 'card':
+    case 'diagonal':
       return (
         <g fill="none" strokeWidth={SW}>
-          <rect x={p} y={p} width={s} height={s} rx={1} stroke={stroke} />
-          <line x1={p + 1.5} y1={p + s * 0.3} x2={p + s - 1.5} y2={p + s * 0.3} stroke={stroke} opacity={0.6} />
+          <rect x={p} y={p} width={s} height={s} rx={0.8} stroke={S} opacity={0.4} />
+          <line x1={p + 1} y1={p + s - 1} x2={p + s - 1} y2={p + 1} stroke={W} />
         </g>
+      );
+    case 'zigzag':
+      return (
+        <path
+          d={`M${p + 1} ${p + s * 0.7}L${p + s * 0.35} ${p + s * 0.2}L${p + s * 0.65} ${p + s * 0.8}L${p + s - 1} ${p + s * 0.3}`}
+          fill="none" stroke={W} strokeWidth={SW} strokeLinecap="round" strokeLinejoin="round"
+        />
       );
     case 'list':
       return (
         <g fill="none" strokeWidth={SW}>
-          <line x1={p + 1} y1={p + s * 0.25} x2={p + s - 1} y2={p + s * 0.25} stroke={stroke} />
-          <line x1={p + 1} y1={p + s * 0.5} x2={p + s - 1} y2={p + s * 0.5} stroke={stroke} />
-          <line x1={p + 1} y1={p + s * 0.75} x2={p + s - 1} y2={p + s * 0.75} stroke={stroke} />
+          <line x1={p + 1} y1={p + s * 0.22} x2={p + s - 1} y2={p + s * 0.22} stroke={W} />
+          <line x1={p + 1} y1={p + s * 0.42} x2={p + s - 1} y2={p + s * 0.42} stroke={W} />
+          <line x1={p + 1} y1={p + s * 0.62} x2={p + s - 1} y2={p + s * 0.62} stroke={W} />
+          <line x1={p + 1} y1={p + s * 0.82} x2={p + s * 0.65} y2={p + s * 0.82} stroke={S} opacity={0.6} />
         </g>
       );
-    case 'wave':
-      return (
-        <path
-          d={`M${p} ${p + s * 0.6}Q${p + s * 0.25} ${p + s * 0.2} ${p + s * 0.5} ${p + s * 0.5}Q${p + s * 0.75} ${p + s * 0.8} ${p + s} ${p + s * 0.4}`}
-          fill="none" stroke={stroke} strokeWidth={SW} strokeLinecap="round"
-        />
-      );
     case 'grid': {
-      const gs = (s - 2) / 2;
-      const g = 1;
+      const gs = (s - 1.5) / 2;
       return (
         <g fill="none" strokeWidth={SW}>
-          <rect x={p} y={p} width={gs} height={gs} rx={0.5} stroke={stroke} />
-          <rect x={p + gs + g} y={p} width={gs} height={gs} rx={0.5} stroke={stroke} />
-          <rect x={p} y={p + gs + g} width={gs} height={gs} rx={0.5} stroke={stroke} />
-          <rect x={p + gs + g} y={p + gs + g} width={gs} height={gs} rx={0.5} stroke={stroke} />
+          <rect x={p} y={p} width={gs} height={gs} rx={0.5} stroke={W} />
+          <rect x={p + gs + 1.5} y={p} width={gs} height={gs} rx={0.5} stroke={W} />
+          <rect x={p} y={p + gs + 1.5} width={gs} height={gs} rx={0.5} stroke={W} />
+          <rect x={p + gs + 1.5} y={p + gs + 1.5} width={gs} height={gs} rx={0.5} stroke={W} />
         </g>
       );
     }
     case 'letterA':
       return (
         <g fill="none" strokeWidth={SW}>
-          <line x1={p + s * 0.5} y1={p + 1} x2={p + 1} y2={p + s - 1} stroke={stroke} />
-          <line x1={p + s * 0.5} y1={p + 1} x2={p + s - 1} y2={p + s - 1} stroke={stroke} />
-          <line x1={p + s * 0.25} y1={p + s * 0.6} x2={p + s * 0.75} y2={p + s * 0.6} stroke={stroke} />
+          <line x1={p + s * 0.5} y1={p + 1} x2={p + 1.5} y2={p + s - 1} stroke={W} />
+          <line x1={p + s * 0.5} y1={p + 1} x2={p + s - 1.5} y2={p + s - 1} stroke={W} />
+          <line x1={p + s * 0.27} y1={p + s * 0.58} x2={p + s * 0.73} y2={p + s * 0.58} stroke={S} />
         </g>
       );
     case 'circles':
       return (
         <g fill="none" strokeWidth={SW}>
-          <circle cx={p + s * 0.22} cy={p + s * 0.5} r={s * 0.15} stroke={stroke} />
-          <circle cx={p + s * 0.5} cy={p + s * 0.5} r={s * 0.15} stroke={stroke} />
-          <circle cx={p + s * 0.78} cy={p + s * 0.5} r={s * 0.15} stroke={stroke} />
+          <circle cx={p + s * 0.22} cy={p + s * 0.5} r={s * 0.14} stroke={W} />
+          <circle cx={p + s * 0.5} cy={p + s * 0.5} r={s * 0.14} stroke={W} />
+          <circle cx={p + s * 0.78} cy={p + s * 0.5} r={s * 0.14} stroke={W} />
         </g>
       );
     case 'chevron':
       return (
         <path
-          d={`M${p + 2} ${p + s * 0.3}L${p + s * 0.5} ${p + s * 0.7}L${p + s - 2} ${p + s * 0.3}`}
-          fill="none" stroke={stroke} strokeWidth={SW} strokeLinecap="round" strokeLinejoin="round"
+          d={`M${p + 1.5} ${p + s * 0.3}L${p + s * 0.5} ${p + s * 0.7}L${p + s - 1.5} ${p + s * 0.3}`}
+          fill="none" stroke={W} strokeWidth={SW} strokeLinecap="round" strokeLinejoin="round"
         />
       );
     default:
@@ -188,35 +282,33 @@ function TopFaceContent({ type, hd, stroke }) {
 // ── Slab renderer ────────────────────────────────────────
 
 function SlabNode({ node }) {
-  const style = LEVEL_STYLE[node.level];
+  const s = node.slab;
+  const clip = `url(#vst-clip-${node.id})`;
+
   return (
     <g filter="url(#vsts)">
-      <path
-        d={node.slab.outline}
-        fill="var(--vdl-950)"
-        stroke={style.outline}
-        strokeWidth={SW}
-        strokeLinejoin="round"
-      />
-      <path
-        d={node.slab.vLine}
-        fill="none"
-        stroke={style.internal}
-        strokeWidth={SW}
-        strokeLinecap="round"
-        clipPath={`url(#vst-clip-${node.id})`}
-      />
-      <path
-        d={node.slab.frontEdge}
-        fill="none"
-        stroke={style.internal}
-        strokeWidth={SW}
-        strokeLinecap="round"
-        clipPath={`url(#vst-clip-${node.id})`}
-      />
-      <g transform={node.slab.topTransform} clipPath={`url(#vst-clip-${node.id})`}>
-        <TopFaceContent type={node.type} hd={node.slab.hd} stroke={style.internal} />
+      <path d={s.outline} fill="var(--vdl-950)" stroke="white" strokeWidth={SW} strokeLinejoin="round" />
+      <path d={s.vLine} fill="none" stroke="var(--vdl-800)" strokeWidth={SW} strokeLinecap="round" clipPath={clip} />
+      <path d={s.frontEdge} fill="none" stroke="var(--vdl-800)" strokeWidth={SW} strokeLinecap="round" clipPath={clip} />
+      <g transform={s.topTransform} clipPath={clip}>
+        <TopFaceContent type={node.type} hd={s.hd} />
       </g>
+    </g>
+  );
+}
+
+// ── Connection Line + Junction Dots ─────────────────────
+
+function ConnLine({ from, to }) {
+  return (
+    <g>
+      <line
+        x1={r(from.x)} y1={r(from.y)}
+        x2={r(to.x)} y2={r(to.y)}
+        stroke={CONN_STROKE} strokeWidth={0.5}
+      />
+      <circle cx={r(from.x)} cy={r(from.y)} r={1.5} fill={CONN_DOT} />
+      <circle cx={r(to.x)} cy={r(to.y)} r={1.5} fill={CONN_DOT} />
     </g>
   );
 }
@@ -240,7 +332,7 @@ const VibeStandardTree = forwardRef((props, ref) => {
 
   const nodes = TREE_NODES.map((n) => ({
     ...n,
-    slab: roundedSlab(n.ix, n.iy, n.iz, n.w, n.h, n.cr, ORIGIN),
+    slab: buildVstSlab(n.ix, n.iy, n.iz, n.w, n.h, n.cr, ORIGIN),
   }));
 
   const dots = LEAF_DOTS.map((d) => ({
@@ -250,10 +342,12 @@ const VibeStandardTree = forwardRef((props, ref) => {
 
   const nodeMap = Object.fromEntries(nodes.map((n) => [n.id, n]));
 
-  // Sort by depth within each level (ix+iy ascending = back first)
+  // Painter's model: back-to-front within each level
   const sortedL2 = nodes.filter((n) => n.level === 2).sort((a, b) => (a.ix + a.iy) - (b.ix + b.iy));
   const sortedL1 = nodes.filter((n) => n.level === 1).sort((a, b) => (a.ix + a.iy) - (b.ix + b.iy));
   const root = nodes.find((n) => n.level === 0);
+
+  const cls = (delay) => inView ? `vst-anim vst-d${delay}` : 'vst-hidden';
 
   return (
     <svg
@@ -277,12 +371,12 @@ const VibeStandardTree = forwardRef((props, ref) => {
           opacity: 0.01;
           animation: vst-enter 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
-        .vst-d0  { animation-delay: 0ms; }
-        .vst-d1  { animation-delay: 300ms; }
-        .vst-d2  { animation-delay: 400ms; }
-        .vst-d3  { animation-delay: 800ms; }
-        .vst-d4  { animation-delay: 900ms; }
-        .vst-d5  { animation-delay: 1400ms; }
+        .vst-d0 { animation-delay: 0ms; }
+        .vst-d1 { animation-delay: 300ms; }
+        .vst-d2 { animation-delay: 400ms; }
+        .vst-d3 { animation-delay: 800ms; }
+        .vst-d4 { animation-delay: 900ms; }
+        .vst-d5 { animation-delay: 1400ms; }
         @media (prefers-reduced-motion: reduce) {
           .vst-anim { animation: none; opacity: 1; }
         }
@@ -299,8 +393,7 @@ const VibeStandardTree = forwardRef((props, ref) => {
         >
           <feFlood floodOpacity="0" result="bg" />
           <feColorMatrix
-            in="SourceAlpha"
-            result="a"
+            in="SourceAlpha" result="a"
             values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
           />
           <feOffset dy="4" />
@@ -317,89 +410,71 @@ const VibeStandardTree = forwardRef((props, ref) => {
         ))}
       </defs>
 
-      {/* ── L0→L1 connection lines (delay: d1) ── */}
-      <g className={inView ? 'vst-anim vst-d1' : 'vst-hidden'}>
+      {/* ── Root → L1 connections (d1) ── */}
+      <g className={cls(1)}>
         {nodes.filter((n) => n.level === 1).map((n) => {
           const p = nodeMap[n.parent];
           if (!p) return null;
-          return (
-            <g key={`conn-${n.id}`}>
-              <line
-                x1={r(p.slab.frontBottom.x)} y1={r(p.slab.frontBottom.y)}
-                x2={r(n.slab.top.x)} y2={r(n.slab.top.y)}
-                stroke="var(--vdl-700)" strokeWidth={0.5}
-              />
-              <circle cx={r(p.slab.frontBottom.x)} cy={r(p.slab.frontBottom.y)} r={1.2} fill="var(--vdl-700)" />
-              <circle cx={r(n.slab.top.x)} cy={r(n.slab.top.y)} r={1.2} fill="var(--vdl-700)" />
-            </g>
-          );
+          return <ConnLine key={`c-${n.id}`} from={p.slab.frontBottom} to={n.slab.top} />;
         })}
       </g>
 
-      {/* ── L1→L2 connection lines (delay: d3) ── */}
-      <g className={inView ? 'vst-anim vst-d3' : 'vst-hidden'}>
+      {/* ── L1 → L2 connections (d3) ── */}
+      <g className={cls(3)}>
         {nodes.filter((n) => n.level === 2).map((n) => {
           const p = nodeMap[n.parent];
           if (!p) return null;
-          return (
-            <g key={`conn-${n.id}`}>
-              <line
-                x1={r(p.slab.frontBottom.x)} y1={r(p.slab.frontBottom.y)}
-                x2={r(n.slab.top.x)} y2={r(n.slab.top.y)}
-                stroke="var(--vdl-700)" strokeWidth={0.5}
-              />
-              <circle cx={r(p.slab.frontBottom.x)} cy={r(p.slab.frontBottom.y)} r={1.2} fill="var(--vdl-700)" />
-              <circle cx={r(n.slab.top.x)} cy={r(n.slab.top.y)} r={1.2} fill="var(--vdl-700)" />
-            </g>
-          );
+          return <ConnLine key={`c-${n.id}`} from={p.slab.frontBottom} to={n.slab.top} />;
         })}
       </g>
 
-      {/* ── L2→L3 connection lines (delay: d5) ── */}
-      <g className={inView ? 'vst-anim vst-d5' : 'vst-hidden'}>
+      {/* ── L2 → L3 connections (d5) ── */}
+      <g className={cls(5)}>
         {dots.map((d) => {
           const p = nodeMap[d.parent];
           if (!p) return null;
           return (
-            <line
-              key={`conn-${d.id}`}
-              x1={r(p.slab.frontBottom.x)} y1={r(p.slab.frontBottom.y)}
-              x2={r(d.screen.x)} y2={r(d.screen.y)}
-              stroke="var(--vdl-700)" strokeWidth={0.3}
-            />
+            <g key={`c-${d.id}`}>
+              <line
+                x1={r(p.slab.frontBottom.x)} y1={r(p.slab.frontBottom.y)}
+                x2={r(d.screen.x)} y2={r(d.screen.y)}
+                stroke={CONN_STROKE} strokeWidth={0.3}
+              />
+              <circle cx={r(p.slab.frontBottom.x)} cy={r(p.slab.frontBottom.y)} r={1.5} fill={CONN_DOT} />
+            </g>
           );
         })}
       </g>
 
-      {/* ── L2 slabs (delay: d4) ── */}
+      {/* ── L2 slabs (d4) ── */}
       {sortedL2.map((n) => (
-        <g key={n.id} className={inView ? 'vst-anim vst-d4' : 'vst-hidden'}>
+        <g key={n.id} className={cls(4)}>
           <SlabNode node={n} />
         </g>
       ))}
 
-      {/* ── L1 slabs (delay: d2) ── */}
+      {/* ── L1 slabs (d2) ── */}
       {sortedL1.map((n) => (
-        <g key={n.id} className={inView ? 'vst-anim vst-d2' : 'vst-hidden'}>
+        <g key={n.id} className={cls(2)}>
           <SlabNode node={n} />
         </g>
       ))}
 
-      {/* ── L0 root slab (delay: d0) ── */}
+      {/* ── Root slab (d0) ── */}
       {root && (
-        <g className={inView ? 'vst-anim vst-d0' : 'vst-hidden'}>
+        <g className={cls(0)}>
           <SlabNode node={root} />
         </g>
       )}
 
-      {/* ── L3 leaf dots (delay: d5) ── */}
-      <g className={inView ? 'vst-anim vst-d5' : 'vst-hidden'}>
+      {/* ── L3 leaf dots (d5) ── */}
+      <g className={cls(5)}>
         {dots.map((d) => (
           <circle
             key={d.id}
             cx={r(d.screen.x)}
             cy={r(d.screen.y)}
-            r={1.5}
+            r={2}
             fill="var(--vdl-700)"
           />
         ))}

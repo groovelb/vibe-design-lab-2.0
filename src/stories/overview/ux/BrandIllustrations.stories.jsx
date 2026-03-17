@@ -19,6 +19,7 @@ import { SystemOverDrawingGemini } from '../../../assets/brandIllustration/Syste
 import { SystemOverDrawingGL } from '../../../assets/brandIllustration/SystemOverDrawingGL';
 import { VibeStandardIso } from '../../../assets/brandIllustration/VibeStandardIso';
 import { DesignAsBuildIso } from '../../../assets/brandIllustration/DesignAsBuildIso';
+import { VibeStandardTree } from '../../../assets/brandIllustration/VibeStandardTree';
 
 export default {
   title: 'Overview/UX/Brand Illustrations',
@@ -44,7 +45,6 @@ const IllustrationPanel = ({ children, label, sublabel, maxWidth = 400 }) => (
       mb: 2,
     }}
   >
-    {/* 레이블 바 */}
     {(label || sublabel) && (
       <Box
         sx={{
@@ -59,30 +59,20 @@ const IllustrationPanel = ({ children, label, sublabel, maxWidth = 400 }) => (
       >
         {label && (
           <Typography
-            sx={{
-              fontFamily: 'monospace',
-              fontSize: 11,
-              color: 'text.secondary',
-            }}
+            sx={{ fontFamily: 'monospace', fontSize: 11, color: 'text.secondary' }}
           >
             {label}
           </Typography>
         )}
         {sublabel && (
           <Typography
-            sx={{
-              fontFamily: 'monospace',
-              fontSize: 10,
-              color: 'text.disabled',
-            }}
+            sx={{ fontFamily: 'monospace', fontSize: 10, color: 'text.disabled' }}
           >
             {sublabel}
           </Typography>
         )}
       </Box>
     )}
-
-    {/* 일러스트 영역 */}
     <Box
       sx={{
         bgcolor: 'var(--vdl-950)',
@@ -99,54 +89,34 @@ const IllustrationPanel = ({ children, label, sublabel, maxWidth = 400 }) => (
   </Box>
 );
 
+// ═══════════════════════════════════════════════════════════
+// Docs — 확정 일러스트 (LandingSolution에서 사용 중)
+// ═══════════════════════════════════════════════════════════
+
 export const Docs = {
   render: () => (
     <>
       <DocumentTitle
         title="Brand Illustrations"
-        status="Prototype"
-        note="3가지 가치 제안(Value Propositions)을 시각화하는 제너러티브 일러스트레이션"
+        status="Production"
+        note="LandingSolution 섹션에서 사용 중인 확정 일러스트"
         brandName="Vibe Design Labs"
         systemName="Brand Visual"
-        version="0.1"
+        version="1.0"
       />
       <PageContainer>
         <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
-          Brand Illustrations — Value Propositions
+          Brand Illustrations — Confirmed
         </Typography>
         <Typography variant="body1" color="text.secondary" sx={{ mb: 6 }}>
-          LandingSolution 섹션의 FeatureCard에 들어갈 제너러티브 SVG 일러스트.
-          모든 형태는 데이터·알고리즘·규칙으로 생성된다.
+          LandingSolution FeatureCard에 사용 중인 확정 SVG 일러스트.
+          동일 아이소메트릭 좌표계(~26.57° · 8px unit · RoundedSlab) 기반.
         </Typography>
 
-        {/* ════════════════════════════════════════════════════
-            Isometric System (공유 좌표계 기반)
-            ════════════════════════════════════════════════════ */}
-        <Typography variant="h5" sx={{ fontWeight: 700, mb: 1 }}>
-          Isometric System
-        </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 4 }}>
-          동일 각도(~26.57°) · 동일 단위(8px) · 동일 프리미티브(Prism/Card)를 공유하는
-          아이소메트릭 좌표계 위에 구축된 3개 VP 일러스트.
-        </Typography>
-
-        {/* ── VP1 Iso: System Over Drawing ── */}
+        {/* ── 1. VP1: System Over Drawing ── */}
         <SectionTitle
-          title="VP1 Iso — System Over Drawing"
-          description="&quot;기준을 먼저 설계하는 과정&quot; — 익스플로디드 레이어 스택: Grid → Tokens → Rules → Components → Result. 하단(기준)이 hero, 상단(결과물)이 subtle. 각 레이어에 실제 디자인 요소가 표현된다."
-        />
-        <IllustrationPanel
-          label="SystemOverDrawingIso"
-          sublabel="layers: 5 · w: 7u · exploded view · top face content"
-          maxWidth={560}
-        >
-          <SystemOverDrawingIso />
-        </IllustrationPanel>
-
-        {/* ── VP1 V3: System Over Drawing (RoundedSlab) ── */}
-        <SectionTitle
-          title="VP1 V3 — System Over Drawing (RoundedSlab)"
-          description="&quot;기준을 먼저 설계하는 과정&quot; — RoundedSlab 프리미티브 사용, NB2 생성 system-over-drawing_v7.png 기반 SVG 변환. 5개 디자인 토큰 레이어가 합쳐지기 직전의 분해도."
+          title="VP1 — System Over Drawing"
+          description="&quot;기준을 먼저 설계하는 과정&quot; — RoundedSlab 프리미티브 사용, 5개 디자인 토큰 레이어가 합쳐지기 직전의 분해도."
         />
         <IllustrationPanel
           label="SystemOverDrawingV3"
@@ -156,10 +126,71 @@ export const Docs = {
           <SystemOverDrawingV3 />
         </IllustrationPanel>
 
-        {/* ── VP1 V6: System Over Drawing (Containers Only) ── */}
+        {/* ── 2. VP2: Vibe Standard Tree ── */}
         <SectionTitle
-          title="VP1 V6 — System Over Drawing (Containers Only)"
-          description="&quot;기준을 먼저 설계하는 과정&quot; — 5개 디자인 토큰 레이어의 컨테이너(슬래브 외형)만 구현. 상면 콘텐츠·네이밍 라인·치수선 미포함."
+          title="VP2 — Vibe Standard Tree"
+          description="&quot;감각을 언어로 번역한 체계&quot; — 디자인 언어 택소노미를 아이소메트릭 노드 트리로 시각화. Root → 4 L1 → 8 L2 → 4 L3 dots. v10 픽셀 측정 + 수학적 역산 기반."
+        />
+        <IllustrationPanel
+          label="VibeStandardTree"
+          sublabel="levels: 4 · nodes: 13+4dots · RoundedSlab · v10 pixel-measured"
+          maxWidth={600}
+        >
+          <VibeStandardTree />
+        </IllustrationPanel>
+      </PageContainer>
+    </>
+  ),
+};
+
+// ═══════════════════════════════════════════════════════════
+// Ideation — 실험·대안 일러스트 아카이브
+// ═══════════════════════════════════════════════════════════
+
+export const Ideation = {
+  render: () => (
+    <>
+      <DocumentTitle
+        title="Brand Illustrations — Ideation"
+        status="Archive"
+        note="VP별 탐색 과정에서 생성된 실험·대안 일러스트 아카이브"
+        brandName="Vibe Design Labs"
+        systemName="Brand Visual"
+        version="0.1"
+      />
+      <PageContainer>
+        <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
+          Brand Illustrations — Ideation Archive
+        </Typography>
+        <Typography variant="body1" color="text.secondary" sx={{ mb: 6 }}>
+          확정 전 탐색 과정의 실험 일러스트. 참고용으로 보존.
+        </Typography>
+
+        {/* ════════════════════════════════════════════════════
+            Isometric Variants
+            ════════════════════════════════════════════════════ */}
+        <Typography variant="h5" sx={{ fontWeight: 700, mb: 1 }}>
+          Isometric Variants
+        </Typography>
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 4 }}>
+          공유 아이소메트릭 좌표계 기반 대안 버전들.
+        </Typography>
+
+        <SectionTitle
+          title="VP1 Iso — System Over Drawing"
+          description="Prism 프리미티브 기반 초기 버전. 익스플로디드 레이어 스택."
+        />
+        <IllustrationPanel
+          label="SystemOverDrawingIso"
+          sublabel="layers: 5 · w: 7u · exploded view · top face content"
+          maxWidth={560}
+        >
+          <SystemOverDrawingIso />
+        </IllustrationPanel>
+
+        <SectionTitle
+          title="VP1 V6 — Containers Only"
+          description="5개 레이어의 컨테이너(슬래브 외형)만 구현. 상면 콘텐츠 미포함."
         />
         <IllustrationPanel
           label="SystemOverDrawingV6"
@@ -169,10 +200,9 @@ export const Docs = {
           <SystemOverDrawingV6 />
         </IllustrationPanel>
 
-        {/* ── VP1 Gemini: System Over Drawing (Containers Only) ── */}
         <SectionTitle
-          title="VP1 Gemini — System Over Drawing (Containers Only)"
-          description="&quot;기준을 먼저 설계하는 과정&quot; — Gemini 버전에 맞춘 5개 디자인 토큰 컨테이너 렌더링. 구조적 토대만 남겨 시각화의 기본 뼈대를 보여줍니다."
+          title="VP1 Gemini — Gemini Version"
+          description="Gemini 버전에 맞춘 5개 디자인 토큰 컨테이너 렌더링."
         />
         <IllustrationPanel
           label="SystemOverDrawingGemini"
@@ -182,10 +212,9 @@ export const Docs = {
           <SystemOverDrawingGemini />
         </IllustrationPanel>
 
-        {/* ── VP1 GL: System Over Drawing (Three.js) ── */}
         <SectionTitle
-          title="VP1 GL — System Over Drawing (Three.js)"
-          description="Three.js OrthographicCamera + EdgesGeometry 기반. 수동 아이소메트릭 수학 없이 카메라가 투영을 자동 처리. 구조적 정확성 검증용."
+          title="VP1 GL — Three.js"
+          description="Three.js OrthographicCamera + EdgesGeometry 기반 구조적 정확성 검증용."
         />
         <IllustrationPanel
           label="SystemOverDrawingGL"
@@ -195,10 +224,9 @@ export const Docs = {
           <SystemOverDrawingGL sx={{ height: 450 }} />
         </IllustrationPanel>
 
-        {/* ── VP2 Iso: The Vibe Standard ── */}
         <SectionTitle
           title="VP2 Iso — The Vibe Standard"
-          description="&quot;감각을 언어로 번역한 체계&quot; — 토큰 레지스트리 모듈: 5개 슬롯이 동일 포맷(아이콘+이름+값+상태)으로 정렬. 같은 구조 = 표준."
+          description="토큰 레지스트리 모듈: 5개 슬롯이 동일 포맷으로 정렬."
         />
         <IllustrationPanel
           label="VibeStandardIso"
@@ -208,14 +236,13 @@ export const Docs = {
           <VibeStandardIso />
         </IllustrationPanel>
 
-        {/* ── VP3 Iso: Design As Build ── */}
         <SectionTitle
           title="VP3 Iso — Design As Build"
-          description="&quot;설계가 곧 구현이 되는 장면&quot; — Card 컴포넌트를 4개 레이어(Container/Header/Content/Actions)로 분해한 익스플로디드 뷰. 좌측 구조 인덱스 + 우측 CSS 속성 어노테이션 + 상면 아이소메트릭 텍스트."
+          description="Card 컴포넌트를 4개 레이어로 분해한 익스플로디드 뷰."
         />
         <IllustrationPanel
           label="DesignAsBuildIso"
-          sublabel="layers: 4 · w: 7u · exploded view · top face content · CSS annotations"
+          sublabel="layers: 4 · w: 7u · exploded view · CSS annotations"
           maxWidth={560}
         >
           <DesignAsBuildIso />
@@ -223,10 +250,19 @@ export const Docs = {
 
         <Box sx={{ borderBottom: '1px solid', borderColor: 'divider', my: 8 }} />
 
-        {/* ── VP1: System Over Drawing ── */}
+        {/* ════════════════════════════════════════════════════
+            2D Generative Variants
+            ════════════════════════════════════════════════════ */}
+        <Typography variant="h5" sx={{ fontWeight: 700, mb: 1 }}>
+          2D Generative Variants
+        </Typography>
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 4 }}>
+          아이소메트릭 도입 전 2D 제너러티브 실험들.
+        </Typography>
+
         <SectionTitle
-          title="VP1 — System Over Drawing"
-          description="&quot;결과물보다 기준을 먼저 설계합니다&quot; — 하나의 타원(규칙)이 회전·복제되어 로제트 패턴(결과물)을 만든다. 기준 타원과 가이드 원이 결과물보다 밝게 강조된다."
+          title="VP1 — System Over Drawing (Rosette)"
+          description="타원 회전·복제로 로제트 패턴을 생성. 기준 타원이 결과물보다 밝게 강조."
         />
         <IllustrationPanel
           label="SystemOverDrawing"
@@ -235,111 +271,20 @@ export const Docs = {
           <SystemOverDrawing />
         </IllustrationPanel>
 
-        <Box sx={{ mb: 2 }}>
-          <Typography
-            variant="body2"
-            sx={{ fontFamily: 'monospace', fontSize: 12, color: 'text.secondary', mb: 1 }}
-          >
-            색상 위계
-          </Typography>
-          <Box sx={{ display: 'flex', gap: 3 }}>
-            {[
-              { color: 'var(--vdl-200)', label: '--vdl-200 (hero)', desc: '기준 타원 + 가이드 원 + 중심점' },
-              { color: 'var(--vdl-700)', label: '--vdl-700 (subtle)', desc: '결과물 로제트 (17개 타원)' },
-              { color: 'var(--vdl-800)', label: '--vdl-800 (structure)', desc: '구조 축' },
-            ].map((item) => (
-              <Box key={item.label} sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
-                <Box
-                  sx={{
-                    width: 12,
-                    height: 12,
-                    bgcolor: item.color,
-                    flexShrink: 0,
-                    mt: 0.25,
-                  }}
-                />
-                <Box>
-                  <Typography sx={{ fontFamily: 'monospace', fontSize: 11, color: 'text.secondary' }}>
-                    {item.label}
-                  </Typography>
-                  <Typography sx={{ fontFamily: 'monospace', fontSize: 10, color: 'text.disabled' }}>
-                    {item.desc}
-                  </Typography>
-                </Box>
-              </Box>
-            ))}
-          </Box>
-        </Box>
-
-        <Typography
-          variant="body2"
-          sx={{ fontFamily: 'monospace', fontSize: 12, color: 'text.disabled', mb: 6 }}
-        >
-          알고리즘: for(i=0; i&lt;18; i++) ellipse(cx, cy, 155, 48).rotate(i * 10°)
-          — 규칙 하나(회전)로 복잡한 결과물을 생성하는 &quot;System Over Drawing&quot;의 시각적 증거.
-        </Typography>
-
-        {/* ── VP1 v2: System Over Drawing ── */}
         <SectionTitle
-          title="VP1 v2 — System Over Drawing"
-          description="&quot;기준점이 먼저 정해지면 형태는 결과로 완성된다&quot; — 9개 앵커가 먼저 찍히고, 허브 스포크 → 외곽 경계선 → 면 채움 순으로 구조가 드러난다."
+          title="VP1 v2 — System Over Drawing (Hub-Spoke)"
+          description="9개 앵커 → 허브 스포크 → 외곽 경계선 → 면 채움 순으로 구조가 드러남."
         />
         <IllustrationPanel
           label="SystemOverDrawingV2"
-          sublabel="anchors: 9 · hub: center · spokes: 8 · boundary: 8 edges · fills: 2 triangles"
+          sublabel="anchors: 9 · hub: center · spokes: 8 · boundary: 8 edges"
         >
           <SystemOverDrawingV2 />
         </IllustrationPanel>
 
-        <Box sx={{ mb: 2 }}>
-          <Typography
-            variant="body2"
-            sx={{ fontFamily: 'monospace', fontSize: 12, color: 'text.secondary', mb: 1 }}
-          >
-            색상 위계
-          </Typography>
-          <Box sx={{ display: 'flex', gap: 3 }}>
-            {[
-              { color: 'var(--vdl-200)', label: '--vdl-200 (hero)', desc: '앵커 포인트 (9개)' },
-              { color: 'var(--vdl-700)', label: '--vdl-700 (subtle)', desc: '외곽 경계선' },
-              { color: 'var(--vdl-800)', label: '--vdl-800 (structure)', desc: '허브 스포크' },
-              { color: 'var(--vdl-900)', label: '--vdl-900 (fill)', desc: '삼각형 면 채움' },
-            ].map((item) => (
-              <Box key={item.label} sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
-                <Box
-                  sx={{
-                    width: 12,
-                    height: 12,
-                    bgcolor: item.color,
-                    flexShrink: 0,
-                    mt: 0.25,
-                  }}
-                />
-                <Box>
-                  <Typography sx={{ fontFamily: 'monospace', fontSize: 11, color: 'text.secondary' }}>
-                    {item.label}
-                  </Typography>
-                  <Typography sx={{ fontFamily: 'monospace', fontSize: 10, color: 'text.disabled' }}>
-                    {item.desc}
-                  </Typography>
-                </Box>
-              </Box>
-            ))}
-          </Box>
-        </Box>
-
-        <Typography
-          variant="body2"
-          sx={{ fontFamily: 'monospace', fontSize: 12, color: 'text.disabled', mb: 6 }}
-        >
-          시퀀스: 허브 앵커 → 나머지 앵커 → 허브 스포크 draw → 외곽 경계 draw → 면 채움 fade
-          — 기준(앵커)이 먼저 놓이면 형태(네트워크)가 저절로 완성된다.
-        </Typography>
-
-        {/* ── VP2: The Vibe Standard ── */}
         <SectionTitle
-          title="VP2 — The Vibe Standard"
-          description="&quot;AI가 알아듣는 표준 디자인 언어 체계&quot; — 하나의 수직 축(표준)을 공유하는 타원들이 폭만 파라메트릭하게 변주되며, 상·하단 수렴점에서 정확히 만난다."
+          title="VP2 — The Vibe Standard (Parametric Ellipses)"
+          description="수직 축을 공유하는 타원들이 폭만 파라메트릭하게 변주."
         />
         <IllustrationPanel
           label="VibeStandard"
@@ -348,54 +293,9 @@ export const Docs = {
           <VibeStandard />
         </IllustrationPanel>
 
-        <Box sx={{ mb: 2 }}>
-          <Typography
-            variant="body2"
-            sx={{ fontFamily: 'monospace', fontSize: 12, color: 'text.secondary', mb: 1 }}
-          >
-            색상 위계
-          </Typography>
-          <Box sx={{ display: 'flex', gap: 3 }}>
-            {[
-              { color: 'var(--vdl-200)', label: '--vdl-200 (hero)', desc: '수직 축(표준) + 수렴점' },
-              { color: 'var(--vdl-600)', label: '--vdl-600 (default)', desc: '파라메트릭 타원 (14개)' },
-              { color: 'var(--vdl-800)', label: '--vdl-800 (structure)', desc: '수평 축 + 화살표' },
-            ].map((item) => (
-              <Box key={item.label} sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
-                <Box
-                  sx={{
-                    width: 12,
-                    height: 12,
-                    bgcolor: item.color,
-                    flexShrink: 0,
-                    mt: 0.25,
-                  }}
-                />
-                <Box>
-                  <Typography sx={{ fontFamily: 'monospace', fontSize: 11, color: 'text.secondary' }}>
-                    {item.label}
-                  </Typography>
-                  <Typography sx={{ fontFamily: 'monospace', fontSize: 10, color: 'text.disabled' }}>
-                    {item.desc}
-                  </Typography>
-                </Box>
-              </Box>
-            ))}
-          </Box>
-        </Box>
-
-        <Typography
-          variant="body2"
-          sx={{ fontFamily: 'monospace', fontSize: 12, color: 'text.disabled', mb: 6 }}
-        >
-          알고리즘: for(i=0; i&lt;14; i++) ellipse(cx, cy, lerp(5, 170, i/13), 156)
-          — 하나의 파라미터(폭)만 변주해도 모든 타원이 같은 축 위에서 정확히 수렴하는 &quot;The Vibe Standard&quot;의 시각적 증거.
-        </Typography>
-
-        {/* ── VP3: Design As Build ── */}
         <SectionTitle
-          title="VP3 — Design As Build"
-          description="&quot;구현의 설계도가 되는 디자인 접근방식&quot; — 중심 노드(⊕)에서 좌우로 분기하는 대칭 구조. 좌·우가 동일한 곡률과 스타일을 가져 &quot;설계 = 구현&quot;을 표현한다."
+          title="VP3 — Design As Build (Symmetric Branch)"
+          description="중심 노드(⊕)에서 좌우 분기하는 대칭 구조."
         />
         <IllustrationPanel
           label="DesignAsBuild"
@@ -404,55 +304,9 @@ export const Docs = {
           <DesignAsBuild />
         </IllustrationPanel>
 
-        <Box sx={{ mb: 2 }}>
-          <Typography
-            variant="body2"
-            sx={{ fontFamily: 'monospace', fontSize: 12, color: 'text.secondary', mb: 1 }}
-          >
-            색상 위계
-          </Typography>
-          <Box sx={{ display: 'flex', gap: 3 }}>
-            {[
-              { color: 'var(--vdl-50)', label: '--vdl-50 (focal)', desc: '중심 노드 dot' },
-              { color: 'var(--vdl-200)', label: '--vdl-200 (hero)', desc: '중심 노드 ⊕ 심볼' },
-              { color: 'var(--vdl-700)', label: '--vdl-700 (subtle)', desc: '실선 분기 + 화살표' },
-              { color: 'var(--vdl-800)', label: '--vdl-800 (structure)', desc: '점선/대시 분기' },
-            ].map((item) => (
-              <Box key={item.label} sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
-                <Box
-                  sx={{
-                    width: 12,
-                    height: 12,
-                    bgcolor: item.color,
-                    flexShrink: 0,
-                    mt: 0.25,
-                  }}
-                />
-                <Box>
-                  <Typography sx={{ fontFamily: 'monospace', fontSize: 11, color: 'text.secondary' }}>
-                    {item.label}
-                  </Typography>
-                  <Typography sx={{ fontFamily: 'monospace', fontSize: 10, color: 'text.disabled' }}>
-                    {item.desc}
-                  </Typography>
-                </Box>
-              </Box>
-            ))}
-          </Box>
-        </Box>
-
-        <Typography
-          variant="body2"
-          sx={{ fontFamily: 'monospace', fontSize: 12, color: 'text.disabled', mb: 6 }}
-        >
-          알고리즘: forEach(offset) path(center → Q-bezier corner → vertical → Q-bezier corner → edge)
-          — 좌우 대칭 구조로 &quot;설계도가 곧 구현물&quot;임을 시각적으로 증명한다.
-        </Typography>
-
-        {/* ── VP3 v2: Design As Build ── */}
         <SectionTitle
-          title="VP3 v2 — Design As Build"
-          description="&quot;해부도를 그리는 행위가 곧 컴포넌트를 완성하는 행위&quot; — UI Card의 anatomy가 레이어별로 드로잉되면서 완성된 컴포넌트가 되고, Naming Line이 각 파트를 레이블링한다."
+          title="VP3 v2 — Design As Build (Card Anatomy)"
+          description="UI Card의 anatomy가 레이어별로 드로잉되며 완성."
         />
         <IllustrationPanel
           label="DesignAsBuildV2"
@@ -460,50 +314,6 @@ export const Docs = {
         >
           <DesignAsBuildV2 />
         </IllustrationPanel>
-
-        <Box sx={{ mb: 2 }}>
-          <Typography
-            variant="body2"
-            sx={{ fontFamily: 'monospace', fontSize: 12, color: 'text.secondary', mb: 1 }}
-          >
-            색상 위계
-          </Typography>
-          <Box sx={{ display: 'flex', gap: 3 }}>
-            {[
-              { color: 'var(--vdl-200)', label: '--vdl-200 (hero)', desc: 'Naming Line dot + 선 + 레이블' },
-              { color: 'var(--vdl-700)', label: '--vdl-700 (subtle)', desc: '외곽 컨테이너 + 헤딩 + CTA' },
-              { color: 'var(--vdl-800)', label: '--vdl-800 (structure)', desc: '패딩 가이드 + 구조선 + 본문 + 미디어' },
-            ].map((item) => (
-              <Box key={item.label} sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
-                <Box
-                  sx={{
-                    width: 12,
-                    height: 12,
-                    bgcolor: item.color,
-                    flexShrink: 0,
-                    mt: 0.25,
-                  }}
-                />
-                <Box>
-                  <Typography sx={{ fontFamily: 'monospace', fontSize: 11, color: 'text.secondary' }}>
-                    {item.label}
-                  </Typography>
-                  <Typography sx={{ fontFamily: 'monospace', fontSize: 10, color: 'text.disabled' }}>
-                    {item.desc}
-                  </Typography>
-                </Box>
-              </Box>
-            ))}
-          </Box>
-        </Box>
-
-        <Typography
-          variant="body2"
-          sx={{ fontFamily: 'monospace', fontSize: 12, color: 'text.disabled', mb: 6 }}
-        >
-          시퀀스: 외곽 draw → 패딩 가이드 fade → 구조선 draw → 콘텐츠 fade → CTA draw → Naming Lines
-          — 설계도(해부)를 그리는 행위가 곧 컴포넌트(구현)를 완성하는 행위.
-        </Typography>
       </PageContainer>
     </>
   ),
