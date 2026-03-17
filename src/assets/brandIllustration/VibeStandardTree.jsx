@@ -7,18 +7,24 @@ import { isoToScreen, r } from './isometricGrid';
  * VP2 — Vibe Standard Tree
  *
  * 디자인 언어 체계의 택소노미 트리를 아이소메트릭 노드로 시각화.
- * v10 레퍼런스 이미지(1408×768) 픽셀 측정값 기반 좌표.
+ * 파라메트릭 레이아웃: Root(뒤) → L1 → L2 → L3(앞) 깊이 전개.
+ *
+ * 좌표 공식:
+ *   L1[i] = (ix: SPREAD[i], iy: IY_STEP, iz: -IZ_STEP)
+ *   L2[j] = (ix: parent.ix ± δ₂, iy: 2·IY_STEP, iz: -2·IZ_STEP)
+ *   screen_x = ORIGIN.x + (ix - iy) × 8
+ *   screen_y = ORIGIN.y + (ix + iy) × 4 - iz × 8
  *
  * @param {object} props - SVG props passthrough [Optional]
  */
 
 const VB_X = 30;
-const VB_Y = -54;
+const VB_Y = -40;
 const VB_W = 380;
 const VB_H = 314;
 const SW = 0.5;
 
-const ORIGIN = { x: 220, y: 40 };
+const ORIGIN = { x: 260, y: 15 };
 
 const CONN_STROKE = 'var(--vdl-800)';
 const CONN_DOT = 'var(--vdl-800)';
@@ -115,34 +121,38 @@ function buildVstSlab(ix, iy, iz, w, h, cornerR, origin) {
   };
 }
 
-// ── 트리 노드 데이터 ────────────────────────────────────
+// ── 파라메트릭 레이아웃 ─────────────────────────────────
+// IY_STEP=5, IZ_STEP=8, δ₁=5(L1), δ₂=1.5(L2)
+// 각 레벨은 iy 방향(앞)으로 전진, iz 방향(아래)으로 하강
+// → 아이소메트릭 깊이감 있는 트리 구도
+
 const TREE_NODES = [
-  // L0 Root (iz=0)
+  // L0 Root — (0, 0, 0)
   { id: 'root', level: 0, ix: 0, iy: 0, iz: 0, w: 5.1, h: 1.48, cr: 0.85, type: 'dashboard', parent: null },
 
-  // L1 Categories (iz=-12, 수직 간격 확대)
-  { id: 'l1a', level: 1, ix: -8.5,  iy: 8.5,  iz: -12, w: 3.65, h: 1.25, cr: 0.65, type: 'browser',    parent: 'root' },
-  { id: 'l1b', level: 1, ix: -2.85, iy: 2.85, iz: -12, w: 3.65, h: 1.25, cr: 0.65, type: 'sCurve',     parent: 'root' },
-  { id: 'l1c', level: 1, ix: 2.85,  iy: -2.85,iz: -12, w: 3.65, h: 1.25, cr: 0.65, type: 'artboard',   parent: 'root' },
-  { id: 'l1d', level: 1, ix: 8.5,   iy: -8.5, iz: -12, w: 3.65, h: 1.25, cr: 0.65, type: 'splitPanel', parent: 'root' },
+  // L1 — iy=5, iz=-8, ix=[-7.5, -2.5, 2.5, 7.5] (δ₁=5, 등간격)
+  { id: 'l1a', level: 1, ix: -7.5, iy: 5, iz: -8, w: 3.65, h: 1.25, cr: 0.65, type: 'browser',    parent: 'root' },
+  { id: 'l1b', level: 1, ix: -2.5, iy: 5, iz: -8, w: 3.65, h: 1.25, cr: 0.65, type: 'sCurve',     parent: 'root' },
+  { id: 'l1c', level: 1, ix: 2.5,  iy: 5, iz: -8, w: 3.65, h: 1.25, cr: 0.65, type: 'artboard',   parent: 'root' },
+  { id: 'l1d', level: 1, ix: 7.5,  iy: 5, iz: -8, w: 3.65, h: 1.25, cr: 0.65, type: 'splitPanel', parent: 'root' },
 
-  // L2 Sub-categories (iz=-22, 축소, L1 부모 ix 기준 ±1.5 대칭)
-  { id: 'l2a1', level: 2, ix: -10,   iy: 10,   iz: -22, w: 1.8, h: 1.25, cr: 0.35, type: 'pill',     parent: 'l1a' },
-  { id: 'l2a2', level: 2, ix: -7,    iy: 7,    iz: -22, w: 1.8, h: 1.25, cr: 0.35, type: 'diagonal', parent: 'l1a' },
-  { id: 'l2b1', level: 2, ix: -4.35, iy: 4.35, iz: -22, w: 1.8, h: 1.25, cr: 0.35, type: 'zigzag',  parent: 'l1b' },
-  { id: 'l2b2', level: 2, ix: -1.35, iy: 1.35, iz: -22, w: 1.8, h: 1.25, cr: 0.35, type: 'list',    parent: 'l1b' },
-  { id: 'l2c1', level: 2, ix: 1.35,  iy: -1.35,iz: -22, w: 1.8, h: 1.25, cr: 0.35, type: 'grid',    parent: 'l1c' },
-  { id: 'l2c2', level: 2, ix: 4.35,  iy: -4.35,iz: -22, w: 1.8, h: 1.25, cr: 0.35, type: 'letterA', parent: 'l1c' },
-  { id: 'l2d1', level: 2, ix: 7,     iy: -7,   iz: -22, w: 1.8, h: 1.25, cr: 0.35, type: 'circles', parent: 'l1d' },
-  { id: 'l2d2', level: 2, ix: 10,    iy: -10,  iz: -22, w: 1.8, h: 1.25, cr: 0.35, type: 'chevron', parent: 'l1d' },
+  // L2 — iy=10, iz=-16, parent.ix ± δ₂(1.5)
+  { id: 'l2a1', level: 2, ix: -9,  iy: 10, iz: -16, w: 1.8, h: 1.25, cr: 0.35, type: 'pill',     parent: 'l1a' },
+  { id: 'l2a2', level: 2, ix: -6,  iy: 10, iz: -16, w: 1.8, h: 1.25, cr: 0.35, type: 'diagonal', parent: 'l1a' },
+  { id: 'l2b1', level: 2, ix: -4,  iy: 10, iz: -16, w: 1.8, h: 1.25, cr: 0.35, type: 'zigzag',  parent: 'l1b' },
+  { id: 'l2b2', level: 2, ix: -1,  iy: 10, iz: -16, w: 1.8, h: 1.25, cr: 0.35, type: 'list',    parent: 'l1b' },
+  { id: 'l2c1', level: 2, ix: 1,   iy: 10, iz: -16, w: 1.8, h: 1.25, cr: 0.35, type: 'grid',    parent: 'l1c' },
+  { id: 'l2c2', level: 2, ix: 4,   iy: 10, iz: -16, w: 1.8, h: 1.25, cr: 0.35, type: 'letterA', parent: 'l1c' },
+  { id: 'l2d1', level: 2, ix: 6,   iy: 10, iz: -16, w: 1.8, h: 1.25, cr: 0.35, type: 'circles', parent: 'l1d' },
+  { id: 'l2d2', level: 2, ix: 9,   iy: 10, iz: -16, w: 1.8, h: 1.25, cr: 0.35, type: 'chevron', parent: 'l1d' },
 ];
 
-// L3 Leaf dots (iz=-26, L2 부모 직하)
+// L3 Leaf dots — iy=13, iz=-20, parent.ix 직하
 const LEAF_DOTS = [
-  { id: 'l3a', ix: -10,   iy: 10,   iz: -26, parent: 'l2a1' },
-  { id: 'l3b', ix: -1.35, iy: 1.35, iz: -26, parent: 'l2b2' },
-  { id: 'l3c', ix: 1.35,  iy: -1.35,iz: -26, parent: 'l2c1' },
-  { id: 'l3d', ix: 10,    iy: -10,  iz: -26, parent: 'l2d2' },
+  { id: 'l3a', ix: -9, iy: 13, iz: -20, parent: 'l2a1' },
+  { id: 'l3b', ix: -1, iy: 13, iz: -20, parent: 'l2b2' },
+  { id: 'l3c', ix: 1,  iy: 13, iz: -20, parent: 'l2c1' },
+  { id: 'l3d', ix: 9,  iy: 13, iz: -20, parent: 'l2d2' },
 ];
 
 // ── Top Face Content (flat hd×hd 좌표계) ────────────────
@@ -342,10 +352,10 @@ const VibeStandardTree = forwardRef((props, ref) => {
 
   const nodeMap = Object.fromEntries(nodes.map((n) => [n.id, n]));
 
-  // Painter's model: back-to-front within each level
-  const sortedL2 = nodes.filter((n) => n.level === 2).sort((a, b) => (a.ix + a.iy) - (b.ix + b.iy));
-  const sortedL1 = nodes.filter((n) => n.level === 1).sort((a, b) => (a.ix + a.iy) - (b.ix + b.iy));
+  // Painter's model: back-to-front (ix ascending within level)
   const root = nodes.find((n) => n.level === 0);
+  const sortedL1 = nodes.filter((n) => n.level === 1).sort((a, b) => a.ix - b.ix);
+  const sortedL2 = nodes.filter((n) => n.level === 2).sort((a, b) => a.ix - b.ix);
 
   const cls = (delay) => inView ? `vst-anim vst-d${delay}` : 'vst-hidden';
 
@@ -410,25 +420,48 @@ const VibeStandardTree = forwardRef((props, ref) => {
         ))}
       </defs>
 
+      {/* ── Painter's model: back(Root) → front(L3) ── */}
+
+      {/* ── Root slab (d0, furthest back) ── */}
+      {root && (
+        <g className={cls(0)}>
+          <SlabNode node={root} />
+        </g>
+      )}
+
       {/* ── Root → L1 connections (d1) ── */}
       <g className={cls(1)}>
-        {nodes.filter((n) => n.level === 1).map((n) => {
+        {sortedL1.map((n) => {
           const p = nodeMap[n.parent];
           if (!p) return null;
           return <ConnLine key={`c-${n.id}`} from={p.slab.frontBottom} to={n.slab.top} />;
         })}
       </g>
+
+      {/* ── L1 slabs (d2) ── */}
+      {sortedL1.map((n) => (
+        <g key={n.id} className={cls(2)}>
+          <SlabNode node={n} />
+        </g>
+      ))}
 
       {/* ── L1 → L2 connections (d3) ── */}
       <g className={cls(3)}>
-        {nodes.filter((n) => n.level === 2).map((n) => {
+        {sortedL2.map((n) => {
           const p = nodeMap[n.parent];
           if (!p) return null;
           return <ConnLine key={`c-${n.id}`} from={p.slab.frontBottom} to={n.slab.top} />;
         })}
       </g>
 
-      {/* ── L2 → L3 connections (d5) ── */}
+      {/* ── L2 slabs (d4) ── */}
+      {sortedL2.map((n) => (
+        <g key={n.id} className={cls(4)}>
+          <SlabNode node={n} />
+        </g>
+      ))}
+
+      {/* ── L2 → L3 connections + dots (d5, closest) ── */}
       <g className={cls(5)}>
         {dots.map((d) => {
           const p = nodeMap[d.parent];
@@ -444,31 +477,6 @@ const VibeStandardTree = forwardRef((props, ref) => {
             </g>
           );
         })}
-      </g>
-
-      {/* ── L2 slabs (d4) ── */}
-      {sortedL2.map((n) => (
-        <g key={n.id} className={cls(4)}>
-          <SlabNode node={n} />
-        </g>
-      ))}
-
-      {/* ── L1 slabs (d2) ── */}
-      {sortedL1.map((n) => (
-        <g key={n.id} className={cls(2)}>
-          <SlabNode node={n} />
-        </g>
-      ))}
-
-      {/* ── Root slab (d0) ── */}
-      {root && (
-        <g className={cls(0)}>
-          <SlabNode node={root} />
-        </g>
-      )}
-
-      {/* ── L3 leaf dots (d5) ── */}
-      <g className={cls(5)}>
         {dots.map((d) => (
           <circle
             key={d.id}
