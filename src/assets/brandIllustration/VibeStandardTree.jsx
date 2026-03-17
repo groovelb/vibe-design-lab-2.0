@@ -116,6 +116,8 @@ function buildVstSlab(ix, iy, iz, w, h, cornerR, origin) {
     frontBottom: { x: C.x, y: Sy(C.y) },
     leftBottom: { x: D.x, y: Sy(D.y) },
     left: D,
+    topCenter: { x: cx, y: topY + hd / 2 },
+    bottomCenter: { x: cx, y: topY + hd / 2 + bh },
     rightMid: { x: pB_R.x, y: pB_R.y + bh / 2 },
     leftMid: { x: pD_L.x, y: pD_L.y + bh / 2 },
   };
@@ -137,14 +139,14 @@ const TREE_NODES = [
   { id: 'l1d', level: 1, ix: 9,  iy: 5, iz: -8, w: 4.02, h: 1.38, cr: 0.72, type: 'splitPanel', parent: 'root' },
 
   // L2 — iy=10, iz=-16, 균등 간격 step=3  ×1.1
-  { id: 'l2a1', level: 2, ix: -10.5, iy: 10, iz: -16, w: 1.98, h: 1.38, cr: 0.39, type: 'pill',     parent: 'l1a' },
-  { id: 'l2a2', level: 2, ix: -7.5,  iy: 10, iz: -16, w: 1.98, h: 1.38, cr: 0.39, type: 'diagonal', parent: 'l1a' },
-  { id: 'l2b1', level: 2, ix: -4.5,  iy: 10, iz: -16, w: 1.98, h: 1.38, cr: 0.39, type: 'zigzag',  parent: 'l1b' },
-  { id: 'l2b2', level: 2, ix: -1.5,  iy: 10, iz: -16, w: 1.98, h: 1.38, cr: 0.39, type: 'list',    parent: 'l1b' },
-  { id: 'l2c1', level: 2, ix: 1.5,   iy: 10, iz: -16, w: 1.98, h: 1.38, cr: 0.39, type: 'grid',    parent: 'l1c' },
-  { id: 'l2c2', level: 2, ix: 4.5,   iy: 10, iz: -16, w: 1.98, h: 1.38, cr: 0.39, type: 'letterA', parent: 'l1c' },
-  { id: 'l2d1', level: 2, ix: 7.5,   iy: 10, iz: -16, w: 1.98, h: 1.38, cr: 0.39, type: 'circles', parent: 'l1d' },
-  { id: 'l2d2', level: 2, ix: 10.5,  iy: 10, iz: -16, w: 1.98, h: 1.38, cr: 0.39, type: 'chevron', parent: 'l1d' },
+  { id: 'l2a1', level: 2, ix: -11.55, iy: 10, iz: -16, w: 1.98, h: 1.38, cr: 0.39, type: 'pill',     parent: 'l1a' },
+  { id: 'l2a2', level: 2, ix: -8.25,  iy: 10, iz: -16, w: 1.98, h: 1.38, cr: 0.39, type: 'diagonal', parent: 'l1a' },
+  { id: 'l2b1', level: 2, ix: -4.95,  iy: 10, iz: -16, w: 1.98, h: 1.38, cr: 0.39, type: 'zigzag',  parent: 'l1b' },
+  { id: 'l2b2', level: 2, ix: -1.65,  iy: 10, iz: -16, w: 1.98, h: 1.38, cr: 0.39, type: 'list',    parent: 'l1b' },
+  { id: 'l2c1', level: 2, ix: 1.65,   iy: 10, iz: -16, w: 1.98, h: 1.38, cr: 0.39, type: 'grid',    parent: 'l1c' },
+  { id: 'l2c2', level: 2, ix: 4.95,   iy: 10, iz: -16, w: 1.98, h: 1.38, cr: 0.39, type: 'letterA', parent: 'l1c' },
+  { id: 'l2d1', level: 2, ix: 8.25,   iy: 10, iz: -16, w: 1.98, h: 1.38, cr: 0.39, type: 'circles', parent: 'l1d' },
+  { id: 'l2d2', level: 2, ix: 11.55,  iy: 10, iz: -16, w: 1.98, h: 1.38, cr: 0.39, type: 'chevron', parent: 'l1d' },
 ];
 
 // L3 Leaf dots — iy=13, iz=-20, parent.ix 직하
@@ -318,8 +320,8 @@ function ConnLine({ from, to }) {
         x2={r(to.x)} y2={r(to.y)}
         stroke={CONN_STROKE} strokeWidth={0.5}
       />
-      <circle cx={r(from.x)} cy={r(from.y)} r={1.5} fill={CONN_DOT} />
-      <circle cx={r(to.x)} cy={r(to.y)} r={1.5} fill={CONN_DOT} />
+      <circle cx={r(from.x)} cy={r(from.y)} r={1.5} fill="white" />
+      <circle cx={r(to.x)} cy={r(to.y)} r={1.5} fill="white" />
     </g>
   );
 }
@@ -421,23 +423,14 @@ const VibeStandardTree = forwardRef((props, ref) => {
         ))}
       </defs>
 
-      {/* ── Painter's model: back(Root) → front(L3) ── */}
+      {/* ── Slabs: back(Root) → front(L2) ── */}
 
-      {/* ── Root slab (d0, furthest back) ── */}
+      {/* ── Root slab (d0) ── */}
       {root && (
         <g className={cls(0)}>
           <SlabNode node={root} />
         </g>
       )}
-
-      {/* ── Root → L1 connections (d1) ── */}
-      <g className={cls(1)}>
-        {sortedL1.map((n) => {
-          const p = nodeMap[n.parent];
-          if (!p) return null;
-          return <ConnLine key={`c-${n.id}`} from={p.slab.frontBottom} to={n.slab.top} />;
-        })}
-      </g>
 
       {/* ── L1 slabs (d2) ── */}
       {sortedL1.map((n) => (
@@ -446,21 +439,32 @@ const VibeStandardTree = forwardRef((props, ref) => {
         </g>
       ))}
 
-      {/* ── L1 → L2 connections (d3) ── */}
-      <g className={cls(3)}>
-        {sortedL2.map((n) => {
-          const p = nodeMap[n.parent];
-          if (!p) return null;
-          return <ConnLine key={`c-${n.id}`} from={p.slab.frontBottom} to={n.slab.top} />;
-        })}
-      </g>
-
       {/* ── L2 slabs (d4) ── */}
       {sortedL2.map((n) => (
         <g key={n.id} className={cls(4)}>
           <SlabNode node={n} />
         </g>
       ))}
+
+      {/* ── Connections on top of slabs ── */}
+
+      {/* ── Root → L1 connections (d1) ── */}
+      <g className={cls(1)}>
+        {sortedL1.map((n) => {
+          const p = nodeMap[n.parent];
+          if (!p) return null;
+          return <ConnLine key={`c-${n.id}`} from={p.slab.bottomCenter} to={n.slab.topCenter} />;
+        })}
+      </g>
+
+      {/* ── L1 → L2 connections (d3) ── */}
+      <g className={cls(3)}>
+        {sortedL2.map((n) => {
+          const p = nodeMap[n.parent];
+          if (!p) return null;
+          return <ConnLine key={`c-${n.id}`} from={p.slab.bottomCenter} to={n.slab.topCenter} />;
+        })}
+      </g>
 
     </svg>
   );

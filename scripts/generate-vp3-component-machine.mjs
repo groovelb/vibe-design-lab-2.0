@@ -78,26 +78,85 @@ const SUBJECT = {
   prompt: `\
 ${BASE_PROMPT}
 
-CRITICAL STYLE OVERRIDE: Absolutely NO solid fills anywhere. Every single shape — rectangles, circles, buttons, screens, brackets — must be OUTLINE STROKES ONLY. The dark background must show through every object. This is a pure wireframe/monoline illustration. If a shape looks "filled" or "solid white", it is WRONG. Only thin white outline strokes on dark background.
+CRITICAL: Pure monoline — NO solid fills. Every shape is transparent outline only.
+Dark background shows through all surfaces.
 
-Subject: Three layers of depth receding into isometric space — a screen showing UI in front, the design anatomy floating behind it, and code floating behind that. Three distinct planes at different z-depths, not stacked vertically, but receding BACKWARD in isometric perspective.
+TEXT EXCEPTION: The back panel shows legible code in monospace font.
+State labels (idle, hover, active, disabled) are allowed on the middle panel.
+This overrides the "no text" rule for those panels only.
 
-FRONT (closest to viewer) — Screen with UI:
-A large isometric screen or monitor outline (just the bezel frame, no fill). On the screen surface: a wireframe card UI component drawn in thin outlines — a small circle (status badge), two horizontal lines of different lengths (title and subtitle), a rounded rectangle outline (button), and a tiny cursor arrow shape near the button. Everything is transparent outlines only — the dark background shows through the screen and through every UI element.
+ORIENTATION OVERRIDE: These are NOT flat-lying platforms.
+All three objects are STANDING UPRIGHT — LANDSCAPE (wider than tall)
+rectangular screens, like widescreen monitors or cinema displays.
+Aspect ratio roughly 16:10 landscape. They are much wider than they
+are tall, and much taller than they are deep (thin).
+Think of three widescreen monitors standing on a desk, viewed from a
+3/4 isometric angle.
 
-MIDDLE (floating behind the screen) — Design Anatomy:
-Behind and slightly above the screen, a floating transparent panel or frame. On it: a state machine diagram — four small circle outlines arranged in a diamond or loose pattern, connected by thin orthogonal path lines turning at right angles. One circle has a double ring (active state). The others are single-ring outlines. Thin directional connection lines link the nodes. This anatomy panel is visually "behind" the screen, partially overlapping, showing the invisible design decisions that govern the UI behavior.
+Subject: Three upright LANDSCAPE screen panels arranged in DEPTH, receding from
+front-left (closest, largest) to back-right (furthest, smallest).
+Their bottom edges rest on the isometric ground diagonal running
+top-right to bottom-left. Each panel shows:
+- A large FRONT FACE (wide landscape parallelogram — the content surface)
+- A thin LEFT-SIDE EDGE strip (showing shallow thickness)
+- A thin TOP EDGE strip (connecting front to back)
+- Generously rounded corners on the front face
 
-BACK (furthest from viewer) — Code:
-Behind everything, floating furthest back in isometric depth: a transparent rectangular frame containing code. Three to four thin horizontal lines of varying lengths at consistent vertical spacing (lines of code). A curly brace outline on the left edge. Indented shorter lines suggesting nested structure. Pure wireframe — every line is just a stroke, no fill.
+BACK PANEL (upper-right, smallest) — CODE:
+A small standing screen. On its front face, real JSX code in
+small monospace font:
+  function Card() {
+    const [state, setState]
+      = useState('idle')
+    return (
+      <div onHover={setState}>
+        <Badge status />
+        <Button onClick />
+      </div>
+    )
+  }
+Legible curly braces, JSX angle brackets, function keywords.
 
-From the CODE panel only: three thin horizontal annotation lines extend to the right, each ending with a small dot. These represent output values flowing from the code forward through the anatomy into the UI.
+MIDDLE PANEL (center, medium) — DESIGN ANATOMY:
+A medium standing screen. On its front face, a state machine:
+- Four circle nodes: "idle" at top, "hover" at left, "active"
+  at right, "disabled" at bottom
+- Connected by thin orthogonal right-angle path lines
+- The "active" node is visually distinct (double-ring or larger)
+- Below the diagram: two short annotation lines
+  (onHover → setState, onClick → handler)
 
-Thin connection lines with small junction dots link the three planes: code → anatomy → UI, showing the flow from back to front.
+FRONT PANEL (lower-left, largest) — UI SCREEN:
+The largest widescreen landscape display, showing a trendy modern SaaS dashboard UI:
+- Top navigation bar: small logo mark, three nav pill links, avatar circle on far right
+- Main content area split into two columns:
+  LEFT COLUMN (wider): A large hero card with generous rounded corners —
+    status badge pill (small rounded rectangle) upper-left,
+    bold title line, lighter subtitle line,
+    two body text lines,
+    prominent call-to-action button with rounded corners at bottom
+  RIGHT COLUMN (narrower): A vertical stack of 3 small metric cards,
+    each with a number line and a tiny sparkline graph
+- A cursor arrow hovering over the CTA button
+- Overall feel: clean SaaS product like Linear, Vercel, or Stripe dashboard
+All UI elements are crisp wireframe outlines — trendy, modern, spacious layout
+with generous whitespace between elements.
 
-The three planes are arranged along the isometric z-axis — front, middle, back — creating a sense of depth. They partially overlap, letting the viewer see through all three transparent layers simultaneously.
+DASHED CONNECTION LINES between matching elements across panels:
+- Code "<Badge status />" to Anatomy "idle" node to UI status badge pill
+- Code "<Button onClick />" to Anatomy "active" node to UI CTA button
+CRITICAL: Every dashed line must be a PERFECTLY STRAIGHT LINE — no curves,
+no bends, no zigzags. Each line is a single straight segment from point A
+to point B, passing through the intermediate panel. Like a laser beam.
+Small filled junction dots at every endpoint (6 dots total: 2 lines × 3 panels).
+These straight dotted traces are the KEY STORYTELLING DEVICE — they prove
+each UI element maps through design anatomy to exact code.
 
-Centered in the 4:3 frame. Generous negative space. Nothing else.`,
+SPACING: The three panels decrease in size from front (2x) to back (1x).
+Even depth spacing between them. The front UI panel dominates the
+composition. Generous negative space on all sides.
+
+Centered in 4:3 frame. Nothing else.`,
 };
 
 // ── 유틸 ─────────────────────────────────────────────────

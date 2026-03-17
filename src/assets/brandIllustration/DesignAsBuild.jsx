@@ -1,238 +1,473 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
+import { isoToScreen, r } from './isometricGrid';
 
 /**
- * DesignAsBuild — 브랜드 일러스트레이션
+ * VP3 — Design As Build
  *
- * "설계가 곧 구현이다" (Design As Build)
- * 그리드 위에 타원이 그려지고, 타원 경계가 지나는 셀이 활성화되며
- * 곡선(디자인)이 그리드 좌표(구현)로 분해되는 장면을 시각화한다.
+ * "설계가 곧 구현이다"
+ * 3개 세워진 랜드스케이프 스크린이 깊이 배열:
+ * Code(뒤/우상) → Anatomy(중간) → UI(앞/좌하)
+ * 대응 요소를 잇는 직선 dashed 연결선 + junction dot.
  *
- * 드로잉 시퀀스: 중심점 → 그리드 → 타원 draw → 셀 활성화 → 어노테이션
- * hover 시 전체 시퀀스가 처음부터 다시 재생된다.
- *
- * Example usage:
- * <DesignAsBuild />
+ * @param {object} props - SVG props passthrough [Optional]
  */
-export function DesignAsBuild(props) {
-  const [animKey, setAnimKey] = useState(0);
 
-  const size = 400;
-  const cx = size / 2;
-  const cy = size / 2;
-  const grid = 16;
-  const cols = size / grid;
-  const rows = size / grid;
+const VB_X = 150;
+const VB_Y = -30;
+const VB_W = 325;
+const VB_H = 269;
+const SW = 0.5;
+const CR = 6;
 
-  /* ── 타원 파라미터 ── */
-  const rx = 152;
-  const ry = 88;
+const ORIGIN = { x: 345, y: 95 };
 
-  /* ── 타원 경계를 지나는 셀 계산 ── */
-  const activeCells = useMemo(() => {
-    const cells = [];
-    for (let row = 0; row < rows; row++) {
-      for (let col = 0; col < cols; col++) {
-        const cellCx = col * grid + grid / 2;
-        const cellCy = row * grid + grid / 2;
+// flat 좌표 기준 (전면 콘텐츠용)
+const FF_W = 100;
+const FF_H = 62.5;
 
-        const corners = [
-          [col * grid, row * grid],
-          [col * grid + grid, row * grid],
-          [col * grid, row * grid + grid],
-          [col * grid + grid, row * grid + grid],
-        ];
+// ── 3 패널 정의 ─────────────────────────────────────────
+const PANELS = [
+  { id: 'code',    iy: 0,  fw: 100, fd: 7, bh: 64, type: 'code' },
+  { id: 'anatomy', iy: 11, fw: 135, fd: 8, bh: 86, type: 'anatomy' },
+  { id: 'ui',      iy: 22, fw: 180, fd: 9, bh: 115, type: 'ui' },
+];
 
-        const ellipseVal = (x, y) =>
-          ((x - cx) * (x - cx)) / (rx * rx) + ((y - cy) * (y - cy)) / (ry * ry);
+// ── Standing Screen Builder ─────────────────────────────
+// buildRectSlab 동일 구조, fw >> fd, bh >> fd
+// 전면(C→D edge)이 메인 콘텐츠 면
 
-        const values = corners.map(([x, y]) => ellipseVal(x, y));
-        const hasInside = values.some((v) => v <= 1);
-        const hasOutside = values.some((v) => v > 1);
+function buildDabScreen(iy, fw, fd, bh, origin) {
+  const UNIT = 8;
+  const base = isoToScreen(0, iy, 0, origin);
+  const cx = base.x;
+  const topY = base.y - (fw + fd) / 4 - bh;
 
-        if (hasInside && hasOutside) {
-          const dist = Math.sqrt(
-            ((cellCx - cx) / rx) ** 2 + ((cellCy - cy) / ry) ** 2,
-          );
-          const angle = Math.atan2(cellCy - cy, cellCx - cx);
-          cells.push({ col, row, dist, angle });
-        }
-      }
+  const A = { x: cx, y: topY };
+  const B = { x: cx + fw, y: topY + fw / 2 };
+  const C = { x: cx + fw - fd, y: topY + (fw + fd) / 2 };
+  const D = { x: cx - fd, y: topY + fd / 2 };
+
+  const s5 = Math.sqrt(5);
+  const cuf = CR * 2 / s5;
+  const cvf = CR / s5;
+
+  const pA1 = { x: A.x - cuf, y: A.y + cvf };
+  const pA2 = { x: A.x + cuf, y: A.y + cvf };
+
+  const pB1 = { x: B.x - cuf, y: B.y - cvf };
+  const pB2 = { x: B.x - cuf, y: B.y + cvf };
+  const pB_R = { x: B.x - 0.5 * cuf, y: B.y };
+  const qB1 = { x: B.x - 0.5 * cuf, y: B.y - 0.5 * cvf };
+  const qB2 = { x: B.x - 0.5 * cuf, y: B.y + 0.5 * cvf };
+
+  const pC1 = { x: C.x + cuf, y: C.y - cvf };
+  const pC2 = { x: C.x - cuf, y: C.y - cvf };
+
+  const pD1 = { x: D.x + cuf, y: D.y + cvf };
+  const pD2 = { x: D.x + cuf, y: D.y - cvf };
+  const pD_L = { x: D.x + 0.5 * cuf, y: D.y };
+  const qD1 = { x: D.x + 0.5 * cuf, y: D.y + 0.5 * cvf };
+  const qD2 = { x: D.x + 0.5 * cuf, y: D.y - 0.5 * cvf };
+
+  const Sy = (y) => y + bh;
+
+  const outline = [
+    `M${r(pA1.x)} ${r(pA1.y)}`,
+    `Q${r(A.x)} ${r(A.y)} ${r(pA2.x)} ${r(pA2.y)}`,
+    `L${r(pB1.x)} ${r(pB1.y)}`,
+    `Q${r(qB1.x)} ${r(qB1.y)} ${r(pB_R.x)} ${r(pB_R.y)}`,
+    `L${r(pB_R.x)} ${r(Sy(pB_R.y))}`,
+    `Q${r(qB2.x)} ${r(Sy(qB2.y))} ${r(pB2.x)} ${r(Sy(pB2.y))}`,
+    `L${r(pC1.x)} ${r(Sy(pC1.y))}`,
+    `Q${r(C.x)} ${r(Sy(C.y))} ${r(pC2.x)} ${r(Sy(pC2.y))}`,
+    `L${r(pD1.x)} ${r(Sy(pD1.y))}`,
+    `Q${r(qD1.x)} ${r(Sy(qD1.y))} ${r(pD_L.x)} ${r(Sy(pD_L.y))}`,
+    `L${r(pD_L.x)} ${r(pD_L.y)}`,
+    `Q${r(qD2.x)} ${r(qD2.y)} ${r(pD2.x)} ${r(pD2.y)}`,
+    'Z',
+  ].join('');
+
+  const vLine = [
+    `M${r(pD_L.x)} ${r(pD_L.y)}`,
+    `Q${r(qD1.x)} ${r(qD1.y)} ${r(pD1.x)} ${r(pD1.y)}`,
+    `L${r(pC2.x)} ${r(pC2.y)}`,
+    `Q${r(C.x)} ${r(C.y)} ${r(pC1.x)} ${r(pC1.y)}`,
+    `L${r(pB2.x)} ${r(pB2.y)}`,
+    `Q${r(qB2.x)} ${r(qB2.y)} ${r(pB_R.x)} ${r(pB_R.y)}`,
+  ].join('');
+
+  const pC_M = { x: C.x, y: C.y - 0.5 * cvf };
+  const frontEdge = `M${r(pC_M.x)} ${r(pC_M.y)}L${r(pC_M.x)} ${r(Sy(pC_M.y))}`;
+
+  // frontTransform: flat (FF_W × FF_H) → 전면 평행사변형 (D→C top edge, bh drop)
+  const frontTransform = `matrix(${r(fw / FF_W)}, ${r(fw / (2 * FF_W))}, 0, ${r(bh / FF_H)}, ${r(D.x)}, ${r(D.y)})`;
+
+  return {
+    outline, vLine, frontEdge, frontTransform,
+    fw, fd, bh, cx, topY,
+    top: A, right: B, frontTop: C, left: D,
+    rightBottom: { x: B.x, y: Sy(B.y) },
+    frontBottom: { x: C.x, y: Sy(C.y) },
+    leftBottom: { x: D.x, y: Sy(D.y) },
+    leftMid: { x: pD_L.x, y: pD_L.y + bh / 2 },
+    rightMid: { x: pB_R.x, y: pB_R.y + bh / 2 },
+    // 전면 좌표 헬퍼: (u, v) 비율 → screen 좌표
+    frontPoint: (u, v) => ({
+      x: r(D.x + u * fw),
+      y: r(D.y + u * fw / 2 + v * bh),
+    }),
+  };
+}
+
+// ── Front Face Content ──────────────────────────────────
+// flat (FF_W × FF_H) 좌표계에서 콘텐츠를 그린다.
+// frontTransform이 아이소메트릭 전면으로 변환.
+
+function FrontContent({ type }) {
+  const p = 5;
+  const w = FF_W - 2 * p;
+  const h = FF_H - 2 * p;
+  const W = 'white';
+  const S = 'var(--vdl-700)';
+
+  switch (type) {
+    case 'code': {
+      const lines = [
+        'function Card() {',
+        '  const [state,',
+        '    setState]',
+        '    = useState(\'idle\')',
+        '  return (',
+        '    <div onHover>',
+        '      <Badge status />',
+        '      <Button onClick />',
+        '    </div>',
+        '  )',
+        '}',
+      ];
+      const lh = h / (lines.length + 1);
+      return (
+        <g>
+          {lines.map((text, i) => (
+            <text
+              key={i}
+              x={p + 2}
+              y={p + lh * (i + 1)}
+              fill={W}
+              fontSize={3.8}
+              fontFamily="monospace"
+              opacity={text.includes('Badge') || text.includes('Button') ? 1 : 0.6}
+            >
+              {text}
+            </text>
+          ))}
+        </g>
+      );
     }
-    return cells;
+
+    case 'anatomy': {
+      const midX = FF_W / 2;
+      const midY = FF_H * 0.42;
+      const sp = 14;
+      const nodes = [
+        { label: 'idle',     x: midX,      y: midY - sp,  r: 4,   active: false },
+        { label: 'hover',    x: midX - sp, y: midY,       r: 4,   active: false },
+        { label: 'active',   x: midX + sp, y: midY,       r: 5.5, active: true  },
+        { label: 'disabled', x: midX,      y: midY + sp,  r: 4,   active: false },
+      ];
+      return (
+        <g>
+          {/* orthogonal connection lines */}
+          <path
+            d={`M${midX} ${midY - sp + 4}L${midX} ${midY - 3}L${midX - sp} ${midY - 3}L${midX - sp} ${midY - 4}`}
+            fill="none" stroke={S} strokeWidth={SW}
+          />
+          <path
+            d={`M${midX} ${midY - sp + 4}L${midX} ${midY - 3}L${midX + sp} ${midY - 3}L${midX + sp} ${midY - 5.5}`}
+            fill="none" stroke={S} strokeWidth={SW}
+          />
+          <path
+            d={`M${midX - sp} ${midY + 4}L${midX - sp} ${midY + 3}L${midX} ${midY + 3}L${midX} ${midY + sp - 4}`}
+            fill="none" stroke={S} strokeWidth={SW}
+          />
+          <path
+            d={`M${midX + sp} ${midY + 5.5}L${midX + sp} ${midY + 3}L${midX} ${midY + 3}L${midX} ${midY + sp - 4}`}
+            fill="none" stroke={S} strokeWidth={SW}
+          />
+          {/* nodes */}
+          {nodes.map((n) => (
+            <g key={n.label}>
+              <circle cx={n.x} cy={n.y} r={n.r} fill="none" stroke={W}
+                strokeWidth={n.active ? SW * 2 : SW} />
+              {n.active && (
+                <circle cx={n.x} cy={n.y} r={n.r - 1.8} fill="none" stroke={W} strokeWidth={SW} />
+              )}
+              <text
+                x={n.x} y={n.y + n.r + 5}
+                fill={W} fontSize={3.2} fontFamily="monospace"
+                textAnchor="middle" opacity={0.7}
+              >
+                {n.label}
+              </text>
+            </g>
+          ))}
+          {/* annotations */}
+          <text x={p + 2} y={FF_H - p - 6} fill={S} fontSize={3} fontFamily="monospace">
+            onHover → setState
+          </text>
+          <text x={p + 2} y={FF_H - p - 2} fill={S} fontSize={3} fontFamily="monospace">
+            onClick → handler
+          </text>
+        </g>
+      );
+    }
+
+    case 'ui': {
+      const navH = 8;
+      const cardX = p;
+      const cardY = p + navH + 3;
+      const cardW = w * 0.62;
+      const cardH = h - navH - 8;
+      const metX = p + cardW + 3;
+      const metW = w - cardW - 3;
+      const metH = (cardH - 4) / 3;
+
+      return (
+        <g fill="none" strokeWidth={SW}>
+          {/* nav bar */}
+          <circle cx={p + 4} cy={p + navH / 2} r={2.5} stroke={W} />
+          <line x1={p + 12} y1={p + navH / 2} x2={p + 20} y2={p + navH / 2} stroke={S} />
+          <line x1={p + 23} y1={p + navH / 2} x2={p + 31} y2={p + navH / 2} stroke={S} />
+          <line x1={p + 34} y1={p + navH / 2} x2={p + 42} y2={p + navH / 2} stroke={S} />
+          <circle cx={FF_W - p - 4} cy={p + navH / 2} r={2.2} stroke={S} />
+          <line x1={p} y1={p + navH} x2={FF_W - p} y2={p + navH} stroke={S} opacity={0.5} />
+
+          {/* hero card */}
+          <rect x={cardX} y={cardY} width={cardW} height={cardH} rx={3} stroke={W} />
+          {/* badge pill */}
+          <rect x={cardX + 3} y={cardY + 3} width={14} height={4.5} rx={2.2}
+            stroke={W} strokeWidth={SW} />
+          {/* title */}
+          <line x1={cardX + 3} y1={cardY + 12} x2={cardX + cardW - 6} y2={cardY + 12}
+            stroke={W} />
+          {/* subtitle */}
+          <line x1={cardX + 3} y1={cardY + 17} x2={cardX + cardW * 0.55} y2={cardY + 17}
+            stroke={S} />
+          {/* body lines */}
+          <line x1={cardX + 3} y1={cardY + 23} x2={cardX + cardW - 4} y2={cardY + 23}
+            stroke={S} opacity={0.5} />
+          <line x1={cardX + 3} y1={cardY + 27} x2={cardX + cardW * 0.7} y2={cardY + 27}
+            stroke={S} opacity={0.5} />
+          {/* CTA button */}
+          <rect x={cardX + 3} y={cardY + cardH - 10} width={cardW * 0.45} height={7} rx={3}
+            stroke={W} />
+          {/* cursor */}
+          <path
+            d={`M${cardX + 3 + cardW * 0.45 + 4} ${cardY + cardH - 5}l0 -7 5 5.5 -2.8 0.3 1.8 3z`}
+            fill={W} stroke="none"
+          />
+
+          {/* metric cards */}
+          {[0, 1, 2].map((i) => {
+            const my = cardY + i * (metH + 2);
+            return (
+              <g key={i}>
+                <rect x={metX} y={my} width={metW} height={metH} rx={2} stroke={S} />
+                <line x1={metX + 2} y1={my + metH * 0.35} x2={metX + metW * 0.45} y2={my + metH * 0.35}
+                  stroke={W} opacity={0.8} />
+                {/* sparkline */}
+                <path
+                  d={`M${metX + 2} ${my + metH * 0.72}l${metW * 0.15} ${-metH * 0.15}l${metW * 0.12} ${metH * 0.1}l${metW * 0.18} ${-metH * 0.25}l${metW * 0.12} ${metH * 0.08}`}
+                  stroke={S} fill="none" strokeLinecap="round"
+                />
+              </g>
+            );
+          })}
+        </g>
+      );
+    }
+
+    default:
+      return null;
+  }
+}
+
+// ── Screen renderer ─────────────────────────────────────
+
+function ScreenNode({ panel }) {
+  const s = panel.screen;
+  const clip = `url(#dab-clip-${panel.id})`;
+
+  return (
+    <g filter="url(#dabs)">
+      <path d={s.outline} fill="var(--vdl-950)" stroke="white"
+        strokeWidth={SW} strokeLinejoin="round" />
+      <path d={s.vLine} fill="none" stroke="var(--vdl-800)"
+        strokeWidth={SW} strokeLinecap="round" clipPath={clip} />
+      <path d={s.frontEdge} fill="none" stroke="var(--vdl-800)"
+        strokeWidth={SW} strokeLinecap="round" clipPath={clip} />
+      <g transform={s.frontTransform}>
+        <FrontContent type={panel.type} />
+      </g>
+    </g>
+  );
+}
+
+// ── Main Component ──────────────────────────────────────
+
+const DesignAsBuild = forwardRef((props, ref) => {
+  const innerRef = useRef(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const el = innerRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setInView(true); io.disconnect(); } },
+      { threshold: 0.2 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
 
-  /* ── 어노테이션 — 특정 셀에서 바깥으로 확장 ── */
-  const annotations = useMemo(() => {
-    if (activeCells.length === 0) return [];
+  const panels = PANELS.map((p) => ({
+    ...p,
+    screen: buildDabScreen(p.iy, p.fw, p.fd, p.bh, ORIGIN),
+  }));
 
-    const targets = [
-      { angleTarget: -Math.PI * 0.75, side: -1 },
-      { angleTarget: -Math.PI * 0.35, side: 1 },
-      { angleTarget: -Math.PI * 0.1, side: 1 },
-      { angleTarget: Math.PI * 0.15, side: 1 },
-      { angleTarget: Math.PI * 0.4, side: -1 },
-      { angleTarget: Math.PI * 0.8, side: -1 },
-    ];
+  // 점선 연결 좌표: 전면 (u, v) 비율로 각 패널의 대응 요소 위치 지정
+  const connLines = [
+    { // Badge line: code <Badge> → anatomy idle → UI badge pill
+      points: [
+        panels[0].screen.frontPoint(0.45, 0.58),
+        panels[1].screen.frontPoint(0.5, 0.18),
+        panels[2].screen.frontPoint(0.12, 0.28),
+      ],
+    },
+    { // Button line: code <Button> → anatomy active → UI CTA button
+      points: [
+        panels[0].screen.frontPoint(0.45, 0.70),
+        panels[1].screen.frontPoint(0.78, 0.42),
+        panels[2].screen.frontPoint(0.28, 0.82),
+      ],
+    },
+  ];
 
-    return targets.map(({ angleTarget, side }) => {
-      const cell = activeCells.reduce((best, c) =>
-        Math.abs(c.angle - angleTarget) < Math.abs(best.angle - angleTarget)
-          ? c
-          : best,
-      );
-      const cellX = side === 1 ? (cell.col + 1) * grid : cell.col * grid;
-      const cellY = cell.row * grid + grid / 2;
-      const len = 14 + ((cell.col * 7 + cell.row * 13) % 8);
-      return { x: cellX, y: cellY, side, len };
-    });
-  }, [activeCells]);
+  const cls = (delay) => inView ? `dab-anim dab-d${delay}` : 'dab-hidden';
 
   return (
     <svg
-      viewBox={`0 0 ${size} ${size}`}
+      ref={(node) => {
+        innerRef.current = node;
+        if (typeof ref === 'function') ref(node);
+        else if (ref) ref.current = node;
+      }}
       xmlns="http://www.w3.org/2000/svg"
-      role="img"
-      aria-label="Design As Build"
-      style={{ width: '100%', height: '100%', display: 'block' }}
-      onMouseEnter={() => setAnimKey((k) => k + 1)}
+      viewBox={`${VB_X} ${VB_Y} ${VB_W} ${VB_H}`}
+      fill="none"
       {...props}
     >
       <style>{`
-        @media (prefers-reduced-motion: no-preference) {
-          .dab-draw {
-            stroke-dasharray: var(--l);
-            stroke-dashoffset: var(--l);
-            animation: dab-d var(--d) ease-out var(--t) forwards;
-          }
-          .dab-fade {
-            opacity: 0.01;
-            animation: dab-f var(--d) ease-out var(--t) forwards;
-          }
-          @keyframes dab-d { to { stroke-dashoffset: 0; } }
-          @keyframes dab-f { to { opacity: 1; } }
+        @keyframes dab-enter {
+          from { opacity: 0.01; transform: translateY(12px); }
+          to   { opacity: 1;    transform: translateY(0); }
+        }
+        .dab-hidden { opacity: 0.01; }
+        .dab-anim {
+          opacity: 0.01;
+          animation: dab-enter 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .dab-d0 { animation-delay: 0ms; }
+        .dab-d1 { animation-delay: 200ms; }
+        .dab-d2 { animation-delay: 400ms; }
+        .dab-d3 { animation-delay: 600ms; }
+        .dab-d4 { animation-delay: 800ms; }
+        @media (prefers-reduced-motion: reduce) {
+          .dab-anim { animation: none; opacity: 1; }
         }
       `}</style>
+      <defs>
+        <filter
+          id="dabs"
+          x={VB_X - 40}
+          y={VB_Y - 40}
+          width={VB_W + 80}
+          height={VB_H + 80}
+          colorInterpolationFilters="sRGB"
+          filterUnits="userSpaceOnUse"
+        >
+          <feFlood floodOpacity="0" result="bg" />
+          <feColorMatrix
+            in="SourceAlpha" result="a"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+          />
+          <feOffset dy="4" />
+          <feGaussianBlur stdDeviation="8" />
+          <feComposite in2="a" operator="out" />
+          <feColorMatrix values="0 0 0 0 0.031 0 0 0 0 0.035 0 0 0 0 0.039 0 0 0 0.6 0" />
+          <feBlend in2="bg" result="shadow" />
+          <feBlend in="SourceGraphic" in2="shadow" result="shape" />
+        </filter>
+        {panels.map((p) => (
+          <clipPath key={p.id} id={`dab-clip-${p.id}`}>
+            <path d={p.screen.outline} />
+          </clipPath>
+        ))}
+      </defs>
 
-      <rect width={size} height={size} fill="var(--vdl-950)" />
+      {/* ── Painter's model: back → front ── */}
 
-      <g key={animKey}>
-        {/* 1. 그리드 — subtle 배경 */}
-        <g className="dab-fade" style={{ '--d': '800ms', '--t': '100ms' }}>
-          {Array.from({ length: cols - 1 }, (_, i) => (
+      {/* Back: Code panel (d0) */}
+      <g className={cls(0)}>
+        <ScreenNode panel={panels[0]} />
+      </g>
+
+      {/* Connection lines behind middle panel (d1) */}
+      <g className={cls(1)}>
+        {connLines.map((conn, ci) => (
+          <g key={`conn-back-${ci}`}>
             <line
-              key={`gv-${i}`}
-              x1={(i + 1) * grid}
-              y1={0}
-              x2={(i + 1) * grid}
-              y2={size}
-              stroke="var(--vdl-800)"
-              strokeWidth={0.25}
+              x1={conn.points[0].x} y1={conn.points[0].y}
+              x2={conn.points[1].x} y2={conn.points[1].y}
+              stroke="white" strokeWidth={SW}
+              strokeDasharray="3 2" opacity={0.5}
             />
-          ))}
-          {Array.from({ length: rows - 1 }, (_, i) => (
+            <circle cx={conn.points[0].x} cy={conn.points[0].y} r={1.5} fill="white" />
+          </g>
+        ))}
+      </g>
+
+      {/* Middle: Anatomy panel (d2) */}
+      <g className={cls(2)}>
+        <ScreenNode panel={panels[1]} />
+      </g>
+
+      {/* Connection lines behind front panel (d3) */}
+      <g className={cls(3)}>
+        {connLines.map((conn, ci) => (
+          <g key={`conn-front-${ci}`}>
             <line
-              key={`gh-${i}`}
-              x1={0}
-              y1={(i + 1) * grid}
-              x2={size}
-              y2={(i + 1) * grid}
-              stroke="var(--vdl-800)"
-              strokeWidth={0.25}
+              x1={conn.points[1].x} y1={conn.points[1].y}
+              x2={conn.points[2].x} y2={conn.points[2].y}
+              stroke="white" strokeWidth={SW}
+              strokeDasharray="3 2" opacity={0.5}
             />
-          ))}
-        </g>
+            <circle cx={conn.points[1].x} cy={conn.points[1].y} r={1.5} fill="white" />
+            <circle cx={conn.points[2].x} cy={conn.points[2].y} r={1.5} fill="white" />
+          </g>
+        ))}
+      </g>
 
-        {/* 2. 타원 — 디자인 표면 (draw in) */}
-        <ellipse
-          className="dab-draw"
-          cx={cx}
-          cy={cy}
-          rx={rx}
-          ry={ry}
-          fill="none"
-          stroke="var(--vdl-200)"
-          strokeWidth={0.5}
-          style={{
-            '--l': Math.ceil(2 * Math.PI * Math.sqrt((rx * rx + ry * ry) / 2)),
-            '--d': '800ms',
-            '--t': '400ms',
-          }}
-        />
-
-        {/* 3. 활성 셀 — 타원 경계가 지나는 그리드 셀 */}
-        {activeCells.map((cell, i) => {
-          const delay = 900 + i * 8;
-          return (
-            <rect
-              key={`c-${i}`}
-              className="dab-fade"
-              x={cell.col * grid}
-              y={cell.row * grid}
-              width={grid}
-              height={grid}
-              fill="var(--vdl-700)"
-              style={{ '--d': '300ms', '--t': `${delay}ms` }}
-            />
-          );
-        })}
-
-        {/* 4. 타원 재드로우 — 활성 셀 위에 타원선이 다시 보이도록 */}
-        <ellipse
-          className="dab-draw"
-          cx={cx}
-          cy={cy}
-          rx={rx}
-          ry={ry}
-          fill="none"
-          stroke="var(--vdl-200)"
-          strokeWidth={0.5}
-          style={{
-            '--l': Math.ceil(2 * Math.PI * Math.sqrt((rx * rx + ry * ry) / 2)),
-            '--d': '800ms',
-            '--t': '400ms',
-          }}
-        />
-
-        {/* 5. 어노테이션 — 활성 셀에서 바깥으로 뻗는 Naming Line */}
-        {annotations.map((a, i) => {
-          const endX = a.x + a.side * a.len;
-          return (
-            <g key={`a-${i}`}>
-              <line
-                className="dab-draw"
-                x1={a.x}
-                y1={a.y}
-                x2={endX}
-                y2={a.y}
-                stroke="var(--vdl-200)"
-                strokeWidth={0.5}
-                strokeLinecap="round"
-                style={{ '--l': a.len, '--d': '300ms', '--t': `${1400 + i * 70}ms` }}
-              />
-              <circle
-                className="dab-fade"
-                cx={endX}
-                cy={a.y}
-                r={1.5}
-                fill="var(--vdl-200)"
-                style={{ '--d': '200ms', '--t': `${1500 + i * 70}ms` }}
-              />
-            </g>
-          );
-        })}
-
-        {/* 0. 중심점 */}
-        <circle
-          className="dab-fade"
-          cx={cx}
-          cy={cy}
-          r={2.5}
-          fill="var(--vdl-200)"
-          style={{ '--d': '300ms', '--t': '0ms' }}
-        />
+      {/* Front: UI panel (d4) */}
+      <g className={cls(4)}>
+        <ScreenNode panel={panels[2]} />
       </g>
     </svg>
   );
-}
+});
+
+DesignAsBuild.displayName = 'DesignAsBuild';
+
+export { DesignAsBuild };

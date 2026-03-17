@@ -29,11 +29,11 @@ const SW = 0.5; // 통일 헤어라인 스트로크
 
 // 측정: 아래 레이어일수록 큰 슬래브, 우측정렬, 간격 좁게
 const LAYERS = [
-  { iz: 0,  id: 'background', label: 'BACKGROUND',   stroke: 'white', sw: SW, fw: 159, fd: 106 },
-  { iz: 5,  id: 'spatial',    label: 'LAYOUT',       stroke: 'white', sw: SW, fw: 142, fd: 95  },
-  { iz: 10, id: 'motion',     label: 'MOTION',       stroke: 'white', sw: SW, fw: 125, fd: 84  },
-  { iz: 15, id: 'color',      label: 'COLOR TOKEN',  stroke: 'white', sw: SW, fw: 108, fd: 73  },
-  { iz: 20, id: 'typography', label: 'TYPOGRAPHY',   stroke: 'white', sw: SW, fw: 105, fd: 70  },
+  { iz: 0,  id: 'background', label: 'BACKGROUND',   stroke: 'white', sw: SW, fw: 175, fd: 117 },
+  { iz: 5,  id: 'spatial',    label: 'LAYOUT',       stroke: 'white', sw: SW, fw: 152, fd: 101 },
+  { iz: 10, id: 'motion',     label: 'MOTION',       stroke: 'white', sw: SW, fw: 127, fd: 85  },
+  { iz: 15, id: 'color',      label: 'COLOR TOKEN',  stroke: 'white', sw: SW, fw: 99,  fd: 66  },
+  { iz: 20, id: 'typography', label: 'TYPOGRAPHY',   stroke: 'white', sw: SW, fw: 79,  fd: 53  },
 ];
 
 // ── Rectangular Isometric Slab (Gemini 방식) ──
