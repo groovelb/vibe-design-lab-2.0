@@ -321,7 +321,7 @@ export const PAGES = {
     instructor: {
       dividerLabel: 'Instructor',
       headline: '10년차 디발자의 노하우를 전수해드립니다.',
-      projectsLabel: '참여 프로젝트',
+      projectsLabel: '대표 프로젝트',
     },
     schedule: {
       dividerLabel: 'Schedule',

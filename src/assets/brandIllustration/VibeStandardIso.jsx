@@ -29,6 +29,8 @@ const SLOTS = [
 const SLOT_T_START = 0.06;
 const SLOT_T_HEIGHT = 0.14;
 const SLOT_GAP = 0.04;
+const PAD = 0.06;
+const PAD_R = 0.94;
 
 export const VibeStandardIso = (props) => {
   const c = prism(0, 0, 0, 7, 24, O);
@@ -39,26 +41,36 @@ export const VibeStandardIso = (props) => {
   const slots = SLOTS.map((s, i) => {
     const tStart = SLOT_T_START + i * (SLOT_T_HEIGHT + SLOT_GAP);
     const tEnd = tStart + SLOT_T_HEIGHT;
-    return { ...s, tStart, tEnd, index: i + 1 };
-  });
+    const tMid = (tStart + tEnd) / 2;
+    const index = i + 1;
+    const stroke = s.isHero ? 'var(--vdl-200)' : 'var(--vdl-800)';
+    const contentStroke = s.isHero ? 'var(--vdl-700)' : 'var(--vdl-800)';
+    const nlColor = s.isHero ? 'var(--vdl-200)' : 'var(--vdl-700)';
 
-  // 인덱스 바 (좌측 세로선)
-  const idxTop = pt(SLOT_T_START, 0);
-  const lastSlot = slots[slots.length - 1];
-  const idxBot = pt(lastSlot.tEnd, 0);
+    // Pre-compute coordinates (IIFE 제거)
+    const numPos = pt(tStart + 0.01, PAD + 0.02);
+    const iconPos = pt(tMid, 0.17);
+    const statusPos = pt(tMid, 0.88);
+    const connOut = pt(tEnd, PAD_R);
+    const connIn = pt(tStart, 0.5);
 
-  // Naming lines
-  const nls = slots.map((s) => {
-    const tMid = (s.tStart + s.tEnd) / 2;
+    // Naming line
     const edge = pt(tMid, 1);
+    const nl = namingLine(edge.x + 4, edge.y, s.isHero ? 48 : 36);
+
     return {
-      ...s,
-      nl: namingLine(edge.x + 4, edge.y, s.isHero ? 48 : 36),
+      ...s, tStart, tEnd, tMid, index,
+      stroke, contentStroke, nlColor,
+      numPos, iconPos, statusPos, connOut, connIn, nl,
     };
   });
 
   // Container naming line
-  const containerNL = namingLine(pt(0.01, 1).x + 4, pt(0.01, 1).y, 56);
+  const containerNLEdge = pt(0.01, 1);
+  const containerNL = namingLine(containerNLEdge.x + 4, containerNLEdge.y, 56);
+
+  // Bottom annotation
+  const annotationPos = pt(0.97, 0.5);
 
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width={W} height={H} fill="none" viewBox={`0 0 ${W} ${H}`} {...props}>
@@ -75,108 +87,116 @@ export const VibeStandardIso = (props) => {
         </filter>
       </defs>
 
-      {/* ── 메인 컨테이너 Prism ── */}
-      <g filter="url(#vp2s)">
-        <path d={c.outline} fill="var(--vdl-950)" stroke="var(--vdl-700)" strokeWidth="0.5" strokeLinejoin="round" />
-        <path d={c.vLine} stroke="var(--vdl-800)" strokeWidth="0.5" strokeLinecap="round" />
+      {/* ── Global ── */}
+      <g data-role="global">
+        {/* 메인 컨테이너 Prism */}
+        <g data-part="container" filter="url(#vp2s)">
+          <path d={c.outline} fill="var(--vdl-950)" stroke="var(--vdl-700)" strokeWidth="0.5" strokeLinejoin="round" />
+          <path d={c.vLine} stroke="var(--vdl-800)" strokeWidth="0.5" strokeLinecap="round" />
+        </g>
+
       </g>
 
-      {/* ── 인덱스 바 (좌측 세로선) ── */}
-      <path
-        d={`M${r(idxTop.x - 3)} ${r(idxTop.y)} L${r(idxBot.x - 3)} ${r(idxBot.y)}`}
-        stroke="var(--vdl-800)" strokeWidth="0.5" strokeLinecap="round"
-      />
-      {/* 인덱스 마커 */}
-      {slots.map((s) => {
-        const mid = pt((s.tStart + s.tEnd) / 2, 0);
-        return <circle key={`im${s.index}`} cx={r(mid.x - 3)} cy={mid.y} r="1.2" fill={s.isHero ? 'var(--vdl-200)' : 'var(--vdl-800)'} />;
-      })}
+      {/* ── Geometry: Slots ── */}
+      <g data-role="geometry">
+        {slots.map((s) => (
+          <g key={`geo-${s.index}`} data-layer={s.index - 1}>
+            {/* 슬롯 콘텐츠 */}
+            <g data-part="slot">
+              {/* 슬롯 외곽 사각형 */}
+              <path d={rect(s.tStart, PAD, s.tEnd, PAD_R)} stroke={s.stroke} strokeWidth="0.5" fill="none" />
 
-      {/* ── 슬롯 ── */}
-      {slots.map((s) => {
-        const stroke = s.isHero ? 'var(--vdl-200)' : 'var(--vdl-800)';
-        const contentStroke = s.isHero ? 'var(--vdl-700)' : 'var(--vdl-800)';
-        const tMid = (s.tStart + s.tEnd) / 2;
-        const pad = 0.06;
-        const padR = 0.94;
+              {/* 슬롯 번호 */}
+              <text x={s.numPos.x} y={s.numPos.y} fill={s.contentStroke} fontSize="4" fontFamily="monospace" dominantBaseline="hanging">
+                {`#${s.index}`}
+              </text>
 
-        return (
-          <g key={`slot${s.index}`}>
-            {/* 슬롯 외곽 사각형 */}
-            <path d={rect(s.tStart, pad, s.tEnd, padR)} stroke={stroke} strokeWidth="0.5" fill="none" />
+              {/* 아이콘 영역 */}
+              <path d={rect(s.tStart + 0.02, PAD + 0.02, s.tEnd - 0.02, 0.28)} stroke={s.contentStroke} strokeWidth="0.3" fill="none" />
+              <text x={s.iconPos.x} y={s.iconPos.y} fill={s.isHero ? 'var(--vdl-200)' : 'var(--vdl-700)'} fontSize="7" fontFamily="monospace" dominantBaseline="middle" textAnchor="middle">
+                {s.icon}
+              </text>
 
-            {/* 슬롯 번호 */}
-            {(() => {
-              const np = pt(s.tStart + 0.01, pad + 0.02);
-              return <text x={np.x} y={np.y} fill={contentStroke} fontSize="4" fontFamily="monospace" dominantBaseline="hanging">{`#${s.index}`}</text>;
-            })()}
+              {/* 토큰명 라인 */}
+              <path d={hl(s.tMid - 0.02, 0.34, 0.75)} stroke={s.contentStroke} strokeWidth="0.5" strokeLinecap="round" />
 
-            {/* 아이콘 영역 (좌측 작은 사각형) */}
-            <path d={rect(s.tStart + 0.02, pad + 0.02, s.tEnd - 0.02, 0.28)} stroke={contentStroke} strokeWidth="0.3" fill="none" />
-            {/* 아이콘 텍스트 */}
-            {(() => {
-              const ip = pt(tMid, 0.17);
-              return <text x={ip.x} y={ip.y} fill={s.isHero ? 'var(--vdl-200)' : 'var(--vdl-700)'} fontSize="7" fontFamily="monospace" dominantBaseline="middle" textAnchor="middle">{s.icon}</text>;
-            })()}
+              {/* 값 프리뷰 라인 */}
+              <path d={hl(s.tMid + 0.03, 0.34, 0.58)} stroke={s.contentStroke} strokeWidth="0.3" strokeLinecap="round" />
 
-            {/* 토큰명 라인 (중앙) */}
-            <path d={hl(tMid - 0.02, 0.34, 0.75)} stroke={contentStroke} strokeWidth="0.5" strokeLinecap="round" />
+              {/* 상태 인디케이터 */}
+              <circle cx={s.statusPos.x} cy={s.statusPos.y} r={s.isHero ? 2 : 1.2} fill={s.isHero ? 'var(--vdl-200)' : 'var(--vdl-800)'} />
+            </g>
 
-            {/* 값 프리뷰 라인 (하단) */}
-            <path d={hl(tMid + 0.03, 0.34, 0.58)} stroke={contentStroke} strokeWidth="0.3" strokeLinecap="round" />
-
-            {/* 상태 인디케이터 */}
-            {(() => {
-              const dp = pt(tMid, 0.88);
-              return <circle cx={dp.x} cy={dp.y} r={s.isHero ? 2 : 1.2} fill={s.isHero ? 'var(--vdl-200)' : 'var(--vdl-800)'} />;
-            })()}
-
-            {/* 슬롯 간 구분선 (마지막 제외) */}
+            {/* 슬롯 간 구분선 */}
             {s.index < SLOTS.length && (
               <path
-                d={hl(s.tEnd + SLOT_GAP / 2, pad + 0.04, padR - 0.04)}
+                data-part="divider"
+                d={hl(s.tEnd + SLOT_GAP / 2, PAD + 0.04, PAD_R - 0.04)}
                 stroke="var(--vdl-800)" strokeWidth="0.2" strokeDasharray="1 2"
               />
             )}
           </g>
-        );
-      })}
-
-      {/* ── Container Naming Line ── */}
-      <g>
-        <circle cx={containerNL.dot.cx} cy={containerNL.dot.cy} r="1.5" fill="var(--vdl-700)" />
-        <path d={containerNL.line} stroke="var(--vdl-700)" strokeWidth="0.5" />
-        <text x={containerNL.labelAnchor.x} y={containerNL.labelAnchor.y} fill="var(--vdl-700)" fontSize="6.5" fontFamily="monospace" dominantBaseline="middle">
-          TokenRegistry
-        </text>
+        ))}
       </g>
 
-      {/* ── Slot Naming Lines ── */}
-      {nls.map((item) => (
-        <g key={`nl${item.index}`}>
-          <circle
-            cx={item.nl.dot.cx} cy={item.nl.dot.cy} r="1.5"
-            fill={item.isHero ? 'var(--vdl-200)' : 'var(--vdl-700)'}
-          />
-          <path d={item.nl.line} stroke={item.isHero ? 'var(--vdl-200)' : 'var(--vdl-700)'} strokeWidth="0.5" />
-          <text
-            x={item.nl.labelAnchor.x}
-            y={item.nl.labelAnchor.y}
-            fill={item.isHero ? 'var(--vdl-200)' : 'var(--vdl-700)'}
-            fontSize={item.isHero ? 6.5 : 5.5}
-            fontFamily="monospace"
-            dominantBaseline="middle"
-          >
-            {item.label}
+      {/* ── Annotations ── */}
+      <g data-role="annotations">
+        {/* Slot Connectors (밑면 중앙 → 윗면 중앙) */}
+        {slots.slice(0, -1).map((s, i) => {
+          const next = slots[i + 1];
+          return (
+            <g key={`conn-${i}`} data-part="connector">
+              <circle cx={r(s.connOut.x)} cy={r(s.connOut.y)} r="1.2" fill="var(--vdl-800)" />
+              <path
+                d={`M${r(s.connOut.x)} ${r(s.connOut.y)} L${r(next.connIn.x)} ${r(next.connIn.y)}`}
+                stroke="var(--vdl-800)" strokeWidth="0.5" strokeLinecap="round"
+              />
+              <circle cx={r(next.connIn.x)} cy={r(next.connIn.y)} r="1.2" fill="var(--vdl-800)" />
+            </g>
+          );
+        })}
+
+        {/* Container Naming Line */}
+        <g data-part="container-nl">
+          <circle cx={containerNL.dot.cx} cy={containerNL.dot.cy} r="1.5" fill="var(--vdl-700)" />
+          <path d={containerNL.line} stroke="var(--vdl-700)" strokeWidth="0.5" />
+          <text x={containerNL.labelAnchor.x} y={containerNL.labelAnchor.y} fill="var(--vdl-700)" fontSize="6.5" fontFamily="monospace" dominantBaseline="middle">
+            TokenRegistry
           </text>
         </g>
-      ))}
 
-      {/* ── "Standard" 주석 (하단) ── */}
-      {(() => {
-        const fp = pt(0.97, 0.5);
-        return <text x={fp.x} y={r(fp.y + 12)} fill="var(--vdl-800)" fontSize="5" fontFamily="monospace" dominantBaseline="middle" textAnchor="middle">identical format = standard</text>;
-      })()}
+        {/* Slot Naming Lines */}
+        {slots.map((s) => (
+          <g key={`ann-${s.index}`} data-layer={s.index - 1} data-part="naming-line">
+            <circle cx={s.nl.dot.cx} cy={s.nl.dot.cy} r="1.5" fill={s.nlColor} />
+            <path d={s.nl.line} stroke={s.nlColor} strokeWidth="0.5" />
+            <text
+              x={s.nl.labelAnchor.x}
+              y={s.nl.labelAnchor.y}
+              fill={s.nlColor}
+              fontSize={s.isHero ? 6.5 : 5.5}
+              fontFamily="monospace"
+              dominantBaseline="middle"
+            >
+              {s.label}
+            </text>
+          </g>
+        ))}
+
+        {/* "Standard" 주석 (하단) */}
+        <text
+          data-part="annotation"
+          x={annotationPos.x}
+          y={r(annotationPos.y + 12)}
+          fill="var(--vdl-800)"
+          fontSize="5"
+          fontFamily="monospace"
+          dominantBaseline="middle"
+          textAnchor="middle"
+        >
+          identical format = standard
+        </text>
+      </g>
     </svg>
   );
 };
