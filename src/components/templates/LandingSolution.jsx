@@ -15,13 +15,17 @@ import { AreaConstruct } from '../motion/AreaConstruct';
 import { ConstructType } from '../motion/ConstructType';
 import { ConstructBlock } from '../motion/ConstructBlock';
 import { ConstructButton } from '../motion/ConstructButton';
-import { COL_STAGGER, VISUAL_LEAD } from '../motion/constants';
+import { COL_STAGGER, VISUAL_LEAD, T } from '../motion/constants';
 import { PAGES, VALUE_PROPOSITIONS } from '../../data/contents';
 import { SystemOverDrawingV3 } from '../../assets/brandIllustration/SystemOverDrawingV3';
 import { VibeStandardTree } from '../../assets/brandIllustration/VibeStandardTree';
 import { DesignAsBuild } from '../../assets/brandIllustration/DesignAsBuild';
 
 const ILLUSTRATIONS = [SystemOverDrawingV3, VibeStandardTree, DesignAsBuild];
+
+// AreaConstruct reveal까지: tag(80) + scatter(290) + reveal opacity ramp ≈ 520ms
+// + illustration IO가 construct IO보다 ~300ms 먼저 발동 (threshold 0.2 vs center)
+const CONSTRUCT_OVERHEAD = T.tag + T.scatter + T.settle + T.reveal + 1200;
 
 const { howDifferent } = PAGES.landing;
 
@@ -57,7 +61,7 @@ export function LandingSolution() {
           return (
             <Grid key={vp.name} size={{ xs: 12, md: 4 }}>
               <AreaConstruct isTriggerOnView delay={colDelay}>
-                <Illustration />
+                <Illustration delay={CONSTRUCT_OVERHEAD + colDelay} />
               </AreaConstruct>
               <Box sx={{ mt: 6 }}>
                 <ConstructType

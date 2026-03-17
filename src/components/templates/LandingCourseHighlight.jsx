@@ -2,8 +2,6 @@
 import { SectionContainer } from '../container/SectionContainer';
 import { CourseDetailCard } from '../card/CourseDetailCard';
 import FadeTransition from '../motion/FadeTransition';
-import { SectionDivider } from '../typography/SectionDivider';
-import { SectionTitle } from '../typography/SectionTitle';
 import { PAGES } from '../../data/contents';
 import { COURSES } from '../../data/landingMockData';
 import coursePoster from '../../assets/course/course_thumbnail_line.png';
@@ -26,28 +24,21 @@ export function LandingCourseHighlight() {
 
   return (
     <SectionContainer>
-        <FadeTransition direction="up" isTriggerOnView threshold={0.5}>
-          <SectionDivider label="Course" sx={{ mb: 3 }} />
-          <SectionTitle
-            headline={courseHighlight.headline}
-            sx={{ mb: { xs: 6, md: 10 } }}
-          />
-        </FadeTransition>
-
-        <FadeTransition direction="up" isTriggerOnView threshold={0.5}>
-          <CourseDetailCard
-            videoSrc={courseVideo}
-            posterSrc={coursePoster.src || coursePoster}
-            cohortStatus={course.cohortStatus}
-            duration={course.duration}
-            chapters={course.chapters}
-            title={course.title}
-            subtitle={course.subtitle}
-            target={course.target}
-            ctaLabel={courseHighlight.ctaPrimary}
-            ctaHref={`/course/${course.slug}`}
-          />
-        </FadeTransition>
+      <FadeTransition direction="up" isTriggerOnView threshold={0.5}>
+        <CourseDetailCard
+          videoSrc={courseVideo}
+          posterSrc={coursePoster.src || coursePoster}
+          cohortStatus={course.cohortStatus}
+          duration={course.duration}
+          chapters={course.chapters}
+          title={course.title}
+          subtitle={course.subtitle}
+          target={course.target}
+          ctaLabel={courseHighlight.ctaPrimary}
+          ctaHref={`/course/${course.slug}`}
+          sx={{ border: '1px solid', borderColor: 'divider' }}
+        />
+      </FadeTransition>
     </SectionContainer>
   );
 }

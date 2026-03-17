@@ -27,6 +27,10 @@ const BH = 11;
 const CR = 8;
 const SW = 0.5; // 통일 헤어라인 스트로크
 
+// ── Animation timing (ms) ───────────────────────────────
+const DRAW_DUR = 400;
+const LAYER_STAGGER = 150;
+
 // 측정: 아래 레이어일수록 큰 슬래브, 우측정렬, 간격 좁게
 const LAYERS = [
   { iz: 0,  id: 'background', label: 'BACKGROUND',   stroke: 'white', sw: SW, fw: 175, fd: 117 },
@@ -115,8 +119,10 @@ function buildRectSlab(iz, fw, fd) {
   const sy = fd / FD;
   const topTransform = `matrix(${r(sx)}, ${r(sx / 2)}, ${r(-sy)}, ${r(sy / 2)}, ${r(cx)}, ${r(topY)})`;
 
+  const pathLen = Math.ceil((fw + fd) * 2.3 + 2 * BH + 50);
+
   return {
-    outline, vLine, frontEdge, topTransform,
+    outline, vLine, frontEdge, topTransform, pathLen,
     fw, fd, bh: BH, cx, topY,
     frontTop: C,
     top: A,
@@ -283,9 +289,10 @@ function TopFaceContent({ id }) {
 
 // ── Main Component ──
 
-const SystemOverDrawingV3 = forwardRef((props, ref) => {
+const SystemOverDrawingV3 = forwardRef(({ delay: baseDelay = 0, ...props }, ref) => {
   const innerRef = useRef(null);
   const [inView, setInView] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     const el = innerRef.current;
@@ -313,26 +320,71 @@ const SystemOverDrawingV3 = forwardRef((props, ref) => {
       xmlns="http://www.w3.org/2000/svg"
       viewBox={`${VB_X} ${VB_Y} ${VB_W} ${VB_H}`}
       fill="none"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       {...props}
     >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&display=swap');
-        @keyframes sod3-enter {
-          from { opacity: 0.01; transform: translateY(16px); }
-          to   { opacity: 1;    transform: translateY(0); }
+        @keyframes sod3-draw {
+          to { stroke-dashoffset: 0; fill-opacity: 1; }
+        }
+        @keyframes sod3-fade {
+          to { opacity: 1; }
+        }
+        .sod3-outline-hidden {
+          stroke-dasharray: var(--len);
+          stroke-dashoffset: var(--len);
+          fill-opacity: 0;
+        }
+        .sod3-draw {
+          stroke-dasharray: var(--len);
+          stroke-dashoffset: var(--len);
+          fill-opacity: 0;
+          animation: sod3-draw ${DRAW_DUR}ms ease-out var(--delay) forwards;
         }
         .sod3-hidden { opacity: 0.01; }
-        .sod3-layer {
+        .sod3-fade {
           opacity: 0.01;
-          animation: sod3-enter 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+          animation: sod3-fade 300ms ease-out var(--delay) forwards;
         }
-        .sod3-l0 { animation-delay: 0.8s; }
-        .sod3-l1 { animation-delay: 0.6s; }
-        .sod3-l2 { animation-delay: 0.4s; }
-        .sod3-l3 { animation-delay: 0.2s; }
-        .sod3-l4 { animation-delay: 0s; }
+        @keyframes sod3-halo-pulse {
+          0%, 100% { opacity: 0.01; }
+          35%, 65% { opacity: 0.4; }
+        }
+        @keyframes sod3-fill-pulse {
+          0%, 100% { opacity: 0.01; }
+          35%, 65% { opacity: 0.15; }
+        }
+        .sod3-pulse-halo, .sod3-pulse-fill,
+        .sod3-stay-halo, .sod3-stay-fill {
+          opacity: 0.01;
+        }
+        .sod3-hovered .sod3-pulse-halo {
+          animation: sod3-halo-pulse 600ms ease-out var(--glow-delay) both;
+        }
+        .sod3-hovered .sod3-pulse-fill {
+          animation: sod3-fill-pulse 600ms ease-out var(--glow-delay) both;
+        }
+        .sod3-stay-halo, .sod3-stay-fill {
+          transition: opacity 300ms ease-out 0ms;
+        }
+        .sod3-hovered .sod3-stay-halo {
+          opacity: 0.4;
+          transition-delay: var(--glow-delay);
+        }
+        .sod3-hovered .sod3-stay-fill {
+          opacity: 0.15;
+          transition-delay: var(--glow-delay);
+        }
         @media (prefers-reduced-motion: reduce) {
-          .sod3-layer { animation: none; opacity: 1; }
+          .sod3-draw { fill-opacity: 1; stroke-dashoffset: 0; animation: none; }
+          .sod3-fade { opacity: 1; animation: none; }
+          .sod3-hovered .sod3-pulse-halo,
+          .sod3-hovered .sod3-pulse-fill { animation: none; }
+          .sod3-stay-halo, .sod3-stay-fill { transition: none; }
+          .sod3-hovered .sod3-stay-halo { opacity: 0.4; }
+          .sod3-hovered .sod3-stay-fill { opacity: 0.15; }
         }
       `}</style>
       <defs>
@@ -358,6 +410,9 @@ const SystemOverDrawingV3 = forwardRef((props, ref) => {
           <feBlend in2="bg" result="shadow" />
           <feBlend in="SourceGraphic" in2="shadow" result="shape" />
         </filter>
+        <filter id="sod3-glow-f" x="-100%" y="-100%" width="300%" height="300%">
+          <feGaussianBlur stdDeviation="6" />
+        </filter>
         {/* 슬래브별 clipPath — vLine/frontEdge가 rounded corner 밖으로 삐져나오지 않도록 */}
         {layers.map((l) => (
           <clipPath key={l.id} id={`sod3-clip-${l.id}`}>
@@ -366,59 +421,99 @@ const SystemOverDrawingV3 = forwardRef((props, ref) => {
         ))}
       </defs>
 
-      {/* ── Layers + Naming Lines (staggered entrance) ── */}
+      {/* ── Layers + Naming Lines (draw + fade) ── */}
       {layers.map((l, i) => {
         const anchor = l.p.rightMid;
         const nl = namingLine(anchor.x + 5, anchor.y, 40);
+        const order = LAYERS.length - 1 - i;
+        const drawDelay = baseDelay + order * LAYER_STAGGER;
+        const contentDelay = drawDelay + DRAW_DUR - 100;
 
         return (
-          <g key={l.id} className={inView ? `sod3-layer sod3-l${i}` : 'sod3-hidden'}>
-            {/* Container */}
+          <g key={l.id}>
             <g filter="url(#sod3s)">
+              {/* Phase 1: outline draws */}
               <path
                 d={l.p.outline}
                 fill="var(--vdl-950)"
                 stroke={l.stroke}
                 strokeWidth={l.sw}
                 strokeLinejoin="round"
+                className={inView ? 'sod3-draw' : 'sod3-outline-hidden'}
+                style={{ '--len': l.p.pathLen, '--delay': `${drawDelay}ms` }}
               />
-              <path
-                d={l.p.vLine}
-                fill="none"
-                stroke="var(--vdl-800)"
-                strokeWidth={SW}
-                strokeLinecap="round"
-                clipPath={`url(#sod3-clip-${l.id})`}
-              />
-              <path
-                d={l.p.frontEdge}
-                fill="none"
-                stroke="var(--vdl-800)"
-                strokeWidth={SW}
-                strokeLinecap="round"
-                clipPath={`url(#sod3-clip-${l.id})`}
-              />
-              <g transform={l.p.topTransform}>
-                <TopFaceContent id={l.id} />
+              {/* Phase 2: content fades in */}
+              <g
+                className={inView ? 'sod3-fade' : 'sod3-hidden'}
+                style={{ '--delay': `${contentDelay}ms` }}
+              >
+                <path
+                  d={l.p.vLine}
+                  fill="none"
+                  stroke="var(--vdl-800)"
+                  strokeWidth={SW}
+                  strokeLinecap="round"
+                  clipPath={`url(#sod3-clip-${l.id})`}
+                />
+                <path
+                  d={l.p.frontEdge}
+                  fill="none"
+                  stroke="var(--vdl-800)"
+                  strokeWidth={SW}
+                  strokeLinecap="round"
+                  clipPath={`url(#sod3-clip-${l.id})`}
+                />
+                <g transform={l.p.topTransform}>
+                  <TopFaceContent id={l.id} />
+                </g>
               </g>
             </g>
-            {/* Naming Line & Label */}
-            <circle cx={nl.dot.cx} cy={nl.dot.cy} r="1.8" fill="white" />
-            <path d={nl.line} stroke="white" strokeWidth={SW} />
-            <text
-              x={nl.labelAnchor.x}
-              y={nl.labelAnchor.y}
-              fill="white"
-              fontSize="7.5"
-              fontFamily="monospace"
-              fontWeight="bold"
-              dominantBaseline="middle"
+            {/* Naming line (fades with content) */}
+            <g
+              className={inView ? 'sod3-fade' : 'sod3-hidden'}
+              style={{ '--delay': `${contentDelay}ms` }}
             >
-              {l.label}
-            </text>
+              <circle cx={nl.dot.cx} cy={nl.dot.cy} r="1.8" fill="white" />
+              <path d={nl.line} stroke="white" strokeWidth={SW} />
+              <text
+                x={nl.labelAnchor.x}
+                y={nl.labelAnchor.y}
+                fill="white"
+                fontSize="7.5"
+                fontFamily="monospace"
+                fontWeight="bold"
+                dominantBaseline="middle"
+              >
+                {l.label}
+              </text>
+            </g>
           </g>
         );
       })}
+
+      {/* ── Layer glow (hover) — top→bottom wave, last stays ── */}
+      <g className={isHovered ? 'sod3-hovered' : undefined}>
+        {layers.map((l, i) => {
+          const order = LAYERS.length - 1 - i;
+          const isLast = i === 0; // background = cascade 마지막
+          const haloCls = isLast ? 'sod3-stay-halo' : 'sod3-pulse-halo';
+          const fillCls = isLast ? 'sod3-stay-fill' : 'sod3-pulse-fill';
+          return (
+            <g key={`glow-${l.id}`} style={{ '--glow-delay': `${order * 150}ms` }}>
+              <path
+                d={l.p.outline}
+                fill="var(--vdl-200)" filter="url(#sod3-glow-f)"
+                className={haloCls}
+              />
+              <path
+                d={l.p.outline}
+                fill="var(--vdl-200)"
+                className={fillCls}
+              />
+            </g>
+          );
+        })}
+      </g>
 
     </svg>
   );

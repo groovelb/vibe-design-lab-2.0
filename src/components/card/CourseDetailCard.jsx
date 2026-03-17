@@ -108,7 +108,7 @@ const CourseDetailCard = forwardRef(function CourseDetailCard({
   };
 
   return (
-    <Grid ref={ref} container spacing={{ xs: 4, md: 6 }} sx={sx} {...props}>
+    <Grid ref={ref} container spacing={0} sx={{ borderRadius: '12px', overflow: 'hidden', ...sx }} {...props}>
       {/* 미디어 영역 */}
       <Grid size={{ xs: 12, md: 6 }}>
         <Box sx={{ overflow: 'hidden', bgcolor: '#09080b', '& video': { mixBlendMode: 'lighten' } }}>
@@ -118,7 +118,7 @@ const CourseDetailCard = forwardRef(function CourseDetailCard({
 
       {/* 콘텐츠 영역 */}
       <Grid size={{ xs: 12, md: 6 }}>
-        <Stack spacing={3} sx={{ height: '100%', justifyContent: 'space-between' }}>
+        <Stack spacing={3} sx={{ height: '100%', justifyContent: 'space-between', p: { xs: 3, md: 4 } }}>
           {/* 상단: 텍스트 콘텐츠 */}
           <Stack spacing={3}>
             {/* 코호트 배지 + 메타 정보 */}

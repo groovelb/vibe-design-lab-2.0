@@ -21,6 +21,10 @@ const VB_H = 269;
 const SW = 0.5;
 const CR = 6;
 
+// ── Animation timing (ms) ───────────────────────────────
+const DRAW_DUR = 400;
+const PANEL_STAGGER = 500;
+
 const ORIGIN = { x: 345, y: 95 };
 
 // flat 좌표 기준 (전면 콘텐츠용)
@@ -107,8 +111,10 @@ function buildDabScreen(iy, fw, fd, bh, origin) {
   // frontTransform: flat (FF_W × FF_H) → 전면 평행사변형 (D→C top edge, bh drop)
   const frontTransform = `matrix(${r(fw / FF_W)}, ${r(fw / (2 * FF_W))}, 0, ${r(bh / FF_H)}, ${r(D.x)}, ${r(D.y)})`;
 
+  const pathLen = Math.ceil((fw + fd) * 2.3 + 2 * bh + 50);
+
   return {
-    outline, vLine, frontEdge, frontTransform,
+    outline, vLine, frontEdge, frontTransform, pathLen,
     fw, fd, bh, cx, topY,
     top: A, right: B, frontTop: C, left: D,
     rightBottom: { x: B.x, y: Sy(B.y) },
@@ -296,20 +302,31 @@ function FrontContent({ type }) {
 
 // ── Screen renderer ─────────────────────────────────────
 
-function ScreenNode({ panel }) {
+function ScreenNode({ panel, inView, drawDelay, contentDelay }) {
   const s = panel.screen;
   const clip = `url(#dab-clip-${panel.id})`;
 
   return (
     <g filter="url(#dabs)">
-      <path d={s.outline} fill="var(--vdl-950)" fillOpacity={0.85} stroke="white"
-        strokeWidth={SW} strokeLinejoin="round" />
-      <path d={s.vLine} fill="none" stroke="var(--vdl-800)"
-        strokeWidth={SW} strokeLinecap="round" clipPath={clip} />
-      <path d={s.frontEdge} fill="none" stroke="var(--vdl-800)"
-        strokeWidth={SW} strokeLinecap="round" clipPath={clip} />
-      <g transform={s.frontTransform}>
-        <FrontContent type={panel.type} />
+      {/* Phase 1: outline draws */}
+      <path
+        d={s.outline} fill="var(--vdl-950)" stroke="white"
+        strokeWidth={SW} strokeLinejoin="round"
+        className={inView ? 'dab-draw' : 'dab-outline-hidden'}
+        style={{ '--len': s.pathLen, '--delay': `${drawDelay}ms` }}
+      />
+      {/* Phase 2: content fades in */}
+      <g
+        className={inView ? 'dab-fade' : 'dab-hidden'}
+        style={{ '--delay': `${contentDelay}ms` }}
+      >
+        <path d={s.vLine} fill="none" stroke="var(--vdl-800)"
+          strokeWidth={SW} strokeLinecap="round" clipPath={clip} />
+        <path d={s.frontEdge} fill="none" stroke="var(--vdl-800)"
+          strokeWidth={SW} strokeLinecap="round" clipPath={clip} />
+        <g transform={s.frontTransform}>
+          <FrontContent type={panel.type} />
+        </g>
       </g>
     </g>
   );
@@ -317,7 +334,7 @@ function ScreenNode({ panel }) {
 
 // ── Main Component ──────────────────────────────────────
 
-const DesignAsBuild = forwardRef((props, ref) => {
+const DesignAsBuild = forwardRef(({ delay: baseDelay = 0, ...props }, ref) => {
   const innerRef = useRef(null);
   const [inView, setInView] = useState(false);
 
@@ -346,7 +363,12 @@ const DesignAsBuild = forwardRef((props, ref) => {
     { id: 'left',   pts: [s[0].leftBottom,  s[1].leftBottom,  s[2].leftBottom]  },
   ];
 
-  const cls = (delay) => inView ? `dab-anim dab-d${delay}` : 'dab-hidden';
+  // 패널별 타이밍
+  const panelTimings = panels.map((_, i) => ({
+    draw: baseDelay + i * PANEL_STAGGER,
+    content: baseDelay + i * PANEL_STAGGER + DRAW_DUR - 100,
+    conn: baseDelay + i * PANEL_STAGGER + DRAW_DUR - 50,
+  }));
 
   return (
     <svg
@@ -361,22 +383,31 @@ const DesignAsBuild = forwardRef((props, ref) => {
       {...props}
     >
       <style>{`
-        @keyframes dab-enter {
-          from { opacity: 0.01; transform: translateY(12px); }
-          to   { opacity: 1;    transform: translateY(0); }
+        @keyframes dab-draw {
+          to { stroke-dashoffset: 0; fill-opacity: 0.85; }
+        }
+        @keyframes dab-fade {
+          to { opacity: 1; }
+        }
+        .dab-outline-hidden {
+          stroke-dasharray: var(--len);
+          stroke-dashoffset: var(--len);
+          fill-opacity: 0;
+        }
+        .dab-draw {
+          stroke-dasharray: var(--len);
+          stroke-dashoffset: var(--len);
+          fill-opacity: 0;
+          animation: dab-draw ${DRAW_DUR}ms ease-out var(--delay) forwards;
         }
         .dab-hidden { opacity: 0.01; }
-        .dab-anim {
+        .dab-fade {
           opacity: 0.01;
-          animation: dab-enter 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+          animation: dab-fade 300ms ease-out var(--delay) forwards;
         }
-        .dab-d0 { animation-delay: 0ms; }
-        .dab-d1 { animation-delay: 200ms; }
-        .dab-d2 { animation-delay: 400ms; }
-        .dab-d3 { animation-delay: 600ms; }
-        .dab-d4 { animation-delay: 800ms; }
         @media (prefers-reduced-motion: reduce) {
-          .dab-anim { animation: none; opacity: 1; }
+          .dab-draw { fill-opacity: 0.85; stroke-dashoffset: 0; animation: none; }
+          .dab-fade { opacity: 1; animation: none; }
         }
       `}</style>
       <defs>
@@ -410,13 +441,15 @@ const DesignAsBuild = forwardRef((props, ref) => {
 
       {/* ── Painter's model: back → front ── */}
 
-      {/* Back: Code panel (d0) */}
-      <g className={cls(0)}>
-        <ScreenNode panel={panels[0]} />
-      </g>
+      {/* Back: Code panel */}
+      <ScreenNode panel={panels[0]} inView={inView}
+        drawDelay={panelTimings[0].draw} contentDelay={panelTimings[0].content} />
 
-      {/* Connection lines: code → anatomy (d1) */}
-      <g className={cls(1)}>
+      {/* Connection lines: code → anatomy */}
+      <g
+        className={inView ? 'dab-fade' : 'dab-hidden'}
+        style={{ '--delay': `${panelTimings[0].conn}ms` }}
+      >
         {connLines.map((conn) => (
           <line key={`c1-${conn.id}`}
             x1={conn.pts[0].x} y1={conn.pts[0].y}
@@ -427,13 +460,15 @@ const DesignAsBuild = forwardRef((props, ref) => {
         ))}
       </g>
 
-      {/* Middle: Anatomy panel (d2) */}
-      <g className={cls(2)}>
-        <ScreenNode panel={panels[1]} />
-      </g>
+      {/* Middle: Anatomy panel */}
+      <ScreenNode panel={panels[1]} inView={inView}
+        drawDelay={panelTimings[1].draw} contentDelay={panelTimings[1].content} />
 
-      {/* Connection lines: anatomy → ui (d3) */}
-      <g className={cls(3)}>
+      {/* Connection lines: anatomy → ui */}
+      <g
+        className={inView ? 'dab-fade' : 'dab-hidden'}
+        style={{ '--delay': `${panelTimings[1].conn}ms` }}
+      >
         {connLines.map((conn) => (
           <line key={`c2-${conn.id}`}
             x1={conn.pts[1].x} y1={conn.pts[1].y}
@@ -444,10 +479,9 @@ const DesignAsBuild = forwardRef((props, ref) => {
         ))}
       </g>
 
-      {/* Front: UI panel (d4) */}
-      <g className={cls(4)}>
-        <ScreenNode panel={panels[2]} />
-      </g>
+      {/* Front: UI panel */}
+      <ScreenNode panel={panels[2]} inView={inView}
+        drawDelay={panelTimings[2].draw} contentDelay={panelTimings[2].content} />
     </svg>
   );
 });

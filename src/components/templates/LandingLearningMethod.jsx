@@ -1,4 +1,5 @@
 'use client';
+import { useRef, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
@@ -13,6 +14,7 @@ import { Network, BookOpenText, UsersRound, Layers } from 'lucide-react';
 import { COL_STAGGER } from '../motion/constants';
 import { PAGES } from '../../data/contents';
 import { INSTRUCTOR_PROFILE } from '../../data/courseDetailMockData';
+import { useInView } from '../../hooks/useInView';
 
 const { learningMethod } = PAGES.landing;
 const { instructor } = PAGES.courseDetail;
@@ -29,6 +31,15 @@ const METHOD_ICONS = [Network, BookOpenText, UsersRound, Layers];
  * <LandingLearningMethod />
  */
 export function LandingLearningMethod() {
+  const videoRef = useRef(null);
+  const [inViewRef, isInView] = useInView({ trigger: 0.3 });
+
+  useEffect(() => {
+    if (isInView && videoRef.current) {
+      videoRef.current.play();
+    }
+  }, [isInView]);
+
   return (
     <SectionContainer>
       <SectionDivider label="Method" sx={{ mb: 3 }} />
@@ -45,10 +56,16 @@ export function LandingLearningMethod() {
             <Grid container spacing={3}>
               <Grid size={{ xs: 12, md: 6 }}>
                 <Box
-                  component="img"
-                  src={INSTRUCTOR_PROFILE.imageSrc}
-                  alt={INSTRUCTOR_PROFILE.name}
-                  sx={{ width: '100%', height: 'auto' }}
+                  ref={(node) => {
+                    videoRef.current = node;
+                    inViewRef(node);
+                  }}
+                  component="video"
+                  src="/assets/lead/lead-profile-v18-1.mp4"
+                  poster={INSTRUCTOR_PROFILE.imageSrc}
+                  muted
+                  playsInline
+                  sx={{ width: '100%', height: 'auto', borderRadius: '2px' }}
                 />
               </Grid>
               <Grid size={{ xs: 12, md: 6 }}>

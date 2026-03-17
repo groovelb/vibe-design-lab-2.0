@@ -29,6 +29,17 @@ const ORIGIN = { x: 260, y: 153 };
 const CONN_STROKE = 'var(--vdl-800)';
 const CONN_DOT = 'var(--vdl-800)';
 
+// ── Animation timing (ms) ───────────────────────────────
+const DRAW_DUR = 400;
+const LINE_DUR = 300;
+const T = {
+  ROOT_DRAW: 0,      ROOT_CONTENT: 300,
+  CONN_01: 550,
+  L1_DRAW: 750,      L1_CONTENT: 1050,
+  CONN_12: 1250,
+  L2_DRAW: 1450,     L2_CONTENT: 1750,
+};
+
 // ── Slab builder (V3 buildRectSlab 구조 동일) ──────────────
 // Q-curve rounding: B/D split (upper+vert+lower), A/C face↔face
 
@@ -105,9 +116,10 @@ function buildVstSlab(ix, iy, iz, w, h, cornerR, origin) {
   const frontEdge = `M${r(pC_M.x)} ${r(pC_M.y)}L${r(pC_M.x)} ${r(Sy(pC_M.y))}`;
 
   const topTransform = `matrix(1, 0.5, -1, 0.5, ${r(cx)}, ${r(topY)})`;
+  const pathLen = Math.ceil(4.5 * hd + 2 * bh);
 
   return {
-    outline, vLine, frontEdge, topTransform,
+    outline, vLine, frontEdge, topTransform, pathLen,
     hd, bh, cx, topY,
     top: A,
     right: B,
@@ -294,43 +306,111 @@ function TopFaceContent({ type, hd }) {
 
 // ── Slab renderer ────────────────────────────────────────
 
-function SlabNode({ node }) {
+function SlabNode({ node, inView, drawDelay, contentDelay }) {
   const s = node.slab;
   const clip = `url(#vst-clip-${node.id})`;
 
   return (
     <g filter="url(#vsts)">
-      <path d={s.outline} fill="var(--vdl-950)" stroke="white" strokeWidth={SW} strokeLinejoin="round" />
-      <path d={s.vLine} fill="none" stroke="var(--vdl-800)" strokeWidth={SW} strokeLinecap="round" clipPath={clip} />
-      <path d={s.frontEdge} fill="none" stroke="var(--vdl-800)" strokeWidth={SW} strokeLinecap="round" clipPath={clip} />
-      <g transform={s.topTransform}>
-        <TopFaceContent type={node.type} hd={s.hd} />
+      {/* Phase 1: outline draws itself */}
+      <path
+        d={s.outline} fill="var(--vdl-950)" stroke="white"
+        strokeWidth={SW} strokeLinejoin="round"
+        className={inView ? 'vst-draw' : 'vst-outline-hidden'}
+        style={{ '--len': s.pathLen, '--delay': `${drawDelay}ms` }}
+      />
+      {/* Phase 2: inner content fades in */}
+      <g
+        className={inView ? 'vst-fade' : 'vst-hidden'}
+        style={{ '--delay': `${contentDelay}ms` }}
+      >
+        <path d={s.vLine} fill="none" stroke="var(--vdl-800)" strokeWidth={SW} strokeLinecap="round" clipPath={clip} />
+        <path d={s.frontEdge} fill="none" stroke="var(--vdl-800)" strokeWidth={SW} strokeLinecap="round" clipPath={clip} />
+        <g transform={s.topTransform}>
+          <TopFaceContent type={node.type} hd={s.hd} />
+        </g>
       </g>
     </g>
   );
 }
 
+// ── Direction-aware face connection ──────────────────────
+// 슬랩 다이아몬드 4면: AB(우상), BC(우하), CD(좌하), DA(좌상)
+// 각 면의 법선과 방향벡터 내적으로 가장 가까운 면을 결정한 뒤,
+// 해당 면의 하단 변 중점(출발) 또는 상단 변 중점(도착)을 반환.
+
+function faceMid(slab, face, isBottom) {
+  const { cx, hd, topY, bh } = slab;
+  const y0 = isBottom ? bh : 0;
+  const pts = {
+    AB: { x: cx + hd / 2, y: topY + hd / 4 + y0 },
+    BC: { x: cx + hd / 2, y: topY + hd * 3 / 4 + y0 },
+    CD: { x: cx - hd / 2, y: topY + hd * 3 / 4 + y0 },
+    DA: { x: cx - hd / 2, y: topY + hd / 4 + y0 },
+  };
+  return pts[face];
+}
+
+function nearestFace(dx, dy) {
+  const d = [
+    { f: 'AB', v: dx - 2 * dy },
+    { f: 'BC', v: dx + 2 * dy },
+    { f: 'CD', v: -dx + 2 * dy },
+    { f: 'DA', v: -dx - 2 * dy },
+  ];
+  return d.reduce((a, b) => (a.v > b.v ? a : b)).f;
+}
+
+// 트리 깊이 방향(Δiy=5, Δiz=-8)의 화면 벡터로 면 결정.
+// ix 편차를 무시해야 모든 연결이 동일 면(CD 출발, AB 도착)을 사용.
+const TREE_DIR = (() => {
+  const diy = 5, diz = -8;
+  return { dx: -diy * 8, dy: diy * 4 - diz * 8 };
+})();
+
+function connPoints(parentSlab, childSlab) {
+  return {
+    from: faceMid(parentSlab, nearestFace(TREE_DIR.dx, TREE_DIR.dy), true),
+    to: faceMid(childSlab, nearestFace(-TREE_DIR.dx, -TREE_DIR.dy), false),
+  };
+}
+
 // ── Connection Line + Junction Dots ─────────────────────
 
-function ConnLine({ from, to }) {
+function ConnLine({ from, to, inView, lineDelay }) {
+  const dx = to.x - from.x;
+  const dy = to.y - from.y;
+  const len = Math.ceil(Math.sqrt(dx * dx + dy * dy));
+
   return (
     <g>
       <line
         x1={r(from.x)} y1={r(from.y)}
         x2={r(to.x)} y2={r(to.y)}
         stroke={CONN_STROKE} strokeWidth={0.5}
+        className={inView ? 'vst-line' : 'vst-line-hidden'}
+        style={{ '--len': len, '--delay': `${lineDelay}ms` }}
       />
-      <circle cx={r(from.x)} cy={r(from.y)} r={1.5} fill="white" />
-      <circle cx={r(to.x)} cy={r(to.y)} r={1.5} fill="white" />
+      <circle
+        cx={r(from.x)} cy={r(from.y)} r={1.5} fill="white"
+        className={inView ? 'vst-fade' : 'vst-hidden'}
+        style={{ '--delay': `${lineDelay}ms` }}
+      />
+      <circle
+        cx={r(to.x)} cy={r(to.y)} r={1.5} fill="white"
+        className={inView ? 'vst-fade' : 'vst-hidden'}
+        style={{ '--delay': `${lineDelay + LINE_DUR - 50}ms` }}
+      />
     </g>
   );
 }
 
 // ── Main Component ──────────────────────────────────────
 
-const VibeStandardTree = forwardRef((props, ref) => {
+const VibeStandardTree = forwardRef(({ delay: baseDelay = 0, ...props }, ref) => {
   const innerRef = useRef(null);
   const [inView, setInView] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     const el = innerRef.current;
@@ -348,11 +428,6 @@ const VibeStandardTree = forwardRef((props, ref) => {
     slab: buildVstSlab(n.ix, n.iy, n.iz, n.w, n.h, n.cr, ORIGIN),
   }));
 
-  const dots = LEAF_DOTS.map((d) => ({
-    ...d,
-    screen: isoToScreen(d.ix, d.iy, d.iz, ORIGIN),
-  }));
-
   const nodeMap = Object.fromEntries(nodes.map((n) => [n.id, n]));
 
   // Painter's model: back-to-front (ix ascending within level)
@@ -360,7 +435,8 @@ const VibeStandardTree = forwardRef((props, ref) => {
   const sortedL1 = nodes.filter((n) => n.level === 1).sort((a, b) => a.ix - b.ix);
   const sortedL2 = nodes.filter((n) => n.level === 2).sort((a, b) => a.ix - b.ix);
 
-  const cls = (delay) => inView ? `vst-anim vst-d${delay}` : 'vst-hidden';
+  // Offset all timings by baseDelay (syncs with AreaConstruct reveal)
+  const d = Object.fromEntries(Object.entries(T).map(([k, v]) => [k, v + baseDelay]));
 
   return (
     <svg
@@ -372,26 +448,68 @@ const VibeStandardTree = forwardRef((props, ref) => {
       xmlns="http://www.w3.org/2000/svg"
       viewBox={`${VB_X} ${VB_Y} ${VB_W} ${VB_H}`}
       fill="none"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       {...props}
     >
       <style>{`
-        @keyframes vst-enter {
-          from { opacity: 0.01; transform: translateY(12px); }
-          to   { opacity: 1;    transform: translateY(0); }
+        @keyframes vst-draw {
+          to { stroke-dashoffset: 0; fill-opacity: 1; }
+        }
+        @keyframes vst-fade {
+          to { opacity: 1; }
+        }
+        @keyframes vst-line-draw {
+          to { stroke-dashoffset: 0; }
+        }
+        .vst-outline-hidden {
+          stroke-dasharray: var(--len);
+          stroke-dashoffset: var(--len);
+          fill-opacity: 0;
+        }
+        .vst-draw {
+          stroke-dasharray: var(--len);
+          stroke-dashoffset: var(--len);
+          fill-opacity: 0;
+          animation: vst-draw ${DRAW_DUR}ms ease-out var(--delay) forwards;
         }
         .vst-hidden { opacity: 0.01; }
-        .vst-anim {
+        .vst-fade {
           opacity: 0.01;
-          animation: vst-enter 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+          animation: vst-fade 300ms ease-out var(--delay) forwards;
         }
-        .vst-d0 { animation-delay: 0ms; }
-        .vst-d1 { animation-delay: 300ms; }
-        .vst-d2 { animation-delay: 400ms; }
-        .vst-d3 { animation-delay: 800ms; }
-        .vst-d4 { animation-delay: 900ms; }
-        .vst-d5 { animation-delay: 1400ms; }
+        .vst-line-hidden {
+          stroke-dasharray: var(--len);
+          stroke-dashoffset: var(--len);
+        }
+        .vst-line {
+          stroke-dasharray: var(--len);
+          stroke-dashoffset: var(--len);
+          animation: vst-line-draw ${LINE_DUR}ms ease-out var(--delay) forwards;
+        }
+        .vst-glow-halo {
+          opacity: 0.01;
+          transition: opacity 400ms ease-out 0ms;
+        }
+        .vst-glow-fill {
+          opacity: 0.01;
+          transition: opacity 300ms ease-out 0ms;
+        }
+        .vst-hovered .vst-glow-halo {
+          opacity: 0.4;
+          transition-delay: var(--glow-delay);
+        }
+        .vst-hovered .vst-glow-fill {
+          opacity: 0.15;
+          transition-delay: var(--glow-delay);
+        }
         @media (prefers-reduced-motion: reduce) {
-          .vst-anim { animation: none; opacity: 1; }
+          .vst-draw { fill-opacity: 1; stroke-dashoffset: 0; animation: none; }
+          .vst-fade { opacity: 1; animation: none; }
+          .vst-line { stroke-dashoffset: 0; animation: none; }
+          .vst-glow-halo, .vst-glow-fill { transition: none; }
+          .vst-hovered .vst-glow-halo { opacity: 0.4; }
+          .vst-hovered .vst-glow-fill { opacity: 0.15; }
         }
       `}</style>
       <defs>
@@ -416,6 +534,9 @@ const VibeStandardTree = forwardRef((props, ref) => {
           <feBlend in2="bg" result="shadow" />
           <feBlend in="SourceGraphic" in2="shadow" result="shape" />
         </filter>
+        <filter id="vst-glow-f" x="-100%" y="-100%" width="300%" height="300%">
+          <feGaussianBlur stdDeviation="4" />
+        </filter>
         {nodes.map((n) => (
           <clipPath key={n.id} id={`vst-clip-${n.id}`}>
             <path d={n.slab.outline} />
@@ -425,45 +546,55 @@ const VibeStandardTree = forwardRef((props, ref) => {
 
       {/* ── Slabs: back(Root) → front(L2) ── */}
 
-      {/* ── Root slab (d0) ── */}
+      {/* ── Root slab ── */}
       {root && (
-        <g className={cls(0)}>
-          <SlabNode node={root} />
-        </g>
+        <SlabNode node={root} inView={inView} drawDelay={d.ROOT_DRAW} contentDelay={d.ROOT_CONTENT} />
       )}
 
-      {/* ── L1 slabs (d2) ── */}
+      {/* ── L1 slabs ── */}
       {sortedL1.map((n) => (
-        <g key={n.id} className={cls(2)}>
-          <SlabNode node={n} />
-        </g>
+        <SlabNode key={n.id} node={n} inView={inView} drawDelay={d.L1_DRAW} contentDelay={d.L1_CONTENT} />
       ))}
 
-      {/* ── L2 slabs (d4) ── */}
+      {/* ── L2 slabs ── */}
       {sortedL2.map((n) => (
-        <g key={n.id} className={cls(4)}>
-          <SlabNode node={n} />
-        </g>
+        <SlabNode key={n.id} node={n} inView={inView} drawDelay={d.L2_DRAW} contentDelay={d.L2_CONTENT} />
       ))}
 
       {/* ── Connections on top of slabs ── */}
 
-      {/* ── Root → L1 connections (d1) ── */}
-      <g className={cls(1)}>
-        {sortedL1.map((n) => {
-          const p = nodeMap[n.parent];
-          if (!p) return null;
-          return <ConnLine key={`c-${n.id}`} from={p.slab.bottomCenter} to={n.slab.topCenter} />;
-        })}
-      </g>
+      {/* ── Root → L1 connections ── */}
+      {sortedL1.map((n) => {
+        const p = nodeMap[n.parent];
+        if (!p) return null;
+        const { from, to } = connPoints(p.slab, n.slab);
+        return <ConnLine key={`c-${n.id}`} from={from} to={to} inView={inView} lineDelay={d.CONN_01} />;
+      })}
 
-      {/* ── L1 → L2 connections (d3) ── */}
-      <g className={cls(3)}>
-        {sortedL2.map((n) => {
-          const p = nodeMap[n.parent];
-          if (!p) return null;
-          return <ConnLine key={`c-${n.id}`} from={p.slab.bottomCenter} to={n.slab.topCenter} />;
-        })}
+      {/* ── L1 → L2 connections ── */}
+      {sortedL2.map((n) => {
+        const p = nodeMap[n.parent];
+        if (!p) return null;
+        const { from, to } = connPoints(p.slab, n.slab);
+        return <ConnLine key={`c-${n.id}`} from={from} to={to} inView={inView} lineDelay={d.CONN_12} />;
+      })}
+
+      {/* ── L2 slab glow (hover) ── */}
+      <g className={isHovered ? 'vst-hovered' : undefined}>
+        {sortedL2.map((n, i) => (
+          <g key={`glow-${n.id}`} style={{ '--glow-delay': `${i * 80}ms` }}>
+            <path
+              d={n.slab.outline}
+              fill="var(--vdl-200)" filter="url(#vst-glow-f)"
+              className="vst-glow-halo"
+            />
+            <path
+              d={n.slab.outline}
+              fill="var(--vdl-200)"
+              className="vst-glow-fill"
+            />
+          </g>
+        ))}
       </g>
 
     </svg>
