@@ -30,7 +30,7 @@ const FF_H = 62.5;
 // ── 3 패널 정의 ─────────────────────────────────────────
 const PANELS = [
   { id: 'code',    iy: 0,  fw: 100, fd: 7, bh: 64, type: 'code' },
-  { id: 'anatomy', iy: 11, fw: 135, fd: 8, bh: 86, type: 'anatomy' },
+  { id: 'anatomy', iy: 11, fw: 140, fd: 8, bh: 89.5, type: 'anatomy' },
   { id: 'ui',      iy: 22, fw: 180, fd: 9, bh: 115, type: 'ui' },
 ];
 
@@ -337,22 +337,13 @@ const DesignAsBuild = forwardRef((props, ref) => {
     screen: buildDabScreen(p.iy, p.fw, p.fd, p.bh, ORIGIN),
   }));
 
-  // 점선 연결 좌표: 전면 (u, v) 비율로 각 패널의 대응 요소 위치 지정
+  // 점선 연결: 각 패널의 대응 꼭짓점 4개를 잇는 직선
+  const s = panels.map((p) => p.screen);
   const connLines = [
-    { // Badge line: code <Badge> → anatomy idle → UI badge pill
-      points: [
-        panels[0].screen.frontPoint(0.45, 0.58),
-        panels[1].screen.frontPoint(0.5, 0.18),
-        panels[2].screen.frontPoint(0.12, 0.28),
-      ],
-    },
-    { // Button line: code <Button> → anatomy active → UI CTA button
-      points: [
-        panels[0].screen.frontPoint(0.45, 0.70),
-        panels[1].screen.frontPoint(0.78, 0.42),
-        panels[2].screen.frontPoint(0.28, 0.82),
-      ],
-    },
+    { id: 'top',    pts: [s[0].top,         s[1].top,         s[2].top]         },
+    { id: 'right',  pts: [s[0].rightBottom, s[1].rightBottom, s[2].rightBottom] },
+    { id: 'front',  pts: [s[0].frontBottom, s[1].frontBottom, s[2].frontBottom] },
+    { id: 'left',   pts: [s[0].leftBottom,  s[1].leftBottom,  s[2].leftBottom]  },
   ];
 
   const cls = (delay) => inView ? `dab-anim dab-d${delay}` : 'dab-hidden';
@@ -424,18 +415,15 @@ const DesignAsBuild = forwardRef((props, ref) => {
         <ScreenNode panel={panels[0]} />
       </g>
 
-      {/* Connection lines behind middle panel (d1) */}
+      {/* Connection lines: code → anatomy (d1) */}
       <g className={cls(1)}>
-        {connLines.map((conn, ci) => (
-          <g key={`conn-back-${ci}`}>
-            <line
-              x1={conn.points[0].x} y1={conn.points[0].y}
-              x2={conn.points[1].x} y2={conn.points[1].y}
-              stroke="white" strokeWidth={SW}
-              strokeDasharray="3 2" opacity={0.5}
-            />
-            <circle cx={conn.points[0].x} cy={conn.points[0].y} r={1.5} fill="white" />
-          </g>
+        {connLines.map((conn) => (
+          <line key={`c1-${conn.id}`}
+            x1={conn.pts[0].x} y1={conn.pts[0].y}
+            x2={conn.pts[1].x} y2={conn.pts[1].y}
+            stroke="white" strokeWidth={SW}
+            strokeDasharray="3 2" opacity={0.4}
+          />
         ))}
       </g>
 
@@ -444,19 +432,15 @@ const DesignAsBuild = forwardRef((props, ref) => {
         <ScreenNode panel={panels[1]} />
       </g>
 
-      {/* Connection lines behind front panel (d3) */}
+      {/* Connection lines: anatomy → ui (d3) */}
       <g className={cls(3)}>
-        {connLines.map((conn, ci) => (
-          <g key={`conn-front-${ci}`}>
-            <line
-              x1={conn.points[1].x} y1={conn.points[1].y}
-              x2={conn.points[2].x} y2={conn.points[2].y}
-              stroke="white" strokeWidth={SW}
-              strokeDasharray="3 2" opacity={0.5}
-            />
-            <circle cx={conn.points[1].x} cy={conn.points[1].y} r={1.5} fill="white" />
-            <circle cx={conn.points[2].x} cy={conn.points[2].y} r={1.5} fill="white" />
-          </g>
+        {connLines.map((conn) => (
+          <line key={`c2-${conn.id}`}
+            x1={conn.pts[1].x} y1={conn.pts[1].y}
+            x2={conn.pts[2].x} y2={conn.pts[2].y}
+            stroke="white" strokeWidth={SW}
+            strokeDasharray="3 2" opacity={0.4}
+          />
         ))}
       </g>
 

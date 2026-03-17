@@ -2,8 +2,10 @@
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Grid';
+import Chip from '@mui/material/Chip';
 import { SectionContainer } from '../container/SectionContainer';
 import LineGrid from '../layout/LineGrid';
+import MarqueeContainer from '../motion/MarqueeContainer';
 import { AreaConstruct } from '../motion/AreaConstruct';
 import { ConstructType } from '../motion/ConstructType';
 import { ConstructBlock } from '../motion/ConstructBlock';
@@ -45,6 +47,27 @@ export function LandingProblem() {
             isSplitSentences={false}
             sx={{ letterSpacing: '-0.02em', wordSpacing: '0.15em', '& .MuiTypography-root': { lineHeight: 1.71 } }}
           />
+          <Box sx={{ mt: 4 }}>
+            <MarqueeContainer speed={25} direction="left" isPauseOnHover={false} isScrollScrub gap={1.5}>
+              {problem.tags.map((tag) => (
+                <Chip
+                  key={tag}
+                  label={tag}
+                  variant="outlined"
+                  sx={{
+                    bgcolor: 'transparent',
+                    color: 'common.white',
+                    borderColor: 'common.white',
+                    fontWeight: 700,
+                    fontSize: '1.75rem',
+                    height: 76,
+                    borderRadius: '38px',
+                    '& .MuiChip-label': { px: 4 },
+                  }}
+                />
+              ))}
+            </MarqueeContainer>
+          </Box>
         </Box>
         <LineGrid container gap={144} borderColor="divider">
           {problem.career.filter((_, i) => VISIBLE_INDICES.includes(i)).map((item, index) => {
