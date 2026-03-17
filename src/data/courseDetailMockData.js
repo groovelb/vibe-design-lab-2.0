@@ -91,6 +91,7 @@ export const FAQ_ITEMS = [
 
 export const INSTRUCTOR_PROFILE = {
   name: 'DDD',
+  imageSrc: '/assets/lead/lead-profile-v18-1.png',
   titles: [
     'Data Driven Design 대표',
     'Vibe Design Lab 운영',

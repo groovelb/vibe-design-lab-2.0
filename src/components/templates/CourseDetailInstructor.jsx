@@ -36,6 +36,7 @@ export function CourseDetailInstructor() {
       {/* 프로필 블록 */}
       <FadeTransition direction="up" delay={100} isTriggerOnView>
         <ProfileBlock
+          imageSrc={INSTRUCTOR_PROFILE.imageSrc}
           name={INSTRUCTOR_PROFILE.name}
           titles={INSTRUCTOR_PROFILE.titles}
           projects={INSTRUCTOR_PROFILE.projects}

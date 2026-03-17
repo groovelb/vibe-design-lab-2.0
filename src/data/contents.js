@@ -150,6 +150,16 @@ export const PAGES = {
         },
       ],
     },
+    courseLead: {
+      label: 'Course Lead',
+      name: 'DDD',
+      role: '10년차 디자인 엔지니어',
+      description: '디자인과 개발의 경계를 허무는 실무자. 금융·ESG·브랜딩 등 다양한 산업의 인터랙티브 프로젝트를 설계하고 직접 구현해왔습니다.',
+      credentials: [
+        'Data Driven Design 대표',
+        'Coloso 인터랙티브 바이브 코딩 강의',
+      ],
+    },
     courseHighlight: {
       headline: '코스',
       ctaPrimary: '자세히 보기',
