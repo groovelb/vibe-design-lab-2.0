@@ -130,29 +130,29 @@ const TREE_NODES = [
   // L0 Root — (0, 0, 0)
   { id: 'root', level: 0, ix: 0, iy: 0, iz: 0, w: 5.1, h: 1.48, cr: 0.85, type: 'dashboard', parent: null },
 
-  // L1 — iy=5, iz=-8, ix=[-7.5, -2.5, 2.5, 7.5] (δ₁=5, 등간격)
-  { id: 'l1a', level: 1, ix: -7.5, iy: 5, iz: -8, w: 3.65, h: 1.25, cr: 0.65, type: 'browser',    parent: 'root' },
-  { id: 'l1b', level: 1, ix: -2.5, iy: 5, iz: -8, w: 3.65, h: 1.25, cr: 0.65, type: 'sCurve',     parent: 'root' },
-  { id: 'l1c', level: 1, ix: 2.5,  iy: 5, iz: -8, w: 3.65, h: 1.25, cr: 0.65, type: 'artboard',   parent: 'root' },
-  { id: 'l1d', level: 1, ix: 7.5,  iy: 5, iz: -8, w: 3.65, h: 1.25, cr: 0.65, type: 'splitPanel', parent: 'root' },
+  // L1 — iy=5, iz=-8, ix=[-9, -3, 3, 9] (L2 쌍 중심, 등간격 6)
+  { id: 'l1a', level: 1, ix: -9, iy: 5, iz: -8, w: 3.65, h: 1.25, cr: 0.65, type: 'browser',    parent: 'root' },
+  { id: 'l1b', level: 1, ix: -3, iy: 5, iz: -8, w: 3.65, h: 1.25, cr: 0.65, type: 'sCurve',     parent: 'root' },
+  { id: 'l1c', level: 1, ix: 3,  iy: 5, iz: -8, w: 3.65, h: 1.25, cr: 0.65, type: 'artboard',   parent: 'root' },
+  { id: 'l1d', level: 1, ix: 9,  iy: 5, iz: -8, w: 3.65, h: 1.25, cr: 0.65, type: 'splitPanel', parent: 'root' },
 
-  // L2 — iy=10, iz=-16, parent.ix ± δ₂(1.5)
-  { id: 'l2a1', level: 2, ix: -9,  iy: 10, iz: -16, w: 1.8, h: 1.25, cr: 0.35, type: 'pill',     parent: 'l1a' },
-  { id: 'l2a2', level: 2, ix: -6,  iy: 10, iz: -16, w: 1.8, h: 1.25, cr: 0.35, type: 'diagonal', parent: 'l1a' },
-  { id: 'l2b1', level: 2, ix: -4,  iy: 10, iz: -16, w: 1.8, h: 1.25, cr: 0.35, type: 'zigzag',  parent: 'l1b' },
-  { id: 'l2b2', level: 2, ix: -1,  iy: 10, iz: -16, w: 1.8, h: 1.25, cr: 0.35, type: 'list',    parent: 'l1b' },
-  { id: 'l2c1', level: 2, ix: 1,   iy: 10, iz: -16, w: 1.8, h: 1.25, cr: 0.35, type: 'grid',    parent: 'l1c' },
-  { id: 'l2c2', level: 2, ix: 4,   iy: 10, iz: -16, w: 1.8, h: 1.25, cr: 0.35, type: 'letterA', parent: 'l1c' },
-  { id: 'l2d1', level: 2, ix: 6,   iy: 10, iz: -16, w: 1.8, h: 1.25, cr: 0.35, type: 'circles', parent: 'l1d' },
-  { id: 'l2d2', level: 2, ix: 9,   iy: 10, iz: -16, w: 1.8, h: 1.25, cr: 0.35, type: 'chevron', parent: 'l1d' },
+  // L2 — iy=10, iz=-16, 균등 간격 step=3 (ix: -10.5 ~ 10.5)
+  { id: 'l2a1', level: 2, ix: -10.5, iy: 10, iz: -16, w: 1.8, h: 1.25, cr: 0.35, type: 'pill',     parent: 'l1a' },
+  { id: 'l2a2', level: 2, ix: -7.5,  iy: 10, iz: -16, w: 1.8, h: 1.25, cr: 0.35, type: 'diagonal', parent: 'l1a' },
+  { id: 'l2b1', level: 2, ix: -4.5,  iy: 10, iz: -16, w: 1.8, h: 1.25, cr: 0.35, type: 'zigzag',  parent: 'l1b' },
+  { id: 'l2b2', level: 2, ix: -1.5,  iy: 10, iz: -16, w: 1.8, h: 1.25, cr: 0.35, type: 'list',    parent: 'l1b' },
+  { id: 'l2c1', level: 2, ix: 1.5,   iy: 10, iz: -16, w: 1.8, h: 1.25, cr: 0.35, type: 'grid',    parent: 'l1c' },
+  { id: 'l2c2', level: 2, ix: 4.5,   iy: 10, iz: -16, w: 1.8, h: 1.25, cr: 0.35, type: 'letterA', parent: 'l1c' },
+  { id: 'l2d1', level: 2, ix: 7.5,   iy: 10, iz: -16, w: 1.8, h: 1.25, cr: 0.35, type: 'circles', parent: 'l1d' },
+  { id: 'l2d2', level: 2, ix: 10.5,  iy: 10, iz: -16, w: 1.8, h: 1.25, cr: 0.35, type: 'chevron', parent: 'l1d' },
 ];
 
 // L3 Leaf dots — iy=13, iz=-20, parent.ix 직하
 const LEAF_DOTS = [
-  { id: 'l3a', ix: -9, iy: 13, iz: -20, parent: 'l2a1' },
-  { id: 'l3b', ix: -1, iy: 13, iz: -20, parent: 'l2b2' },
-  { id: 'l3c', ix: 1,  iy: 13, iz: -20, parent: 'l2c1' },
-  { id: 'l3d', ix: 9,  iy: 13, iz: -20, parent: 'l2d2' },
+  { id: 'l3a', ix: -10.5, iy: 13, iz: -20, parent: 'l2a1' },
+  { id: 'l3b', ix: -1.5,  iy: 13, iz: -20, parent: 'l2b2' },
+  { id: 'l3c', ix: 1.5,   iy: 13, iz: -20, parent: 'l2c1' },
+  { id: 'l3d', ix: 10.5,  iy: 13, iz: -20, parent: 'l2d2' },
 ];
 
 // ── Top Face Content (flat hd×hd 좌표계) ────────────────
