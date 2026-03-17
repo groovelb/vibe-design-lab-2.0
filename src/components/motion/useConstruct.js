@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useInView } from '../../hooks/useInView';
 import { T } from './constants';
+import { playConstructClick } from './constructSounds';
 
 /**
  * useConstruct 훅
@@ -73,7 +74,10 @@ export function useConstruct({ isTriggerOnView = true, delay = 0, trigger = 'cen
         t = setTimeout(() => setPhase('reveal'), T.scatter + T.settle);
         break;
       case 'reveal':
-        t = setTimeout(() => setPhase('done'), T.reveal + 150);
+        t = setTimeout(() => {
+          setPhase('done');
+          playConstructClick();
+        }, T.reveal + 150);
         break;
     }
     return () => clearTimeout(t);

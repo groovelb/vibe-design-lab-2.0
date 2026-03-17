@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { useInView } from '../../hooks/useInView';
 import { CURSOR_RATIO, EASE_OUT } from './constants';
+import { playConstructClick } from './constructSounds';
 
 const GRID_SLOTS = 16;
 const ACTIVE_COUNT = 7;
@@ -148,6 +149,7 @@ const ConstructBlock = forwardRef(function ConstructBlock(
       } else {
         lineEl.style.opacity = '0.01';
         textEl.style.clipPath = 'inset(0 0 0 0)';
+        playConstructClick();
       }
     };
 

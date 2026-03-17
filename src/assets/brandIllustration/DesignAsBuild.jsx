@@ -49,9 +49,12 @@ function buildDabScreen(iy, fw, fd, bh, origin) {
   const C = { x: cx + fw - fd, y: topY + (fw + fd) / 2 };
   const D = { x: cx - fd, y: topY + fd / 2 };
 
+  // CR 클램핑: 짧은 변(fd) 대비 코너가 겹치지 않도록
+  // 안전 조건: 2*cuf < fd*√5/2 → CR < fd*5/8
+  const cr = Math.min(CR, fd * 0.55);
   const s5 = Math.sqrt(5);
-  const cuf = CR * 2 / s5;
-  const cvf = CR / s5;
+  const cuf = cr * 2 / s5;
+  const cvf = cr / s5;
 
   const pA1 = { x: A.x - cuf, y: A.y + cvf };
   const pA2 = { x: A.x + cuf, y: A.y + cvf };
@@ -135,32 +138,31 @@ function FrontContent({ type }) {
   switch (type) {
     case 'code': {
       const lines = [
-        'function Card() {',
-        '  const [state,',
-        '    setState]',
-        '    = useState(\'idle\')',
-        '  return (',
-        '    <div onHover>',
-        '      <Badge status />',
-        '      <Button onClick />',
-        '    </div>',
-        '  )',
-        '}',
+        { t: 'function Card() {',           hi: false },
+        { t: '  const [state, setState]',    hi: false },
+        { t: '    = useState(\'idle\')',     hi: false },
+        { t: '  return (',                   hi: false },
+        { t: '    <div onHover={setState}>', hi: false },
+        { t: '      <Badge status />',       hi: true  },
+        { t: '      <Button onClick />',     hi: true  },
+        { t: '    </div>',                   hi: false },
+        { t: '  )',                           hi: false },
+        { t: '}',                             hi: false },
       ];
-      const lh = h / (lines.length + 1);
+      const lh = h / (lines.length + 0.5);
       return (
         <g>
-          {lines.map((text, i) => (
+          {lines.map((l, i) => (
             <text
               key={i}
               x={p + 2}
-              y={p + lh * (i + 1)}
+              y={p + lh * (i + 0.8)}
               fill={W}
-              fontSize={3.8}
+              fontSize={3.6}
               fontFamily="monospace"
-              opacity={text.includes('Badge') || text.includes('Button') ? 1 : 0.6}
+              opacity={l.hi ? 1 : 0.55}
             >
-              {text}
+              {l.t}
             </text>
           ))}
         </g>
@@ -214,60 +216,58 @@ function FrontContent({ type }) {
             </g>
           ))}
           {/* annotations */}
-          <text x={p + 2} y={FF_H - p - 6} fill={S} fontSize={3} fontFamily="monospace">
-            onHover → setState
+          <text x={midX} y={FF_H - p - 4} fill={S} fontSize={2.8} fontFamily="monospace"
+            textAnchor="middle" opacity={0.6}>
+            (onHover → setState,
           </text>
-          <text x={p + 2} y={FF_H - p - 2} fill={S} fontSize={3} fontFamily="monospace">
-            onClick → handler
+          <text x={midX} y={FF_H - p - 0.5} fill={S} fontSize={2.8} fontFamily="monospace"
+            textAnchor="middle" opacity={0.6}>
+            onClick → handler)
           </text>
         </g>
       );
     }
 
     case 'ui': {
-      const navH = 8;
+      const navH = 7;
       const cardX = p;
-      const cardY = p + navH + 3;
+      const cardY = p + navH + 2.5;
       const cardW = w * 0.62;
-      const cardH = h - navH - 8;
+      const cardH = h - navH - 6;
       const metX = p + cardW + 3;
       const metW = w - cardW - 3;
       const metH = (cardH - 4) / 3;
+      const nums = ['16', '264', '32'];
 
       return (
         <g fill="none" strokeWidth={SW}>
           {/* nav bar */}
           <circle cx={p + 4} cy={p + navH / 2} r={2.5} stroke={W} />
-          <line x1={p + 12} y1={p + navH / 2} x2={p + 20} y2={p + navH / 2} stroke={S} />
-          <line x1={p + 23} y1={p + navH / 2} x2={p + 31} y2={p + navH / 2} stroke={S} />
-          <line x1={p + 34} y1={p + navH / 2} x2={p + 42} y2={p + navH / 2} stroke={S} />
+          <text x={p + 12} y={p + navH / 2 + 1} fill={S} fontSize={2.6}
+            fontFamily="monospace">nav pill</text>
+          <text x={p + 30} y={p + navH / 2 + 1} fill={S} fontSize={2.6}
+            fontFamily="monospace">nav links</text>
           <circle cx={FF_W - p - 4} cy={p + navH / 2} r={2.2} stroke={S} />
-          <line x1={p} y1={p + navH} x2={FF_W - p} y2={p + navH} stroke={S} opacity={0.5} />
+          <line x1={p} y1={p + navH} x2={FF_W - p} y2={p + navH} stroke={S} opacity={0.4} />
 
           {/* hero card */}
           <rect x={cardX} y={cardY} width={cardW} height={cardH} rx={3} stroke={W} />
-          {/* badge pill */}
-          <rect x={cardX + 3} y={cardY + 3} width={14} height={4.5} rx={2.2}
-            stroke={W} strokeWidth={SW} />
           {/* title */}
-          <line x1={cardX + 3} y1={cardY + 12} x2={cardX + cardW - 6} y2={cardY + 12}
-            stroke={W} />
-          {/* subtitle */}
-          <line x1={cardX + 3} y1={cardY + 17} x2={cardX + cardW * 0.55} y2={cardY + 17}
-            stroke={S} />
-          {/* body lines */}
-          <line x1={cardX + 3} y1={cardY + 23} x2={cardX + cardW - 4} y2={cardY + 23}
-            stroke={S} opacity={0.5} />
-          <line x1={cardX + 3} y1={cardY + 27} x2={cardX + cardW * 0.7} y2={cardY + 27}
-            stroke={S} opacity={0.5} />
-          {/* CTA button */}
+          <text x={cardX + 3} y={cardY + 8} fill={W} fontSize={4.2}
+            fontFamily="sans-serif" fontWeight="bold">Vibe Design Labs</text>
+          {/* subtitle — BRAND.slogan */}
+          <text x={cardX + 3} y={cardY + 14} fill={S} fontSize={2.8}
+            fontFamily="monospace">Design at the Speed of Thought</text>
+          {/* body — VALUE_PROPOSITIONS */}
+          <text x={cardX + 3} y={cardY + 20} fill={S} fontSize={2.2}
+            fontFamily="monospace" opacity={0.5}>System Over Drawing · The Vibe Standard</text>
+          <text x={cardX + 3} y={cardY + 24} fill={S} fontSize={2.2}
+            fontFamily="monospace" opacity={0.5}>Design As Build</text>
+          {/* CTA button — white fill */}
           <rect x={cardX + 3} y={cardY + cardH - 10} width={cardW * 0.45} height={7} rx={3}
-            stroke={W} />
-          {/* cursor */}
-          <path
-            d={`M${cardX + 3 + cardW * 0.45 + 4} ${cardY + cardH - 5}l0 -7 5 5.5 -2.8 0.3 1.8 3z`}
-            fill={W} stroke="none"
-          />
+            fill={W} stroke="none" />
+          <text x={cardX + 3 + cardW * 0.225} y={cardY + cardH - 5.5} fill="var(--vdl-950)"
+            fontSize={2.8} fontFamily="monospace" textAnchor="middle" fontWeight="bold">Start</text>
 
           {/* metric cards */}
           {[0, 1, 2].map((i) => {
@@ -275,8 +275,8 @@ function FrontContent({ type }) {
             return (
               <g key={i}>
                 <rect x={metX} y={my} width={metW} height={metH} rx={2} stroke={S} />
-                <line x1={metX + 2} y1={my + metH * 0.35} x2={metX + metW * 0.45} y2={my + metH * 0.35}
-                  stroke={W} opacity={0.8} />
+                <text x={metX + 2} y={my + metH * 0.38} fill={W} fontSize={4}
+                  fontFamily="monospace" fontWeight="bold">{nums[i]}</text>
                 {/* sparkline */}
                 <path
                   d={`M${metX + 2} ${my + metH * 0.72}l${metW * 0.15} ${-metH * 0.15}l${metW * 0.12} ${metH * 0.1}l${metW * 0.18} ${-metH * 0.25}l${metW * 0.12} ${metH * 0.08}`}
@@ -302,7 +302,7 @@ function ScreenNode({ panel }) {
 
   return (
     <g filter="url(#dabs)">
-      <path d={s.outline} fill="var(--vdl-950)" stroke="white"
+      <path d={s.outline} fill="var(--vdl-950)" fillOpacity={0.85} stroke="white"
         strokeWidth={SW} strokeLinejoin="round" />
       <path d={s.vLine} fill="none" stroke="var(--vdl-800)"
         strokeWidth={SW} strokeLinecap="round" clipPath={clip} />

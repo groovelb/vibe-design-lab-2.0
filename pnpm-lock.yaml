@@ -50,9 +50,6 @@ importers:
       react-dom:
         specifier: ^19.2.0
         version: 19.2.0(react@19.2.0)
-      snd-lib:
-        specifier: ^1.2.4
-        version: 1.2.4
       three:
         specifier: ^0.182.0
         version: 0.182.0
@@ -3923,9 +3920,6 @@ packages:
   sirv@3.0.2:
     resolution: {integrity: sha512-2wcC/oGxHis/BoHkkPwldgiPSYcpZK3JU28WoMVv55yHJgcZ8rlXvuG9iZggz+sU1d4bRgIGASwyWqjxu3FM0g==}
     engines: {node: '>=18'}
-
-  snd-lib@1.2.4:
-    resolution: {integrity: sha512-Q8DnFVFGGb+buivj5aE4UIyJ3BI4j0qyARwxbkWsJPCEt1jMbBDD3nCTttZl1R0HcWFh5adDR3SHy/dSciwLvw==}
 
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
@@ -8611,10 +8605,6 @@ snapshots:
       '@polka/url': 1.0.0-next.29
       mrmime: 2.0.1
       totalist: 3.0.1
-
-  snd-lib@1.2.4:
-    dependencies:
-      events: 3.3.0
 
   source-map-js@1.2.1: {}
 

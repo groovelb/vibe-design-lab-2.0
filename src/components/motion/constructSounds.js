@@ -1,62 +1,89 @@
 /**
  * Construct Sound System
  *
- * SND (snd.dev) 기반 UI 효과음.
- * 한 동작에 한 번, 최소한의 사운드.
+ * click 1종만 사용. 콘텐츠 등장 직전 시선 유도용 단발 신호.
+ * Detuned dual-sine + bandpass 공명. 차갑고 정밀한 디지털 톤.
+ *
+ * 재생 규칙:
+ * - AreaConstruct: tag phase (■ 등장)에서 1회
+ * - ConstructBlock: sweep start에서 1회
+ * - 한 Construct당 1회만, 뷰포트 진입 시만
+ * - 동시 다발 금지: 300ms 이내 중복 재생 차단
  */
 
-import Snd from 'snd-lib';
+let _ctx = null;
+let _lastPlayTime = 0;
+let _warmed = false;
 
-let _snd = null;
-let _ready = false;
+const DEBOUNCE_MS = 300;
 
-/**
- * SND 인스턴스 초기화 (lazy, 1회)
- * 첫 호출 시 에셋 로드 → 이후 즉시 재생.
- */
-async function ensureReady() {
-  if (_ready) return _snd;
-  if (!_snd) {
-    _snd = new Snd();
-    await _snd.load(Snd.KITS.SND01);
-    _ready = true;
-  }
-  return _snd;
-}
-
-function prefersReducedMotion() {
-  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function getCtx() {
+  if (!_ctx) _ctx = new (window.AudioContext || window.webkitAudioContext)();
+  if (_ctx.state === 'suspended') _ctx.resume();
+  return _ctx;
 }
 
 /**
- * AreaConstruct phase 사운드
- *
- * tag → tap, scatter → button, done → toggle
- *
- * @param {'tag'|'scatter'|'reveal'|'done'} phase [Required]
+ * 첫 사용자 제스처에서 AudioContext를 미리 활성화.
+ * 이후 setTimeout/IntersectionObserver에서 호출해도 재생 가능.
  */
-export async function playAreaConstructSound(phase) {
-  if (prefersReducedMotion()) return;
-  const snd = await ensureReady();
-  switch (phase) {
-    case 'tag': snd.play(Snd.SOUNDS.TAP); break;
-    case 'scatter': snd.play(Snd.SOUNDS.BUTTON); break;
-    case 'done': snd.play(Snd.SOUNDS.TOGGLE); break;
-  }
+function warmUp() {
+  if (_warmed) return;
+  _warmed = true;
+  getCtx();
+  ['click', 'touchstart', 'keydown'].forEach((evt) =>
+    document.removeEventListener(evt, warmUp, { capture: true }),
+  );
+}
+
+if (typeof document !== 'undefined') {
+  ['click', 'touchstart', 'keydown'].forEach((evt) =>
+    document.addEventListener(evt, warmUp, { capture: true, once: false, passive: true }),
+  );
 }
 
 /**
- * ConstructBlock 이벤트 사운드
- *
- * start → tap, complete → button
- *
- * @param {'start'|'complete'} event [Required]
+ * click — 차가운 핑. 900Hz detuned sine, bandpass 1200Hz, 45ms decay.
  */
-export async function playConstructBlockSound(event) {
-  if (prefersReducedMotion()) return;
-  const snd = await ensureReady();
-  switch (event) {
-    case 'start': snd.play(Snd.SOUNDS.TAP); break;
-    case 'complete': snd.play(Snd.SOUNDS.BUTTON); break;
-  }
+function click() {
+  const ctx = getCtx();
+  const t = ctx.currentTime;
+
+  const filter = ctx.createBiquadFilter();
+  filter.type = 'bandpass';
+  filter.frequency.value = 1200;
+  filter.Q.value = 2;
+
+  const master = ctx.createGain();
+  master.gain.setValueAtTime(0, t);
+  master.gain.linearRampToValueAtTime(0.1, t + 0.008);
+  master.gain.exponentialRampToValueAtTime(0.001, t + 0.053);
+
+  filter.connect(master).connect(ctx.destination);
+
+  [-3, 3].forEach((d) => {
+    const o = ctx.createOscillator();
+    o.type = 'sine';
+    o.frequency.value = 900;
+    o.detune.value = d;
+    o.connect(filter);
+    o.start(t);
+    o.stop(t + 0.06);
+  });
+}
+
+/**
+ * Construct 시작 사운드 재생
+ *
+ * 300ms 디바운스 적용 — 동시 다발 Construct에서 첫 번째만 재생.
+ * prefers-reduced-motion 시 무음.
+ */
+export function playConstructClick() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const now = performance.now();
+  if (now - _lastPlayTime < DEBOUNCE_MS) return;
+  _lastPlayTime = now;
+
+  click();
 }
