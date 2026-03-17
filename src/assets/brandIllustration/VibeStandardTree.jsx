@@ -19,12 +19,12 @@ import { isoToScreen, r } from './isometricGrid';
  */
 
 const VB_X = 30;
-const VB_Y = -40;
-const VB_W = 380;
-const VB_H = 314;
+const VB_Y = 50;
+const VB_W = 400;
+const VB_H = 330;
 const SW = 0.5;
 
-const ORIGIN = { x: 260, y: 15 };
+const ORIGIN = { x: 260, y: 153 };
 
 const CONN_STROKE = 'var(--vdl-800)';
 const CONN_DOT = 'var(--vdl-800)';
@@ -127,24 +127,24 @@ function buildVstSlab(ix, iy, iz, w, h, cornerR, origin) {
 // → 아이소메트릭 깊이감 있는 트리 구도
 
 const TREE_NODES = [
-  // L0 Root — (0, 0, 0)
-  { id: 'root', level: 0, ix: 0, iy: 0, iz: 0, w: 5.1, h: 1.48, cr: 0.85, type: 'dashboard', parent: null },
+  // L0 Root — (0, 0, 0)  ×1.1
+  { id: 'root', level: 0, ix: 0, iy: 0, iz: 0, w: 5.61, h: 1.63, cr: 0.94, type: 'dashboard', parent: null },
 
-  // L1 — iy=5, iz=-8, ix=[-9, -3, 3, 9] (L2 쌍 중심, 등간격 6)
-  { id: 'l1a', level: 1, ix: -9, iy: 5, iz: -8, w: 3.65, h: 1.25, cr: 0.65, type: 'browser',    parent: 'root' },
-  { id: 'l1b', level: 1, ix: -3, iy: 5, iz: -8, w: 3.65, h: 1.25, cr: 0.65, type: 'sCurve',     parent: 'root' },
-  { id: 'l1c', level: 1, ix: 3,  iy: 5, iz: -8, w: 3.65, h: 1.25, cr: 0.65, type: 'artboard',   parent: 'root' },
-  { id: 'l1d', level: 1, ix: 9,  iy: 5, iz: -8, w: 3.65, h: 1.25, cr: 0.65, type: 'splitPanel', parent: 'root' },
+  // L1 — iy=5, iz=-8, ix=[-9, -3, 3, 9]  ×1.1
+  { id: 'l1a', level: 1, ix: -9, iy: 5, iz: -8, w: 4.02, h: 1.38, cr: 0.72, type: 'browser',    parent: 'root' },
+  { id: 'l1b', level: 1, ix: -3, iy: 5, iz: -8, w: 4.02, h: 1.38, cr: 0.72, type: 'sCurve',     parent: 'root' },
+  { id: 'l1c', level: 1, ix: 3,  iy: 5, iz: -8, w: 4.02, h: 1.38, cr: 0.72, type: 'artboard',   parent: 'root' },
+  { id: 'l1d', level: 1, ix: 9,  iy: 5, iz: -8, w: 4.02, h: 1.38, cr: 0.72, type: 'splitPanel', parent: 'root' },
 
-  // L2 — iy=10, iz=-16, 균등 간격 step=3 (ix: -10.5 ~ 10.5)
-  { id: 'l2a1', level: 2, ix: -10.5, iy: 10, iz: -16, w: 1.8, h: 1.25, cr: 0.35, type: 'pill',     parent: 'l1a' },
-  { id: 'l2a2', level: 2, ix: -7.5,  iy: 10, iz: -16, w: 1.8, h: 1.25, cr: 0.35, type: 'diagonal', parent: 'l1a' },
-  { id: 'l2b1', level: 2, ix: -4.5,  iy: 10, iz: -16, w: 1.8, h: 1.25, cr: 0.35, type: 'zigzag',  parent: 'l1b' },
-  { id: 'l2b2', level: 2, ix: -1.5,  iy: 10, iz: -16, w: 1.8, h: 1.25, cr: 0.35, type: 'list',    parent: 'l1b' },
-  { id: 'l2c1', level: 2, ix: 1.5,   iy: 10, iz: -16, w: 1.8, h: 1.25, cr: 0.35, type: 'grid',    parent: 'l1c' },
-  { id: 'l2c2', level: 2, ix: 4.5,   iy: 10, iz: -16, w: 1.8, h: 1.25, cr: 0.35, type: 'letterA', parent: 'l1c' },
-  { id: 'l2d1', level: 2, ix: 7.5,   iy: 10, iz: -16, w: 1.8, h: 1.25, cr: 0.35, type: 'circles', parent: 'l1d' },
-  { id: 'l2d2', level: 2, ix: 10.5,  iy: 10, iz: -16, w: 1.8, h: 1.25, cr: 0.35, type: 'chevron', parent: 'l1d' },
+  // L2 — iy=10, iz=-16, 균등 간격 step=3  ×1.1
+  { id: 'l2a1', level: 2, ix: -10.5, iy: 10, iz: -16, w: 1.98, h: 1.38, cr: 0.39, type: 'pill',     parent: 'l1a' },
+  { id: 'l2a2', level: 2, ix: -7.5,  iy: 10, iz: -16, w: 1.98, h: 1.38, cr: 0.39, type: 'diagonal', parent: 'l1a' },
+  { id: 'l2b1', level: 2, ix: -4.5,  iy: 10, iz: -16, w: 1.98, h: 1.38, cr: 0.39, type: 'zigzag',  parent: 'l1b' },
+  { id: 'l2b2', level: 2, ix: -1.5,  iy: 10, iz: -16, w: 1.98, h: 1.38, cr: 0.39, type: 'list',    parent: 'l1b' },
+  { id: 'l2c1', level: 2, ix: 1.5,   iy: 10, iz: -16, w: 1.98, h: 1.38, cr: 0.39, type: 'grid',    parent: 'l1c' },
+  { id: 'l2c2', level: 2, ix: 4.5,   iy: 10, iz: -16, w: 1.98, h: 1.38, cr: 0.39, type: 'letterA', parent: 'l1c' },
+  { id: 'l2d1', level: 2, ix: 7.5,   iy: 10, iz: -16, w: 1.98, h: 1.38, cr: 0.39, type: 'circles', parent: 'l1d' },
+  { id: 'l2d2', level: 2, ix: 10.5,  iy: 10, iz: -16, w: 1.98, h: 1.38, cr: 0.39, type: 'chevron', parent: 'l1d' },
 ];
 
 // L3 Leaf dots — iy=13, iz=-20, parent.ix 직하
@@ -161,6 +161,7 @@ const LEAF_DOTS = [
 function TopFaceContent({ type, hd }) {
   const p = hd * 0.15;
   const s = hd - 2 * p;
+  const csw = Math.max(SW, 10 / hd);   // 노드 크기에 반비례, 최소 SW
   const W = 'white';
   const S = 'var(--vdl-700)';
 
@@ -172,12 +173,12 @@ function TopFaceContent({ type, hd }) {
       const gCol = gridW / 3;
       const gRow = s / 3;
       return (
-        <g fill="none" strokeWidth={SW}>
+        <g fill="none" strokeWidth={csw}>
           <line x1={p + 1} y1={p + s * 0.12} x2={p + s * 0.18} y2={p + s * 0.12} stroke={W} opacity={0.5} />
-          <circle cx={p + s * 0.06} cy={p + s * 0.82} r={0.9} fill={S} />
-          <circle cx={p + s * 0.13} cy={p + s * 0.82} r={0.9} fill={S} />
-          <circle cx={p + s * 0.20} cy={p + s * 0.82} r={0.9} fill={S} />
-          <circle cx={p + s * 0.27} cy={p + s * 0.82} r={0.9} fill={S} />
+          <circle cx={p + s * 0.06} cy={p + s * 0.82} r={1.2} fill={S} />
+          <circle cx={p + s * 0.14} cy={p + s * 0.82} r={1.2} fill={S} />
+          <circle cx={p + s * 0.22} cy={p + s * 0.82} r={1.2} fill={S} />
+          <circle cx={p + s * 0.30} cy={p + s * 0.82} r={1.2} fill={S} />
           <line x1={divX} y1={p} x2={divX} y2={p + s} stroke={S} opacity={0.5} />
           <rect x={gridX} y={p} width={gridW} height={s} rx={1} stroke={W} opacity={0.5} />
           <line x1={gridX + gCol} y1={p} x2={gridX + gCol} y2={p + s} stroke={S} opacity={0.4} />
@@ -189,35 +190,35 @@ function TopFaceContent({ type, hd }) {
     }
     case 'browser':
       return (
-        <g fill="none" strokeWidth={SW}>
+        <g fill="none" strokeWidth={csw}>
           <rect x={p} y={p} width={s} height={s} rx={1.5} stroke={W} />
           <line x1={p} y1={p + s * 0.2} x2={p + s} y2={p + s * 0.2} stroke={W} />
-          <circle cx={p + 2.5} cy={p + s * 0.1} r={0.7} fill={S} />
-          <circle cx={p + 5} cy={p + s * 0.1} r={0.7} fill={S} />
-          <circle cx={p + 7.5} cy={p + s * 0.1} r={0.7} fill={S} />
+          <circle cx={p + s * 0.12} cy={p + s * 0.1} r={1} fill={S} />
+          <circle cx={p + s * 0.24} cy={p + s * 0.1} r={1} fill={S} />
+          <circle cx={p + s * 0.36} cy={p + s * 0.1} r={1} fill={S} />
           <line x1={p + 2} y1={p + s * 0.45} x2={p + s - 2} y2={p + s * 0.45} stroke={S} opacity={0.5} />
           <line x1={p + 2} y1={p + s * 0.65} x2={p + s * 0.55} y2={p + s * 0.65} stroke={S} opacity={0.5} />
         </g>
       );
     case 'sCurve':
       return (
-        <g fill="none" strokeWidth={SW}>
+        <g fill="none" strokeWidth={csw}>
           <rect x={p} y={p} width={s} height={s} rx={1.5} stroke={S} opacity={0.4} />
           <path
             d={`M${p + s * 0.1} ${p + s * 0.78}C${p + s * 0.35} ${p + s * 0.05} ${p + s * 0.65} ${p + s * 0.95} ${p + s * 0.9} ${p + s * 0.22}`}
-            stroke={W} strokeWidth={SW * 1.5} strokeLinecap="round"
+            stroke={W} strokeWidth={csw * 1.5} strokeLinecap="round"
           />
         </g>
       );
     case 'artboard':
       return (
-        <g fill="none" strokeWidth={SW}>
+        <g fill="none" strokeWidth={csw}>
           <rect x={p} y={p} width={s} height={s} rx={1.5} stroke={W} opacity={0.35} />
         </g>
       );
     case 'splitPanel':
       return (
-        <g fill="none" strokeWidth={SW}>
+        <g fill="none" strokeWidth={csw}>
           <rect x={p} y={p} width={s} height={s} rx={1} stroke={W} />
           <line x1={p + s * 0.5} y1={p + 2} x2={p + s * 0.5} y2={p + s - 2} stroke={S} opacity={0.7} />
         </g>
@@ -225,11 +226,11 @@ function TopFaceContent({ type, hd }) {
     case 'pill':
       return (
         <rect x={p + 1} y={p + s * 0.3} width={s - 2} height={s * 0.4} rx={s * 0.2}
-          stroke={W} strokeWidth={SW} fill="none" />
+          stroke={W} strokeWidth={csw} fill="none" />
       );
     case 'diagonal':
       return (
-        <g fill="none" strokeWidth={SW}>
+        <g fill="none" strokeWidth={csw}>
           <rect x={p} y={p} width={s} height={s} rx={0.8} stroke={S} opacity={0.4} />
           <line x1={p + 1} y1={p + s - 1} x2={p + s - 1} y2={p + 1} stroke={W} />
         </g>
@@ -238,12 +239,12 @@ function TopFaceContent({ type, hd }) {
       return (
         <path
           d={`M${p + 1} ${p + s * 0.7}L${p + s * 0.35} ${p + s * 0.2}L${p + s * 0.65} ${p + s * 0.8}L${p + s - 1} ${p + s * 0.3}`}
-          fill="none" stroke={W} strokeWidth={SW} strokeLinecap="round" strokeLinejoin="round"
+          fill="none" stroke={W} strokeWidth={csw} strokeLinecap="round" strokeLinejoin="round"
         />
       );
     case 'list':
       return (
-        <g fill="none" strokeWidth={SW}>
+        <g fill="none" strokeWidth={csw}>
           <line x1={p + 1} y1={p + s * 0.22} x2={p + s - 1} y2={p + s * 0.22} stroke={W} />
           <line x1={p + 1} y1={p + s * 0.42} x2={p + s - 1} y2={p + s * 0.42} stroke={W} />
           <line x1={p + 1} y1={p + s * 0.62} x2={p + s - 1} y2={p + s * 0.62} stroke={W} />
@@ -253,7 +254,7 @@ function TopFaceContent({ type, hd }) {
     case 'grid': {
       const gs = (s - 1.5) / 2;
       return (
-        <g fill="none" strokeWidth={SW}>
+        <g fill="none" strokeWidth={csw}>
           <rect x={p} y={p} width={gs} height={gs} rx={0.5} stroke={W} />
           <rect x={p + gs + 1.5} y={p} width={gs} height={gs} rx={0.5} stroke={W} />
           <rect x={p} y={p + gs + 1.5} width={gs} height={gs} rx={0.5} stroke={W} />
@@ -263,7 +264,7 @@ function TopFaceContent({ type, hd }) {
     }
     case 'letterA':
       return (
-        <g fill="none" strokeWidth={SW}>
+        <g fill="none" strokeWidth={csw}>
           <line x1={p + s * 0.5} y1={p + 1} x2={p + 1.5} y2={p + s - 1} stroke={W} />
           <line x1={p + s * 0.5} y1={p + 1} x2={p + s - 1.5} y2={p + s - 1} stroke={W} />
           <line x1={p + s * 0.27} y1={p + s * 0.58} x2={p + s * 0.73} y2={p + s * 0.58} stroke={S} />
@@ -271,7 +272,7 @@ function TopFaceContent({ type, hd }) {
       );
     case 'circles':
       return (
-        <g fill="none" strokeWidth={SW}>
+        <g fill="none" strokeWidth={csw}>
           <circle cx={p + s * 0.22} cy={p + s * 0.5} r={s * 0.14} stroke={W} />
           <circle cx={p + s * 0.5} cy={p + s * 0.5} r={s * 0.14} stroke={W} />
           <circle cx={p + s * 0.78} cy={p + s * 0.5} r={s * 0.14} stroke={W} />
@@ -281,7 +282,7 @@ function TopFaceContent({ type, hd }) {
       return (
         <path
           d={`M${p + 1.5} ${p + s * 0.3}L${p + s * 0.5} ${p + s * 0.7}L${p + s - 1.5} ${p + s * 0.3}`}
-          fill="none" stroke={W} strokeWidth={SW} strokeLinecap="round" strokeLinejoin="round"
+          fill="none" stroke={W} strokeWidth={csw} strokeLinecap="round" strokeLinejoin="round"
         />
       );
     default:
@@ -300,7 +301,7 @@ function SlabNode({ node }) {
       <path d={s.outline} fill="var(--vdl-950)" stroke="white" strokeWidth={SW} strokeLinejoin="round" />
       <path d={s.vLine} fill="none" stroke="var(--vdl-800)" strokeWidth={SW} strokeLinecap="round" clipPath={clip} />
       <path d={s.frontEdge} fill="none" stroke="var(--vdl-800)" strokeWidth={SW} strokeLinecap="round" clipPath={clip} />
-      <g transform={s.topTransform} clipPath={clip}>
+      <g transform={s.topTransform}>
         <TopFaceContent type={node.type} hd={s.hd} />
       </g>
     </g>
@@ -461,32 +462,6 @@ const VibeStandardTree = forwardRef((props, ref) => {
         </g>
       ))}
 
-      {/* ── L2 → L3 connections + dots (d5, closest) ── */}
-      <g className={cls(5)}>
-        {dots.map((d) => {
-          const p = nodeMap[d.parent];
-          if (!p) return null;
-          return (
-            <g key={`c-${d.id}`}>
-              <line
-                x1={r(p.slab.frontBottom.x)} y1={r(p.slab.frontBottom.y)}
-                x2={r(d.screen.x)} y2={r(d.screen.y)}
-                stroke={CONN_STROKE} strokeWidth={0.3}
-              />
-              <circle cx={r(p.slab.frontBottom.x)} cy={r(p.slab.frontBottom.y)} r={1.5} fill={CONN_DOT} />
-            </g>
-          );
-        })}
-        {dots.map((d) => (
-          <circle
-            key={d.id}
-            cx={r(d.screen.x)}
-            cy={r(d.screen.y)}
-            r={2}
-            fill="var(--vdl-700)"
-          />
-        ))}
-      </g>
     </svg>
   );
 });
