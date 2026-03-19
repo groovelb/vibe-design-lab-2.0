@@ -1,7 +1,10 @@
 'use client';
 
+import { useState } from 'react';
 import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
+import { RotateCcw } from 'lucide-react';
 import {
   DocumentTitle,
   PageContainer,
@@ -29,65 +32,79 @@ export default {
 };
 
 /**
- * 다크 배경 프리뷰 패널
+ * 다크 배경 프리뷰 패널 (Replay 지원)
  *
  * @param {ReactNode} children - 콘텐츠 [Required]
  * @param {string} label - 레이블 [Optional]
  * @param {string} sublabel - 보조 설명 [Optional]
  * @param {number} maxWidth - 최대 너비 [Optional, 기본값: 400]
  */
-const IllustrationPanel = ({ children, label, sublabel, maxWidth = 400 }) => (
-  <Box
-    sx={{
-      border: '1px solid',
-      borderColor: 'divider',
-      overflow: 'hidden',
-      mb: 2,
-    }}
-  >
-    {(label || sublabel) && (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          px: 2,
-          py: 1,
-          borderBottom: '1px solid',
-          borderColor: 'divider',
-        }}
-      >
-        {label && (
-          <Typography
-            sx={{ fontFamily: 'monospace', fontSize: 11, color: 'text.secondary' }}
-          >
-            {label}
-          </Typography>
-        )}
-        {sublabel && (
-          <Typography
-            sx={{ fontFamily: 'monospace', fontSize: 10, color: 'text.disabled' }}
-          >
-            {sublabel}
-          </Typography>
-        )}
-      </Box>
-    )}
+const IllustrationPanel = ({ children, label, sublabel, maxWidth = 400 }) => {
+  const [replayKey, setReplayKey] = useState(0);
+
+  return (
     <Box
       sx={{
-        bgcolor: 'var(--vdl-950)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        p: 6,
+        border: '1px solid',
+        borderColor: 'divider',
+        overflow: 'hidden',
+        mb: 2,
       }}
     >
-      <Box sx={{ width: '100%', maxWidth }}>
-        {children}
+      {(label || sublabel) && (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            px: 2,
+            py: 0.5,
+            borderBottom: '1px solid',
+            borderColor: 'divider',
+          }}
+        >
+          {label && (
+            <Typography
+              sx={{ fontFamily: 'monospace', fontSize: 11, color: 'text.secondary' }}
+            >
+              {label}
+            </Typography>
+          )}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            {sublabel && (
+              <Typography
+                sx={{ fontFamily: 'monospace', fontSize: 10, color: 'text.disabled' }}
+              >
+                {sublabel}
+              </Typography>
+            )}
+            <IconButton
+              size="small"
+              onClick={() => setReplayKey((k) => k + 1)}
+              aria-label="Replay"
+              sx={{ color: 'text.secondary' }}
+            >
+              <RotateCcw size={14} />
+            </IconButton>
+          </Box>
+        </Box>
+      )}
+      <Box
+        sx={{
+          bgcolor: 'var(--vdl-950)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          p: 6,
+        }}
+      >
+        <Box key={replayKey} sx={{ width: '100%', maxWidth }}>
+          {children}
+        </Box>
       </Box>
     </Box>
-  </Box>
-);
+  );
+};
 
 // ═══════════════════════════════════════════════════════════
 // Docs — 확정 일러스트 (LandingSolution에서 사용 중)
@@ -137,6 +154,19 @@ export const Docs = {
           maxWidth={600}
         >
           <VibeStandardTree />
+        </IllustrationPanel>
+
+        {/* ── 3. VP3: Design As Build ── */}
+        <SectionTitle
+          title="VP3 — Design As Build"
+          description="&quot;설계가 곧 구현이다&quot; — 3개 세워진 랜드스케이프 스크린(Code → Anatomy → UI)이 깊이 배열. 대응 요소를 잇는 dashed 연결선 + hover glow."
+        />
+        <IllustrationPanel
+          label="DesignAsBuild"
+          sublabel="panels: 3 · standing screens · dashed connections · hover glow"
+          maxWidth={600}
+        >
+          <DesignAsBuild />
         </IllustrationPanel>
       </PageContainer>
     </>

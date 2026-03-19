@@ -3,13 +3,14 @@ import { useRef, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { SectionContainer } from '../container/SectionContainer';
 import LineGrid from '../layout/LineGrid';
 import { SectionDivider } from '../typography/SectionDivider';
 import { SectionTitle } from '../typography/SectionTitle';
 import { MethodCard } from '../card/MethodCard';
-import FadeTransition from '../motion/FadeTransition';
+import { AreaConstruct } from '../motion/AreaConstruct';
+import { ConstructBlock } from '../motion/ConstructBlock';
+import { ConstructType } from '../motion/ConstructType';
 import { Network, BookOpenText, UsersRound, Layers } from 'lucide-react';
 import { COL_STAGGER } from '../motion/constants';
 import { PAGES } from '../../data/contents';
@@ -36,7 +37,9 @@ export function LandingLearningMethod() {
 
   useEffect(() => {
     if (isInView && videoRef.current) {
-      videoRef.current.play();
+      requestAnimationFrame(() => {
+        videoRef.current?.play().catch(() => {});
+      });
     }
   }, [isInView]);
 
@@ -52,9 +55,9 @@ export function LandingLearningMethod() {
       {/* Course Lead — 좌: 소개+사진, 우: 프로젝트 이력 */}
       <Grid container spacing={{ xs: 4, md: 6 }} sx={{ mb: { xs: 8, md: 16 } }}>
         <Grid size={{ xs: 12, md: 6 }}>
-          <FadeTransition direction="up" delay={0} isTriggerOnView>
-            <Grid container spacing={3}>
-              <Grid size={{ xs: 12, md: 6 }}>
+          <Grid container spacing={3}>
+            <Grid size={{ xs: 12, md: 6 }}>
+              <AreaConstruct>
                 <Box
                   ref={(node) => {
                     videoRef.current = node;
@@ -67,9 +70,11 @@ export function LandingLearningMethod() {
                   playsInline
                   sx={{ width: '100%', height: 'auto', borderRadius: '2px' }}
                 />
-              </Grid>
-              <Grid size={{ xs: 12, md: 6 }}>
-                <Stack spacing={1}>
+              </AreaConstruct>
+            </Grid>
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Stack spacing={1}>
+                <AreaConstruct delay={200}>
                   <Box
                     component="svg"
                     viewBox="0 0 150 56"
@@ -86,46 +91,45 @@ export function LandingLearningMethod() {
                     <path d="M0 0h18a28 28 0 010 56H0Z" transform="translate(52)" fill="currentColor" />
                     <path d="M0 0h18a28 28 0 010 56H0Z" transform="translate(104)" fill="currentColor" />
                   </Box>
-                  {INSTRUCTOR_PROFILE.titles.map((title) => (
-                    <Typography
-                      key={title}
-                      variant="body2"
-                      sx={{ color: 'text.secondary' }}
-                    >
-                      • {title}
-                    </Typography>
-                  ))}
-                </Stack>
-              </Grid>
+                </AreaConstruct>
+                {INSTRUCTOR_PROFILE.titles.map((title, index) => (
+                  <ConstructBlock
+                    key={title}
+                    text={`• ${title}`}
+                    variant="body2"
+                    delay={300 + index * 80}
+                    sx={{ '& .MuiTypography-root': { color: 'text.secondary' } }}
+                  />
+                ))}
+              </Stack>
             </Grid>
-          </FadeTransition>
+          </Grid>
         </Grid>
 
         <Grid size={{ xs: 12, md: 6 }}>
-          <FadeTransition direction="up" delay={COL_STAGGER} isTriggerOnView>
-            <Stack spacing={2}>
-              <Typography
-                variant="caption"
-                sx={{
+          <Stack spacing={2}>
+            <ConstructType
+              text={instructor.projectsLabel}
+              variant="caption"
+              sx={{
+                '& .MuiTypography-root': {
                   color: 'text.secondary',
                   letterSpacing: '0.08em',
-                }}
-              >
-                {instructor.projectsLabel}
-              </Typography>
-              <Stack spacing={1}>
-                {INSTRUCTOR_PROFILE.projects.map((project, index) => (
-                  <Typography
-                    key={index}
-                    variant="body2"
-                    sx={{ color: 'text.secondary' }}
-                  >
-                    {project.year} {project.title}
-                  </Typography>
-                ))}
-              </Stack>
+                },
+              }}
+            />
+            <Stack spacing={1}>
+              {INSTRUCTOR_PROFILE.projects.map((project, index) => (
+                <ConstructBlock
+                  key={index}
+                  text={`${project.year} ${project.title}`}
+                  variant="body2"
+                  delay={200 + index * 40}
+                  sx={{ '& .MuiTypography-root': { color: 'text.secondary' } }}
+                />
+              ))}
             </Stack>
-          </FadeTransition>
+          </Stack>
         </Grid>
       </Grid>
 

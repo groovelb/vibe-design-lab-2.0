@@ -1,6 +1,49 @@
 'use client';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+// ============================================================
+// Shared Observer Registry
+// 동일 옵션(threshold + rootMargin)의 요소를 하나의 Observer로 관찰.
+// 개별 Observer 난립에 의한 콜백 폭주 + 메인 스레드 경합을 방지한다.
+// ============================================================
+
+const sharedObservers = new Map();
+
+function getKey(threshold, rootMargin) {
+  return `${threshold}|${rootMargin}`;
+}
+
+function subscribeElement(element, options, callback) {
+  const key = getKey(options.threshold, options.rootMargin);
+
+  if (!sharedObservers.has(key)) {
+    const callbacks = new Map();
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        callbacks.get(entry.target)?.(entry);
+      }
+    }, options);
+    sharedObservers.set(key, { observer, callbacks });
+  }
+
+  const { observer, callbacks } = sharedObservers.get(key);
+  callbacks.set(element, callback);
+  observer.observe(element);
+
+  return () => {
+    observer.unobserve(element);
+    callbacks.delete(element);
+    if (callbacks.size === 0) {
+      observer.disconnect();
+      sharedObservers.delete(key);
+    }
+  };
+}
+
+// ============================================================
+// useInView Hook
+// ============================================================
+
 /**
  * useInView 커스텀 훅
  *
@@ -37,6 +80,7 @@ export function useInView({
   const [element, setElement] = useState(null);
   const [isInView, setIsInView] = useState(false);
   const delayRef = useRef(null);
+  const unsubscribeRef = useRef(null);
 
   const ref = useCallback((node) => {
     setElement(node);
@@ -50,7 +94,7 @@ export function useInView({
         ? { rootMargin: customRootMargin ?? '-50% 0px -50% 0px', threshold: 0 }
         : { rootMargin: customRootMargin ?? '0px', threshold: trigger };
 
-    const handleEntry = ([entry]) => {
+    const unsubscribe = subscribeElement(element, options, (entry) => {
       const entering = entry.isIntersecting;
 
       if (isOnce) {
@@ -60,7 +104,8 @@ export function useInView({
           } else {
             setIsInView(true);
           }
-          observer.disconnect();
+          unsubscribeRef.current?.();
+          unsubscribeRef.current = null;
         }
       } else {
         if (entering) {
@@ -75,13 +120,13 @@ export function useInView({
           setIsInView(false);
         }
       }
-    };
+    });
 
-    const observer = new IntersectionObserver(handleEntry, options);
-    observer.observe(element);
+    unsubscribeRef.current = unsubscribe;
 
     return () => {
-      observer.disconnect();
+      unsubscribe();
+      unsubscribeRef.current = null;
       clearTimeout(delayRef.current);
     };
   }, [element, isEnabled, trigger, isOnce, delay, customRootMargin]);

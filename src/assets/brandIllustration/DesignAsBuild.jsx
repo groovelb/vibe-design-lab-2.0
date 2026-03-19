@@ -337,6 +337,7 @@ function ScreenNode({ panel, inView, drawDelay, contentDelay }) {
 const DesignAsBuild = forwardRef(({ delay: baseDelay = 0, ...props }, ref) => {
   const innerRef = useRef(null);
   const [inView, setInView] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     const el = innerRef.current;
@@ -380,6 +381,8 @@ const DesignAsBuild = forwardRef(({ delay: baseDelay = 0, ...props }, ref) => {
       xmlns="http://www.w3.org/2000/svg"
       viewBox={`${VB_X} ${VB_Y} ${VB_W} ${VB_H}`}
       fill="none"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       {...props}
     >
       <style>{`
@@ -405,12 +408,49 @@ const DesignAsBuild = forwardRef(({ delay: baseDelay = 0, ...props }, ref) => {
           opacity: 0.01;
           animation: dab-fade 300ms ease-out var(--delay) forwards;
         }
+        @keyframes dab-halo-pulse {
+          0%, 100% { opacity: 0.01; }
+          35%, 65% { opacity: 0.4; }
+        }
+        @keyframes dab-fill-pulse {
+          0%, 100% { opacity: 0.01; }
+          35%, 65% { opacity: 0.15; }
+        }
+        .dab-pulse-halo, .dab-pulse-fill,
+        .dab-stay-halo, .dab-stay-fill {
+          opacity: 0.01;
+        }
+        .dab-hovered .dab-pulse-halo {
+          animation: dab-halo-pulse 600ms ease-out var(--glow-delay) both;
+        }
+        .dab-hovered .dab-pulse-fill {
+          animation: dab-fill-pulse 600ms ease-out var(--glow-delay) both;
+        }
+        .dab-stay-halo, .dab-stay-fill {
+          transition: opacity 300ms ease-out 0ms;
+        }
+        .dab-hovered .dab-stay-halo {
+          opacity: 0.4;
+          transition-delay: var(--glow-delay);
+        }
+        .dab-hovered .dab-stay-fill {
+          opacity: 0.15;
+          transition-delay: var(--glow-delay);
+        }
         @media (prefers-reduced-motion: reduce) {
           .dab-draw { fill-opacity: 0.85; stroke-dashoffset: 0; animation: none; }
           .dab-fade { opacity: 1; animation: none; }
+          .dab-hovered .dab-pulse-halo,
+          .dab-hovered .dab-pulse-fill { animation: none; }
+          .dab-stay-halo, .dab-stay-fill { transition: none; }
+          .dab-hovered .dab-stay-halo { opacity: 0.4; }
+          .dab-hovered .dab-stay-fill { opacity: 0.15; }
         }
       `}</style>
       <defs>
+        <filter id="dab-glow-f" x="-100%" y="-100%" width="300%" height="300%">
+          <feGaussianBlur stdDeviation="6" />
+        </filter>
         <filter
           id="dabs"
           x={VB_X - 40}
@@ -482,6 +522,29 @@ const DesignAsBuild = forwardRef(({ delay: baseDelay = 0, ...props }, ref) => {
       {/* Front: UI panel */}
       <ScreenNode panel={panels[2]} inView={inView}
         drawDelay={panelTimings[2].draw} contentDelay={panelTimings[2].content} />
+
+      {/* ── Panel glow (hover) — back→front wave, last stays ── */}
+      <g className={isHovered ? 'dab-hovered' : undefined}>
+        {panels.map((p, i) => {
+          const isLast = i === panels.length - 1;
+          const haloCls = isLast ? 'dab-stay-halo' : 'dab-pulse-halo';
+          const fillCls = isLast ? 'dab-stay-fill' : 'dab-pulse-fill';
+          return (
+            <g key={`glow-${p.id}`} style={{ '--glow-delay': `${i * 200}ms` }}>
+              <path
+                d={p.screen.outline}
+                fill="var(--vdl-200)" filter="url(#dab-glow-f)"
+                className={haloCls}
+              />
+              <path
+                d={p.screen.outline}
+                fill="var(--vdl-200)"
+                className={fillCls}
+              />
+            </g>
+          );
+        })}
+      </g>
     </svg>
   );
 });
