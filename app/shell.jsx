@@ -28,7 +28,7 @@ export default function SiteShell({ children }) {
     <>
     <AmbientGrainedBackground />
     <AppShell
-      sx={{ position: 'relative', zIndex: 1 }}
+      sx={{ position: 'relative' }}
       logo={
         <Typography variant="h6" sx={{ fontFamily: 'Inter, sans-serif', fontWeight: 800, letterSpacing: '-0.02em', textTransform: 'uppercase' }}>
           {GNB_DATA.logo}

@@ -1,3 +1,4 @@
+import Box from '@mui/material/Box';
 import { LandingPage } from '../../components/page/LandingPage';
 import { AmbientGrainedBackground } from '../../components/dynamic-color/AmbientGrainedBackground';
 
@@ -30,7 +31,9 @@ export const FullPage = {
   render: () => (
     <>
       <AmbientGrainedBackground />
-      <LandingPage />
+      <Box sx={{ position: 'relative' }}>
+        <LandingPage />
+      </Box>
     </>
   ),
 };
