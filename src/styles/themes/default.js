@@ -419,7 +419,7 @@ const defaultTheme = createTheme({
       secondary: violetGray[400],
       disabled: violetGray[700],
     },
-    divider: violetGray[800],
+    divider: violetGray[600],
     action: {
       active: violetGray[200],
       hover: violetGray[800],

@@ -38,6 +38,7 @@ export function LandingCourseHighlight() {
           ctaHref={`/course/${course.slug}`}
           sx={{ border: '1px solid', borderColor: 'divider' }}
         />
+
       </FadeTransition>
     </SectionContainer>
   );

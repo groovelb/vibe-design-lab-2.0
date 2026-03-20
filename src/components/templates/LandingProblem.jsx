@@ -59,10 +59,10 @@ export function LandingProblem() {
                     color: 'common.white',
                     borderColor: 'common.white',
                     fontWeight: 700,
-                    fontSize: '1.75rem',
-                    height: 76,
-                    borderRadius: '38px',
-                    '& .MuiChip-label': { px: 4 },
+                    fontSize: '1rem',
+                    height: 40,
+                    borderRadius: 0,
+                    '& .MuiChip-label': { px: 2 },
                   }}
                 />
               ))}

@@ -26,8 +26,8 @@ const SW = 0.5;
 
 const ORIGIN = { x: 260, y: 153 };
 
-const CONN_STROKE = 'var(--vdl-800)';
-const CONN_DOT = 'var(--vdl-800)';
+const CONN_STROKE = 'var(--vdl-700)';
+const CONN_DOT = 'var(--vdl-700)';
 
 // ── Animation timing (ms) ───────────────────────────────
 const DRAW_DUR = 400;
