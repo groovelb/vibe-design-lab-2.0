@@ -3,6 +3,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { AppShell } from '@/components/layout/AppShell';
 import { NavMenu } from '@/components/navigation/NavMenu';
+import { AmbientGrainedBackground } from '@/components/dynamic-color/AmbientGrainedBackground';
 import { GNB as GNB_DATA } from '@/data/contents';
 
 const navItems = GNB_DATA.menus.map((menu) => ({
@@ -24,7 +25,10 @@ const navItems = GNB_DATA.menus.map((menu) => ({
  */
 export default function SiteShell({ children }) {
   return (
+    <>
+    <AmbientGrainedBackground />
     <AppShell
+      sx={{ position: 'relative', zIndex: 1 }}
       logo={
         <Typography variant="h6" sx={{ fontFamily: 'Inter, sans-serif', fontWeight: 800, letterSpacing: '-0.02em', textTransform: 'uppercase' }}>
           {GNB_DATA.logo}
@@ -47,5 +51,6 @@ export default function SiteShell({ children }) {
     >
       {children}
     </AppShell>
+    </>
   );
 }

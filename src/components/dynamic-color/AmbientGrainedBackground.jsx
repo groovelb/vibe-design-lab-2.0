@@ -16,7 +16,8 @@ const GLOW = `
  * AmbientGrainedBackground 컴포넌트
  *
  * violetGray 950/900 기반 모노톤 ambient grained gradient 배경.
- * 5-레이어 합성: Base(950) → Glow(900) → Gradient(900→950) → Section Grain → Global Grain.
+ * position: fixed로 뷰포트 전체를 덮는 독립 배경 레이어.
+ * 스크롤 대상이 아니며, 콘텐츠 뒤에 깔린다.
  *
  * @param {boolean} hasGlow - 앰비언트 글로우 레이어 표시 여부 [Optional, 기본값: true]
  * @param {boolean} hasGrain - 섹션 그레인 레이어 표시 여부 [Optional, 기본값: true]
@@ -24,13 +25,11 @@ const GLOW = `
  * @param {number} grainOpacity - 섹션 그레인 불투명도 (0–1) [Optional, 기본값: 0.8]
  * @param {boolean} hasGlobalGrain - 글로벌 그레인 레이어 표시 여부 [Optional, 기본값: true]
  * @param {number} globalGrainOpacity - 글로벌 그레인 불투명도 (0–1) [Optional, 기본값: 0.07]
- * @param {node} children - 콘텐츠 [Optional]
  * @param {object} sx - 추가 스타일 [Optional]
  *
  * Example usage:
- * <AmbientGrainedBackground>
- *   <Typography variant="h2">Hero</Typography>
- * </AmbientGrainedBackground>
+ * <AmbientGrainedBackground />
+ * <SiteShell>{children}</SiteShell>
  */
 const AmbientGrainedBackground = forwardRef(function AmbientGrainedBackground({
   hasGlow = true,
@@ -39,7 +38,6 @@ const AmbientGrainedBackground = forwardRef(function AmbientGrainedBackground({
   grainOpacity = 0.8,
   hasGlobalGrain = true,
   globalGrainOpacity = 0.07,
-  children,
   sx,
   ...props
 }, ref) {
@@ -49,9 +47,12 @@ const AmbientGrainedBackground = forwardRef(function AmbientGrainedBackground({
     <Box
       ref={ref}
       sx={{
-        position: 'relative',
+        position: 'fixed',
+        inset: 0,
+        zIndex: 0,
         overflow: 'hidden',
         backgroundColor: 'var(--vdl-950)',
+        pointerEvents: 'none',
         ...sx,
       }}
       {...props}
@@ -66,7 +67,6 @@ const AmbientGrainedBackground = forwardRef(function AmbientGrainedBackground({
             top: '-10%',
             left: '-20%',
             background: GLOW,
-            pointerEvents: 'none',
           }}
         />
       )}
@@ -77,7 +77,6 @@ const AmbientGrainedBackground = forwardRef(function AmbientGrainedBackground({
           position: 'absolute',
           inset: 0,
           background: GRADIENT,
-          pointerEvents: 'none',
         }}
       />
 
@@ -91,7 +90,6 @@ const AmbientGrainedBackground = forwardRef(function AmbientGrainedBackground({
             backgroundRepeat: 'repeat',
             backgroundSize: `${grainSize}px ${grainSize}px`,
             opacity: grainOpacity,
-            pointerEvents: 'none',
           }}
         />
       )}
@@ -105,17 +103,8 @@ const AmbientGrainedBackground = forwardRef(function AmbientGrainedBackground({
             backgroundImage: `url(${light})`,
             backgroundRepeat: 'repeat',
             opacity: globalGrainOpacity,
-            pointerEvents: 'none',
-            zIndex: 2,
           }}
         />
-      )}
-
-      {/* Content */}
-      {children && (
-        <Box sx={{ position: 'relative', zIndex: 1 }}>
-          {children}
-        </Box>
       )}
     </Box>
   );

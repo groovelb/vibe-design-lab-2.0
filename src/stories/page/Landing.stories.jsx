@@ -1,4 +1,5 @@
 import { LandingPage } from '../../components/page/LandingPage';
+import { AmbientGrainedBackground } from '../../components/dynamic-color/AmbientGrainedBackground';
 
 export default {
   title: 'Page/Landing',
@@ -26,5 +27,10 @@ Hook (Hero) → Pain (Problem) → Why (인식전환) → Solution (Difference) 
  * 8개 섹션이 조립된 Landing 페이지 전체 플로우.
  */
 export const FullPage = {
-  render: () => <LandingPage />,
+  render: () => (
+    <>
+      <AmbientGrainedBackground />
+      <LandingPage />
+    </>
+  ),
 };

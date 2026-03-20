@@ -74,29 +74,31 @@ export function LandingProblem() {
             const colDelay = (index % 2) * COL_STAGGER;
             return (
               <Grid key={item.subtitle} size={{ xs: 12, md: 6 }}>
-                <AreaConstruct isTriggerOnView delay={colDelay}>
-                  <Box sx={{ width: '100%', aspectRatio: '4/3', overflow: 'hidden', bgcolor: '#09080b' }}>
-                    <Box
-                      component="video"
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      preload="none"
-                      poster={PERSONA_MEDIA[index].poster}
-                      sx={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        display: 'block',
-                        mixBlendMode: 'lighten',
-                        ...(index >= 1 && { transform: 'translateY(24px)' }),
-                      }}
-                    >
-                      <source src={PERSONA_MEDIA[index].video} type="video/mp4" />
+                <Box sx={{ mixBlendMode: 'screen' }}>
+                  <AreaConstruct isTriggerOnView delay={colDelay}>
+                    <Box sx={{ width: '100%', aspectRatio: '4/3', overflow: 'hidden' }}>
+                      <Box
+                        component="video"
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        preload="none"
+                        poster={PERSONA_MEDIA[index].poster}
+                        sx={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          display: 'block',
+                          filter: 'contrast(1.8) brightness(1.3)',
+                          ...(index >= 1 && { transform: 'translateY(24px)' }),
+                        }}
+                      >
+                        <source src={PERSONA_MEDIA[index].video} type="video/mp4" />
+                      </Box>
                     </Box>
-                  </Box>
-                </AreaConstruct>
+                  </AreaConstruct>
+                </Box>
                 <Box sx={{ mt: 6 }}>
                   <ConstructType
                     text={item.subtitle}
