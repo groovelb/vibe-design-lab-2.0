@@ -1,6 +1,5 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import Stack from '@mui/material/Stack';
 import { AmbientGrainedBackground } from './AmbientGrainedBackground';
 
 export default {
@@ -14,12 +13,12 @@ export default {
         component: `
 ## AmbientGrainedBackground
 
-violetGray 스케일 기반 모노톤 ambient grained gradient 배경.
+violetGray 950/900 기반 모노톤 ambient grained gradient 배경.
 
 5-레이어 합성 구조:
-1. **Base** — \`--vdl-950\` (dark) 또는 \`--vdl-50\` (light)
-2. **Ambient Glow** — radial-gradient 광원
-3. **Section Gradient** — linear-gradient 명도 램프
+1. **Base** — \`--vdl-950\`
+2. **Ambient Glow** — \`--vdl-900\` radial-gradient 광원
+3. **Gradient** — \`--vdl-900\` → \`--vdl-950\` → transparent 명도 램프
 4. **Section Grain** — 어두운 노이즈 텍스처 (128px 타일)
 5. **Global Grain** — 밝은 노이즈 텍스처 (미묘한 아날로그 질감)
         `,
@@ -27,11 +26,6 @@ violetGray 스케일 기반 모노톤 ambient grained gradient 배경.
     },
   },
   argTypes: {
-    variant: {
-      control: 'radio',
-      options: ['dark', 'light', 'cta'],
-      description: '그래디언트 프리셋',
-    },
     hasGlow: {
       control: 'boolean',
       description: '앰비언트 글로우 레이어 표시 여부',
@@ -61,46 +55,11 @@ violetGray 스케일 기반 모노톤 ambient grained gradient 배경.
   },
 };
 
-/** 공통 데모 콘텐츠 */
-const DemoContent = ({ isLight = false }) => (
-  <Box sx={{
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    minHeight: 480,
-    gap: 2,
-    px: 4,
-    textAlign: 'center',
-  }}>
-    <Typography
-      variant="h2"
-      sx={{
-        fontWeight: 800,
-        color: isLight ? 'var(--vdl-950)' : 'var(--vdl-50)',
-      }}
-    >
-      Ambient Grained
-    </Typography>
-    <Typography
-      variant="body1"
-      sx={{
-        maxWidth: 480,
-        color: isLight ? 'var(--vdl-600)' : 'var(--vdl-400)',
-      }}
-    >
-      violetGray 스케일만으로 구성한 모노톤 배경.
-      명도 대비와 노이즈 텍스처로 공간감을 만든다.
-    </Typography>
-  </Box>
-);
-
 /**
- * Dark — 어두운 배경 위 상향 명도 램프
+ * Default — 950/900 모노톤
  */
-export const Dark = {
+export const Default = {
   args: {
-    variant: 'dark',
     hasGlow: true,
     hasGrain: true,
     grainSize: 128,
@@ -110,81 +69,30 @@ export const Dark = {
   },
   render: (args) => (
     <AmbientGrainedBackground {...args}>
-      <DemoContent />
-    </AmbientGrainedBackground>
-  ),
-};
-
-/**
- * Light — 밝은 배경 위 하향 명도 램프
- */
-export const Light = {
-  args: {
-    variant: 'light',
-    hasGlow: true,
-    hasGrain: true,
-    grainSize: 128,
-    grainOpacity: 0.4,
-    hasGlobalGrain: true,
-    globalGrainOpacity: 0.05,
-  },
-  render: (args) => (
-    <AmbientGrainedBackground {...args}>
-      <DemoContent isLight />
-    </AmbientGrainedBackground>
-  ),
-};
-
-/**
- * CTA — 수평 풀스펙트럼 그래디언트
- */
-export const CTA = {
-  args: {
-    variant: 'cta',
-    hasGlow: true,
-    hasGrain: true,
-    grainSize: 128,
-    grainOpacity: 0.8,
-    hasGlobalGrain: true,
-    globalGrainOpacity: 0.07,
-  },
-  render: (args) => (
-    <AmbientGrainedBackground {...args}>
-      <DemoContent />
-    </AmbientGrainedBackground>
-  ),
-};
-
-/**
- * Variants — 세 가지 프리셋 비교
- */
-export const Variants = {
-  render: () => (
-    <Stack spacing={0}>
-      {['dark', 'light', 'cta'].map((v) => (
-        <AmbientGrainedBackground
-          key={v}
-          variant={v}
-          grainOpacity={v === 'light' ? 0.4 : 0.8}
+      <Box sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: 480,
+        gap: 2,
+        px: 4,
+        textAlign: 'center',
+      }}>
+        <Typography
+          variant="h2"
+          sx={{ fontWeight: 800, color: 'var(--vdl-50)' }}
         >
-          <Box sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            minHeight: 320,
-          }}>
-            <Typography
-              variant="h3"
-              sx={{
-                fontWeight: 700,
-                color: v === 'light' ? 'var(--vdl-950)' : 'var(--vdl-50)',
-              }}
-            >
-              {v.toUpperCase()}
-            </Typography>
-          </Box>
-        </AmbientGrainedBackground>
-      ))}
-    </Stack>
+          Ambient Grained
+        </Typography>
+        <Typography
+          variant="body1"
+          sx={{ maxWidth: 480, color: 'var(--vdl-400)' }}
+        >
+          violetGray 950/900만으로 구성한 모노톤 배경.
+          명도 대비와 노이즈 텍스처로 공간감을 만든다.
+        </Typography>
+      </Box>
+    </AmbientGrainedBackground>
   ),
 };
