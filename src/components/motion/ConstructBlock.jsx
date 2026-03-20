@@ -22,6 +22,7 @@ const SHUFFLE_INTERVAL = 80;
  * @param {string} variant - MUI Typography variant [Optional, 기본값: 'body1']
  * @param {number} duration - 스캔 소요시간 (ms) [Optional, 기본값: 800]
  * @param {boolean} isTriggerOnView - 뷰포트 진입 시 자동 트리거 여부 [Optional, 기본값: true]
+ * @param {boolean} isEnabled - 트리거 활성화 여부 [Optional, 기본값: true]
  * @param {number} delay - 시작 지연 (ms) [Optional, 기본값: 0]
  * @param {object} sx - 추가 스타일 [Optional]
  *
@@ -39,6 +40,7 @@ const ConstructBlock = forwardRef(function ConstructBlock(
     variant = 'body1',
     duration = 800,
     isTriggerOnView = true,
+    isEnabled = true,
     delay = 0,
     sx,
     ...props
@@ -48,7 +50,7 @@ const ConstructBlock = forwardRef(function ConstructBlock(
   const [inViewRef, isInView] = useInView({
     trigger: 0.1,
     delay,
-    isEnabled: isTriggerOnView,
+    isEnabled: isTriggerOnView && isEnabled,
   });
 
   const [isActive, setIsActive] = useState(false);
@@ -76,10 +78,10 @@ const ConstructBlock = forwardRef(function ConstructBlock(
 
   /** 수동 트리거 */
   useEffect(() => {
-    if (isTriggerOnView) return;
+    if (isTriggerOnView || !isEnabled) return;
     const t = setTimeout(() => setIsActive(true), delay);
     return () => clearTimeout(t);
-  }, [isTriggerOnView, delay]);
+  }, [isTriggerOnView, delay, isEnabled]);
 
   /** 블록 높이 측정 → 슬롯 크기 + 위치(px) 계산 */
   useEffect(() => {
@@ -94,7 +96,7 @@ const ConstructBlock = forwardRef(function ConstructBlock(
     setSlotPositions(positions);
   }, [text, variant]);
 
-  /** Sweep 애니메이션 — 12그리드 중 5개 on, 셔플 */
+  /** Sweep 애니메이션 — CSS transition + setInterval 슬롯 셔플 */
   useEffect(() => {
     if (!isActive) return;
 
@@ -114,47 +116,40 @@ const ConstructBlock = forwardRef(function ConstructBlock(
       return new Set(indices.slice(-ACTIVE_COUNT));
     };
 
-    let activeSet = pickActive();
-
     /** 슬롯 on/off 반영 */
-    const applySlots = () => {
+    const applySlots = (activeSet) => {
       slotRefs.current.forEach((el, i) => {
         if (!el) return;
         el.style.opacity = activeSet.has(i) ? '1' : '0.01';
       });
     };
 
-    applySlots();
+    applySlots(pickActive());
+
+    // CSS transition으로 clip-path, transform 보간
+    textEl.style.transition = `clip-path ${duration}ms linear`;
+    textEl.style.clipPath = 'inset(0 0 0 0)';
+
+    lineEl.style.transition = `transform ${duration}ms linear, opacity 150ms ${EASE_OUT}`;
     lineEl.style.opacity = '1';
+    lineEl.style.transform = `translate3d(${blockWidth}px, 0, 0)`;
 
-    let lastShuffleTime = 0;
-    const startTime = performance.now();
-    let rafId;
+    // 슬롯 셔플
+    const shuffleId = setInterval(() => {
+      applySlots(pickActive());
+    }, SHUFFLE_INTERVAL);
 
-    const animate = (now) => {
-      const elapsed = now - startTime;
-      const progress = Math.min(elapsed / duration, 1);
+    // 완료 정리
+    const doneId = setTimeout(() => {
+      clearInterval(shuffleId);
+      lineEl.style.opacity = '0.01';
+      playConstructClick();
+    }, duration);
 
-      textEl.style.clipPath = `inset(0 ${(1 - progress) * 100}% 0 0)`;
-      lineEl.style.transform = `translate3d(${progress * blockWidth}px, 0, 0)`;
-
-      if (now - lastShuffleTime > SHUFFLE_INTERVAL) {
-        lastShuffleTime = now;
-        activeSet = pickActive();
-        applySlots();
-      }
-
-      if (progress < 1) {
-        rafId = requestAnimationFrame(animate);
-      } else {
-        lineEl.style.opacity = '0.01';
-        textEl.style.clipPath = 'inset(0 0 0 0)';
-        playConstructClick();
-      }
+    return () => {
+      clearInterval(shuffleId);
+      clearTimeout(doneId);
     };
-
-    rafId = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(rafId);
   }, [isActive, duration, slotPx]);
 
   return (

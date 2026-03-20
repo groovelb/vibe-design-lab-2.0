@@ -20,7 +20,9 @@ import { ConstructOverlay } from './ConstructOverlay';
  *
  * @param {React.ReactNode} children - 애니메이션 후 등장할 콘텐츠 [Required]
  * @param {boolean} isTriggerOnView - 뷰포트 진입 시 자동 트리거 여부 [Optional, 기본값: true]
+ * @param {boolean} isEnabled - 트리거 활성화 여부 [Optional, 기본값: true]
  * @param {number} delay - 시작 지연 (ms) [Optional, 기본값: 0]
+ * @param {number|'center'} trigger - useInView trigger [Optional, 기본값: 'center']
  * @param {object} sx - 추가 스타일 [Optional]
  *
  * Example usage:
@@ -29,10 +31,10 @@ import { ConstructOverlay } from './ConstructOverlay';
  * </AreaConstruct>
  */
 const AreaConstruct = forwardRef(function AreaConstruct(
-  { children, isTriggerOnView = true, delay = 0, sx, ...props },
+  { children, isTriggerOnView = true, isEnabled = true, delay = 0, trigger, sx, ...props },
   forwardedRef,
 ) {
-  const { phase, handleRef, size } = useConstruct({ isTriggerOnView, delay });
+  const { phase, handleRef, size } = useConstruct({ isTriggerOnView, delay, trigger, isEnabled });
 
   const mergedRef = (el) => {
     handleRef(el);

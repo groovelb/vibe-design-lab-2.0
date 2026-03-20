@@ -10,7 +10,9 @@ import { AreaConstruct } from './AreaConstruct';
  * ■ → 바운딩 박스 확장 → 버튼 페이드인.
  *
  * @param {boolean} isTriggerOnView - 뷰포트 진입 시 자동 트리거 여부 [Optional, 기본값: true]
+ * @param {boolean} isEnabled - 트리거 활성화 여부 [Optional, 기본값: true]
  * @param {number} delay - 시작 지연 (ms) [Optional, 기본값: 0]
+ * @param {number|'center'} trigger - useInView trigger [Optional]
  * @param {string} color - MUI Button color [Optional, 기본값: 'primary']
  * @param {string} variant - MUI Button variant [Optional, 기본값: 'contained']
  * @param {React.ReactNode} children - 버튼 콘텐츠 [Required]
@@ -22,7 +24,9 @@ import { AreaConstruct } from './AreaConstruct';
 const ConstructButton = forwardRef(function ConstructButton(
   {
     isTriggerOnView = true,
+    isEnabled = true,
     delay = 0,
+    trigger,
     color = 'primary',
     variant = 'contained',
     children,
@@ -34,7 +38,9 @@ const ConstructButton = forwardRef(function ConstructButton(
   return (
     <AreaConstruct
       isTriggerOnView={isTriggerOnView}
+      isEnabled={isEnabled}
       delay={delay}
+      trigger={trigger}
       sx={{ display: 'inline-flex', ...sx }}
     >
       <Button

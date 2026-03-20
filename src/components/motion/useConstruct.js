@@ -14,14 +14,15 @@ import { playConstructClick } from './constructSounds';
  * @param {object} options
  * @param {boolean} options.isTriggerOnView - 뷰포트 진입 시 트리거 [Optional, 기본값: true]
  * @param {number} options.delay - 시작 지연 ms [Optional, 기본값: 0]
- * @param {number|'center'} options.trigger - useInView trigger [Optional, 기본값: 'center']
+ * @param {number|'center'} options.trigger - useInView trigger [Optional, 기본값: 0.1]
+ * @param {boolean} options.isEnabled - 트리거 활성화 여부 [Optional, 기본값: true]
  *
  * @returns {{ phase: string, handleRef: function, size: { w: number, h: number } }}
  *
  * Example usage:
  * const { phase, handleRef, size } = useConstruct({ isTriggerOnView: true, delay: 120 });
  */
-export function useConstruct({ isTriggerOnView = true, delay = 0, trigger = 'center' } = {}) {
+export function useConstruct({ isTriggerOnView = true, delay = 0, trigger = 0.1, isEnabled = true } = {}) {
   const innerRef = useRef(null);
   const [size, setSize] = useState({ w: 0, h: 0 });
   const [phase, setPhase] = useState('idle');
@@ -29,7 +30,7 @@ export function useConstruct({ isTriggerOnView = true, delay = 0, trigger = 'cen
   const [inViewRef, isInView] = useInView({
     trigger,
     delay,
-    isEnabled: isTriggerOnView,
+    isEnabled: isTriggerOnView && isEnabled,
   });
 
   const handleRef = useCallback(
@@ -54,14 +55,12 @@ export function useConstruct({ isTriggerOnView = true, delay = 0, trigger = 'cen
   /** 뷰포트 진입 또는 즉시 시작 */
   useEffect(() => {
     if (!isTriggerOnView) {
-      if (phase === 'idle') {
-        const t = setTimeout(() => setPhase('tag'), delay);
-        return () => clearTimeout(t);
-      }
-      return;
+      if (!isEnabled || phase !== 'idle') return;
+      const t = setTimeout(() => setPhase('tag'), delay);
+      return () => clearTimeout(t);
     }
     if (isInView && phase === 'idle') setPhase('tag');
-  }, [isTriggerOnView, isInView, delay, phase]);
+  }, [isTriggerOnView, isInView, delay, phase, isEnabled]);
 
   /** 단계 전이 */
   useEffect(() => {

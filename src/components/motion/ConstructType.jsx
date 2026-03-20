@@ -15,6 +15,7 @@ import { ConstructCursor } from './ConstructCursor';
  * @param {string} variant - MUI Typography variant [Optional, 기본값: 'h2']
  * @param {number} typingSpeed - 문자 간 딜레이 ms [Optional, 기본값: 60]
  * @param {boolean} isTriggerOnView - 뷰포트 진입 시 자동 트리거 여부 [Optional, 기본값: true]
+ * @param {boolean} isEnabled - 트리거 활성화 여부 [Optional, 기본값: true]
  * @param {number} delay - 시작 지연 (ms) [Optional, 기본값: 0]
  * @param {object} sx - 추가 스타일 [Optional]
  *
@@ -22,13 +23,13 @@ import { ConstructCursor } from './ConstructCursor';
  * <ConstructType text="VIBE DESIGN LAB" variant="h2" isTriggerOnView />
  */
 const ConstructType = forwardRef(function ConstructType(
-  { text, variant = 'h2', typingSpeed = 30, isTriggerOnView = true, delay = 0, sx, ...props },
+  { text, variant = 'h2', typingSpeed = 30, isTriggerOnView = true, isEnabled = true, delay = 0, sx, ...props },
   forwardedRef,
 ) {
   const [inViewRef, isInView] = useInView({
     trigger: 0.1,
     delay,
-    isEnabled: isTriggerOnView,
+    isEnabled: isTriggerOnView && isEnabled,
   });
 
   const [isActive, setIsActive] = useState(false);
@@ -49,10 +50,10 @@ const ConstructType = forwardRef(function ConstructType(
 
   /** 수동 트리거 (isTriggerOnView=false) */
   useEffect(() => {
-    if (isTriggerOnView) return;
+    if (isTriggerOnView || !isEnabled) return;
     const t = setTimeout(() => setIsActive(true), delay);
     return () => clearTimeout(t);
-  }, [isTriggerOnView, delay]);
+  }, [isTriggerOnView, delay, isEnabled]);
 
   return (
     <Box ref={mergedRef} sx={{ position: 'relative', ...sx }} {...props}>
