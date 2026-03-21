@@ -9,13 +9,14 @@ export const VIEW = { w: 1600, h: 500 };
 export const SPHERE = { cx: 800, cy: 260, r: 160 };
 
 // 입력 스트림 (좌측 패널) — 코드/텍스트 조각
+// w: monospace fontSize 10 기준 추정 픽셀 폭 (ASCII ≈ 6px, 한글 ≈ 12px)
 export const INPUT_STREAMS = [
-  { label: "sx={{ color: 'primary' }}", y: 90 },
-  { label: 'variant="display"', y: 155 },
-  { label: 'spacing={8}', y: 220 },
-  { label: '<PhiSplit ratio={φ}>', y: 285 },
-  { label: "'설득이 아니라 증명으로'", y: 350 },
-  { label: 'animate={{ opacity: 1 }}', y: 415 },
+  { label: "sx={{ color: 'primary' }}", y: 90, w: 170 },
+  { label: 'variant="display"', y: 155, w: 110 },
+  { label: 'spacing={8}', y: 220, w: 72 },
+  { label: '<PhiSplit ratio={φ}>', y: 285, w: 128 },
+  { label: "'설득이 아니라 증명으로'", y: 350, w: 140 },
+  { label: 'animate={{ opacity: 1 }}', y: 415, w: 152 },
 ];
 
 // 출력 채널 (우측 패널) — 동작하는 디자인 산출물

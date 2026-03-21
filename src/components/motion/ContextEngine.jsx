@@ -89,8 +89,24 @@ function Sphere({ pointCount, rotationDuration, accentColor, isReducedMotion }) 
 }
 
 // ============================================================
-// InputStreams — 좌측 6개 입력 스트림
+// InputStreams — 좌측 6개 입력 스트림 + 타이핑 리빌
 // ============================================================
+
+// 타이핑 애니메이션 타이밍
+const TYPE_SPEED = 200; // px/s
+const TYPE_START = 0.5; // 첫 라벨 시작 딜레이
+const TYPE_GAP = 0.3;   // 라벨 간 간격
+
+// 각 라벨의 begin/dur 사전 계산
+const INPUT_TIMINGS = (() => {
+  let t = TYPE_START;
+  return INPUT_STREAMS.map((s) => {
+    const dur = s.w / TYPE_SPEED;
+    const begin = t;
+    t = begin + dur + TYPE_GAP;
+    return { begin: +begin.toFixed(2), dur: +dur.toFixed(2) };
+  });
+})();
 
 function InputStreams({ accentColor, isReducedMotion }) {
   const { inputLabelX, inputDotsX, inputPathStartX } = LAYOUT;
@@ -98,6 +114,27 @@ function InputStreams({ accentColor, isReducedMotion }) {
 
   return (
     <g>
+      {/* 타이핑 clipPath 정의 */}
+      {!isReducedMotion && (
+        <defs>
+          {INPUT_STREAMS.map((stream, i) => {
+            const { begin, dur } = INPUT_TIMINGS[i];
+            return (
+              <clipPath key={i} id={`ce-type-${i}`}>
+                <rect x={inputLabelX - 2} y={stream.y - 14} width={0.01} height={28}>
+                  <animate
+                    attributeName="width"
+                    from="0.01" to={stream.w + 4}
+                    dur={`${dur}s`} begin={`${begin}s`}
+                    fill="freeze"
+                  />
+                </rect>
+              </clipPath>
+            );
+          })}
+        </defs>
+      )}
+
       <text x={inputLabelX} y={55} fill={MUTED}
         fontSize={9} fontFamily={FONT}
         letterSpacing="0.08em" opacity={0.5}>
@@ -105,16 +142,36 @@ function InputStreams({ accentColor, isReducedMotion }) {
       </text>
 
       {INPUT_STREAMS.map((stream, i) => {
-        const { label, y } = stream;
+        const { label, y, w } = stream;
+        const { begin, dur } = INPUT_TIMINGS[i];
         const path = cleanBezier(inputPathStartX, y, sphereEdgeX, SPHERE.cy, { straightRatio: 0.7 });
 
         return (
           <g key={i}>
-            <text x={inputLabelX} y={y + 4} fill={MUTED}
-              fontSize={10} fontFamily={FONT} opacity={0.4}>
-              {label}
-            </text>
+            {/* 코드 라벨 — clipPath 타이핑 리빌 */}
+            <g clipPath={isReducedMotion ? undefined : `url(#ce-type-${i})`}>
+              <text x={inputLabelX} y={y + 4} fill={MUTED}
+                fontSize={10} fontFamily={FONT} opacity={0.4}>
+                {label}
+              </text>
+            </g>
 
+            {/* 타이핑 커서 */}
+            {!isReducedMotion && (
+              <rect x={inputLabelX} y={y - 7} width={1.5} height={14}
+                fill={accentColor} opacity={0.01}>
+                <animate attributeName="x"
+                  from={inputLabelX} to={inputLabelX + w}
+                  dur={`${dur}s`} begin={`${begin}s`} fill="freeze" />
+                <animate attributeName="opacity"
+                  to="0.8" dur="0.05s" begin={`${begin}s`} fill="freeze" />
+                <animate attributeName="opacity"
+                  values="0.8;0.01;0.8" dur="0.8s"
+                  begin={`${begin + dur}s`} repeatCount="indefinite" />
+              </rect>
+            )}
+
+            {/* 스테이터스 인디케이터 */}
             {[0, 1, 2, 3].map((d) => (
               <rect key={d}
                 x={inputDotsX + d * 12 - 2.5} y={y - 2.5}
@@ -124,9 +181,11 @@ function InputStreams({ accentColor, isReducedMotion }) {
               />
             ))}
 
+            {/* 가이드 패스 */}
             <path d={path} fill="none" stroke={accentColor}
               strokeWidth={0.6} opacity={0.07} />
 
+            {/* 흐르는 파티클 */}
             {!isReducedMotion && (
               <>
                 <rect x={-3} y={-3} width={6} height={6} rx={1} fill={accentColor}>
@@ -181,12 +240,61 @@ function InputStreams({ accentColor, isReducedMotion }) {
 }
 
 // ============================================================
-// OutputChannels — 우측 4개 출력 채널
+// OutputChannels — 우측 4개 출력 채널 + UI 와이어프레임 조립
 // ============================================================
+
+// 와이어프레임 등장 타이밍 (입력 타이핑 완료 후)
+const WIRE_START = 6.5;
+const WIRE_STAGGER = 0.4;
+const WIRE_DUR = 0.5;
+
+// 와이어프레임 아이콘 — 각 출력 채널의 디자인 산출물 시각화
+const WIREFRAME_ICONS = [
+  // 컴포넌트 — 버튼 형태
+  (wx, wy, c) => (
+    <>
+      <rect x={wx} y={wy - 5} width={18} height={10} rx={2}
+        fill="none" stroke={c} strokeWidth={0.8} />
+      <line x1={wx + 5} y1={wy} x2={wx + 13} y2={wy}
+        stroke={c} strokeWidth={0.8} />
+    </>
+  ),
+  // 레이아웃 — 2분할 그리드
+  (wx, wy, c) => (
+    <>
+      <rect x={wx} y={wy - 7} width={8} height={14} rx={1}
+        fill="none" stroke={c} strokeWidth={0.8} />
+      <rect x={wx + 10} y={wy - 7} width={8} height={14} rx={1}
+        fill="none" stroke={c} strokeWidth={0.8} />
+    </>
+  ),
+  // 인터랙션 — rect + 모션 화살표
+  (wx, wy, c) => (
+    <>
+      <rect x={wx} y={wy - 5} width={12} height={10} rx={1}
+        fill="none" stroke={c} strokeWidth={0.8} />
+      <line x1={wx + 14} y1={wy + 3} x2={wx + 18} y2={wy - 3}
+        stroke={c} strokeWidth={0.8} />
+      <polyline points={`${wx + 16},${wy - 3} ${wx + 18},${wy - 3} ${wx + 18},${wy - 1}`}
+        fill="none" stroke={c} strokeWidth={0.8} />
+    </>
+  ),
+  // 제품 — 스크린 아웃라인
+  (wx, wy, c) => (
+    <>
+      <rect x={wx + 2} y={wy - 9} width={14} height={18} rx={2}
+        fill="none" stroke={c} strokeWidth={0.8} />
+      <line x1={wx + 7} y1={wy + 7} x2={wx + 11} y2={wy + 7}
+        stroke={c} strokeWidth={0.6} />
+    </>
+  ),
+];
 
 function OutputChannels({ accentColor, isReducedMotion }) {
   const sphereEdgeX = SPHERE.cx + SPHERE.r;
   const { outputEndX, outputLabelX } = LAYOUT;
+  const wireX = outputLabelX + 2;
+  const labelX = outputLabelX + 26;
 
   return (
     <g>
@@ -199,12 +307,15 @@ function OutputChannels({ accentColor, isReducedMotion }) {
       {OUTPUT_CHANNELS.map((channel, i) => {
         const { label, y } = channel;
         const path = cleanBezier(sphereEdgeX, SPHERE.cy, outputEndX, y, { straightRatio: 0.7 });
+        const wireBegin = WIRE_START + i * WIRE_STAGGER;
 
         return (
           <g key={i}>
+            {/* 가이드 패스 */}
             <path d={path} fill="none" stroke={accentColor}
               strokeWidth={0.6} opacity={0.07} />
 
+            {/* 흐르는 파티클 */}
             {!isReducedMotion && (
               <>
                 <rect x={-3} y={-3} width={6} height={6} rx={1} fill={accentColor}>
@@ -252,6 +363,7 @@ function OutputChannels({ accentColor, isReducedMotion }) {
               </>
             )}
 
+            {/* 엔드포인트 */}
             <rect x={outputEndX - 5} y={y - 5} width={10} height={10} rx={1}
               fill={accentColor} opacity={0.7}>
               {!isReducedMotion && (
@@ -277,8 +389,26 @@ function OutputChannels({ accentColor, isReducedMotion }) {
               )}
             </rect>
 
-            <text x={outputLabelX + 18} y={y + 4} fill={MUTED}
-              fontSize={10} fontFamily={FONT} opacity={0.6}>
+            {/* UI 와이어프레임 아이콘 — 조립 애니메이션 */}
+            <g opacity={isReducedMotion ? 0.6 : 0.01}>
+              {!isReducedMotion && (
+                <animate attributeName="opacity"
+                  from="0.01" to="0.6"
+                  dur={`${WIRE_DUR}s`} begin={`${wireBegin}s`}
+                  fill="freeze" />
+              )}
+              {WIREFRAME_ICONS[i](wireX, y, accentColor)}
+            </g>
+
+            {/* 채널 라벨 */}
+            <text x={labelX} y={y + 4} fill={MUTED}
+              fontSize={10} fontFamily={FONT} opacity={isReducedMotion ? 0.6 : 0.01}>
+              {!isReducedMotion && (
+                <animate attributeName="opacity"
+                  from="0.01" to="0.6"
+                  dur={`${WIRE_DUR}s`} begin={`${wireBegin}s`}
+                  fill="freeze" />
+              )}
               {label}
             </text>
           </g>
