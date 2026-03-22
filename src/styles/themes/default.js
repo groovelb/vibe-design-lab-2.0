@@ -68,7 +68,7 @@ const typography = {
   h1: {
     fontFamily: suitFamily,
     fontWeight: 700,
-    fontSize: '3rem',
+    fontSize: '2.75rem',
     lineHeight: 1.075,
     letterSpacing: '-0.03em',
     wordSpacing: '0.1em',
@@ -92,8 +92,8 @@ const typography = {
   h4: {
     fontFamily: suitFamily,
     fontWeight: 700,
-    fontSize: '1.5rem',
-    lineHeight: 1.3,
+    fontSize: '1.25rem',
+    lineHeight: 1.2,
     letterSpacing: '-0.01em',
     wordSpacing: '0.1em',
   },
@@ -116,12 +116,12 @@ const typography = {
 
   // 본문 — SUIT (fontFamily 상속)
   body1: {
-    fontSize: '1.125rem',
+    fontSize: '1rem',
     lineHeight: 1.7,
     letterSpacing: '0',
   },
   body2: {
-    fontSize: '1rem',
+    fontSize: '0.85rem',
     lineHeight: 1.7,
     letterSpacing: '0',
   },
@@ -165,7 +165,7 @@ const typography = {
   display: {
     fontFamily: suitFamily,
     fontWeight: 700,
-    fontSize: 'clamp(4rem, 7vw, 5rem)',
+    fontSize: 'clamp(4rem, 7vw, 4.5rem)',
     lineHeight: 1.1,
     letterSpacing: '-0.04em',
     wordSpacing: '0.06em',
@@ -310,7 +310,7 @@ const components = {
       },
       sizeLarge: {
         padding: '16px 44px',
-        fontSize: '1.125rem',
+        fontSize: '1rem',
       },
     },
   },

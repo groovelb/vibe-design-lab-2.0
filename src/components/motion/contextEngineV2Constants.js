@@ -4,7 +4,7 @@
  * 흐름: 프롬프트 입력(1) → 타이핑 → 파티클 → 바 노드(9) → 파티클 → 출력(5)
  */
 
-// SVG viewBox (상단 60px 패딩 포함)
+// SVG viewBox
 export const VIEW = { w: 1600, h: 560 };
 
 // ============================================================
@@ -12,12 +12,12 @@ export const VIEW = { w: 1600, h: 560 };
 // ============================================================
 
 export const LAYOUT_V2 = {
-  // Stage 1: Prompt input container
-  containerX: 20,
-  containerY: 170,
-  containerW: 260,
-  containerH: 220,
-  containerCenterY: 280,
+  // Stage 1: Prompt input container (상단 정렬, 첫 바 노드와 top 동일)
+  containerX: 0,
+  containerY: 40,
+  containerW: 360,
+  containerH: 80,
+  containerCenterY: 80,
   // Stage 2: Bar nodes
   barX: 560,
   // Stage 3: Output endpoints
@@ -26,29 +26,31 @@ export const LAYOUT_V2 = {
 
 // ============================================================
 // Stage 1 — 프롬프트 입력 컨테이너 (1개)
-// 4줄의 프롬프트가 순차 타이핑
 // ============================================================
 
 export const TYPING_PROMPTS = [
-  { text: '> design a landing page with golden ratio layout, scroll reveal motion, and product card grid', textWidth: 230 },
+  { text: '> design a hero with golden ratio and scroll motion', textWidth: 320 },
 ];
 
 // 컨테이너 내 라인 y 좌표 (단일 프롬프트 — 컨테이너 중앙)
-export const getLineY = () => 280;
+export const getLineY = () => 80;
 
 // ============================================================
-// Stage 2 — 바 노드 (9개, 최다)
+// Stage 2 — 바 노드 (9개)
 // ============================================================
 
 export const PROCESS_BARS = [
   // Design tokens
-  { label: 'color.primary',    y: 130, w: 140 },
-  { label: 'typography.h1',    y: 200, w: 120 },
-  { label: 'spacing.unit',     y: 270, w: 110 },
+  { label: 'color.primary',    y: 50,  w: 130 },
+  { label: 'typography.h1',    y: 106, w: 130 },
+  { label: 'spacing.unit',     y: 162, w: 130 },
+  { label: 'elevation.level',  y: 218, w: 130 },
+  { label: 'radius.none',      y: 274, w: 130 },
   // Logic / structure
-  { label: 'Grid.columns',     y: 340, w: 130 },
-  { label: 'transition.ease',  y: 410, w: 135 },
-  { label: 'breakpoint.md',    y: 480, w: 120 },
+  { label: 'Grid.columns',     y: 330, w: 130 },
+  { label: 'PhiSplit.ratio',   y: 386, w: 130 },
+  { label: 'transition.ease',  y: 442, w: 130 },
+  { label: 'breakpoint.md',    y: 498, w: 130 },
 ];
 
 // ============================================================
@@ -56,25 +58,27 @@ export const PROCESS_BARS = [
 // ============================================================
 
 export const OUTPUT_CHANNELS_V2 = [
-  { label: 'Component',   y: 132, score: '0.97', icon: 'component' },
-  { label: 'Layout',      y: 222, score: '0.94', icon: 'layoutGrid' },
-  { label: 'Interaction', y: 312, score: '0.91', icon: 'mouse' },
-  { label: 'Product',     y: 402, score: '0.88', icon: 'package' },
-  { label: 'System',      y: 492, score: '0.92', icon: 'settings' },
+  { label: 'Component',   y: 70,  score: '0.97', icon: 'component' },
+  { label: 'Layout',      y: 182, score: '0.94', icon: 'layoutGrid' },
+  { label: 'Interaction', y: 294, score: '0.91', icon: 'mouse' },
+  { label: 'Product',     y: 406, score: '0.88', icon: 'package' },
+  { label: 'System',      y: 518, score: '0.92', icon: 'settings' },
 ];
 
 // ============================================================
 // 연결 매핑 — Middle→Output
-// (Stage 1은 단일 컨테이너→전체 9바 노드, 매핑 불필요)
 // ============================================================
 
 export const MIDDLE_TO_OUTPUT_MAP = [
   [0, 3],   // color.primary   → Component, Product
   [0, 1],   // typography.h1   → Component, Layout
-  [1, 2],   // spacing.unit    → Layout, Interaction
+  [1],      // spacing.unit    → Layout
+  [0, 2],   // elevation.level → Component, Interaction
+  [1, 4],   // radius.none     → Layout, System
   [1, 3],   // Grid.columns    → Layout, Product
-  [2, 4],   // transition.ease → Interaction, System
-  [0, 4],   // breakpoint.md   → Component, System
+  [3, 4],   // PhiSplit.ratio  → Product, System
+  [2],      // transition.ease → Interaction
+  [2, 4],   // breakpoint.md   → Interaction, System
 ];
 
 // ============================================================
@@ -121,8 +125,8 @@ export const CYCLE = 5; // seconds
 export const TYPING_TIMING = {
   lineTypeDur: 1.2,    // 타이핑 소요 시간(s)
   lineStagger: 0,      // 단일 프롬프트이므로 0
-  fontSize: 10,
-  lineHeight: 14,
+  fontSize: 14,
+  lineHeight: 18,
   cursorBlinkDur: 0.6,
 };
 
@@ -154,62 +158,65 @@ export const TIMING = {
 // ============================================================
 
 export const READOUTS = [
-  { x: 360, y: 120, lines: ['/3.652e+3', '0.883'], opacity: 0.08 },
-  { x: 340, y: 500, lines: ['TSK/N', 'Q3REF0'], opacity: 0.06 },
-  { x: 980, y: 110, lines: ['582205'], opacity: 0.07 },
-  { x: 1000, y: 510, lines: ['READING...'], opacity: 0.06 },
-  { x: 1180, y: 200, lines: ['T', 'U', 'Z', 'C'], opacity: 0.05 },
+  { x: 360, y: 60,  lines: ['/3.652e+3', '0.883'], opacity: 0.08 },
+  { x: 340, y: 480, lines: ['TSK/N', 'Q3REF0'], opacity: 0.06 },
+  { x: 980, y: 50,  lines: ['582205'], opacity: 0.07 },
+  { x: 1000, y: 500, lines: ['READING...'], opacity: 0.06 },
+  { x: 1180, y: 140, lines: ['T', 'U', 'Z', 'C'], opacity: 0.05 },
 ];
 
 // ============================================================
 // 수평 스캔라인
 // ============================================================
 
-export const SCAN_LINES = [160, 310, 460];
+export const SCAN_LINES = [100, 280, 460];
 
 // ============================================================
-// Curve generators
+// Curve generators — 직선 최대화 + 고곡률 전환
+// 수평 직선 → 라운드 90° 전환 → 수직 직선 → 라운드 90° 전환 → 수평 직선
 // ============================================================
+
+const CORNER_R = 16; // 전환부 곡률 반경 (px)
 
 /**
- * Sankey 번들 커브 — 소스에서 타깃으로 수렴하는 S-커브
+ * 라운드 엘보 커넥터 — 수평→수직→수평 경로
+ * turnX: 방향 전환이 일어나는 x 좌표
+ * r: 코너 반경 (|dy|/2 이하로 클램프)
  */
-export function sankeyBundle(x1, y1, x2, y2) {
-  const dx = x2 - x1;
+function elbowPath(x1, y1, x2, y2, turnX, r) {
+  const dy = y2 - y1;
 
-  if (Math.abs(y2 - y1) < 2) {
+  if (Math.abs(dy) < 2) {
     return `M ${x1} ${y1} L ${x2} ${y2}`;
   }
 
-  const cp1x = x1 + dx * 0.35;
-  const cp1y = y1;
-  const cp2x = x1 + dx * 0.5;
-  const cp2y = y1 + (y2 - y1) * 0.7;
-  const endCurveX = x1 + dx * 0.65;
+  const cr = Math.min(r, Math.abs(dy) / 2, Math.abs(turnX - x1), Math.abs(x2 - turnX));
+  const s = dy > 0 ? 1 : -1;
 
   return [
     `M ${x1} ${y1}`,
-    `C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${endCurveX} ${y2}`,
+    `L ${turnX - cr} ${y1}`,
+    `Q ${turnX} ${y1}, ${turnX} ${y1 + s * cr}`,
+    `L ${turnX} ${y2 - s * cr}`,
+    `Q ${turnX} ${y2}, ${turnX + cr} ${y2}`,
     `L ${x2} ${y2}`,
   ].join(' ');
 }
 
 /**
- * 팬아웃 커브 — 소스에서 각 타깃으로 확산하는 대칭 S-커브
+ * Stage 1 커브 — 프롬프트→바 노드
+ * 전환 열: 고정 x=460 (컨테이너 우측과 barX 중간)
+ */
+export function sankeyBundle(x1, y1, x2, y2) {
+  return elbowPath(x1, y1, x2, y2, 460, CORNER_R);
+}
+
+/**
+ * Stage 2 커브 — 바 노드→출력
+ * 전환 열: 고정 x=1400 (출력 근처, 모든 경로 동일 열에서 분기)
  */
 export function fanCurve(x1, y1, x2, y2) {
-  const dx = x2 - x1;
-
-  if (Math.abs(y2 - y1) < 2) {
-    return `M ${x1} ${y1} L ${x2} ${y2}`;
-  }
-
-  const cp1x = x1 + dx * 0.4;
-  const cp1y = y1;
-  const cp2x = x2 - dx * 0.4;
-  const cp2y = y2;
-
-  return `M ${x1} ${y1} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${x2} ${y2}`;
+  return elbowPath(x1, y1, x2, y2, 1400, CORNER_R);
 }
 
 // ============================================================
@@ -217,7 +224,7 @@ export function fanCurve(x1, y1, x2, y2) {
 // ============================================================
 
 /**
- * Stage 1: 프롬프트 컨테이너 → 9개 바 노드
+ * Stage 1: 프롬프트 컨테이너 → 바 노드
  * 컨테이너 우측 중앙에서 모든 바 노드로 팬아웃
  */
 export function buildStage1Paths() {

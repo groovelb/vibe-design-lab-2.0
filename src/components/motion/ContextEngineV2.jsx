@@ -32,7 +32,7 @@ function SvgDefs({ accentColor }) {
         <path
           d="M 14 0 L 28 8.08 L 28 24.25 L 14 32.33 L 0 24.25 L 0 8.08 Z M 14 48.5 L 28 40.42 L 28 56.58 L 14 64.67 L 0 56.58 L 0 40.42 Z"
           fill="none"
-          stroke="var(--vdl-700)"
+          stroke={accentColor}
           strokeWidth={0.3}
         />
       </pattern>
@@ -112,13 +112,13 @@ function ConnectionPaths({ accentColor, stage1Paths, stage2Paths }) {
       {stage1Paths.map((p, i) => (
         <path key={`s1-${i}`} d={p.path}
           fill="none" stroke={accentColor}
-          strokeWidth={0.6} opacity={0.07}
+          strokeWidth={0.7} opacity={0.07}
         />
       ))}
       {stage2Paths.map((p, i) => (
         <path key={`s2-${i}`} d={p.path}
           fill="none" stroke={accentColor}
-          strokeWidth={0.8} opacity={0.07}
+          strokeWidth={0.7} opacity={0.07}
         />
       ))}
     </g>
@@ -177,7 +177,7 @@ function PromptInput({ accentColor, isReducedMotion }) {
 
       {/* "Prompt" 라벨 */}
       <text
-        x={containerX + 12} y={containerY + 20}
+        x={containerX + 12} y={containerY + 16}
         fontFamily={CODE_FONT}
         fontSize={8}
         fill={accentColor}
@@ -189,8 +189,8 @@ function PromptInput({ accentColor, isReducedMotion }) {
 
       {/* 라벨 밑 구분선 */}
       <line
-        x1={containerX + 8} y1={containerY + 30}
-        x2={containerX + containerW - 8} y2={containerY + 30}
+        x1={containerX + 8} y1={containerY + 24}
+        x2={containerX + containerW - 8} y2={containerY + 24}
         stroke={accentColor}
         strokeWidth={0.3}
         opacity={0.15}
@@ -275,13 +275,17 @@ function PromptInput({ accentColor, isReducedMotion }) {
 // BarNode — 단일 바 노드 (가운데 프로세싱 레이어)
 // ============================================================
 
-const BAR_DEPTH_OPACITY = [0.8, 0.75, 0.7, 0.7, 0.65, 0.6];
+const BAR_DEPTH_OPACITY = [0.8, 0.8, 0.75, 0.75, 0.7, 0.7, 0.65, 0.6, 0.55];
 
 function BarNode({ bar, index, accentColor, isReducedMotion }) {
   const { barX } = LAYOUT_V2;
   const barH = 20;
   const barY = bar.y - barH / 2;
+  const sqSize = 12;
+  const sqX = barX + bar.w - sqSize - 6;
+  const sqY = bar.y - sqSize / 2;
   const nodeOpacity = BAR_DEPTH_OPACITY[index];
+  const glowDelay = index * 0.4;
 
   return (
     <g opacity={nodeOpacity}>
@@ -295,16 +299,9 @@ function BarNode({ bar, index, accentColor, isReducedMotion }) {
         opacity={0.25}
       />
 
-      {/* 플레이 삼각형 */}
-      <polygon
-        points={`${barX + 8},${bar.y - 3} ${barX + 8},${bar.y + 3} ${barX + 14},${bar.y}`}
-        fill={accentColor}
-        opacity={0.5}
-      />
-
       {/* 라벨 텍스트 */}
       <text
-        x={barX + 20}
+        x={barX + 8}
         y={bar.y + 3.5}
         fontFamily={CODE_FONT}
         fontSize={9}
@@ -314,25 +311,31 @@ function BarNode({ bar, index, accentColor, isReducedMotion }) {
         {bar.label}
       </text>
 
-      {/* 슬라이더 바 (우측 끝) */}
+      {/* 정사각형 인디케이터 + 순차 glow */}
       <rect
-        x={barX + bar.w - 30}
-        y={bar.y - 1.5}
-        width={24}
-        height={3}
+        x={sqX} y={sqY}
+        width={sqSize} height={sqSize}
         fill={accentColor}
-        opacity={0.3}
+        opacity={0.15}
       >
         {!isReducedMotion && (
           <animate
-            attributeName="width"
-            values="24;28;24"
-            dur={`${TIMING.sliderDur}s`}
-            begin={`${index * TIMING.sliderStagger}s`}
+            attributeName="opacity"
+            values="0.1;0.5;0.1"
+            dur="2.5s"
+            begin={`${glowDelay}s`}
             repeatCount="indefinite"
           />
         )}
       </rect>
+      <rect
+        x={sqX} y={sqY}
+        width={sqSize} height={sqSize}
+        fill="none"
+        stroke={accentColor}
+        strokeWidth={0.5}
+        opacity={0.3}
+      />
     </g>
   );
 }
@@ -575,6 +578,7 @@ const ContextEngineV2 = forwardRef(function ContextEngineV2({
         position: 'relative',
         width: '100%',
         height: '100%',
+        overflow: 'hidden',
         ...sx,
       }}
     >
@@ -582,7 +586,7 @@ const ContextEngineV2 = forwardRef(function ContextEngineV2({
         viewBox={`0 0 ${VIEW.w} ${VIEW.h}`}
         width="100%"
         height="100%"
-        preserveAspectRatio="xMaxYMid slice"
+        preserveAspectRatio="xMinYMid meet"
         style={{ display: 'block' }}
       >
         <SvgDefs accentColor={accentColor} />

@@ -33,6 +33,11 @@ export function LandingHeroMessage() {
         typingSpeed={HEADLINE_SPEED}
         isTriggerOnView={false}
         delay={0}
+        sx={{
+          textShadow: [
+            '0 0 24px hsl(260, 12%, 96%, 0.4)',
+          ].join(', '),
+        }}
       />
 
       <ConstructButton

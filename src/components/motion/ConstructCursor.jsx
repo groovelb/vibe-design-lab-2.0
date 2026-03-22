@@ -117,7 +117,7 @@ function ConstructCursor({ text, variant = 'h2', typingSpeed = 30, isActive = fa
         component="div"
         aria-label={text}
         sx={{
-          whiteSpace: 'nowrap',
+          whiteSpace: 'pre-wrap',
           '@media (prefers-reduced-motion: reduce)': {
             '& > span': { opacity: '1 !important', transition: 'none !important' },
           },

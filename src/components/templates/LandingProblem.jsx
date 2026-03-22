@@ -9,7 +9,6 @@ import MarqueeContainer from '../motion/MarqueeContainer';
 import { AreaConstruct } from '../motion/AreaConstruct';
 import { ConstructType } from '../motion/ConstructType';
 import { ConstructBlock } from '../motion/ConstructBlock';
-import ScrollRevealText from '../kinetic-typography/ScrollRevealText';
 import { SectionDivider } from '../typography/SectionDivider';
 import { COL_STAGGER, VISUAL_LEAD } from '../motion/constants';
 import { PAGES } from '../../data/contents';
@@ -29,7 +28,7 @@ const PERSONA_MEDIA = VISIBLE_INDICES.map((i) => ALL_PERSONA_MEDIA[i]);
 /**
  * LandingProblem 섹션 템플릿
  *
- * 문제 정의 문단형(ScrollRevealText) + 페르소나별 카드 그리드.
+ * 문제 정의 문단형(ConstructType) + 페르소나별 카드 그리드.
  * 카드 텍스트: ConstructType(타이틀) + ConstructBlock(설명).
  *
  * Example usage:
@@ -41,33 +40,12 @@ export function LandingProblem() {
       <Stack spacing={12}>
         <Box sx={{ mb: { xs: 4, md: 6 } }}>
           <SectionDivider label="Problem" sx={{ mb: 3 }} />
-          <ScrollRevealText
+          <ConstructType
             text={problem.headline}
             variant="h1"
-            isSplitSentences={false}
+            typingSpeed={20}
             sx={{ letterSpacing: '-0.02em', wordSpacing: '0.15em', '& .MuiTypography-root': { lineHeight: 1.71 } }}
           />
-          <Box sx={{ mt: 4 }}>
-            <MarqueeContainer speed={25} direction="left" isPauseOnHover={false} isScrollScrub gap={1.5}>
-              {problem.tags.map((tag) => (
-                <Chip
-                  key={tag}
-                  label={tag}
-                  variant="outlined"
-                  sx={{
-                    bgcolor: 'transparent',
-                    color: 'common.white',
-                    borderColor: 'common.white',
-                    fontWeight: 700,
-                    fontSize: '1rem',
-                    height: 40,
-                    borderRadius: 0,
-                    '& .MuiChip-label': { px: 2 },
-                  }}
-                />
-              ))}
-            </MarqueeContainer>
-          </Box>
         </Box>
         <LineGrid container gap={144} borderColor="divider">
           {problem.career.filter((_, i) => VISIBLE_INDICES.includes(i)).map((item, index) => {
@@ -119,6 +97,27 @@ export function LandingProblem() {
             );
           })}
         </LineGrid>
+        <Box sx={{ mt: 4 }}>
+          <MarqueeContainer speed={25} direction="left" isPauseOnHover={false} isScrollScrub gap={1.5}>
+            {problem.tags.map((tag) => (
+              <Chip
+                key={tag}
+                label={tag}
+                variant="outlined"
+                sx={{
+                  bgcolor: 'transparent',
+                  color: 'common.white',
+                  borderColor: 'common.white',
+                  fontWeight: 700,
+                  fontSize: '1rem',
+                  height: 40,
+                  borderRadius: 0,
+                  '& .MuiChip-label': { px: 2 },
+                }}
+              />
+            ))}
+          </MarqueeContainer>
+        </Box>
       </Stack>
     </SectionContainer>
   );
