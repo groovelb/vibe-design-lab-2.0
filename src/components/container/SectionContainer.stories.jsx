@@ -1,7 +1,6 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import { PageContainer } from '../layout/PageContainer';
 import { SectionContainer } from './SectionContainer';
 import { DocumentTitle, SectionTitle } from '../storybookDocumentation';
 import Placeholder from '../../common/ui/Placeholder';
@@ -17,11 +16,11 @@ export default {
 
 /**
  * ## 기본 사용법
- * 
+ *
  * SectionContainer는 페이지 내의 각 섹션을 구분하는 컨테이너입니다.
- * - 100% 너비로 확장되며 상하 여백(py) 제공
+ * - 기본 모드: 콘텐츠 영역(max-width + 중앙정렬 + 좌우 gutter) 자동 적용
+ * - isFullWidth: 전체 너비 모드 (Hero, 가로 스크롤 등)
  * - section 태그로 시맨틱 마크업 적용
- * - 반응형 여백: 모바일(xs) py:4, 데스크탑(md) py:6
  */
 export const Default = {
   render: () => (
@@ -29,24 +28,22 @@ export const Default = {
       <DocumentTitle
         title="SectionContainer"
         status="Ready"
-        note="페이지 내 섹션을 구분하고 일관된 상하 여백을 제공하는 컨테이너"
+        note="콘텐츠 영역 제약 + 전체 너비 모드를 지원하는 섹션 컨테이너"
         brandName="Layout"
         systemName="Container"
-        version="1.0"
+        version="2.0"
       />
 
       <Box sx={{ py: 4 }}>
-        <SectionTitle>기본 사용법</SectionTitle>
+        <SectionTitle>기본 사용법 (콘텐츠 영역)</SectionTitle>
         <SectionContainer sx={{ bgcolor: 'grey.50', border: '2px dashed', borderColor: 'secondary.main' }}>
-          <PageContainer>
-            <Typography variant="h6" gutterBottom color="secondary">
-              SectionContainer
-            </Typography>
-            <Typography color="text.secondary">
-              섹션 컨테이너는 100% 너비로 확장되며, 상하 여백이 자동으로 적용됩니다.
-              내부에 PageContainer를 사용하여 콘텐츠 너비를 제한할 수 있습니다.
-            </Typography>
-          </PageContainer>
+          <Typography variant="h6" gutterBottom color="secondary">
+            SectionContainer
+          </Typography>
+          <Typography color="text.secondary">
+            기본 모드에서는 Container maxWidth=&quot;xl&quot;이 자동 적용되어
+            콘텐츠 폭이 제한됩니다.
+          </Typography>
         </SectionContainer>
       </Box>
     </Box>
@@ -54,70 +51,59 @@ export const Default = {
 };
 
 /**
- * ## 여러 섹션 쌓기
- * 
- * SectionContainer를 연속으로 배치하여 섹션을 구분합니다.
+ * ## 전체 너비 모드
+ *
+ * isFullWidth 사용 시 콘텐츠 영역 제약 없이 전체 너비로 확장됩니다.
+ * Hero 섹션, 가로 스크롤 컨테이너 등에 사용합니다.
  */
-export const StackingSections = {
+export const FullWidth = {
   render: () => (
     <Box sx={{ py: 4 }}>
-      <SectionTitle>여러 섹션 쌓기</SectionTitle>
-      <Typography variant="body2" color="text.secondary" sx={{ px: 2, mb: 2 }}>
-        SectionContainer를 연속으로 배치하면 자연스러운 섹션 구분이 가능합니다.
-      </Typography>
-      
-      <SectionContainer sx={{ bgcolor: 'grey.50' }}>
-        <PageContainer>
-          <Typography variant="h5" gutterBottom>섹션 1: Hero</Typography>
-          <Typography>첫 번째 섹션 콘텐츠입니다. 배경색으로 구분됩니다.</Typography>
-        </PageContainer>
-      </SectionContainer>
-
-      <SectionContainer sx={{ bgcolor: 'white' }}>
-        <PageContainer>
-          <Typography variant="h5" gutterBottom>섹션 2: Features</Typography>
-          <Typography>두 번째 섹션 콘텐츠입니다. 흰색 배경입니다.</Typography>
-        </PageContainer>
-      </SectionContainer>
-
-      <SectionContainer sx={{ bgcolor: 'grey.100' }}>
-        <PageContainer>
-          <Typography variant="h5" gutterBottom>섹션 3: Testimonials</Typography>
-          <Typography>세 번째 섹션 콘텐츠입니다. 회색 배경입니다.</Typography>
-        </PageContainer>
+      <SectionTitle>전체 너비 모드 (isFullWidth)</SectionTitle>
+      <SectionContainer isFullWidth sx={{ bgcolor: 'primary.main', color: 'white' }}>
+        <Typography variant="h3" gutterBottom>
+          Full Width Section
+        </Typography>
+        <Typography variant="h6" sx={{ opacity: 0.8 }}>
+          isFullWidth로 전체 너비를 사용합니다. Hero, 가로 스크롤 등에 적합합니다.
+        </Typography>
       </SectionContainer>
     </Box>
   ),
 };
 
 /**
- * ## 반응형 여백
- * 
- * 기본 상하 여백은 반응형으로 적용됩니다.
+ * ## 여러 섹션 쌓기
+ *
+ * SectionContainer를 연속으로 배치하여 섹션을 구분합니다.
+ * 각 섹션이 자체적으로 콘텐츠 폭을 결정합니다.
  */
-export const ResponsiveSpacing = {
+export const StackingSections = {
   render: () => (
-    <Box sx={{ py: 4, bgcolor: 'grey.50' }}>
-      <SectionTitle>기본 여백 (py)</SectionTitle>
-      <PageContainer>
-        <Paper sx={{ p: 3 }}>
-          <Typography variant="body2" paragraph>
-            SectionContainer의 상하 여백은 반응형으로 적용됩니다:
-          </Typography>
-          <Box sx={{ display: 'flex', gap: 4 }}>
-            <Box>
-              <Typography variant="subtitle2" color="primary">모바일 (xs)</Typography>
-              <Typography variant="h4" sx={{ fontFamily: 'monospace' }}>py: 4</Typography>
-              <Typography variant="caption" color="text.secondary">= 32px</Typography>
-            </Box>
-            <Box>
-              <Typography variant="subtitle2" color="primary">데스크탑 (md+)</Typography>
-              <Typography variant="h4" sx={{ fontFamily: 'monospace' }}>py: 6</Typography>
-              <Typography variant="caption" color="text.secondary">= 48px</Typography>
-            </Box>
-          </Box>
-        </Paper>
-      </PageContainer>
+    <Box sx={{ py: 4 }}>
+      <SectionTitle>여러 섹션 쌓기</SectionTitle>
+
+      <SectionContainer isFullWidth sx={{ bgcolor: 'grey.900', color: 'white', py: { xs: 12, md: 20 } }}>
+        <Box sx={{ textAlign: 'center' }}>
+          <Typography variant="h3" gutterBottom>Hero (Full Width)</Typography>
+          <Typography sx={{ opacity: 0.7 }}>isFullWidth — 전체 너비</Typography>
+        </Box>
+      </SectionContainer>
+
+      <SectionContainer sx={{ bgcolor: 'grey.50' }}>
+        <Typography variant="h5" gutterBottom>Content Section 1</Typography>
+        <Typography>기본 모드 — 콘텐츠 영역 자동 제약</Typography>
+      </SectionContainer>
+
+      <SectionContainer isFullWidth sx={{ bgcolor: 'primary.dark', color: 'white' }}>
+        <Typography variant="h5" gutterBottom sx={{ px: 4 }}>Full Width Section</Typography>
+        <Typography sx={{ px: 4, opacity: 0.8 }}>isFullWidth — 전체 너비, 패딩은 직접 관리</Typography>
+      </SectionContainer>
+
+      <SectionContainer>
+        <Typography variant="h5" gutterBottom>Content Section 2</Typography>
+        <Typography>기본 모드 — 콘텐츠 영역 자동 제약</Typography>
+      </SectionContainer>
     </Box>
   ),
 };
@@ -129,7 +115,7 @@ export const Props = {
   render: () => (
     <Box sx={{ py: 4 }}>
       <SectionTitle>Props</SectionTitle>
-      <PageContainer>
+      <SectionContainer>
         <Paper sx={{ p: 3 }}>
           <Box component="table" sx={{ width: '100%', borderCollapse: 'collapse', '& td, & th': { p: 1.5, borderBottom: '1px solid', borderColor: 'divider', textAlign: 'left' } }}>
             <thead>
@@ -148,61 +134,21 @@ export const Props = {
                 <td><Typography variant="body2">섹션 내부 콘텐츠</Typography></td>
               </tr>
               <tr>
+                <td><Typography variant="body2" sx={{ fontFamily: 'monospace' }}>isFullWidth</Typography></td>
+                <td><Typography variant="body2" color="text.secondary">boolean</Typography></td>
+                <td><Typography variant="body2" color="text.secondary">false</Typography></td>
+                <td><Typography variant="body2">true: 전체 너비 / false: 콘텐츠 영역(Container maxWidth=&quot;xl&quot;) 자동 적용</Typography></td>
+              </tr>
+              <tr>
                 <td><Typography variant="body2" sx={{ fontFamily: 'monospace' }}>sx</Typography></td>
                 <td><Typography variant="body2" color="text.secondary">object</Typography></td>
                 <td><Typography variant="body2" color="text.secondary">-</Typography></td>
-                <td><Typography variant="body2">추가 스타일 (bgcolor, border 등)</Typography></td>
+                <td><Typography variant="body2">추가 스타일 (bgcolor, py 오버라이드 등)</Typography></td>
               </tr>
             </tbody>
           </Box>
         </Paper>
-      </PageContainer>
-    </Box>
-  ),
-};
-
-/**
- * ## PageContainer와 조합 사용
- * 
- * SectionContainer와 PageContainer를 함께 사용하는 일반적인 패턴입니다.
- */
-export const CombinedUsage = {
-  render: () => (
-    <Box>
-      <SectionTitle>조합 사용 예시</SectionTitle>
-      <Typography variant="body2" color="text.secondary" sx={{ px: 2, mb: 2 }}>
-        SectionContainer가 전체 너비 배경을, PageContainer가 콘텐츠 너비 제한을 담당합니다.
-      </Typography>
-
-      <SectionContainer sx={{ bgcolor: 'primary.main', color: 'white' }}>
-        <PageContainer>
-          <Typography variant="h3" gutterBottom>Hero Section</Typography>
-          <Typography variant="h6" sx={{ opacity: 0.8 }}>
-            SectionContainer가 전체 너비 배경색을 제공하고,
-            PageContainer가 내부 콘텐츠 너비를 제한합니다.
-          </Typography>
-        </PageContainer>
-      </SectionContainer>
-
-      <SectionContainer>
-        <PageContainer>
-          <Typography variant="h4" gutterBottom>Features</Typography>
-          <Box sx={ { display: 'flex', gap: 3, flexWrap: 'wrap' } }>
-            { [1, 2, 3].map((i) => (
-              <Placeholder.Box key={ i } label={ `Feature ${i}` } height={ 100 } sx={ { flex: '1 1 200px' } } />
-            )) }
-          </Box>
-        </PageContainer>
-      </SectionContainer>
-
-      <SectionContainer sx={{ bgcolor: 'grey.900', color: 'white' }}>
-        <PageContainer>
-          <Typography variant="body2" align="center">
-            © 2024 Footer Section - 전체 너비 배경에 중앙 정렬 콘텐츠
-          </Typography>
-        </PageContainer>
       </SectionContainer>
     </Box>
   ),
 };
-

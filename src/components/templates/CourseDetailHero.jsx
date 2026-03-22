@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import { CohortBadge } from '../../common/ui/CohortBadge';
-import { PageContainer } from '../layout/PageContainer';
+import { SectionContainer } from '../container/SectionContainer';
 import FadeTransition from '../motion/FadeTransition';
 import { PAGES } from '../../data/contents';
 import { COURSES } from '../../data/landingMockData';
@@ -18,7 +18,7 @@ const course = COURSES[0];
  * CourseDetailHero 섹션 템플릿
  *
  * 코스 상세 페이지의 Hero 영역.
- * PageContainer로 콘텐츠 폭 제한.
+ * SectionContainer로 콘텐츠 폭 제한.
  * 좌: 배지 + 디스플레이 타이틀 + 부제 + 설명.
  * 우: sticky 신청 카드 (가격 + CTA).
  *
@@ -27,9 +27,8 @@ const course = COURSES[0];
  */
 export function CourseDetailHero() {
   return (
-    <Box component="section" sx={{ py: { xs: 6, md: 12 } }}>
-      <PageContainer>
-        <Grid container spacing={{ xs: 6, md: 8 }}>
+    <SectionContainer sx={{ py: { xs: 6, md: 12 } }}>
+      <Grid container spacing={{ xs: 6, md: 8 }}>
           {/* ── 좌측: 타이틀 + 설명 ── */}
           <Grid size={{ xs: 12, md: 7 }}>
             <Stack spacing={{ xs: 4, md: 6 }}>
@@ -140,7 +139,6 @@ export function CourseDetailHero() {
             </FadeTransition>
           </Grid>
         </Grid>
-      </PageContainer>
-    </Box>
+    </SectionContainer>
   );
 }

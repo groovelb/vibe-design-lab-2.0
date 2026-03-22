@@ -110,7 +110,7 @@ function ConstructCursor({ text, variant = 'h2', typingSpeed = 30, isActive = fa
   const isCursorVisible = isActive && !isDone;
 
   return (
-    <Box sx={{ position: 'relative' }}>
+    <Box sx={{ position: 'relative', overflow: 'hidden' }}>
       <Typography
         ref={textRef}
         variant={variant}

@@ -2,7 +2,8 @@
 import Box from '@mui/material/Box';
 import { GridBackground } from '../dynamic-color/GridBackground';
 import { ContextEngineV2 } from '../motion/ContextEngineV2';
-import { PageContainer } from '../layout/PageContainer';
+import Container from '@mui/material/Container';
+import { SectionContainer } from '../container/SectionContainer';
 import { PhiSplit } from '../layout/PhiSplit';
 import { LandingHeroMessage } from './LandingHeroMessage';
 import { LandingHeroPainPoints } from './LandingHeroPainPoints';
@@ -21,6 +22,7 @@ import { LandingHeroPainPoints } from './LandingHeroPainPoints';
  */
 export function LandingHero() {
   return (
+    <SectionContainer isFullWidth sx={{ py: 0 }}>
     <GridBackground
       variant="dot"
       opacity={0.06}
@@ -42,7 +44,7 @@ export function LandingHero() {
         <ContextEngineV2 />
       </Box>
 
-      <PageContainer sx={{ height: '100svh', position: 'relative' }}>
+      <Container maxWidth="xl" sx={{ height: '100svh', position: 'relative' }}>
         {/* L1: 뷰포트 분할 — 상단 여백(38.2%) / 콘텐츠(61.8%) */}
         <PhiSplit
           direction="column"
@@ -62,7 +64,8 @@ export function LandingHero() {
             />
           }
         />
-      </PageContainer>
+      </Container>
     </GridBackground>
+    </SectionContainer>
   );
 }

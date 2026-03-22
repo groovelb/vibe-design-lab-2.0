@@ -22,6 +22,10 @@ import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-mot
  * @param {string} gap - 슬라이드 간 간격 (CSS 단위) [Optional, 기본값: '0px']
  * @param {string} padding - 좌우 패딩 (CSS 단위) [Optional, 기본값: '0px']
  * @param {string} backgroundColor - 배경색 [Optional, 기본값: 'transparent']
+ * @param {React.ReactNode} header - 슬라이드 트랙 상단 고정 콘텐츠 [Optional]
+ * @param {React.ReactNode} footer - 슬라이드 트랙 하단 고정 콘텐츠 [Optional]
+ * @param {string} headerSpacing - header 하단 여백 (CSS 단위) [Optional, 기본값: '0px']
+ * @param {string} footerSpacing - footer 상단 여백 (CSS 단위) [Optional, 기본값: '0px']
  * @param {function} onScrollProgress - 스크롤 진행도 콜백 (0-1) [Optional]
  *
  * Example usage:
@@ -36,6 +40,10 @@ function HorizontalScrollContainer({
   gap = '0px',
   padding = '0px',
   backgroundColor = 'transparent',
+  header,
+  footer,
+  headerSpacing = '0px',
+  footerSpacing = '0px',
   onScrollProgress,
 }) {
   const containerRef = useRef(null);
@@ -89,6 +97,7 @@ function HorizontalScrollContainer({
       sx={ {
         height: containerHeight,
         position: 'relative',
+        minWidth: 0,
       } }
     >
       {/* Sticky 컨테이너 - 화면에 고정 */}
@@ -101,24 +110,44 @@ function HorizontalScrollContainer({
           height: '100vh',
           overflow: 'hidden',
           backgroundColor,
+          display: 'flex',
+          flexDirection: 'column',
+          pt: headerSpacing,
+          pb: footerSpacing,
         } }
       >
+        {/* 상단 고정 콘텐츠 */}
+        { header && (
+          <Box sx={ { flexShrink: 0, px: padding } }>
+            { header }
+          </Box>
+        ) }
+
         {/* 가로 슬라이드 트랙 */}
-        <motion.div
-          ref={ trackRef }
-          style={ {
-            x,
-            display: 'flex',
-            width: 'max-content',
-            gap,
-            alignItems: 'center',
-            height: '100%',
-            paddingLeft: padding,
-            paddingRight: padding,
-          } }
-        >
-          { children }
-        </motion.div>
+        <Box sx={ { flex: 1, overflow: 'hidden' } }>
+          <motion.div
+            ref={ trackRef }
+            style={ {
+              x,
+              display: 'flex',
+              width: 'max-content',
+              gap,
+              alignItems: 'center',
+              height: '100%',
+              paddingLeft: padding,
+              paddingRight: padding,
+            } }
+          >
+            { children }
+          </motion.div>
+        </Box>
+
+        {/* 하단 고정 콘텐츠 */}
+        { footer && (
+          <Box sx={ { flexShrink: 0, px: padding } }>
+            { footer }
+          </Box>
+        ) }
       </Box>
     </Box>
   );

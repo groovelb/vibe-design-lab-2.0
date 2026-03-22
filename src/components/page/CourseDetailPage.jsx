@@ -38,29 +38,27 @@ export function CourseDetailPage() {
   const ctaRef = useRef(null);
 
   return (
-    <>
+    <PageContainer>
       <CourseDetailHero />
-      <PageContainer>
-        <CourseDetailLearningGoals />
-        <CourseDetailTargetAudience />
-        <CourseDetailReview />
-        <CourseDetailVision />
-        <CourseDetailShowcase />
-        <CourseDetailRole />
-        <CourseDetailComposition />
-        <CourseDetailCurriculum />
-        <CourseDetailFAQ />
-        <CourseDetailInstructor />
-        <CourseDetailSchedule />
-        <CourseDetailEarlyBird />
-        <CourseDetailCTA ref={ctaRef} />
-      </PageContainer>
+      <CourseDetailLearningGoals />
+      <CourseDetailTargetAudience />
+      <CourseDetailReview />
+      <CourseDetailVision />
+      <CourseDetailShowcase />
+      <CourseDetailRole />
+      <CourseDetailComposition />
+      <CourseDetailCurriculum />
+      <CourseDetailFAQ />
+      <CourseDetailInstructor />
+      <CourseDetailSchedule />
+      <CourseDetailEarlyBird />
+      <CourseDetailCTA ref={ctaRef} />
       <FloatingCTA
         label={floatingCta.label}
         href="#enroll"
         subText={hero.price}
         hideWhenVisible={ctaRef}
       />
-    </>
+    </PageContainer>
   );
 }

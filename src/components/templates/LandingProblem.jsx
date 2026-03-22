@@ -97,27 +97,6 @@ export function LandingProblem() {
             );
           })}
         </LineGrid>
-        <Box sx={{ mt: 4 }}>
-          <MarqueeContainer speed={25} direction="left" isPauseOnHover={false} isScrollScrub gap={1.5}>
-            {problem.tags.map((tag) => (
-              <Chip
-                key={tag}
-                label={tag}
-                variant="outlined"
-                sx={{
-                  bgcolor: 'transparent',
-                  color: 'common.white',
-                  borderColor: 'common.white',
-                  fontWeight: 700,
-                  fontSize: '1rem',
-                  height: 40,
-                  borderRadius: 0,
-                  '& .MuiChip-label': { px: 2 },
-                }}
-              />
-            ))}
-          </MarqueeContainer>
-        </Box>
       </Stack>
     </SectionContainer>
   );

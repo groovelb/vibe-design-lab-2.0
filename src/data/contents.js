@@ -89,7 +89,7 @@ export const PAGES = {
       ],
     },
     whyVibeDesign: {
-      statement: '그동안 디자인은 과소평가 당해왔습니다. 연출이 아닌 설계로서의 디자인은, 바이브 코딩에서 가장 정확한 표현 수단입니다.',
+      statement: '그동안 디자인은 과소평가 당해왔습니다. 연출이 아닌 설계로서의 디자인은, 바이브 코딩에서 가장 정확한 표현 수단입니다. Vibe Design Labs는 그 언어를 연구하고, 당신을 네이티브 빌더로 만들어드립니다.',
       myths: [
         { label: '도구의 편견', philosophy: _PHILOSOPHY[0].belief, conventional: '더 좋은 AI 모델이 나오면 결과물이 좋아진다', reversal: '결과를 바꾸는 건 모델의 성능이 아니라 내 의도를 날카롭게 깎는 훈련입니다. 해석의 여지가 없는 언어는 LLM에게 가장 좋은 설계도입니다.' },
         { label: '디자인의 편견', philosophy: _PHILOSOPHY[2].belief, conventional: '일단 만들고, 디자인은 나중에 입히면 된다', reversal: '디자인은 설계와 구현을 동시에 담당하는 언어입니다. 기준을 정의하는 순간, 구현은 이미 시작됩니다.' },
