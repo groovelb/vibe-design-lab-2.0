@@ -1,9 +1,9 @@
 import Box from '@mui/material/Box';
-import { ContextEngine } from './ContextEngine';
+import { ContextEngineV2 } from './ContextEngineV2';
 
 export default {
-  title: 'Interactive/14. Motion/ContextEngine',
-  component: ContextEngine,
+  title: 'Interactive/14. Motion/ContextEngineV2',
+  component: ContextEngineV2,
   tags: ['autodocs'],
   argTypes: {
     accentColor: { control: 'text', description: '강조 색상 (CSS 값 또는 hex)' },

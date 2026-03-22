@@ -5,9 +5,6 @@
 // SVG viewBox
 export const VIEW = { w: 1600, h: 500 };
 
-// Sphere center and radius
-export const SPHERE = { cx: 800, cy: 260, r: 160 };
-
 // 입력 스트림 (좌측 패널) — 코드/텍스트 조각
 // w: monospace fontSize 10 기준 추정 픽셀 폭 (ASCII ≈ 6px, 한글 ≈ 12px)
 export const INPUT_STREAMS = [
@@ -27,66 +24,16 @@ export const OUTPUT_CHANNELS = [
   { label: '제품', y: 390 },
 ];
 
+// 입력 → 출력 매핑 (각 입력 인덱스 → 출력 인덱스)
+// 2개 입력이 하나의 출력으로 수렴
+export const INPUT_OUTPUT_MAP = [0, 0, 1, 1, 2, 3];
+
 // 레이아웃 좌표
 export const LAYOUT = {
-  inputLabelX: 40,
-  inputDotsX: 200,
-  inputPathStartX: 270,
-  outputEndX: 1380,
-  outputLabelX: 1400,
+  inputDotsX: 20,
+  inputPathStartX: 80,
+  outputEndX: 1580,
 };
-
-// ============================================================
-// Math utilities
-// ============================================================
-
-const GOLDEN_RATIO = (1 + Math.sqrt(5)) / 2;
-
-/**
- * Golden spiral 기반 구체 표면 균등 분포 포인트 생성
- */
-export function generateSpherePoints(count = 120, relevantRatio = 0.25) {
-  const points = [];
-  for (let i = 0; i < count; i++) {
-    const phi = (2 * Math.PI * i) / GOLDEN_RATIO;
-    const theta = Math.acos(1 - (2 * (i + 0.5)) / count);
-    points.push({
-      x: Math.sin(theta) * Math.cos(phi),
-      y: Math.sin(theta) * Math.sin(phi),
-      z: Math.cos(theta),
-      isRelevant: Math.random() < relevantRatio,
-      id: i,
-    });
-  }
-  return points;
-}
-
-/**
- * 3D → 2D 원근 투영 (Y축 회전)
- */
-export function projectPoint(point, angle, cx, cy, radius, perspectiveStrength = 0.3) {
-  const cosA = Math.cos(angle);
-  const sinA = Math.sin(angle);
-  const rx = point.x * cosA - point.z * sinA;
-  const rz = point.x * sinA + point.z * cosA;
-  const depth = 1 / (1 - perspectiveStrength * rz);
-
-  return {
-    sx: cx + radius * rx * depth,
-    sy: cy + radius * point.y * depth,
-    rz,
-    depth,
-    size: 2 + 3 * depth,
-    opacity: 0.1 + 0.7 * depth,
-  };
-}
-
-/**
- * Z-depth 기반 정렬 (뒤→앞)
- */
-export function zSort(projectedPoints) {
-  return [...projectedPoints].sort((a, b) => a.rz - b.rz);
-}
 
 // ============================================================
 // Curve generators

@@ -1,7 +1,7 @@
 'use client';
 import Box from '@mui/material/Box';
 import { GridBackground } from '../dynamic-color/GridBackground';
-import { ContextEngine } from '../motion/ContextEngine';
+import { ContextEngineV2 } from '../motion/ContextEngineV2';
 import { PageContainer } from '../layout/PageContainer';
 import { PhiSplit } from '../layout/PhiSplit';
 import { LandingHeroMessage } from './LandingHeroMessage';
@@ -24,20 +24,38 @@ export function LandingHero() {
     <GridBackground
       variant="dot"
       opacity={0.06}
-      sx={{ height: '100svh' }}
+      sx={{ height: '100svh', position: 'relative', overflowX: 'hidden' }}
     >
-      <PageContainer sx={{ height: '100svh' }}>
-        {/* L1: 뷰포트 분할 — ContextEngine(38.2%) / 콘텐츠(61.8%) */}
+      {/* ContextEngine — absolute 배경 레이어, 레이아웃에 영향 없음 */}
+      <Box sx={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: '38.2%',
+        pointerEvents: 'none',
+        maskImage: [
+          'linear-gradient(to right, transparent 2%, black 8%, black 98%, transparent)',
+          'linear-gradient(to bottom, black, black 70%, transparent)',
+        ].join(', '),
+        WebkitMaskImage: [
+          'linear-gradient(to right, transparent 2%, black 8%, black 98%, transparent)',
+          'linear-gradient(to bottom, black, black 70%, transparent)',
+        ].join(', '),
+        maskComposite: 'intersect',
+        WebkitMaskComposite: 'source-in',
+      }}>
+        <ContextEngineV2 />
+      </Box>
+
+      <PageContainer sx={{ height: '100svh', position: 'relative' }}>
+        {/* L1: 뷰포트 분할 — 상단 여백(38.2%) / 콘텐츠(61.8%) */}
         <PhiSplit
           direction="column"
           isReversed
           stackAt="none"
           sx={{ height: '100%' }}
-          secondary={
-            <Box sx={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center' }}>
-              <ContextEngine />
-            </Box>
-          }
+          secondary={<Box />}
           primary={
             /* L2: 콘텐츠 분할 — 메인메시지(61.8%) / 페인포인트(38.2%) */
             <PhiSplit

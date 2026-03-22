@@ -28,6 +28,7 @@ const PHI = 1.618033988749895;
  * @param {string} minHeight - 컨테이너 최소 높이 [Optional]
  * @param {object} primarySx - primary 영역 추가 스타일 [Optional]
  * @param {object} secondarySx - secondary 영역 추가 스타일 [Optional]
+ * @param {boolean} isRatioReversed - primary/secondary 비율 스왑 (primary=38.2%, secondary=61.8%) [Optional, 기본값: false]
  * @param {object} sx - 컨테이너 추가 스타일 [Optional]
  *
  * Example usage:
@@ -49,6 +50,7 @@ export function PhiSplit({
   direction = 'row',
   isReversed = false,
   gap = 0,
+  isRatioReversed = false,
   stackAt = 'sm',
   minHeight,
   primarySx,
@@ -61,8 +63,8 @@ export function PhiSplit({
    * - 큰 영역: φ / (φ + 1) ≈ 61.8%
    * - 작은 영역: 1 / (φ + 1) ≈ 38.2%
    */
-  const primaryRatio = PHI / (PHI + 1); // ≈ 0.618
-  const secondaryRatio = 1 / (PHI + 1); // ≈ 0.382
+  const primaryRatio = isRatioReversed ? 1 / (PHI + 1) : PHI / (PHI + 1); // 기본: ≈ 0.618, reversed: ≈ 0.382
+  const secondaryRatio = isRatioReversed ? PHI / (PHI + 1) : 1 / (PHI + 1); // 기본: ≈ 0.382, reversed: ≈ 0.618
 
   /**
    * 브레이크포인트별 flex-direction 설정

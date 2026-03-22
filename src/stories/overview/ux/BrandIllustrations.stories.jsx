@@ -20,6 +20,8 @@ import { SystemOverDrawingV3 } from '../../../assets/brandIllustration/SystemOve
 import { SystemOverDrawingV6 } from '../../../assets/brandIllustration/SystemOverDrawingV6';
 import { SystemOverDrawingGemini } from '../../../assets/brandIllustration/SystemOverDrawingGemini';
 import { SystemOverDrawingGL } from '../../../assets/brandIllustration/SystemOverDrawingGL';
+import { SystemOverDrawingR3F } from '../../../assets/brandIllustration/SystemOverDrawingR3F';
+import { HubSpokeR3F } from '../../../assets/brandIllustration/HubSpokeR3F';
 import { VibeStandardIso } from '../../../assets/brandIllustration/VibeStandardIso';
 import { DesignAsBuildIso } from '../../../assets/brandIllustration/DesignAsBuildIso';
 import { VibeStandardTree } from '../../../assets/brandIllustration/VibeStandardTree';
@@ -240,6 +242,30 @@ export const Ideation = {
           maxWidth={600}
         >
           <SystemOverDrawingGemini />
+        </IllustrationPanel>
+
+        <SectionTitle
+          title="VP1 R3F — Interactive Exploded View"
+          description="R3F + drei 기반 인터랙티브 분해도. OrbitControls 자유 회전 + 슬라이더 분해/조립."
+        />
+        <IllustrationPanel
+          label="SystemOverDrawingR3F"
+          sublabel="R3F · drei · OrbitControls · RoundedBox · explode slider"
+          maxWidth={700}
+        >
+          <SystemOverDrawingR3F />
+        </IllustrationPanel>
+
+        <SectionTitle
+          title="Hub-Spoke R3F — Web Agent"
+          description="Opero Labs 스타일 Hub-and-Spoke 구성. 세워진 브라우저 스크린 + 눕힌 패널 + 허브 연결선 + 바닥 그리드."
+        />
+        <IllustrationPanel
+          label="HubSpokeR3F"
+          sublabel="R3F · drei · hub-spoke · standing screens · flat panels · grid"
+          maxWidth={700}
+        >
+          <HubSpokeR3F />
         </IllustrationPanel>
 
         <SectionTitle
