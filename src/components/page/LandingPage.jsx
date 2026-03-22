@@ -32,7 +32,9 @@ export function LandingPage() {
       <LandingHero />
       <PageContainer>
         <LandingProblem />
-        <LandingWhyVibeDesign />
+      </PageContainer>
+      <LandingWhyVibeDesign />
+      <PageContainer>
         <LandingSolution />
         <LandingLearningMethod />
         <LandingCourseHighlight />

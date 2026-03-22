@@ -46,7 +46,7 @@ function HorizontalScrollContainer({
   useEffect(() => {
     const measure = () => {
       if (!trackRef.current) return;
-      const trackWidth = trackRef.current.scrollWidth;
+      const trackWidth = trackRef.current.getBoundingClientRect().width;
       const viewportWidth = window.innerWidth;
       setScrollDistance(Math.max(0, trackWidth - viewportWidth));
     };
@@ -97,15 +97,13 @@ function HorizontalScrollContainer({
           position: 'sticky',
           top: 0,
           left: 0,
-          width: '100vw',
+          width: '100%',
           height: '100vh',
           overflow: 'hidden',
           backgroundColor,
         } }
       >
         {/* 가로 슬라이드 트랙 */}
-        {/* width: max-content → flex 컨테이너가 콘텐츠 전체 + 양쪽 패딩만큼 확장되어
-            overflow 시에도 paddingRight가 유지됨 */}
         <motion.div
           ref={ trackRef }
           style={ {
