@@ -7,6 +7,7 @@ import { SectionContainer } from '../container/SectionContainer';
 import { PhiSplit } from '../layout/PhiSplit';
 import { LandingHeroMessage } from './LandingHeroMessage';
 import { LandingHeroPainPoints } from './LandingHeroPainPoints';
+import { ParallaxLayer } from '../scroll/ParallaxLayer';
 
 /**
  * LandingHero 섹션 템플릿
@@ -45,24 +46,26 @@ export function LandingHero() {
         <ContextEngineV2 />
       </Box>
 
-      <Container maxWidth="xl" sx={{ height: '100svh', position: 'relative' }}>
-        {/* L1: 뷰포트 분할 — 상단 여백(38.2%) / 콘텐츠(61.8%) */}
-        <PhiSplit
-          direction="column"
-          isReversed
-          stackAt="none"
-          sx={{ height: '100%' }}
-          secondary={<Box />}
-          primary={
-            <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%' }}>
-              <LandingHeroMessage />
-              <Box sx={{ mt: { xs: 6, md: 10 } }}>
-                <LandingHeroPainPoints />
+      <ParallaxLayer speed={1.4} sx={{ height: '100svh', position: 'relative' }}>
+        <Container maxWidth="xl" sx={{ height: '100svh' }}>
+          {/* L1: 뷰포트 분할 — 상단 여백(38.2%) / 콘텐츠(61.8%) */}
+          <PhiSplit
+            direction="column"
+            isReversed
+            stackAt="none"
+            sx={{ height: '100%' }}
+            secondary={<Box />}
+            primary={
+              <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%' }}>
+                <LandingHeroMessage />
+                <Box sx={{ mt: { xs: 6, md: 10 } }}>
+                  <LandingHeroPainPoints />
+                </Box>
               </Box>
-            </Box>
-          }
-        />
-      </Container>
+            }
+          />
+        </Container>
+      </ParallaxLayer>
     </GridBackground>
     </SectionContainer>
   );
