@@ -5,7 +5,7 @@ import { useGrain } from './useGrain';
 
 /* ── Gradient & Glow — vdl-950 / vdl-900 only ── */
 
-const GRADIENT = 'linear-gradient(to top, var(--vdl-900), var(--vdl-950), transparent)';
+const GRADIENT = 'linear-gradient(to top, var(--vdl-800), var(--vdl-950), transparent)';
 
 const GLOW = `
   radial-gradient(ellipse at 25% 35%, color-mix(in srgb, var(--vdl-900) 40%, transparent) 0%, transparent 70%),

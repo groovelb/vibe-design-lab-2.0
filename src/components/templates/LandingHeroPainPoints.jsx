@@ -15,8 +15,8 @@ const countSpaces = (str) => (str.match(/ /g) || []).length;
 const typingDuration = (str, speed) =>
   str.length * speed + countSpaces(str) * speed * (WORD_DELAY_MULTIPLIER - 1);
 
-/** 인터랙티브 인트로(1.8s) 완료 후 3pp 등장 */
-const PAIN_START = 2000;
+/** 인터랙티브 인트로(2.2s) 완료 후 3pp 등장 */
+const PAIN_START = 2400;
 
 /** 타이틀 50% 지점에서 설명 시작 */
 const TITLE_SPEED = 20;

@@ -5,7 +5,7 @@ import {
   VIEW, LAYOUT_V2, TYPING_PROMPTS, PROCESS_BARS, OUTPUT_CHANNELS_V2,
   TIMING, TYPING_TIMING, CYCLE, READOUTS, SCAN_LINES, INTRO,
   ICON_PATHS, getLineY, buildStage1Paths, buildStage2Paths,
-  buildTypingAnimation, buildParticleMotion,
+  buildParticleMotion,
 } from './contextEngineV2Constants';
 
 const ACCENT = 'var(--vdl-200)';
@@ -29,9 +29,9 @@ function SvgDefs({ accentColor }) {
     <defs>
       {/* 출력 노드 글로우 필터 */}
       <filter id="ceV2-glow" x="-50%" y="-50%" width="200%" height="200%">
-        <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur" />
+        <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur" />
         <feColorMatrix in="blur" type="matrix"
-          values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.6 0" result="glow" />
+          values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1.5 0" result="glow" />
         <feMerge>
           <feMergeNode in="glow" />
           <feMergeNode in="SourceGraphic" />
@@ -146,7 +146,7 @@ function DataReadout({ accentColor }) {
 
 // ============================================================
 // PromptInput — 프롬프트 입력 컨테이너 (1개)
-// 4줄의 타이핑 텍스트 + clipPath 리빌 + 커서
+// 멀티라인 순차 타이핑 + 라인별 독립 clipPath + 커서 라인 추적
 // ============================================================
 
 function PromptInput({ accentColor, isReducedMotion }) {
@@ -201,69 +201,125 @@ function PromptInput({ accentColor, isReducedMotion }) {
         opacity={0.15}
       />
 
-      {/* 단일 프롬프트 */}
+      {/* 멀티라인 프롬프트 — 순차 라인 타이핑 */}
       {(() => {
         const prompt = TYPING_PROMPTS[0];
         const lineY = getLineY();
+        const numLines = prompt.lines.length;
 
         if (isReducedMotion) {
           return (
-            <text
-              x={textX} y={lineY + 4}
-              fontFamily={CODE_FONT} fontSize={fontSize}
-              fill={accentColor} opacity={0.6}
-            >
-              {prompt.text}
-            </text>
+            <g>
+              {prompt.lines.map((line, li) => (
+                <text key={li}
+                  x={textX} y={lineY + 4 + li * lineHeight}
+                  fontFamily={CODE_FONT} fontSize={fontSize}
+                  fill={accentColor} opacity={0.6}
+                >
+                  {line}
+                </text>
+              ))}
+            </g>
           );
         }
 
-        const anim = buildTypingAnimation();
-        const cursorValues = anim.values
-          .split(';')
-          .map((v) => Number(v) + textX)
-          .join(';');
+        // 라인별 타이핑 시간 배분
+        const perLineDur = TYPING_TIMING.lineTypeDur / numLines;
+        // 글자 수 × 모노스페이스 글자폭으로 직접 계산 (비례 분배 오차 제거)
+        const charW = fontSize * 0.6;
+        const lineWidths = prompt.lines.map((l) => Math.round(l.length * charW));
+
+        // 라인별 독립 clipPath 데이터 (1회 재생, freeze)
+        const lineClips = prompt.lines.map((_, li) => {
+          const tStart = ((li * perLineDur) / tc).toFixed(4);
+          const tEnd = (((li + 1) * perLineDur) / tc).toFixed(4);
+          const w = lineWidths[li];
+          return {
+            id: `typing-clip-${li}`,
+            keyTimes: `0;${tStart};${tEnd};1`,
+            values: `0;0;${w};${w}`,
+          };
+        });
+
+        // 커서 keyframes — 순차 라인 추적 (1회, 마지막 위치에서 정지)
+        const ckt = [];
+        const cxv = [];
+        const cyv = [];
+
+        for (let li = 0; li < numLines; li++) {
+          const tStart = (li * perLineDur) / tc;
+          const tEnd = ((li + 1) * perLineDur) / tc;
+          const w = lineWidths[li];
+          // baseline 기준 세로 중앙 정렬: baseline - 0.75 * fontSize
+          const curY = lineY + 4 + li * lineHeight - Math.round(fontSize * 0.75);
+
+          // 라인 시작 (첫 라인은 0, 이후는 직전 라인 끝에서 즉시 점프)
+          ckt.push(li === 0 ? '0' : (tStart + 0.0001).toFixed(4));
+          cxv.push(textX);
+          cyv.push(curY);
+
+          // 라인 끝 — 글자 오른쪽 끝 바로 뒤
+          ckt.push(tEnd.toFixed(4));
+          cxv.push(textX + w + 1);
+          cyv.push(curY);
+        }
+
+        // Hold at final position
+        ckt.push('1');
+        cxv.push(cxv[cxv.length - 1]);
+        cyv.push(cyv[cyv.length - 1]);
 
         return (
           <g>
-            {/* clipPath for text reveal */}
-            <clipPath id="typing-clip-0">
-              <rect x={textX} y={lineY - lineHeight} width={0} height={lineHeight * 2}>
-                <animate
-                  attributeName="width"
-                  values={anim.values}
-                  keyTimes={anim.keyTimes}
-                  dur={`${tc}s`}
-                  begin={introBegin}
-                  repeatCount="indefinite"
-                />
-              </rect>
-            </clipPath>
+            {/* 라인별 독립 clipPath + 텍스트 */}
+            {lineClips.map((clip, li) => (
+              <g key={li}>
+                <clipPath id={clip.id}>
+                  <rect x={textX} y={lineY - lineHeight + li * lineHeight}
+                    width={0} height={lineHeight * 2}>
+                    <animate
+                      attributeName="width"
+                      keyTimes={clip.keyTimes}
+                      values={clip.values}
+                      dur={`${tc}s`}
+                      begin={introBegin}
+                      fill="freeze"
+                    />
+                  </rect>
+                </clipPath>
+                <text
+                  x={textX} y={lineY + 4 + li * lineHeight}
+                  clipPath={`url(#${clip.id})`}
+                  fontFamily={CODE_FONT} fontSize={fontSize}
+                  fill={accentColor} opacity={0.6}
+                >
+                  {prompt.lines[li]}
+                </text>
+              </g>
+            ))}
 
-            {/* Prompt text (clipped) */}
-            <text
-              x={textX} y={lineY + 4}
-              clipPath="url(#typing-clip-0)"
-              fontFamily={CODE_FONT} fontSize={fontSize}
-              fill={accentColor} opacity={0.6}
-            >
-              {prompt.text}
-            </text>
-
-            {/* Cursor */}
+            {/* Cursor — fontSize 높이, baseline 기준 세로 중앙 */}
             <rect
-              x={textX} y={lineY - lineHeight / 2}
-              width={2} height={lineHeight}
+              x={textX} y={lineY + 4 - Math.round(fontSize * 0.75)}
+              width={2} height={fontSize}
               fill={accentColor}
               opacity={0}
             >
               <animate
                 attributeName="x"
-                values={cursorValues}
-                keyTimes={anim.keyTimes}
+                keyTimes={ckt.join(';')}
+                values={cxv.join(';')}
                 dur={`${tc}s`}
                 begin={introBegin}
-                repeatCount="indefinite"
+                fill="freeze"
+              />
+              <animate
+                attributeName="y"
+                keyTimes={ckt.join(';')}
+                values={cyv.join(';')}
+                dur={`${tc}s`}
+                begin={introBegin}
+                fill="freeze"
               />
               <animate
                 attributeName="opacity"
@@ -423,7 +479,7 @@ function OutputEndpoint({ channel, index, accentColor, isReducedMotion }) {
         x={cx - bracketSize} y={cy - bracketSize}
         width={bracketSize * 2} height={bracketSize * 2}
         fill={accentColor}
-        opacity={0.04}
+        opacity={0.12}
         filter="url(#ceV2-glow)"
       />
 
@@ -504,16 +560,17 @@ function OutputEndpoint({ channel, index, accentColor, isReducedMotion }) {
 // 모든 파티클이 동일 dur(CYCLE)로 루프, keyTimes로 활성 구간 제어
 // ============================================================
 
-function ParticleSystem({ stage1Paths, stage2Paths }) {
+function ParticleSystem({ stage1Paths, stage2Paths, accentColor }) {
   const tc = CYCLE;
   const introBegin = `${INTRO.total}s`;
   const particles = [];
 
-  // Stage 1 파티클 (컨테이너→바, r=2, 경로당 1개)
+  // Stage 1 파티클 (컨테이너→바, 6×6 네모, 경로당 1개)
   stage1Paths.forEach((p, pathIdx) => {
     const pm = buildParticleMotion(pathIdx, 1);
     particles.push(
-      <circle key={`s1-${pathIdx}`} r={2} fill="url(#ceV2-particleGrad)" opacity={0}>
+      <rect key={`s1-${pathIdx}`} x={-3} y={-3} width={6} height={6}
+        fill={accentColor} opacity={0}>
         <animateMotion
           dur={`${tc}s`}
           begin={introBegin}
@@ -531,15 +588,16 @@ function ParticleSystem({ stage1Paths, stage2Paths }) {
           begin={introBegin}
           repeatCount="indefinite"
         />
-      </circle>,
+      </rect>,
     );
   });
 
-  // Stage 2 파티클 (바→출력, r=3, 경로당 1개)
+  // Stage 2 파티클 (바→출력, 8×8 네모, 경로당 1개)
   stage2Paths.forEach((p, pathIdx) => {
     const pm = buildParticleMotion(pathIdx, 2);
     particles.push(
-      <circle key={`s2-${pathIdx}`} r={3} fill="url(#ceV2-particleGrad)" opacity={0}>
+      <rect key={`s2-${pathIdx}`} x={-4} y={-4} width={8} height={8}
+        fill={accentColor} opacity={0}>
         <animateMotion
           dur={`${tc}s`}
           begin={introBegin}
@@ -557,7 +615,7 @@ function ParticleSystem({ stage1Paths, stage2Paths }) {
           begin={introBegin}
           repeatCount="indefinite"
         />
-      </circle>,
+      </rect>,
     );
   });
 
@@ -649,7 +707,7 @@ const ContextEngineV2 = forwardRef(function ContextEngineV2({
 
         {/* Layer 3: Particles (synced to CYCLE) */}
         {!isReducedMotion && (
-          <ParticleSystem stage1Paths={stage1Paths} stage2Paths={stage2Paths} />
+          <ParticleSystem stage1Paths={stage1Paths} stage2Paths={stage2Paths} accentColor={accentColor} />
         )}
 
         {/* Layer 4: Prompt input container (LEFT) */}

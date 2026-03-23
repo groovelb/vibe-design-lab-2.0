@@ -16,7 +16,7 @@ export const LAYOUT_V2 = {
   containerX: 0,
   containerY: 40,
   containerW: 360,
-  containerH: 80,
+  containerH: 95,
   containerCenterY: 80,
   // Stage 2: Bar nodes
   barX: 560,
@@ -29,11 +29,18 @@ export const LAYOUT_V2 = {
 // ============================================================
 
 export const TYPING_PROMPTS = [
-  { text: '> design a hero with golden ratio and scroll motion', textWidth: 320 },
+  {
+    lines: [
+      '> make hero: phi-ratio layout',
+      '  dark theme, scroll-reveal motion',
+      '  context-engine particle bg',
+    ],
+    textWidth: 290,
+  },
 ];
 
-// 컨테이너 내 라인 y 좌표 (단일 프롬프트 — 컨테이너 중앙)
-export const getLineY = () => 80;
+// 컨테이너 내 첫 번째 라인 y 좌표 (멀티라인 기준점)
+export const getLineY = () => 70;
 
 // ============================================================
 // Stage 2 — 바 노드 (9개)
@@ -165,11 +172,11 @@ export const INTRO = {
   outputStagger: 0.08,   // output 5개: 0.5~0.82s
   outputDur: 0.3,
   lineStart: 0.4,        // 노드 등장 중 S1 라인 시작
-  line1Stagger: 0.03,
-  line2Start: 0.65,      // output 등장 중 S2 라인 시작
-  line2Stagger: 0.02,
-  lineDur: 0.6,
-  total: 1.8,            // 사이클 시작
+  line1Stagger: 0.06,    // S1 라인 간 딜레이 (0.03→0.06)
+  line2Start: 0.8,       // S2 시작 더 늦게 (0.65→0.8)
+  line2Stagger: 0.04,    // S2 라인 간 딜레이 (0.02→0.04)
+  lineDur: 1.0,          // 라인 드로잉 속도 느리게 (0.6→1.0)
+  total: 2.2,            // 전체 인트로 확장 (1.8→2.2)
 };
 
 // ============================================================
@@ -195,7 +202,7 @@ export const SCAN_LINES = [100, 280, 460];
 // 수평 직선 → 라운드 90° 전환 → 수직 직선 → 라운드 90° 전환 → 수평 직선
 // ============================================================
 
-const CORNER_R = 16; // 전환부 곡률 반경 (px)
+const CORNER_R = 10; // 전환부 곡률 반경 — 모든 경로 동일 (최소 |dy|=20에 맞춤)
 
 /**
  * 라운드 엘보 커넥터 — 수평→수직→수평 경로

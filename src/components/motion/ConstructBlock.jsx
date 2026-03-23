@@ -134,20 +134,27 @@ const ConstructBlock = forwardRef(function ConstructBlock(
     lineEl.style.opacity = '1';
     lineEl.style.transform = `translate3d(${blockWidth}px, 0, 0)`;
 
-    // 슬롯 셔플
-    const shuffleId = setInterval(() => {
-      applySlots(pickActive());
-    }, SHUFFLE_INTERVAL);
+    // 슬롯 셔플 — rAF 기반 (브라우저 프레임 동기화)
+    let lastShuffle = 0;
+    let rafId;
+    const shuffleLoop = (timestamp) => {
+      if (timestamp - lastShuffle >= SHUFFLE_INTERVAL) {
+        applySlots(pickActive());
+        lastShuffle = timestamp;
+      }
+      rafId = requestAnimationFrame(shuffleLoop);
+    };
+    rafId = requestAnimationFrame(shuffleLoop);
 
     // 완료 정리
     const doneId = setTimeout(() => {
-      clearInterval(shuffleId);
+      cancelAnimationFrame(rafId);
       lineEl.style.opacity = '0.01';
       playConstructClick();
     }, duration);
 
     return () => {
-      clearInterval(shuffleId);
+      cancelAnimationFrame(rafId);
       clearTimeout(doneId);
     };
   }, [isActive, duration, slotPx]);

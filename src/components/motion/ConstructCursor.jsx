@@ -23,12 +23,12 @@ import { CURSOR_RATIO, EASE_OUT, WORD_DELAY_MULTIPLIER } from './constants';
  * <ConstructCursor text="VIBE DESIGN" isActive typingSpeed={60} />
  */
 function ConstructCursor({ text, variant = 'h2', typingSpeed = 30, isActive = false, onComplete }) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isDone, setIsDone] = useState(false);
   const [cursorSize, setCursorSize] = useState(6);
   const hasStartedRef = useRef(false);
   const textRef = useRef(null);
+  const cursorRef = useRef(null);
   const charWidthsRef = useRef([]);
+  const lineHeightRef = useRef(0);
   const timeoutRef = useRef(null);
 
   const chars = useMemo(() => text.split(''), [text]);
@@ -67,25 +67,48 @@ function ConstructCursor({ text, variant = 'h2', typingSpeed = 30, isActive = fa
     });
     widths.push(cumulative);
     charWidthsRef.current = widths;
+    lineHeightRef.current = el.offsetHeight;
 
     const fontSize = parseFloat(getComputedStyle(el).fontSize);
     setCursorSize(Math.round(fontSize * CURSOR_RATIO));
   }, [text, variant]);
 
-  /** 타이핑 진행 — word 간 3배 딜레이 */
+  /** 타이핑 진행 — 직접 DOM 조작으로 React 리렌더 제거 */
   useEffect(() => {
     if (!isActive || hasStartedRef.current) return;
     hasStartedRef.current = true;
 
+    const el = textRef.current;
+    const cursor = cursorRef.current;
+    if (!el || !cursor) return;
+
+    const spans = el.querySelectorAll('[data-char]');
+    const lh = lineHeightRef.current;
+
+    const moveCursor = (idx) => {
+      const x = charWidthsRef.current[idx] || 0;
+      const gridSlot = yGridIndices[Math.min(idx, yGridIndices.length - 1)] || 0;
+      const y = lh > 0 ? (gridSlot / 5) * lh - lh / 2 : 0;
+      cursor.style.transform = `translate3d(${x}px, calc(-50% + ${y}px), 0)`;
+    };
+
+    cursor.style.opacity = '1';
+    cursor.style.transition = `transform ${typingSpeed}ms ${EASE_OUT}, opacity 150ms ${EASE_OUT}`;
+
     const tick = (idx) => {
       if (idx >= chars.length) {
         timeoutRef.current = setTimeout(() => {
-          setIsDone(true);
+          cursor.style.opacity = '0.01';
+          cursor.style.transition = `opacity 150ms ${EASE_OUT}`;
           onComplete?.();
         }, 150);
         return;
       }
-      setCurrentIndex(idx + 1);
+      if (spans[idx]) {
+        spans[idx].style.opacity = '1';
+        spans[idx].style.transition = `opacity 60ms ${EASE_OUT}`;
+      }
+      moveCursor(idx + 1);
       const delay = chars[idx] === ' ' ? typingSpeed * WORD_DELAY_MULTIPLIER : typingSpeed;
       timeoutRef.current = setTimeout(() => tick(idx + 1), delay);
     };
@@ -93,21 +116,13 @@ function ConstructCursor({ text, variant = 'h2', typingSpeed = 30, isActive = fa
     timeoutRef.current = setTimeout(() => tick(0), typingSpeed);
 
     return () => clearTimeout(timeoutRef.current);
-  }, [isActive, chars, typingSpeed, onComplete]);
+  }, [isActive, chars, typingSpeed, onComplete, yGridIndices]);
 
   /** 리셋 (text 변경 시) */
   useEffect(() => {
     hasStartedRef.current = false;
-    setCurrentIndex(0);
-    setIsDone(false);
     clearTimeout(timeoutRef.current);
   }, [text]);
-
-  const lineHeight = textRef.current?.offsetHeight || 0;
-  const cursorX = charWidthsRef.current[currentIndex] || 0;
-  const gridSlot = yGridIndices[Math.min(currentIndex, yGridIndices.length - 1)] || 0;
-  const cursorY = lineHeight > 0 ? (gridSlot / 5) * lineHeight - lineHeight / 2 : 0;
-  const isCursorVisible = isActive && !isDone;
 
   return (
     <Box sx={{ position: 'relative', overflow: 'hidden' }}>
@@ -128,18 +143,16 @@ function ConstructCursor({ text, variant = 'h2', typingSpeed = 30, isActive = fa
             key={i}
             data-char
             aria-hidden
-            style={{
-              opacity: i < currentIndex ? 1 : 0.01,
-              transition: i < currentIndex ? `opacity 60ms ${EASE_OUT}` : 'none',
-            }}
+            style={{ opacity: 0.01 }}
           >
             {char}
           </span>
         ))}
       </Typography>
 
-      {/* ■ 커서 */}
+      {/* ■ 커서 — 직접 DOM 조작으로 위치/투명도 제어 */}
       <Box
+        ref={cursorRef}
         sx={{
           position: 'absolute',
           top: '50%',
@@ -147,11 +160,8 @@ function ConstructCursor({ text, variant = 'h2', typingSpeed = 30, isActive = fa
           width: cursorSize,
           height: cursorSize,
           backgroundColor: 'primary.main',
-          transform: `translate3d(${cursorX}px, calc(-50% + ${cursorY}px), 0)`,
-          opacity: isCursorVisible ? 1 : 0.01,
-          transition: isCursorVisible
-            ? `transform ${typingSpeed}ms ${EASE_OUT}, opacity 150ms ${EASE_OUT}`
-            : `opacity 150ms ${EASE_OUT}`,
+          transform: 'translate3d(0, -50%, 0)',
+          opacity: 0.01,
           willChange: 'transform, opacity',
           pointerEvents: 'none',
           '@media (prefers-reduced-motion: reduce)': {
