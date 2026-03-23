@@ -35,9 +35,18 @@ const BADGE_ICONS = {
       <path d="M16.71.243l-.12 2.71a.18.18 0 00.29.15l1.06-.8.9.7a.18.18 0 00.28-.14l-.1-2.76 1.33-.1a1.2 1.2 0 011.279 1.2v21.596a1.2 1.2 0 01-1.26 1.2l-16.096-.72a1.2 1.2 0 01-1.15-1.16l-.75-19.797a1.2 1.2 0 011.13-1.27L16.7.222zM13.64 9.3c0 .47 3.16.24 3.59-.08 0-3.2-1.72-4.89-4.859-4.89-3.15 0-4.899 1.72-4.899 4.29 0 4.45 5.999 4.53 5.999 6.959 0 .7-.32 1.1-1.05 1.1-.96 0-1.35-.49-1.3-2.16 0-.36-3.649-.48-3.769 0-.27 4.03 2.23 5.2 5.099 5.2 2.79 0 4.969-1.49 4.969-4.18 0-4.77-6.099-4.64-6.099-6.999 0-.97.72-1.1 1.13-1.1.45 0 1.25.07 1.19 1.87z" />
     </svg>
   ),
-  Cursor: (
-    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#FFFFFF" width="14" height="14">
-      <path d="M11.503.131 1.891 5.678a.84.84 0 0 0-.42.726v11.188c0 .3.162.575.42.724l9.609 5.55a1 1 0 0 0 .998 0l9.61-5.55a.84.84 0 0 0 .42-.724V6.404a.84.84 0 0 0-.42-.726L12.497.131a1.01 1.01 0 0 0-.996 0M2.657 6.338h18.55c.263 0 .43.287.297.515L12.23 22.918c-.062.107-.229.064-.229-.06V12.335a.59.59 0 0 0-.295-.51l-9.11-5.257c-.109-.063-.064-.23.061-.23" />
+  Antigravity: (
+    <svg viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg" width="14" height="13">
+      <mask id="ag-mask" style={{ maskType: 'alpha' }} maskUnits="userSpaceOnUse" x="0" y="0" width="16" height="15">
+        <path d="M14.0777 13.984C14.945 14.6345 16.2458 14.2008 15.0533 13.0084C11.476 9.53949 12.2349 0 7.79033 0C3.34579 0 4.10461 9.53949 0.527295 13.0084C-0.773543 14.3092 0.635692 14.6345 1.50293 13.984C4.86344 11.7076 4.64663 7.69664 7.79033 7.69664C10.934 7.69664 10.7172 11.7076 14.0777 13.984Z" fill="black" />
+      </mask>
+      <g mask="url(#ag-mask)">
+        <rect width="16" height="15" fill="#FFE432" />
+        <circle cx="12" cy="4" r="6" fill="#FC413D" opacity="0.8" />
+        <circle cx="4" cy="6" r="6" fill="#00B95C" opacity="0.8" />
+        <circle cx="10" cy="12" r="5" fill="#3186FF" opacity="0.8" />
+        <circle cx="6" cy="2" r="4" fill="#FBBC04" opacity="0.7" />
+      </g>
     </svg>
   ),
   Claude: (
@@ -260,14 +269,6 @@ export function CourseDetailHero() {
                 mt: 10,
                 display: 'flex',
                 flexDirection: { xs: 'column', md: 'row' },
-                '@keyframes floatAntiGravity': {
-                  '0%': { transform: 'translate(0, 0) rotate(0deg)' },
-                  '15%': { transform: 'translate(5px, -14px) rotate(-4deg)' },
-                  '35%': { transform: 'translate(-4px, -22px) rotate(5deg)' },
-                  '55%': { transform: 'translate(8px, -16px) rotate(-3deg)' },
-                  '75%': { transform: 'translate(-3px, -10px) rotate(4deg)' },
-                  '100%': { transform: 'translate(0, 0) rotate(0deg)' },
-                },
               }}
             >
               {learningGoals.goals.map((goal, index) => (
@@ -308,12 +309,6 @@ export function CourseDetailHero() {
                           fontSize: '0.75rem',
                           borderRadius: '4px',
                           '& .MuiChip-icon': { ml: 0.5 },
-                          ...(badge === 'Cursor' && {
-                            animation: 'floatAntiGravity 8s ease-in-out infinite',
-                            '@media (prefers-reduced-motion: reduce)': {
-                              animation: 'none',
-                            },
-                          }),
                         }}
                       />
                     ))}

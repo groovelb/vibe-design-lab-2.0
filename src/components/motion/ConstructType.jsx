@@ -17,13 +17,14 @@ import { ConstructCursor } from './ConstructCursor';
  * @param {boolean} isTriggerOnView - 뷰포트 진입 시 자동 트리거 여부 [Optional, 기본값: true]
  * @param {boolean} isEnabled - 트리거 활성화 여부 [Optional, 기본값: true]
  * @param {number} delay - 시작 지연 (ms) [Optional, 기본값: 0]
+ * @param {boolean} isIdleVisible - 트리거 전 커서 펄스 표시 여부 [Optional, 기본값: false]
  * @param {object} sx - 추가 스타일 [Optional]
  *
  * Example usage:
  * <ConstructType text="VIBE DESIGN LAB" variant="h2" isTriggerOnView />
  */
 const ConstructType = forwardRef(function ConstructType(
-  { text, variant = 'h2', typingSpeed = 30, isTriggerOnView = true, isEnabled = true, delay = 0, sx, ...props },
+  { text, variant = 'h2', typingSpeed = 30, isTriggerOnView = true, isEnabled = true, delay = 0, isIdleVisible = false, sx, ...props },
   forwardedRef,
 ) {
   const [inViewRef, isInView] = useInView({
@@ -62,6 +63,7 @@ const ConstructType = forwardRef(function ConstructType(
         variant={variant}
         typingSpeed={typingSpeed}
         isActive={isActive}
+        isIdleVisible={isIdleVisible && !isActive}
       />
     </Box>
   );

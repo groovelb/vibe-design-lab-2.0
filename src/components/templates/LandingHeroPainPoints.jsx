@@ -28,6 +28,7 @@ const TITLE_HALF = Math.round(
  * LandingHeroPainPoints — 3축 그리드 (의도 / 어휘 / 설계)
  *
  * 등장 순서:
+ * 0. 커서(■) 펄스 (즉시 표시, 트리거 전까지 idle 펄스)
  * 1. 각 카드 타이틀 (ConstructType) — 좌→우 COL_STAGGER
  * 2. 각 카드 설명 (ConstructBlock) — 타이틀 완료 후
  *
@@ -52,6 +53,7 @@ export function LandingHeroPainPoints() {
                   typingSpeed={TITLE_SPEED}
                   isTriggerOnView={false}
                   delay={titleDelay}
+                  isIdleVisible
                   sx={{ '& .MuiTypography-root': { fontWeight: 900 } }}
                 />
                 <ConstructBlock
@@ -60,6 +62,7 @@ export function LandingHeroPainPoints() {
                   duration={800}
                   isTriggerOnView={false}
                   delay={blockDelay}
+                  isIdleVisible
                   sx={{ mt: 2 }}
                 />
               </Box>

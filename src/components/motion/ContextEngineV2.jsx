@@ -31,7 +31,7 @@ function SvgDefs({ accentColor }) {
       <filter id="ceV2-glow" x="-50%" y="-50%" width="200%" height="200%">
         <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur" />
         <feColorMatrix in="blur" type="matrix"
-          values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1.5 0" result="glow" />
+          values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 2.5 0" result="glow" />
         <feMerge>
           <feMergeNode in="glow" />
           <feMergeNode in="SourceGraphic" />
@@ -57,11 +57,11 @@ function HorizontalScanLines({ accentColor, isReducedMotion }) {
     <g>
       {SCAN_LINES.map((y, i) => (
         <line key={i} x1={0} y1={y} x2={VIEW.w} y2={y}
-          stroke={accentColor} strokeWidth={0.3} opacity={0.04}>
+          stroke={accentColor} strokeWidth={0.3} opacity={0.06}>
           {!isReducedMotion && (
             <animate
               attributeName="opacity"
-              values="0.03;0.06;0.03"
+              values="0.05;0.1;0.05"
               dur="8s"
               begin={`${i * 2}s`}
               repeatCount="indefinite"
@@ -79,7 +79,7 @@ function HorizontalScanLines({ accentColor, isReducedMotion }) {
 
 function ConnectionPaths({ accentColor, stage1Paths, stage2Paths, isReducedMotion }) {
   return (
-    <g opacity={0.15}>
+    <g opacity={0.25}>
       {stage1Paths.map((p, i) => (
         <path key={`s1-${i}`} d={p.path}
           fill="none" stroke={accentColor}
@@ -177,7 +177,7 @@ function PromptInput({ accentColor, isReducedMotion }) {
         fill="var(--vdl-900)"
         stroke={accentColor}
         strokeWidth={0.5}
-        opacity={0.2}
+        opacity={0.3}
       />
 
       {/* "Prompt" 라벨 */}
@@ -186,7 +186,7 @@ function PromptInput({ accentColor, isReducedMotion }) {
         fontFamily={CODE_FONT}
         fontSize={8}
         fill={accentColor}
-        opacity={0.35}
+        opacity={0.45}
         letterSpacing="1.5"
       >
         PROMPT
@@ -198,7 +198,7 @@ function PromptInput({ accentColor, isReducedMotion }) {
         x2={containerX + containerW - 8} y2={containerY + 24}
         stroke={accentColor}
         strokeWidth={0.3}
-        opacity={0.15}
+        opacity={0.25}
       />
 
       {/* 멀티라인 프롬프트 — 순차 라인 타이핑 */}
@@ -373,7 +373,7 @@ function BarNode({ bar, index, accentColor, isReducedMotion }) {
         fill="var(--vdl-800)"
         stroke={accentColor}
         strokeWidth={0.5}
-        opacity={0.25}
+        opacity={0.35}
       />
 
       {/* 라벨 텍스트 */}
@@ -398,7 +398,7 @@ function BarNode({ bar, index, accentColor, isReducedMotion }) {
         {!isReducedMotion && (
           <animate
             attributeName="opacity"
-            values="0.1;0.5;0.1"
+            values="0.15;0.7;0.15"
             dur="2.5s"
             begin={`${INTRO.total + glowDelay}s`}
             repeatCount="indefinite"
@@ -411,7 +411,7 @@ function BarNode({ bar, index, accentColor, isReducedMotion }) {
         fill="none"
         stroke={accentColor}
         strokeWidth={0.5}
-        opacity={0.3}
+        opacity={0.4}
       />
     </g>
   );
@@ -479,7 +479,7 @@ function OutputEndpoint({ channel, index, accentColor, isReducedMotion }) {
         x={cx - bracketSize} y={cy - bracketSize}
         width={bracketSize * 2} height={bracketSize * 2}
         fill={accentColor}
-        opacity={0.12}
+        opacity={0.2}
         filter="url(#ceV2-glow)"
       />
 
@@ -490,7 +490,7 @@ function OutputEndpoint({ channel, index, accentColor, isReducedMotion }) {
         fill="none"
         stroke={accentColor}
         strokeWidth={0.5}
-        opacity={0.3}
+        opacity={0.4}
       />
 
       {/* 내부 rect (아이콘 배경) */}
@@ -498,12 +498,12 @@ function OutputEndpoint({ channel, index, accentColor, isReducedMotion }) {
         x={cx - 10} y={cy - 10}
         width={20} height={20}
         fill={accentColor}
-        opacity={0.15}
+        opacity={0.2}
       >
         {!isReducedMotion && (
           <animate
             attributeName="opacity"
-            values="0.1;0.2;0.1"
+            values="0.15;0.35;0.15"
             dur={`${TIMING.outputPulseDur}s`}
             begin={`${INTRO.total + index * TIMING.outputPulseStagger}s`}
             repeatCount="indefinite"
@@ -523,7 +523,7 @@ function OutputEndpoint({ channel, index, accentColor, isReducedMotion }) {
       ].map((d, bi) => (
         <path key={bi} d={d}
           fill="none" stroke={accentColor}
-          strokeWidth={0.5} opacity={0.25}
+          strokeWidth={0.5} opacity={0.35}
         />
       ))}
 

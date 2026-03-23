@@ -50,7 +50,7 @@ export function LandingShowcase() {
 		>
 			{EXAMPLES.map((ex) => (
 				<HorizontalScrollContainer.Slide key={ex.id}>
-					<Box sx={{ width: "45vw" }}>
+					<Box sx={{ width: "calc(50vw - 80px)" }}>
 						<AreaConstruct sx={{ borderRadius: 4 }}>
 							<RatioContainer
 								ratio="4:3"

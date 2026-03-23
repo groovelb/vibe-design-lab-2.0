@@ -24,6 +24,7 @@ const SHUFFLE_INTERVAL = 80;
  * @param {boolean} isTriggerOnView - 뷰포트 진입 시 자동 트리거 여부 [Optional, 기본값: true]
  * @param {boolean} isEnabled - 트리거 활성화 여부 [Optional, 기본값: true]
  * @param {number} delay - 시작 지연 (ms) [Optional, 기본값: 0]
+ * @param {boolean} isIdleVisible - 트리거 전 sweep 라인 펄스 표시 여부 [Optional, 기본값: false]
  * @param {object} sx - 추가 스타일 [Optional]
  *
  * Example usage:
@@ -42,6 +43,7 @@ const ConstructBlock = forwardRef(function ConstructBlock(
     isTriggerOnView = true,
     isEnabled = true,
     delay = 0,
+    isIdleVisible = false,
     sx,
     ...props
   },
@@ -95,6 +97,25 @@ const ConstructBlock = forwardRef(function ConstructBlock(
     setSlotPx(size);
     setSlotPositions(positions);
   }, [text, variant]);
+
+  /** idle 상태 — 제자리 blink */
+  useEffect(() => {
+    if (!isIdleVisible || isActive) return;
+    const lineEl = lineRef.current;
+    if (!lineEl) return;
+
+    // 슬롯 1개만 on
+    slotRefs.current.forEach((el, i) => {
+      if (el) el.style.opacity = i === 0 ? '1' : '0.01';
+    });
+
+    lineEl.style.opacity = '1';
+    lineEl.style.animation = 'blockIdleBlink 1.2s ease-in-out infinite';
+
+    return () => {
+      lineEl.style.animation = '';
+    };
+  }, [isIdleVisible, isActive]);
 
   /** Sweep 애니메이션 — CSS transition + setInterval 슬롯 셔플 */
   useEffect(() => {
@@ -187,6 +208,10 @@ const ConstructBlock = forwardRef(function ConstructBlock(
           transition: `opacity 150ms ${EASE_OUT}`,
           willChange: 'transform',
           pointerEvents: 'none',
+          '@keyframes blockIdleBlink': {
+            '0%, 100%': { opacity: 0.01 },
+            '50%': { opacity: 0.4 },
+          },
           '@media (prefers-reduced-motion: reduce)': {
             display: 'none',
           },

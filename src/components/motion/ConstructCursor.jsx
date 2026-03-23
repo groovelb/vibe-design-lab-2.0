@@ -17,12 +17,13 @@ import { CURSOR_RATIO, EASE_OUT, WORD_DELAY_MULTIPLIER } from './constants';
  * @param {string} variant - MUI Typography variant [Optional, 기본값: 'h2']
  * @param {number} typingSpeed - 문자당 딜레이 ms [Optional, 기본값: 60]
  * @param {boolean} isActive - 커서 시작 여부 [Optional, 기본값: false]
+ * @param {boolean} isIdleVisible - 트리거 전 커서 펄스 표시 여부 [Optional, 기본값: false]
  * @param {function} onComplete - 타이핑 완료 콜백 [Optional]
  *
  * Example usage:
  * <ConstructCursor text="VIBE DESIGN" isActive typingSpeed={60} />
  */
-function ConstructCursor({ text, variant = 'h2', typingSpeed = 30, isActive = false, onComplete }) {
+function ConstructCursor({ text, variant = 'h2', typingSpeed = 30, isActive = false, isIdleVisible = false, onComplete }) {
   const [cursorSize, setCursorSize] = useState(6);
   const hasStartedRef = useRef(false);
   const textRef = useRef(null);
@@ -164,6 +165,13 @@ function ConstructCursor({ text, variant = 'h2', typingSpeed = 30, isActive = fa
           opacity: 0.01,
           willChange: 'transform, opacity',
           pointerEvents: 'none',
+          ...(!isActive && isIdleVisible && {
+            '@keyframes cursorIdleBlink': {
+              '0%, 100%': { opacity: 0.01 },
+              '50%': { opacity: 0.4 },
+            },
+            animation: 'cursorIdleBlink 1.2s ease-in-out infinite',
+          }),
           '@media (prefers-reduced-motion: reduce)': {
             display: 'none',
           },

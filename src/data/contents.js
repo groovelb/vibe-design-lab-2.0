@@ -225,7 +225,7 @@ export const PAGES = {
         {
           label: 'AI 어시스턴트',
           title: 'AI 어시스턴트를 실시간 멘토로',
-          badges: ['Cursor', 'Claude'],
+          badges: ['Antigravity', 'Claude'],
         },
         {
           label: '접근 방식',
