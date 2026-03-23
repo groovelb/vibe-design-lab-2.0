@@ -121,25 +121,23 @@ const CourseDetailCTA = forwardRef(function CourseDetailCTA(props, ref) {
             spacing={3}
           >
             <Stack spacing={1.5}>
-              <Stack direction="row" spacing={1} flexWrap="wrap">
-                <Chip
-                  label="오프라인 3기 진행중 정원 마감"
-                  size="small"
-                  sx={{ bgcolor: 'action.hover', color: 'text.secondary', fontSize: '0.75rem' }}
-                />
-                <Chip
-                  label="온라인 얼리버드 모집 중"
-                  size="small"
-                  sx={{ bgcolor: 'error.main', color: 'error.contrastText', fontSize: '0.75rem' }}
-                />
-              </Stack>
+              <Chip
+                label="온라인 얼리버드 모집 중"
+                size="small"
+                sx={{ bgcolor: 'error.main', color: 'error.contrastText', fontSize: '0.75rem' }}
+              />
               <Stack spacing={0.5}>
                 <Typography variant="caption" sx={{ color: 'text.secondary' }}>
                   수강료
                 </Typography>
-                <Typography variant="h5" sx={{ fontWeight: 700 }}>
-                  {hero.price}
-                </Typography>
+                <Stack direction="row" spacing={1} alignItems="baseline">
+                  <Typography variant="h5" sx={{ fontWeight: 700 }}>
+                    {hero.price}
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                    {hero.priceOriginal}
+                  </Typography>
+                </Stack>
               </Stack>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                 {hero.priceNote}

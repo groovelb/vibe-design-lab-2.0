@@ -89,7 +89,7 @@ export const PAGES = {
       ],
     },
     whyVibeDesign: {
-      statement: '그동안 디자인은 과소평가 당해왔습니다. 연출이 아닌 설계로서의 디자인은, 바이브 코딩에서 가장 정확한 표현 수단입니다. Vibe Design Labs는 그 언어를 연구하고, 여러분을 AI 네이티브 빌더로 만들어드립니다.',
+      statement: '그동안 디자인은 과소평가 당해왔습니다. 연출이 아닌 설계로서의 디자인은, 바이브 코딩에서 가장 정확한 표현 수단입니다. Vibe Design Lab은 디자인 중심 언어 체계를 연구하여, 여러분이 AI 네이티브 빌더로 만들어드립니다.',
       myths: [
         { label: '도구의 편견', philosophy: _PHILOSOPHY[0].belief, conventional: '더 좋은 AI 모델이 나오면 결과물이 좋아진다', reversal: '결과를 바꾸는 건 모델의 성능이 아니라 내 의도를 날카롭게 깎는 훈련입니다. 해석의 여지가 없는 언어는 LLM에게 가장 좋은 설계도입니다.' },
         { label: '디자인의 편견', philosophy: _PHILOSOPHY[2].belief, conventional: '일단 만들고, 디자인은 나중에 입히면 된다', reversal: '디자인은 설계와 구현을 동시에 담당하는 언어입니다. 기준을 정의하는 순간, 구현은 이미 시작됩니다.' },
@@ -210,7 +210,8 @@ export const PAGES = {
       badge: '온라인 얼리버드 모집',
       subCopy: '디자인 사고로 제품을 설계하는 바이브 코딩',
       description: '최근 실리콘밸리에서는 바이브 코딩을 새로운 디자인 툴로 활용하며, 디자인을 "제품의 구조와 동작을 설계하는 언어"로 바라보고 있습니다. 즉 잘 설계된 디자인 산출물이 최고의 바이브 코딩 인풋이라는 관점인거죠.\n\n이 흐름의 시사점은 분명합니다. 디자이너와 개발자 모두 UX와 미감이라는 디자인 계층을 더 잘 이해해야합니다. 이번 코스는 준비된 Starter Kit과 함께 디자인 자체를 구현 수단으로 활용하는 연습을 하는걸 목표로 합니다.',
-      price: '1차 얼리버드 신청자 25% 할인',
+      price: '544,000원',
+      priceOriginal: '1차 얼리버드 25% 할인',
       priceNote: '오프라인 코스 피드백을 받아 최종 커리큘럼이 확정됩니다.',
       ctaLabel: '온라인 얼리버드 신청',
     },
@@ -318,9 +319,10 @@ export const PAGES = {
       dividerLabel: 'FAQ',
       headline: '디자이너도 충분히 가능합니다, 개발자는 디자인 실력 up!',
     },
-    instructor: {
-      dividerLabel: 'Instructor',
+    courseLead: {
+      dividerLabel: 'Course Lead',
       headline: '10년차 디발자의 노하우를 전수해드립니다.',
+      statement: '10년간 디자인과 개발의 경계에서 일해왔습니다. 디자인 시스템, 인터랙티브 웹, 데이터 시각화 — 실전에서 쌓은 감각을 바이브 코딩이라는 새로운 도구 위에 얹어 전달합니다.',
       projectsLabel: '대표 프로젝트',
     },
     schedule: {

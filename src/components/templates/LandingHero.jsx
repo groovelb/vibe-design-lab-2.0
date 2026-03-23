@@ -8,6 +8,7 @@ import { PhiSplit } from '../layout/PhiSplit';
 import { LandingHeroMessage } from './LandingHeroMessage';
 import { LandingHeroPainPoints } from './LandingHeroPainPoints';
 import { ParallaxLayer } from '../scroll/ParallaxLayer';
+import { BG_PARALLAX_SPEED } from '../motion/constants';
 
 /**
  * LandingHero 섹션 템플릿
@@ -29,8 +30,8 @@ export function LandingHero() {
       opacity={0.06}
       sx={{ height: '100svh', position: 'relative', overflowX: 'hidden' }}
     >
-      {/* ContextEngine — absolute 배경 레이어, 좌측은 콘텐츠 정렬 / 우측은 뷰포트 끝 */}
-      <Box sx={{
+      {/* ContextEngine — absolute 배경 레이어, 느린 패럴럭스 */}
+      <ParallaxLayer speed={BG_PARALLAX_SPEED} sx={{
         position: 'absolute',
         top: 0,
         left: { xs: '16px', md: 'max(24px, calc(50vw - 696px))' },
@@ -44,9 +45,9 @@ export function LandingHero() {
         WebkitMaskComposite: 'source-in',
       }}>
         <ContextEngineV2 />
-      </Box>
+      </ParallaxLayer>
 
-      <ParallaxLayer speed={1.4} sx={{ height: '100svh', position: 'relative' }}>
+      <ParallaxLayer speed={1.08} sx={{ height: '100svh', position: 'relative' }}>
         <Container maxWidth="xl" sx={{ height: '100svh' }}>
           {/* L1: 뷰포트 분할 — 상단 여백(38.2%) / 콘텐츠(61.8%) */}
           <PhiSplit

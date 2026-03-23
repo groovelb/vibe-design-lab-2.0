@@ -9,7 +9,6 @@ import { CourseDetailComposition } from '../../components/templates/CourseDetail
 import { CourseDetailCurriculum } from '../../components/templates/CourseDetailCurriculum';
 import { CourseDetailFAQ } from '../../components/templates/CourseDetailFAQ';
 import { CourseDetailInstructor } from '../../components/templates/CourseDetailInstructor';
-import { CourseDetailSchedule } from '../../components/templates/CourseDetailSchedule';
 import { CourseDetailEarlyBird } from '../../components/templates/CourseDetailEarlyBird';
 import { CourseDetailCTA } from '../../components/templates/CourseDetailCTA';
 
@@ -22,7 +21,7 @@ export default {
         component: `
 ## Course Detail 섹션 템플릿
 
-Course Detail 페이지를 구성하는 14개 섹션 템플릿.
+Course Detail 페이지를 구성하는 13개 섹션 템플릿.
 각 섹션은 독립적으로 렌더링 가능하다.
         `,
       },
@@ -90,26 +89,20 @@ export const S10_FAQ = {
   render: () => <CourseDetailFAQ />,
 };
 
-/** S11. Instructor — 강사 프로필 + 포트폴리오 */
-export const S11_Instructor = {
-  name: 'S11. Instructor',
+/** S11. Course Lead — 강사 프로필 */
+export const S11_CourseLead = {
+  name: 'S11. Course Lead',
   render: () => <CourseDetailInstructor />,
 };
 
-/** S12. Schedule — 4챕터 타임라인 */
-export const S12_Schedule = {
-  name: 'S12. Schedule',
-  render: () => <CourseDetailSchedule />,
-};
-
-/** S13. Early Bird — 얼리버드 혜택 */
-export const S13_EarlyBird = {
-  name: 'S13. Early Bird',
+/** S12. Early Bird — 얼리버드 혜택 */
+export const S12_EarlyBird = {
+  name: 'S12. Early Bird',
   render: () => <CourseDetailEarlyBird />,
 };
 
-/** S14. CTA — 최종 CTA + 부가 링크 */
-export const S14_CTA = {
-  name: 'S14. CTA',
+/** S13. CTA — 최종 CTA + 부가 링크 */
+export const S13_CTA = {
+  name: 'S13. CTA',
   render: () => <CourseDetailCTA />,
 };

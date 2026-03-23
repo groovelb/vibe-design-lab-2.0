@@ -474,15 +474,6 @@ function OutputEndpoint({ channel, index, accentColor, isReducedMotion }) {
         />
       )}
 
-      {/* 글로우 — 정적 blur (애니메이션 금지, 필터 재래스터화 방지) */}
-      <rect
-        x={cx - bracketSize} y={cy - bracketSize}
-        width={bracketSize * 2} height={bracketSize * 2}
-        fill={accentColor}
-        opacity={0.2}
-        filter="url(#ceV2-glow)"
-      />
-
       {/* 외곽 rect */}
       <rect
         x={cx - 18} y={cy - 18}

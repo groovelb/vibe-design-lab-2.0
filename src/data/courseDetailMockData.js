@@ -163,6 +163,7 @@ export const SCHEDULE_TIMELINE = [
 export const TARGET_PERSONAS = [
   {
     role: '프로덕트 디자이너',
+    imageSrc: '/assets/course/course_cover_ver3-1.png',
     descriptions: [
       '내 디자인 & 아이디어 구현 능력.',
       '실제 웹서비스로 제작 & 운영 역량.',
@@ -170,6 +171,7 @@ export const TARGET_PERSONAS = [
   },
   {
     role: '프론트엔드·1인 개발자',
+    imageSrc: '/assets/course/course_cover_ver5-1.png',
     descriptions: [
       '바이브 코딩환경에서 디자인 능력 향상.',
       '기획·디자인까지 1인 서비스 운영 역량.',
@@ -177,6 +179,7 @@ export const TARGET_PERSONAS = [
   },
   {
     role: '팀 리드·PM',
+    imageSrc: '/assets/course/course_cover_ver6-1.png',
     descriptions: [
       '팀내 AI 협업 방식을 체계화하고 싶음.',
       '바이브 코딩 프로세스를 최적화하고 싶음.',

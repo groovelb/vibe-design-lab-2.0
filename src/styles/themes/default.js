@@ -83,7 +83,7 @@ const typography = {
   },
   h3: {
     fontFamily: suitFamily,
-    fontWeight: 800,
+    fontWeight: 500,
     fontSize: '2rem',
     lineHeight: 1.25,
     letterSpacing: '-0.01em',

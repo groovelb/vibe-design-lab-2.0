@@ -18,7 +18,7 @@ import { INSTRUCTOR_PROFILE } from '../../data/courseDetailMockData';
 import { useInView } from '../../hooks/useInView';
 
 const { learningMethod } = PAGES.landing;
-const { instructor } = PAGES.courseDetail;
+const { courseLead: instructor } = PAGES.courseDetail;
 
 const METHOD_ICONS = [Network, BookOpenText, UsersRound, Layers];
 

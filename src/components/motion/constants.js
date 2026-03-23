@@ -23,3 +23,8 @@ export const CURSOR_RATIO = 0.35;
 export const WORD_DELAY_MULTIPLIER = 2;
 /** ConstructCursor Y 점프 최대 범위 (lineHeight 비율) */
 export const CURSOR_Y_RANGE = 0.25;
+
+/* ── 패럴럭스 ── */
+
+/** 배경 인터랙티브 패럴럭스 속도. <1 = 느리게 (콘텐츠 대비 뒤처짐) */
+export const BG_PARALLAX_SPEED = 0.6;

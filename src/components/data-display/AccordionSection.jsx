@@ -65,7 +65,7 @@ const AccordionSection = forwardRef(function AccordionSection({
             <AccordionSummary
               expandIcon={
                 <ChevronDown
-                  size={20}
+                  size={variant === 'curriculum' ? 28 : 20}
                   style={{
                     transition: 'transform 200ms ease',
                   }}
@@ -73,7 +73,7 @@ const AccordionSection = forwardRef(function AccordionSection({
               }
               sx={{
                 px: 0,
-                py: 2,
+                py: variant === 'curriculum' ? { xs: 3, md: 4 } : 2,
                 minHeight: 'unset',
                 color: 'text.primary',
                 '& .MuiAccordionSummary-expandIconWrapper': {
@@ -90,14 +90,14 @@ const AccordionSection = forwardRef(function AccordionSection({
               }}
             >
               {variant === 'curriculum' ? (
-                <Stack direction="row" spacing={2} alignItems="baseline">
+                <Stack direction="row" spacing={3} alignItems="baseline">
                   <Typography
-                    variant="overline"
-                    sx={{ color: 'text.disabled', flexShrink: 0 }}
+                    variant="body2"
+                    sx={{ color: 'text.secondary', flexShrink: 0, fontWeight: 500 }}
                   >
                     Chapter {index + 1}
                   </Typography>
-                  <Typography variant="h5" sx={{ fontWeight: 700 }}>
+                  <Typography variant="h4" sx={{ fontWeight: 700 }}>
                     {item.title}
                   </Typography>
                 </Stack>
@@ -110,17 +110,17 @@ const AccordionSection = forwardRef(function AccordionSection({
             <AccordionDetails
               sx={{
                 px: 0,
-                pb: 3,
+                pb: variant === 'curriculum' ? 5 : 3,
                 pt: 0,
               }}
             >
               {variant === 'curriculum' && item.items ? (
-                <Stack spacing={1} sx={{ pl: { xs: 0, md: 9.5 } }}>
+                <Stack spacing={1.5} sx={{ pl: { xs: 0, md: 12 } }}>
                   {item.items.map((subItem, subIndex) => (
                     <Typography
                       key={subIndex}
                       variant="body1"
-                      sx={{ color: 'text.secondary' }}
+                      sx={{ color: 'text.secondary', fontSize: '1.05rem' }}
                     >
                       {subItem}
                     </Typography>

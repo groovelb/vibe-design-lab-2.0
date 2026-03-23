@@ -215,14 +215,9 @@ export function CourseDetailHero() {
                   }}
                 >
                   <Stack spacing={3}>
-                    <Stack spacing={1}>
-                      <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.5)' }}>
-                        오프라인 3기 진행중
-                      </Typography>
-                      <Typography variant="h5" sx={{ fontWeight: 700, color: 'common.white' }}>
-                        온라인 얼리버드 신청
-                      </Typography>
-                    </Stack>
+                    <Typography variant="h5" sx={{ fontWeight: 700, color: 'common.white' }}>
+                      온라인 얼리버드 신청
+                    </Typography>
 
                     <Box sx={{ borderTop: '1px solid', borderColor: 'rgba(255,255,255,0.12)' }} />
 
@@ -230,9 +225,14 @@ export function CourseDetailHero() {
                       <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.5)' }}>
                         수강료
                       </Typography>
-                      <Typography variant="h6" sx={{ fontWeight: 700, color: 'common.white' }}>
-                        {hero.price}
-                      </Typography>
+                      <Stack direction="row" spacing={1} alignItems="baseline">
+                        <Typography variant="h5" sx={{ fontWeight: 700, color: 'common.white' }}>
+                          {hero.price}
+                        </Typography>
+                        <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.5)' }}>
+                          {hero.priceOriginal}
+                        </Typography>
+                      </Stack>
                     </Stack>
 
                     <Box

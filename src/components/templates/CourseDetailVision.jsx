@@ -12,11 +12,16 @@ import { PAGES } from '../../data/contents';
 
 const { vision } = PAGES.courseDetail;
 
+const VISION_VIDEOS = [
+  '/assets/course/course_thumbnail_line.mp4',
+  '/assets/course/coure_thumbnail_starterkit.mp4',
+];
+
 /**
  * CourseDetailVision 섹션 템플릿
  *
  * 탑티어 비전: 바이브 디자이너 vs 메이커 개발자.
- * 2칼럼 비전 카드 구성.
+ * 2칼럼 비전 카드 + 영상 구성.
  *
  * Example usage:
  * <CourseDetailVision />
@@ -41,15 +46,32 @@ export function CourseDetailVision() {
                 <Typography variant="h3" sx={{ fontWeight: 800, color: 'text.secondary' }}>
                   {index + 1}
                 </Typography>
-                {/* 비디오 placeholder */}
+                {/* 영상 */}
                 <Box
                   sx={{
                     width: '100%',
                     aspectRatio: '16/9',
-                    border: '1px dashed',
-                    borderColor: 'divider',
+                    overflow: 'hidden',
+                    '@media (prefers-reduced-motion: reduce)': {
+                      '& video': { display: 'none' },
+                    },
                   }}
-                />
+                >
+                  <Box
+                    component="video"
+                    src={VISION_VIDEOS[index]}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    sx={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      display: 'block',
+                    }}
+                  />
+                </Box>
                 <Stack spacing={1.5}>
                   <Typography variant="h4" sx={{ fontWeight: 800 }}>
                     {card.title}
