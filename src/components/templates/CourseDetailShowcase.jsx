@@ -7,8 +7,8 @@ import { Check } from 'lucide-react';
 import { SectionContainer } from '../container/SectionContainer';
 import { SectionDivider } from '../typography/SectionDivider';
 import { SectionTitle } from '../typography/SectionTitle';
-import LineGrid from '../layout/LineGrid';
 import FadeTransition from '../motion/FadeTransition';
+import { COL_STAGGER } from '../motion/constants';
 import { PAGES } from '../../data/contents';
 import { SHOWCASE_PORTFOLIO } from '../../data/courseDetailMockData';
 
@@ -19,6 +19,7 @@ const { showcase } = PAGES.courseDetail;
  *
  * 스타터키트 중요성 사례.
  * 대표 사례 설명 + 3칼럼 프로젝트 카드(스크린샷 + 체크리스트).
+ * vibedesignlab.net 프로덕션 레이아웃 반영: 3-col 그리드, gap 24px.
  *
  * Example usage:
  * <CourseDetailShowcase />
@@ -26,7 +27,7 @@ const { showcase } = PAGES.courseDetail;
 export function CourseDetailShowcase() {
   return (
     <SectionContainer>
-      <FadeTransition direction="up" isTriggerOnView>
+      <FadeTransition direction="up" isTriggerOnView threshold={0.5}>
         <SectionDivider label={showcase.dividerLabel} sx={{ mb: 3 }} />
         <SectionTitle
           headline={showcase.headline}
@@ -35,7 +36,7 @@ export function CourseDetailShowcase() {
       </FadeTransition>
 
       {/* 대표 사례 설명 */}
-      <FadeTransition direction="up" delay={100} isTriggerOnView>
+      <FadeTransition direction="up" delay={100} isTriggerOnView threshold={0.5}>
         <Stack spacing={1} sx={{ mb: { xs: 6, md: 10 } }}>
           <Typography variant="h5" sx={{ fontWeight: 700 }}>
             {showcase.subCopy}
@@ -49,11 +50,16 @@ export function CourseDetailShowcase() {
         </Stack>
       </FadeTransition>
 
-      {/* 프로젝트 카드 3칼럼 */}
-      <LineGrid container gap={96} borderColor="divider">
+      {/* 프로젝트 카드 3칼럼 — gap 24px (프로덕션 동일) */}
+      <Grid container spacing={3}>
         {SHOWCASE_PORTFOLIO.map((item, index) => (
           <Grid key={item.id} size={{ xs: 12, md: 4 }}>
-            <FadeTransition direction="up" delay={index * 100} isTriggerOnView>
+            <FadeTransition
+              direction="up"
+              delay={(index % 3) * COL_STAGGER}
+              isTriggerOnView
+              threshold={0.5}
+            >
               <Stack spacing={3}>
                 {/* 스크린샷 placeholder */}
                 <Box
@@ -83,7 +89,7 @@ export function CourseDetailShowcase() {
             </FadeTransition>
           </Grid>
         ))}
-      </LineGrid>
+      </Grid>
     </SectionContainer>
   );
 }

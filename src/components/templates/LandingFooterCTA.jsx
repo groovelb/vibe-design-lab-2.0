@@ -2,7 +2,7 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { SectionContainer } from '../container/SectionContainer';
-import { FitText } from '../typography/FitText';
+import { VdlLogo } from '../typography/VdlLogo';
 import FadeTransition from '../motion/FadeTransition';
 import { PAGES } from '../../data/contents';
 
@@ -31,8 +31,8 @@ export function LandingFooterCTA() {
               py: { xs: 4, md: 8 },
             }}
           >
-            <Box sx={{ width: '100%', mb: { xs: 4, md: 5 } }}>
-              <FitText text={footerCta.headline} variant="headline" />
+            <Box sx={{ mb: { xs: 4, md: 5 } }}>
+              <VdlLogo size={64} />
             </Box>
             <Button
               variant="contained"

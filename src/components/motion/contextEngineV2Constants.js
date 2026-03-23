@@ -153,6 +153,25 @@ export const TIMING = {
   outputPulseStagger: 0.25,
 };
 
+// 인트로 등장 타이밍 (1회성, fill="freeze")
+// 노드 등장과 라인 드로잉이 겹치며 캐스케이드
+export const INTRO = {
+  promptDelay: 0,
+  promptDur: 0.35,
+  barStart: 0.2,         // 프롬프트 후
+  barStagger: 0.06,      // bar 9개: 0.2~0.68s
+  barDur: 0.3,
+  outputStart: 0.5,      // bar 중반부터 output 시작
+  outputStagger: 0.08,   // output 5개: 0.5~0.82s
+  outputDur: 0.3,
+  lineStart: 0.4,        // 노드 등장 중 S1 라인 시작
+  line1Stagger: 0.03,
+  line2Start: 0.65,      // output 등장 중 S2 라인 시작
+  line2Stagger: 0.02,
+  lineDur: 0.6,
+  total: 1.8,            // 사이클 시작
+};
+
 // ============================================================
 // 장식 데이터 리드아웃
 // ============================================================

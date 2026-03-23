@@ -36,6 +36,7 @@ export function LandingHero() {
         right: 0,
         height: '60%',
         pointerEvents: 'none',
+        willChange: 'transform',
         maskImage: 'linear-gradient(to bottom, black 55%, rgba(0,0,0,0.4)), linear-gradient(to right, black 92%, transparent)',
         maskComposite: 'intersect',
         WebkitMaskImage: 'linear-gradient(to bottom, black 55%, rgba(0,0,0,0.4)), linear-gradient(to right, black 92%, transparent)',
@@ -53,15 +54,12 @@ export function LandingHero() {
           sx={{ height: '100%' }}
           secondary={<Box />}
           primary={
-            /* L2: 콘텐츠 분할 — 메인메시지(61.8%) / 페인포인트(38.2%) */
-            <PhiSplit
-              direction="column"
-              isReversed
-              stackAt="none"
-              sx={{ height: '100%' }}
-              primary={<LandingHeroPainPoints />}
-              secondary={<LandingHeroMessage />}
-            />
+            <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%' }}>
+              <LandingHeroMessage />
+              <Box sx={{ mt: { xs: 6, md: 10 } }}>
+                <LandingHeroPainPoints />
+              </Box>
+            </Box>
           }
         />
       </Container>

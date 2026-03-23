@@ -15,10 +15,8 @@ const countSpaces = (str) => (str.match(/ /g) || []).length;
 const typingDuration = (str, speed) =>
   str.length * speed + countSpaces(str) * speed * (WORD_DELAY_MULTIPLIER - 1);
 
-/** headline 70% 지점 + CTA 시작 후 바로 painPoints 시작 */
-const HEADLINE_SPEED = 25;
-const HEADLINE_DURATION = typingDuration(hero.headline, HEADLINE_SPEED);
-const PAIN_START = Math.round(HEADLINE_DURATION * 0.7) + 300;
+/** 인터랙티브 인트로(1.8s) 완료 후 3pp 등장 */
+const PAIN_START = 2000;
 
 /** 타이틀 50% 지점에서 설명 시작 */
 const TITLE_SPEED = 20;

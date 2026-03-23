@@ -6,6 +6,7 @@ import { SectionTitle } from '../typography/SectionTitle';
 import { CardTextStack } from '../typography/CardTextStack';
 import LineGrid from '../layout/LineGrid';
 import FadeTransition from '../motion/FadeTransition';
+import { COL_STAGGER } from '../motion/constants';
 import { PAGES } from '../../data/contents';
 
 const { earlyBird } = PAGES.courseDetail;
@@ -33,7 +34,7 @@ export function CourseDetailEarlyBird() {
       <LineGrid container gap={96} borderColor="divider">
         {earlyBird.benefits.map((benefit, index) => (
           <Grid key={benefit.title} size={{ xs: 12, md: 4 }}>
-            <FadeTransition direction="up" delay={index * 100} isTriggerOnView>
+            <FadeTransition direction="up" delay={(index % 3) * COL_STAGGER} isTriggerOnView threshold={0.5}>
               <CardTextStack
                 title={benefit.title}
                 description={benefit.description}

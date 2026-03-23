@@ -83,7 +83,7 @@ export function LandingCourseReview() {
                 ...(!expandedCourse[index] && {
                   '& .MuiTypography-body2': {
                     display: '-webkit-box',
-                    WebkitLineClamp: 3,
+                    WebkitLineClamp: 2,
                     WebkitBoxOrient: 'vertical',
                     overflow: 'hidden',
                   },
@@ -151,7 +151,7 @@ export function LandingCourseReview() {
                       color: 'text.secondary',
                       lineHeight: 1.7,
                       display: '-webkit-box',
-                      WebkitLineClamp: 3,
+                      WebkitLineClamp: 2,
                       WebkitBoxOrient: 'vertical',
                       overflow: 'hidden',
                     }}

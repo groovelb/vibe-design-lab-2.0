@@ -1,9 +1,9 @@
 'use client';
-import { forwardRef, useMemo, useSyncExternalStore } from 'react';
+import { forwardRef, useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import Box from '@mui/material/Box';
 import {
   VIEW, LAYOUT_V2, TYPING_PROMPTS, PROCESS_BARS, OUTPUT_CHANNELS_V2,
-  TIMING, TYPING_TIMING, CYCLE, READOUTS, SCAN_LINES,
+  TIMING, TYPING_TIMING, CYCLE, READOUTS, SCAN_LINES, INTRO,
   ICON_PATHS, getLineY, buildStage1Paths, buildStage2Paths,
   buildTypingAnimation, buildParticleMotion,
 } from './contextEngineV2Constants';
@@ -27,16 +27,6 @@ const getReducedMotionServer = () => false;
 function SvgDefs({ accentColor }) {
   return (
     <defs>
-      {/* 헥사 그리드 패턴 */}
-      <pattern id="ceV2-hexGrid" width="28" height="48.5" patternUnits="userSpaceOnUse">
-        <path
-          d="M 14 0 L 28 8.08 L 28 24.25 L 14 32.33 L 0 24.25 L 0 8.08 Z M 14 48.5 L 28 40.42 L 28 56.58 L 14 64.67 L 0 56.58 L 0 40.42 Z"
-          fill="none"
-          stroke={accentColor}
-          strokeWidth={0.3}
-        />
-      </pattern>
-
       {/* 출력 노드 글로우 필터 */}
       <filter id="ceV2-glow" x="-50%" y="-50%" width="200%" height="200%">
         <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur" />
@@ -55,25 +45,6 @@ function SvgDefs({ accentColor }) {
         <stop offset="100%" stopColor={accentColor} stopOpacity="0" />
       </radialGradient>
     </defs>
-  );
-}
-
-// ============================================================
-// HexGridBackground
-// ============================================================
-
-function HexGridBackground({ isReducedMotion }) {
-  return (
-    <rect width={VIEW.w} height={VIEW.h} fill="url(#ceV2-hexGrid)" opacity={0.5}>
-      {!isReducedMotion && (
-        <animate
-          attributeName="opacity"
-          values="0.4;0.6;0.4"
-          dur="6s"
-          repeatCount="indefinite"
-        />
-      )}
-    </rect>
   );
 }
 
@@ -106,20 +77,42 @@ function HorizontalScanLines({ accentColor, isReducedMotion }) {
 // ConnectionPaths — 가이드 베지어 커브
 // ============================================================
 
-function ConnectionPaths({ accentColor, stage1Paths, stage2Paths }) {
+function ConnectionPaths({ accentColor, stage1Paths, stage2Paths, isReducedMotion }) {
   return (
-    <g>
+    <g opacity={0.15}>
       {stage1Paths.map((p, i) => (
         <path key={`s1-${i}`} d={p.path}
           fill="none" stroke={accentColor}
-          strokeWidth={0.7} opacity={0.07}
-        />
+          strokeWidth={0.7}
+          {...(!isReducedMotion && { pathLength: 1, strokeDasharray: 1, strokeDashoffset: 1 })}
+        >
+          {!isReducedMotion && (
+            <animate
+              attributeName="stroke-dashoffset"
+              from="1" to="0"
+              dur={`${INTRO.lineDur}s`}
+              begin={`${INTRO.lineStart + i * INTRO.line1Stagger}s`}
+              fill="freeze"
+            />
+          )}
+        </path>
       ))}
       {stage2Paths.map((p, i) => (
         <path key={`s2-${i}`} d={p.path}
           fill="none" stroke={accentColor}
-          strokeWidth={0.7} opacity={0.07}
-        />
+          strokeWidth={0.7}
+          {...(!isReducedMotion && { pathLength: 1, strokeDasharray: 1, strokeDashoffset: 1 })}
+        >
+          {!isReducedMotion && (
+            <animate
+              attributeName="stroke-dashoffset"
+              from="1" to="0"
+              dur={`${INTRO.lineDur}s`}
+              begin={`${INTRO.line2Start + i * INTRO.line2Stagger}s`}
+              fill="freeze"
+            />
+          )}
+        </path>
       ))}
     </g>
   );
@@ -162,8 +155,20 @@ function PromptInput({ accentColor, isReducedMotion }) {
   const tc = CYCLE;
   const textX = containerX + 16;
 
+  const introBegin = `${INTRO.total}s`;
+
   return (
-    <g>
+    <g opacity={isReducedMotion ? 1 : 0}>
+      {!isReducedMotion && (
+        <animate
+          attributeName="opacity"
+          from="0" to="1"
+          dur={`${INTRO.promptDur}s`}
+          begin={`${INTRO.promptDelay}s`}
+          fill="freeze"
+        />
+      )}
+
       {/* 컨테이너 외곽 */}
       <rect
         x={containerX} y={containerY}
@@ -229,6 +234,7 @@ function PromptInput({ accentColor, isReducedMotion }) {
                   values={anim.values}
                   keyTimes={anim.keyTimes}
                   dur={`${tc}s`}
+                  begin={introBegin}
                   repeatCount="indefinite"
                 />
               </rect>
@@ -249,18 +255,21 @@ function PromptInput({ accentColor, isReducedMotion }) {
               x={textX} y={lineY - lineHeight / 2}
               width={2} height={lineHeight}
               fill={accentColor}
+              opacity={0}
             >
               <animate
                 attributeName="x"
                 values={cursorValues}
                 keyTimes={anim.keyTimes}
                 dur={`${tc}s`}
+                begin={introBegin}
                 repeatCount="indefinite"
               />
               <animate
                 attributeName="opacity"
                 values="0.7;0.01;0.7"
                 dur={`${cursorBlinkDur}s`}
+                begin={introBegin}
                 repeatCount="indefinite"
               />
             </rect>
@@ -287,8 +296,20 @@ function BarNode({ bar, index, accentColor, isReducedMotion }) {
   const nodeOpacity = BAR_DEPTH_OPACITY[index];
   const glowDelay = index * 0.4;
 
+  const introDelay = INTRO.barStart + index * INTRO.barStagger;
+
   return (
-    <g opacity={nodeOpacity}>
+    <g opacity={isReducedMotion ? nodeOpacity : 0}>
+      {!isReducedMotion && (
+        <animate
+          attributeName="opacity"
+          from="0" to={nodeOpacity}
+          dur={`${INTRO.barDur}s`}
+          begin={`${introDelay}s`}
+          fill="freeze"
+        />
+      )}
+
       {/* 바 배경 */}
       <rect
         x={barX} y={barY}
@@ -323,7 +344,7 @@ function BarNode({ bar, index, accentColor, isReducedMotion }) {
             attributeName="opacity"
             values="0.1;0.5;0.1"
             dur="2.5s"
-            begin={`${glowDelay}s`}
+            begin={`${INTRO.total + glowDelay}s`}
             repeatCount="indefinite"
           />
         )}
@@ -383,26 +404,28 @@ function OutputEndpoint({ channel, index, accentColor, isReducedMotion }) {
   const bracketSize = 24;
   const bracketLen = 6;
 
+  const introDelay = INTRO.outputStart + index * INTRO.outputStagger;
+
   return (
-    <g>
-      {/* 글로우 */}
+    <g opacity={isReducedMotion ? 1 : 0}>
+      {!isReducedMotion && (
+        <animate
+          attributeName="opacity"
+          from="0" to="1"
+          dur={`${INTRO.outputDur}s`}
+          begin={`${introDelay}s`}
+          fill="freeze"
+        />
+      )}
+
+      {/* 글로우 — 정적 blur (애니메이션 금지, 필터 재래스터화 방지) */}
       <rect
         x={cx - bracketSize} y={cy - bracketSize}
         width={bracketSize * 2} height={bracketSize * 2}
         fill={accentColor}
-        opacity={0.03}
+        opacity={0.04}
         filter="url(#ceV2-glow)"
-      >
-        {!isReducedMotion && (
-          <animate
-            attributeName="opacity"
-            values="0.02;0.06;0.02"
-            dur={`${TIMING.outputGlowDur}s`}
-            begin={`${index * TIMING.outputGlowStagger}s`}
-            repeatCount="indefinite"
-          />
-        )}
-      </rect>
+      />
 
       {/* 외곽 rect */}
       <rect
@@ -426,7 +449,7 @@ function OutputEndpoint({ channel, index, accentColor, isReducedMotion }) {
             attributeName="opacity"
             values="0.1;0.2;0.1"
             dur={`${TIMING.outputPulseDur}s`}
-            begin={`${index * TIMING.outputPulseStagger}s`}
+            begin={`${INTRO.total + index * TIMING.outputPulseStagger}s`}
             repeatCount="indefinite"
           />
         )}
@@ -483,58 +506,59 @@ function OutputEndpoint({ channel, index, accentColor, isReducedMotion }) {
 
 function ParticleSystem({ stage1Paths, stage2Paths }) {
   const tc = CYCLE;
+  const introBegin = `${INTRO.total}s`;
   const particles = [];
 
-  // Stage 1 파티클 (컨테이너→바, r=2, 경로당 2개)
+  // Stage 1 파티클 (컨테이너→바, r=2, 경로당 1개)
   stage1Paths.forEach((p, pathIdx) => {
-    for (let pi = 0; pi < 2; pi++) {
-      const pm = buildParticleMotion(pathIdx + pi * 0.5, 1);
-      particles.push(
-        <circle key={`s1-${pathIdx}-${pi}`} r={2} fill="url(#ceV2-particleGrad)" opacity={0}>
-          <animateMotion
-            dur={`${tc}s`}
-            repeatCount="indefinite"
-            calcMode="linear"
-            keyPoints={pm.motion.keyPoints}
-            keyTimes={pm.motion.keyTimes}
-            path={p.path}
-          />
-          <animate
-            attributeName="opacity"
-            values={pm.opacity.values}
-            keyTimes={pm.opacity.keyTimes}
-            dur={`${tc}s`}
-            repeatCount="indefinite"
-          />
-        </circle>,
-      );
-    }
+    const pm = buildParticleMotion(pathIdx, 1);
+    particles.push(
+      <circle key={`s1-${pathIdx}`} r={2} fill="url(#ceV2-particleGrad)" opacity={0}>
+        <animateMotion
+          dur={`${tc}s`}
+          begin={introBegin}
+          repeatCount="indefinite"
+          calcMode="linear"
+          keyPoints={pm.motion.keyPoints}
+          keyTimes={pm.motion.keyTimes}
+          path={p.path}
+        />
+        <animate
+          attributeName="opacity"
+          values={pm.opacity.values}
+          keyTimes={pm.opacity.keyTimes}
+          dur={`${tc}s`}
+          begin={introBegin}
+          repeatCount="indefinite"
+        />
+      </circle>,
+    );
   });
 
-  // Stage 2 파티클 (바→출력, r=3, 경로당 2개)
+  // Stage 2 파티클 (바→출력, r=3, 경로당 1개)
   stage2Paths.forEach((p, pathIdx) => {
-    for (let pi = 0; pi < 2; pi++) {
-      const pm = buildParticleMotion(pathIdx + pi * 0.5, 2);
-      particles.push(
-        <circle key={`s2-${pathIdx}-${pi}`} r={3} fill="url(#ceV2-particleGrad)" opacity={0}>
-          <animateMotion
-            dur={`${tc}s`}
-            repeatCount="indefinite"
-            calcMode="linear"
-            keyPoints={pm.motion.keyPoints}
-            keyTimes={pm.motion.keyTimes}
-            path={p.path}
-          />
-          <animate
-            attributeName="opacity"
-            values={pm.opacity.values}
-            keyTimes={pm.opacity.keyTimes}
-            dur={`${tc}s`}
-            repeatCount="indefinite"
-          />
-        </circle>,
-      );
-    }
+    const pm = buildParticleMotion(pathIdx, 2);
+    particles.push(
+      <circle key={`s2-${pathIdx}`} r={3} fill="url(#ceV2-particleGrad)" opacity={0}>
+        <animateMotion
+          dur={`${tc}s`}
+          begin={introBegin}
+          repeatCount="indefinite"
+          calcMode="linear"
+          keyPoints={pm.motion.keyPoints}
+          keyTimes={pm.motion.keyTimes}
+          path={p.path}
+        />
+        <animate
+          attributeName="opacity"
+          values={pm.opacity.values}
+          keyTimes={pm.opacity.keyTimes}
+          dur={`${tc}s`}
+          begin={introBegin}
+          repeatCount="indefinite"
+        />
+      </circle>,
+    );
   });
 
   return <g>{particles}</g>;
@@ -571,18 +595,41 @@ const ContextEngineV2 = forwardRef(function ContextEngineV2({
   const stage1Paths = useMemo(() => buildStage1Paths(), []);
   const stage2Paths = useMemo(() => buildStage2Paths(), []);
 
+  // 뷰포트 진입 시 SVG 마운트 → SMIL 타임라인 0에서 시작
+  const [isVisible, setIsVisible] = useState(false);
+  const localRef = useRef(null);
+  const mergedRef = useCallback((node) => {
+    localRef.current = node;
+    if (typeof ref === 'function') ref(node);
+    else if (ref) ref.current = node;
+  }, [ref]);
+
+  useEffect(() => {
+    if (isReducedMotion) { setIsVisible(true); return; }
+    const el = localRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setIsVisible(true); observer.disconnect(); } },
+      { threshold: 0.1 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [isReducedMotion]);
+
   return (
     <Box
-      ref={ref}
+      ref={mergedRef}
       sx={{
         position: 'relative',
         width: '100%',
         height: '100%',
         overflow: 'hidden',
+        willChange: 'transform',
+        contain: 'strict',
         ...sx,
       }}
     >
-      <svg
+      {isVisible && <svg
         viewBox={`0 0 ${VIEW.w} ${VIEW.h}`}
         width="100%"
         height="100%"
@@ -595,7 +642,7 @@ const ContextEngineV2 = forwardRef(function ContextEngineV2({
         <HorizontalScanLines accentColor={accentColor} isReducedMotion={isReducedMotion} />
 
         {/* Layer 1: Guide paths */}
-        <ConnectionPaths accentColor={accentColor} stage1Paths={stage1Paths} stage2Paths={stage2Paths} />
+        <ConnectionPaths accentColor={accentColor} stage1Paths={stage1Paths} stage2Paths={stage2Paths} isReducedMotion={isReducedMotion} />
 
         {/* Layer 2: Ambient data readouts */}
         <DataReadout accentColor={accentColor} />
@@ -623,7 +670,7 @@ const ContextEngineV2 = forwardRef(function ContextEngineV2({
               accentColor={accentColor} isReducedMotion={isReducedMotion} />
           ))}
         </g>
-      </svg>
+      </svg>}
     </Box>
   );
 });

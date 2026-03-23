@@ -19,7 +19,8 @@ const { cta, hero } = PAGES.courseDetail;
  *
  * 코스 상세 페이지 최종 CTA 영역.
  * 부가 링크(웨비나, 문의) + 가격 + 수강 신청 CTA.
- * FloatingCTA의 hideWhenVisible ref 대상이 된다.
+ * vibedesignlab.net 프로덕션 레이아웃: 카드 2행 + 하단 가격 바.
+ * FloatingCTA의 hideWhenVisible ref 대상.
  *
  * Example usage:
  * <CourseDetailCTA ref={ctaRef} />
@@ -27,8 +28,8 @@ const { cta, hero } = PAGES.courseDetail;
 const CourseDetailCTA = forwardRef(function CourseDetailCTA(props, ref) {
   return (
     <SectionContainer ref={ref} id="enroll">
-      {/* 부가 링크: 웨비나 + 문의 */}
-      <FadeTransition direction="up" isTriggerOnView>
+      {/* 헤더 */}
+      <FadeTransition direction="up" isTriggerOnView threshold={0.5}>
         <SectionDivider label="Enroll" sx={{ mb: 3 }} />
         <SectionTitle
           headline={cta.headline}
@@ -36,7 +37,8 @@ const CourseDetailCTA = forwardRef(function CourseDetailCTA(props, ref) {
         />
       </FadeTransition>
 
-      <FadeTransition direction="up" delay={100} isTriggerOnView>
+      {/* 웨비나 + 문의 카드 */}
+      <FadeTransition direction="up" delay={100} isTriggerOnView threshold={0.5}>
         <Stack
           direction={{ xs: 'column', md: 'row' }}
           spacing={3}
@@ -104,19 +106,18 @@ const CourseDetailCTA = forwardRef(function CourseDetailCTA(props, ref) {
         </Stack>
       </FadeTransition>
 
-      {/* 최종 가격 + CTA */}
-      <FadeTransition direction="up" delay={200} isTriggerOnView>
+      {/* 최종 가격 + CTA 바 */}
+      <FadeTransition direction="up" delay={200} isTriggerOnView threshold={0.5}>
         <Box
           sx={{
             p: { xs: 4, md: 5 },
-            border: 1,
-            borderColor: 'divider',
+            bgcolor: 'action.hover',
           }}
         >
           <Stack
             direction={{ xs: 'column', md: 'row' }}
             justifyContent="space-between"
-            alignItems={{ md: 'center' }}
+            alignItems={{ md: 'flex-end' }}
             spacing={3}
           >
             <Stack spacing={1.5}>

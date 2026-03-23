@@ -7,6 +7,7 @@ import { SectionDivider } from '../typography/SectionDivider';
 import LineGrid from '../layout/LineGrid';
 import { CardTextStack } from '../typography/CardTextStack';
 import FadeTransition from '../motion/FadeTransition';
+import { COL_STAGGER } from '../motion/constants';
 import { PAGES } from '../../data/contents';
 
 const { learningGoals } = PAGES.courseDetail;
@@ -29,7 +30,7 @@ export function CourseDetailLearningGoals() {
       <LineGrid container gap={96} borderColor="divider">
         {learningGoals.goals.map((goal, index) => (
           <Grid key={goal.label} size={{ xs: 12, md: 4 }}>
-            <FadeTransition direction="up" delay={index * 100} isTriggerOnView>
+            <FadeTransition direction="up" delay={(index % 3) * COL_STAGGER} isTriggerOnView threshold={0.5}>
               <Stack spacing={3}>
                 <CardTextStack label={goal.label} title={goal.title} />
                 <Stack direction="row" spacing={1} flexWrap="wrap">

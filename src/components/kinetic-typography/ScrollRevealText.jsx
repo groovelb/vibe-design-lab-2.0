@@ -17,6 +17,7 @@ import Typography from '@mui/material/Typography';
  *
  * Props:
  * @param {string} text - 표시할 텍스트 [Required]
+ * @param {number} progress - 외부 스크롤 진행률 (0→1). 제공 시 내부 스크롤 추적 비활성 [Optional]
  * @param {string} activeColor - 활성화된 글자 색상 [Optional, 기본값: 'text.primary']
  * @param {string} inactiveColor - 비활성 글자 색상 [Optional, 기본값: 'text.disabled']
  * @param {string} variant - MUI Typography variant [Optional, 기본값: 'h4']
@@ -28,6 +29,7 @@ import Typography from '@mui/material/Typography';
  */
 function ScrollRevealText({
   text,
+  progress: externalProgress,
   activeColor = 'text.primary',
   inactiveColor = 'text.disabled',
   variant = 'h4',
@@ -35,10 +37,13 @@ function ScrollRevealText({
   sx = {},
 }) {
   const containerRef = useRef(null);
-  const [progress, setProgress] = useState(0);
+  const [internalProgress, setInternalProgress] = useState(0);
+  const progress = externalProgress ?? internalProgress;
 
-  /** 스크롤 위치 기반 진행률 계산 (requestAnimationFrame throttle) */
+  /** 스크롤 위치 기반 진행률 계산 — 외부 progress가 없을 때만 동작 */
   useEffect(() => {
+    if (externalProgress !== undefined) return;
+
     let ticking = false;
 
     const updateProgress = () => {
@@ -54,7 +59,7 @@ function ScrollRevealText({
       let newProgress = (start - current) / (start - end);
       newProgress = Math.max(0, Math.min(1, newProgress));
 
-      setProgress(newProgress);
+      setInternalProgress(newProgress);
       ticking = false;
     };
 
@@ -68,7 +73,7 @@ function ScrollRevealText({
     updateProgress();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+  }, [externalProgress]);
 
   /** 문장 단위 분리 ('\n' 항상 분리 + '. ' 옵션) */
   const lines = text.split('\n');

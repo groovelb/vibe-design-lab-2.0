@@ -8,6 +8,7 @@ import { SectionTitle } from '../typography/SectionTitle';
 import { CardTextStack } from '../typography/CardTextStack';
 import LineGrid from '../layout/LineGrid';
 import FadeTransition from '../motion/FadeTransition';
+import { COL_STAGGER } from '../motion/constants';
 import { PAGES } from '../../data/contents';
 
 const { composition } = PAGES.courseDetail;
@@ -34,7 +35,7 @@ export function CourseDetailComposition() {
       <LineGrid container gap={96} borderColor="divider">
         {composition.items.map((item, index) => (
           <Grid key={item.title} size={{ xs: 12, md: 4 }}>
-            <FadeTransition direction="up" delay={index * 100} isTriggerOnView>
+            <FadeTransition direction="up" delay={(index % 3) * COL_STAGGER} isTriggerOnView threshold={0.5}>
               <CardTextStack
                 title={item.title}
                 description={item.description}
