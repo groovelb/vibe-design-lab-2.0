@@ -40,7 +40,7 @@ function ShowcaseCard({ example, cardRef }) {
 		>
 			<AreaConstruct>
 				<RatioContainer
-					ratio="4:3"
+					ratio="3:2"
 					isContained
 					sx={{
 						overflow: "hidden",
@@ -220,7 +220,7 @@ export function LandingShowcaseMagnifier() {
 							left: "50%",
 							transform: "translate(-50%, -50%)",
 							width: FRAME_W,
-							aspectRatio: "4/3",
+							aspectRatio: "3/2",
 							border: "1px solid",
 							borderColor: "divider",
 							overflow: "hidden",
@@ -249,7 +249,7 @@ export function LandingShowcaseMagnifier() {
 									}}
 								>
 									<RatioContainer
-										ratio="4:3"
+										ratio="3:2"
 										isContained
 										sx={{
 											overflow: "hidden",
