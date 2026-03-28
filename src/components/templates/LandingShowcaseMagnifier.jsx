@@ -7,15 +7,19 @@ import { RatioContainer } from "../container/RatioContainer";
 import { AreaConstruct } from "../motion/AreaConstruct";
 import { EXAMPLES } from "../../data/example";
 
-/* ── 레이아웃 상수 (FRAME_VW 기준 공식화) ──── */
+/* ── 레이아웃 상수 ────
+ * 중앙 프레임(45vw) 실제 크기 기준 사이드 카드 배치:
+ * [24px peek] [gap] [W_side] [gap] [FRAME 45vw] [gap] [W_side] [gap] [24px peek] = 100vw
+ * W_side = (100vw − 45vw − 6×24px) / 2 = 27.5vw − 72px
+ * push offset = (FRAME_W − W_side) / 2 → 좌우 카드를 프레임 밖으로 밀어냄
+ */
 const FRAME_VW = 45;
-const CARD_RATIO = 0.4;
+const GAP_PX = 24;
 
 const FRAME_W = `${FRAME_VW}vw`;
-const CARD_W = `${FRAME_VW * CARD_RATIO}vw`;
-const HALF_CARD = `${FRAME_VW * CARD_RATIO / 2}vw`;
-const TRACK_PAD = `calc(50vw - ${HALF_CARD})`;
-const GAP = "24px";
+const CARD_W = `calc(27.5vw - 72px)`;
+const TRACK_PAD = `calc(36.25vw + 36px)`;
+const GAP = `${GAP_PX}px`;
 const N = EXAMPLES.length;
 
 /**
@@ -33,7 +37,7 @@ function ShowcaseCard({ example, cardRef }) {
 			ref={cardRef}
 			sx={{
 				width: CARD_W,
-				willChange: "opacity, filter",
+				willChange: "opacity, filter, transform",
 				opacity: 0.75,
 				filter: "brightness(0.4)",
 			}}
@@ -44,8 +48,7 @@ function ShowcaseCard({ example, cardRef }) {
 					isContained
 					sx={{
 						overflow: "hidden",
-						border: "1px solid",
-						borderColor: "divider",
+						outline: (t) => `1px solid ${t.palette.divider}`,
 					}}
 				>
 					<video
@@ -85,6 +88,7 @@ export function LandingShowcaseMagnifier() {
 	const titleRef = useRef(null);
 	const labelWrapRef = useRef(null);
 	const isHighlightRef = useRef(false);
+	const prevDxRef = useRef([]);
 
 	/**
 	 * 1. 베이스 카드: proximity 기반 brightness 디밍
@@ -108,38 +112,60 @@ export function LandingShowcaseMagnifier() {
 			"(prefers-reduced-motion: reduce)",
 		).matches;
 
-		/* ── 베이스 카드 디밍 + 프레임 주변 클리핑 ── */
+		/* ── 베이스 카드 디밍 + 클리핑 + push offset ── */
 		const fr = frameRef.current?.getBoundingClientRect();
-		const clearL = fr ? fr.left - 24 : -Infinity;
-		const clearR = fr ? fr.right + 24 : Infinity;
+		const clearL = fr ? fr.left - GAP_PX : -Infinity;
+		const clearR = fr ? fr.right + GAP_PX : Infinity;
+		const frameWpx = fr ? fr.width : 0;
+		const firstCard = cardRefs.current[0];
+		const cardWpx = firstCard ? firstCard.getBoundingClientRect().width : 0;
+		const pushOffset = (frameWpx - cardWpx) / 2;
+		const exactIdx = progress * (N - 1);
+		const prevDx = prevDxRef.current;
 
-		cardRefs.current.forEach((el) => {
+		cardRefs.current.forEach((el, i) => {
 			if (!el) return;
 			if (isReduced) {
 				el.style.opacity = "1";
 				el.style.filter = "brightness(1)";
 				el.style.clipPath = "none";
+				el.style.transform = "none";
 				return;
 			}
 
 			const rect = el.getBoundingClientRect();
-			const cardCenter = rect.left + rect.width / 2;
-			const distance = Math.abs(cardCenter - vCenter);
+			/* 이전 transform 보정 → 레이아웃 위치 복원 */
+			const layoutLeft = rect.left - (prevDx[i] || 0);
+
+			/* push offset: 프레임 좌우로 카드를 밀어냄 */
+			const relPos = i - exactIdx;
+			const sign = Math.abs(relPos) >= 0.5 ? Math.sign(relPos) : relPos * 2;
+			const dx = sign * pushOffset;
+
+			/* 시각적 위치 */
+			const visLeft = layoutLeft + dx;
+			const visRight = visLeft + rect.width;
+			const visCenter = visLeft + rect.width / 2;
+
+			const distance = Math.abs(visCenter - vCenter);
 			const proximity = Math.min(distance / vCenter, 1);
 
 			el.style.opacity = "0.75";
 			el.style.filter = `brightness(${0.5 + (1 - proximity) * 0.5})`;
 
-			/* 프레임+24px 영역 내 카드 clip */
-			if (rect.right <= clearL || rect.left >= clearR) {
+			/* 프레임+gap 영역 내 카드 clip */
+			if (visRight <= clearL || visLeft >= clearR) {
 				el.style.clipPath = "none";
-			} else if (rect.left < clearL) {
-				el.style.clipPath = `inset(0 ${rect.right - clearL}px 0 0)`;
-			} else if (rect.right > clearR) {
-				el.style.clipPath = `inset(0 0 0 ${clearR - rect.left}px)`;
+			} else if (visLeft < clearL) {
+				el.style.clipPath = `inset(0 ${visRight - clearL}px 0 0)`;
+			} else if (visRight > clearR) {
+				el.style.clipPath = `inset(0 0 0 ${clearR - visLeft}px)`;
 			} else {
 				el.style.clipPath = "inset(0 100% 0 0)";
 			}
+
+			el.style.transform = `translateX(${dx}px)`;
+			prevDx[i] = dx;
 		});
 
 		/* ── 프레임 수직 중앙 정렬 (트랙 기준) + 타이틀 동기화 ── */
@@ -221,8 +247,7 @@ export function LandingShowcaseMagnifier() {
 							transform: "translate(-50%, -50%)",
 							width: FRAME_W,
 							aspectRatio: "3/2",
-							border: "1px solid",
-							borderColor: "divider",
+							outline: (t) => `1px solid ${t.palette.divider}`,
 							overflow: "hidden",
 							pointerEvents: "none",
 							zIndex: 10,

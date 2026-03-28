@@ -166,8 +166,8 @@ export const PAGES = {
       ctaSecondary: '코스 전체 보기 →',
     },
     courseReview: {
-      headline: '많은 실무자들이 검증한 커리큘럼입니다',
-      subtitle: '실제 수강생분들의 후기입니다',
+      headline: '30명의 실무자들이 검증한 커리큘럼입니다',
+      subtitle: '3번의 오프라인 코스 현장에서 얻은 인사이트를 반영했습니다',
       webinarLabel: '웨비나 참여자',
     },
     dictionaryPreview: {
@@ -245,8 +245,8 @@ export const PAGES = {
     },
     courseReview: {
       dividerLabel: 'Review',
-      headline: '많은 실무자들이 검증한 커리큘럼입니다.',
-      subtitle: '실제 수강생분들의 후기입니다',
+      headline: '30명의 실무자들이 검증한 커리큘럼입니다',
+      subtitle: '3번의 오프라인 코스 현장에서 얻은 인사이트를 반영했습니다',
       webinarLabel: '웨비나 참여자',
     },
     vision: {
