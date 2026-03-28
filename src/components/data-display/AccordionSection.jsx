@@ -3,6 +3,7 @@ import { forwardRef, useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
+import Divider from '@mui/material/Divider';
 import MuiAccordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -14,23 +15,31 @@ import { ChevronDown } from 'lucide-react';
  * MUI Accordion을 VDL 토큰으로 래핑한 아코디언 섹션.
  * curriculum과 faq 두 가지 variant를 지원한다.
  *
+ * curriculum variant는 두 가지 데이터 형식을 지원:
+ * - flat: { id, title, items: string[] }
+ * - nested: { id, title, parts: [{ title, items: string[] }] }
+ *   nested일 경우 part별 제목 + 항목이 구분선과 함께 표시된다.
+ *
  * @param {Array} items - 아코디언 항목 배열 [Required]
- *   - curriculum: { id, title, items: string[] }
+ *   - curriculum flat: { id, title, items: string[] }
+ *   - curriculum nested: { id, title, parts: [{ title, items: string[] }] }
  *   - faq: { id, question, answer }
  * @param {string} defaultExpandedId - 기본 펼침 항목 ID [Optional]
  * @param {string} variant - 'curriculum' | 'faq' [Optional, 기본값: 'faq']
+ * @param {string} labelPrefix - curriculum variant의 인덱스 라벨 접두사 [Optional, 기본값: 'Chapter']
  * @param {object} sx - 추가 스타일 [Optional]
  *
  * Example usage:
  * <AccordionSection
  *   variant="curriculum"
- *   items={[{ id: 'ch1', title: '챕터 1', items: ['항목 1', '항목 2'] }]}
+ *   items={[{ id: 'S1', title: '섹션 1', parts: [{ title: '파트 A', items: ['항목 1'] }] }]}
  * />
  */
 const AccordionSection = forwardRef(function AccordionSection({
   items = [],
   defaultExpandedId,
   variant = 'faq',
+  labelPrefix = 'Chapter',
   sx,
   ...props
 }, ref) {
@@ -90,16 +99,46 @@ const AccordionSection = forwardRef(function AccordionSection({
               }}
             >
               {variant === 'curriculum' ? (
-                <Stack direction="row" spacing={3} alignItems="baseline">
-                  <Typography
-                    variant="body2"
-                    sx={{ color: 'text.secondary', flexShrink: 0, fontWeight: 500 }}
-                  >
-                    Chapter {index + 1}
-                  </Typography>
-                  <Typography variant="h4" sx={{ fontWeight: 700 }}>
-                    {item.title}
-                  </Typography>
+                <Stack spacing={2.5}>
+                  <Stack direction="row" spacing={3} alignItems="center">
+                    <Typography
+                      variant="body2"
+                      sx={{ color: 'error.main', flexShrink: 0, fontWeight: 600, minWidth: { md: 72 } }}
+                    >
+                      {labelPrefix} {index + 1}
+                    </Typography>
+                    <Typography variant="h3" sx={{ fontWeight: 700 }}>
+                      {item.title}
+                    </Typography>
+                  </Stack>
+                  <Stack spacing={0.5}>
+                    {item.description && (
+                      <Stack direction="row" spacing={3} alignItems="center">
+                        <Typography
+                          variant="body2"
+                          sx={{ color: 'text.secondary', flexShrink: 0, fontWeight: 500, minWidth: { md: 72 } }}
+                        >
+                          요약
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                          {item.description}
+                        </Typography>
+                      </Stack>
+                    )}
+                    {item.goal && (
+                      <Stack direction="row" spacing={3} alignItems="center">
+                        <Typography
+                          variant="body2"
+                          sx={{ color: 'text.secondary', flexShrink: 0, fontWeight: 500, minWidth: { md: 72 } }}
+                        >
+                          목표
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 500 }}>
+                          {item.goal}
+                        </Typography>
+                      </Stack>
+                    )}
+                  </Stack>
                 </Stack>
               ) : (
                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
@@ -110,11 +149,49 @@ const AccordionSection = forwardRef(function AccordionSection({
             <AccordionDetails
               sx={{
                 px: 0,
-                pb: variant === 'curriculum' ? 5 : 3,
+                pb: variant === 'curriculum' ? 8 : 3,
                 pt: 0,
               }}
             >
-              {variant === 'curriculum' && item.items ? (
+              {variant === 'curriculum' && item.chapters ? (
+                /* ── 섹션 > 챕터 > 파트 3단 구조 ── */
+                <Stack spacing={0}>
+                  {item.chapters.map((chapter, chIndex) => (
+                    <Box key={`${id}-ch-${chIndex}`}>
+                      {chIndex > 0 && (
+                        <Divider sx={{ borderColor: 'divider' }} />
+                      )}
+                      <Box sx={{ py: 2.5 }}>
+                        {/* 챕터 헤더 */}
+                        <Stack direction="row" spacing={3} alignItems="center" sx={{ mb: 2 }}>
+                          <Typography
+                            variant="body2"
+                            sx={{ color: 'text.secondary', flexShrink: 0, fontWeight: 700, minWidth: { md: 72 } }}
+                          >
+                            {chapter.label}
+                          </Typography>
+                          <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                            {chapter.title}
+                          </Typography>
+                        </Stack>
+                        {/* 파트 타이틀 목록 */}
+                        <Stack spacing={0.5} sx={{ pl: { xs: 0, md: `calc(72px + 24px)` } }}>
+                          {chapter.parts.map((part, partIndex) => (
+                            <Typography
+                              key={`${id}-ch-${chIndex}-p-${partIndex}`}
+                              variant="body2"
+                              sx={{ color: 'text.secondary' }}
+                            >
+                              · {part.title}
+                            </Typography>
+                          ))}
+                        </Stack>
+                      </Box>
+                    </Box>
+                  ))}
+                </Stack>
+              ) : variant === 'curriculum' && item.items ? (
+                /* ── flat items: 하위 호환 ── */
                 <Stack spacing={1.5} sx={{ pl: { xs: 0, md: 12 } }}>
                   {item.items.map((subItem, subIndex) => (
                     <Typography

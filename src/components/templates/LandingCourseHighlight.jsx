@@ -4,11 +4,14 @@ import { CourseDetailCard } from '../card/CourseDetailCard';
 import FadeTransition from '../motion/FadeTransition';
 import { PAGES } from '../../data/contents';
 import { COURSES } from '../../data/landingMockData';
+import curriculumJson from '../../data/program/vdsk_online_curriculum.json';
 import coursePoster from '../../assets/course/course_thumbnail_line.png';
 
 const courseVideo = '/assets/course/course_thumbnail_line.mp4';
 
 const { courseHighlight } = PAGES.landing;
+
+const CURRICULUM_HIGHLIGHTS = curriculumJson.sections.map((s) => s.title);
 
 /**
  * LandingCourseHighlight 섹션 템플릿
@@ -28,12 +31,11 @@ export function LandingCourseHighlight() {
         <CourseDetailCard
           videoSrc={courseVideo}
           posterSrc={coursePoster.src || coursePoster}
-          cohortStatus={course.cohortStatus}
-          duration={course.duration}
-          chapters={course.chapters}
+          duration={`${curriculumJson.sections.length}섹션`}
+          chapters={curriculumJson.sections.reduce((sum, s) => sum + s.chapters.length, 0)}
           title={course.title}
           subtitle={course.subtitle}
-          target={course.target}
+          highlights={CURRICULUM_HIGHLIGHTS}
           ctaLabel={courseHighlight.ctaPrimary}
           ctaHref={`/course/${course.slug}`}
           sx={{ border: '1px solid', borderColor: 'divider' }}

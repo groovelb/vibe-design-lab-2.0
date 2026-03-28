@@ -1,0 +1,1934 @@
+{
+  "meta": {
+    "version": "1.0",
+    "lastUpdated": "2026-03-26",
+    "sourceFile": "vdsk_online_커리큘럼_목차.md",
+    "changeLog": {
+      "version": "1.1",
+      "date": "2026-03-26",
+      "basis": "2차-커리큘럼-반영사항.md (R1-R6, N1-N6)",
+      "dataSource": "3기 추가 설문 4명 질적 + 얼리버드 140명 정량"
+    }
+  },
+  "course": {
+    "title": "Vibe Design Online: 디자이너를 위한 바이브코딩",
+    "structure": "6섹션 18챕터",
+    "chapterDuration": "~2시간",
+    "totalDuration": "~20시간",
+    "recommendedPace": "주 2챕터 (~4주 완주)",
+    "deliverable": "개인 프로젝트 1개 (메인 페이지 + 디자인 컨셉 + 배포)",
+    "personaMessaging": [
+      {
+        "persona": "P1",
+        "label": "코드 앞에 선 디자이너",
+        "ratio": "30.7%",
+        "message": "코드에 기여하는 디자이너 — 터미널이 무섭지 않게 됩니다",
+        "keyword": "진입장벽 해소"
+      },
+      {
+        "persona": "P2",
+        "label": "구조를 찾는 프로 디자이너",
+        "ratio": "27.1%",
+        "message": "디자인 시스템을 직접 구축하고, 개발자에게 제안하세요",
+        "keyword": "구조적 이해, 실무 도입"
+      },
+      {
+        "persona": "P3",
+        "label": "감각을 찾는 빌더",
+        "ratio": "15.7%",
+        "message": "AI 획일성을 탈피 — 디자이너 수준의 심미성을 바이브 코딩으로",
+        "keyword": "디자인 품질"
+      },
+      {
+        "persona": "P4",
+        "label": "직접 만들고 싶은 기획자",
+        "ratio": "26.4%",
+        "message": "기획에서 배포까지 혼자서 — 외주 없는 서비스 런칭",
+        "keyword": "자립, 독립"
+      }
+    ],
+    "levelSystem": {
+      "description": "접근 제한 없이 레벨 태깅. 수강생이 자기 위치를 파악하고 우선순위를 잡는 가이드",
+      "levels": [
+        {
+          "level": "입문",
+          "target": "코딩 경험 0",
+          "personas": [
+            "P1",
+            "P4"
+          ]
+        },
+        {
+          "level": "초급",
+          "target": "HTML/CSS 경험",
+          "personas": [
+            "P1→P2 전환 중",
+            "P4"
+          ]
+        },
+        {
+          "level": "중급",
+          "target": "프레임워크 경험",
+          "personas": [
+            "P2",
+            "P3"
+          ]
+        },
+        {
+          "level": "고급",
+          "target": "실무 적용",
+          "personas": [
+            "P2 (시니어)",
+            "P3"
+          ]
+        }
+      ]
+    },
+    "futureConsiderations": [
+      {
+        "id": "N6",
+        "title": "P4 하위 세분화 검토",
+        "trigger": "P4 수강생 비율 30% 이상 또는 P4 내 이탈률이 다른 페르소나 대비 유의미하게 높을 때",
+        "currentStatus": "37명(26.4%) 규모에서는 통합 운영이 효율적",
+        "priority": "P2"
+      }
+    ]
+  },
+  "sections": [
+    {
+      "id": "S1",
+      "title": "새로운 사고에 적응하기",
+      "chapters": [
+        {
+          "id": "Ch1",
+          "title": "디자인의 본질은 도구일까, 의도일까?",
+          "position": "S1 프롤로그",
+          "coreMessage": "의도를 정확히 쪼개는 과정 자체가 구현이 된다 — 그 사고 방식에 적응하는 것이 시작",
+          "parts": [
+            {
+              "id": "S1-P-A",
+              "title": "디자인의 언어 체계가 AI를 위한 설계도가 되는 과정",
+              "duration": 5,
+              "items": [
+                {
+                  "title": "10년간의 디발자: 디자이너이자 개발자로서 깨달은 것",
+                  "source": "Ch1 1-A-1에서 이동. 디발자 배경 + 바이브 디자인의 출발점. 10년간 양쪽을 오가며 얻은 관점이 이 코스의 토대",
+                  "sourceId": null,
+                  "status": "◐"
+                },
+                {
+                  "title": "왜 의도를 쪼개야 하는가: 디자인 언어가 설계도가 되는 구조",
+                  "source": "디자인이 구현의 메타 언어가 되는 시대. 잘 쪼갠 의도가 곧 설계도 — 이 코스의 전제를 공유",
+                  "sourceId": null,
+                  "status": "○"
+                }
+              ]
+            }
+          ],
+          "checkpoint": null,
+          "supplements": null
+        },
+        {
+          "id": "Ch2",
+          "title": "바이브 디자인: 관점의 전환",
+          "position": "S1 전반부",
+          "coreMessage": "HOW보다 WHAT이 먼저다 — 의도를 쪼개는 체계(택소노미·사조)를 익히면, 그것이 구현의 언어가 된다",
+          "parts": [
+            {
+              "id": "2-A",
+              "title": "왜 바이브 디자인인가",
+              "duration": 35,
+              "items": [
+                {
+                  "title": "코스 로드맵 + 4섹션 구조 안내",
+                  "source": "신규. VOD 오프닝 — '당신이 여기 온 이유'와 4섹션의 여정 개요",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "바이브코딩에 대한 오해: 캐퍼시의 암묵지",
+                  "source": "신규. Karpathy X 포스트 바이럴 → 암묵지 추상화 단계 차이. 뉴욕 로컬 vs 한국에서 리서치 비유",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "어디에 더 집중해야할까?: 맥락적 오류 VS 컴파일 오류",
+                  "source": "3기 1-1-2 VOD화. 디자이너의 의도가 코드로 변환되는 과정",
+                  "sourceId": null,
+                  "status": "◐"
+                },
+                {
+                  "title": "바이브 디자인이란",
+                  "source": "3기 1-1-1 VOD화. '바이브코딩' → '바이브 디자인' 프레이밍 확장. 디발자 배경은 S1 프롤로그로 이동",
+                  "sourceId": null,
+                  "status": "◐"
+                },
+                {
+                  "title": "'디자인은 항상 체계였다': 디자인 택소노미 소개",
+                  "source": "신규. 바우하우스→스위스 스타일→미니멀리즘→디자인 시스템 계보. '왜 바이브 디자인인가'의 결론",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "UX 디자인이 바이브 디자인이 되기까지",
+                  "source": "신규. UX 디자인의 핵심 원리가 바이브 디자인에서 어떻게 이어지는지",
+                  "sourceId": null,
+                  "status": "○"
+                }
+              ],
+              "notes": [
+                "스토리 흐름: 오해 해소 → 오류 프레이밍 → 바이브 디자인 정의 → 결론: 디자인은 항상 체계였다",
+                "캐퍼시 비유 핵심: 암묵지의 수준이 다르면 같은 도구도 다른 결과",
+                "ddd.k: 'AI 이전에도 원래 이렇게 해야 했다'"
+              ]
+            },
+            {
+              "id": "2-B",
+              "title": "디자인 택소노미 활용법: 컴포넌트와 스타일의 분류 체계",
+              "duration": 30,
+              "description": "택소노미를 배운 직후, 그 눈으로 직접 웹 페이지를 만들어본다. 이론과 실습이 분리되지 않는 VDL의 핵심 사이클.",
+              "items": [
+                {
+                  "title": "15카테고리 분류 체계 소개",
+                  "source": "신규. 15카테고리 개요 + 레고 블록 비유. S2 스타터키트 탐색, Ch4 실전 적용의 기초",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "디자인 프리뷰: \"좋은 디자인은 이렇게 분해된다\"",
+                  "source": "신규 (N2). 클로드에게 통으로 던진 카페메뉴 vs 내가 직접 의도한 카페메뉴 비교",
+                  "sourceId": null,
+                  "status": "○",
+                  "changeRef": "N2",
+                  "personaImpact": {
+                    "P3": "핵심 — AI 획일성 탈피의 시작점",
+                    "P1": "디자인 체계가 있다는 심리적 안심",
+                    "P4": "디자인 체계가 있다는 심리적 안심"
+                  }
+                },
+                {
+                  "title": "실습: HTML 카페메뉴 만들기",
+                  "source": "3기 0-C-1 재활용. 택소노미로 배운 눈으로 직접 만들어본다",
+                  "sourceId": null,
+                  "status": "●"
+                },
+                {
+                  "title": "여기서 잠깐: 웹 프로그래밍 기초, 어디까지 알아야 하나요?",
+                  "source": "신규. 방금 쓴 프롬프트를 분해: 이 문장은 HTML(구조)에, 이 문장은 CSS(스타일)에, 이 문장은 JS(동작)에 영향을 준다. 코드를 읽는 게 아니라 내 프롬프트가 어디에 닿는지를 아는 것",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "실습: 자유 주제 1개 만들기",
+                  "source": "3기 0-C-3 재활용. 택소노미 분류를 의식하며 자유 생성",
+                  "sourceId": null,
+                  "status": "●"
+                }
+              ],
+              "notes": [
+                "핵심 원칙: 택소노미를 '배운 직후' 바로 손으로 확인한다",
+                "카페메뉴는 Typography·Card·Layout 등 택소노미 범주를 체감하는 최소 실습",
+                "1-B-2는 실습 직후 자연스러운 궁금증에 대답: 프롬프트의 어떤 부분이 HTML/CSS/JS 각각에 영향을 주는지 분해",
+                "자유 주제로 '나도 분류할 수 있다'는 경험을 쌓는다"
+              ]
+            },
+            {
+              "id": "2-VH",
+              "title": "레퍼런스 분석 방법: 비쥬얼 해킹 연습하기",
+              "duration": null,
+              "items": [],
+              "notes": []
+            },
+            {
+              "id": "2-C",
+              "title": "왜 프레임워크가 필요한가: 피그마와 React.js의 관계",
+              "duration": 20,
+              "description": "HTML만으로 웹을 만들어본 뒤, 수정·재사용의 불편함을 체감한다. 프레임워크의 필요성을 자연스럽게 이해하고, React 변환 실습을 통해 체감한다.",
+              "items": [
+                {
+                  "title": "1세대 UX디자이너가 바꿔놓은 것들",
+                  "source": "3기 1-2-4 재구성. 역사가 아니라 '불편함의 역사'로 스토리텔링",
+                  "sourceId": null,
+                  "status": "◐"
+                },
+                {
+                  "title": "실습: 카페메뉴를 React로 변환해보기",
+                  "source": "3기 0-C-2 재활용. 방금 만든 HTML 카페메뉴를 React 컴포넌트로 변환",
+                  "sourceId": null,
+                  "status": "●"
+                },
+                {
+                  "title": "여기서 잠깐: React는 어디까지 알아야 하나요?",
+                  "source": "신규. 방금 변환된 코드를 분해: 컴포넌트(피그마 심볼), Props(오버라이드), JSX(프레임 안 레이어 구조). 코드를 외우는 게 아니라 프롬프트로 어떤 단위를 지시하는지를 아는 것",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "React 개발 기초: JSX, Props, Component, 기본 문법",
+                  "source": "3기 세션 3 해설 확장 VOD화. '코드를 읽을 필요는 없지만, 구조는 알아야 한다'",
+                  "sourceId": null,
+                  "status": "◐"
+                },
+                {
+                  "title": "코드를 다 읽지 말고 범위를 확인하라",
+                  "source": "코드 접근법 가이드",
+                  "sourceId": null,
+                  "status": "●"
+                }
+              ],
+              "notes": [
+                "3기 presentation_analysis Section 02 '웹 발전 과정' + Section 03 'HTML→React' 재구성"
+              ]
+            },
+            {
+              "id": "2-D",
+              "title": "디자인 vs 개발 생태계 비교하기",
+              "duration": 10,
+              "description": "피그마의 컴포넌트·오토레이아웃·스타일과 React의 대응 개념을 나란히 비교하고, 디자인 생태계와 개발 생태계의 전체 그림을 조감한다.",
+              "items": [
+                {
+                  "title": "컴포넌트 재사용: 피그마 vs React",
+                  "source": "신규. 컴포넌트=심볼, Variants=Props, 스타일=디자인 토큰, 오토레이아웃=Flex, 컴포넌트 라이브러리=npm 패키지(MUI), Storybook=Storybook",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "실행과 배포: 피그마 vs React",
+                  "source": "신규. 페이지=라우트, 프레임=페이지 컴포넌트, 프로토타입=상태관리+이벤트, 프리뷰=dev 서버, 퍼블리시=빌드→Vercel 배포, 피그마 파일=프로젝트(git repo)",
+                  "sourceId": null,
+                  "status": "○"
+                }
+              ],
+              "notes": [
+                "Layer 1(재사용): 만든 것을 반복해서 쓸 수 있게 하는 구조",
+                "Layer 2(런타임): 만든 것을 사용자에게 실제로 보여주는 구조",
+                "두 레이어를 본 뒤 → 자연스럽게 '그럼 이 도구들을 열어보자'로 세팅 파트 진입"
+              ]
+            },
+            {
+              "id": "2-E",
+              "title": "개발환경 세팅 & 익숙해지기",
+              "duration": 15,
+              "description": "생태계 비교에서 본 도구들을 실제로 열어본다. 피그마를 처음 열 때 파일 생성→플러그인 설치→프레임 배치 순서와 동일한 흐름.",
+              "items": [
+                {
+                  "title": "개발환경 용어 정리",
+                  "source": "3기 0-B-1 확장 (R1). 터미널·Claude Code·스토리북·스타터키트·pnpm·Vercel·git 한 줄 정의",
+                  "sourceId": null,
+                  "status": "◐",
+                  "changeRef": "R1"
+                },
+                {
+                  "title": "사전 점검 스크립트 실행",
+                  "source": "3기 0-A-2 재활용",
+                  "sourceId": null,
+                  "status": "●"
+                },
+                {
+                  "title": "개발환경 가이드 실행",
+                  "source": "3기 0-A-1 재활용. OS별 환경세팅 (Mac/Windows)",
+                  "sourceId": null,
+                  "status": "●"
+                },
+                {
+                  "title": "Claude Code 설치",
+                  "source": "3기 0-A-3 재활용. 계정 연동 + 설치 확인",
+                  "sourceId": null,
+                  "status": "●"
+                },
+                {
+                  "title": "빌드와 npm 이해하기",
+                  "source": "C1-S1 재활용. 빌드/npm 기초 이해",
+                  "sourceId": "C1-S1",
+                  "status": "●"
+                },
+                {
+                  "title": "터미널 첫 경험 + 걱정 FAQ",
+                  "source": "신규 (N1). 용어 카드 확장판 + 터미널 3개 명령어 + 걱정 FAQ",
+                  "sourceId": null,
+                  "status": "○",
+                  "changeRef": "N1"
+                },
+                {
+                  "title": "AntiGravity 사용법",
+                  "source": "신규. AntiGravity 설치 + 기본 사용법 안내",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "Claude CLI 사용법",
+                  "source": "신규. Claude CLI 기본 명령어 + 워크플로우 안내",
+                  "sourceId": null,
+                  "status": "○"
+                }
+              ],
+              "notes": [
+                "피그마 비유: 파일 생성(프로젝트 클론) → 플러그인 설치(pnpm install) → 프레임 배치(코드 실행)",
+                "도구 정의 카드를 세팅 직전에 배치 — '지금부터 만질 도구들'",
+                "세팅이 완료되면 Ch2 AI 협업 태도로 이어짐"
+              ]
+            }
+          ],
+          "checkpoint": {
+            "activities": [
+              "Project Brief 초안 공유"
+            ],
+            "items": [
+              {
+                "title": "Project Brief 초안 작성",
+                "source": "3기 0-D-1 재활용. VOD에서 형성된 관점을 '나는 무엇을 만들고 싶은가'로 구체화",
+                "status": "●"
+              },
+              {
+                "title": "과제 유형 자기 진단",
+                "source": "3기 0-D-2 확장. 비즈니스/서비스/브랜드/시스템 중 내 방향 탐색",
+                "status": "◐"
+              }
+            ],
+            "channel": "#ch-1"
+          },
+          "supplements": null
+        },
+        {
+          "id": "Ch3",
+          "title": "AI와 협업에 적합한 태도와 접근법",
+          "position": "S1 후반부",
+          "coreMessage": "수정할 곳을 모르겠다 = 의도를 충분히 쪼개지 않았다는 신호",
+          "parts": [
+            {
+              "id": "3-F",
+              "title": "감당할 만큼의 사고와 글쓰기",
+              "duration": 15,
+              "description": "AI와 함께 작업하기 전, 협업의 기본 자세를 잡는다. 멘탈모델의 첫 단계.",
+              "items": [
+                {
+                  "title": "AI 협업의 현실: 진짜 vs 가짜 걱정",
+                  "source": "3기 1-1-3, 1-2-1 통합 VOD화. 수강생 실제 불안감 인용 + 의도 불일치가 진짜 걱정",
+                  "sourceId": null,
+                  "status": "◐"
+                },
+                {
+                  "title": "질문→결정→검수 프레임 + 상황 인식 3가지 습관",
+                  "source": "3기 1-2-2, 1-2-3 통합 VOD화",
+                  "sourceId": null,
+                  "status": "◐"
+                },
+                {
+                  "title": "내 말의 영향력 책임지기: 코드를 부품처럼 다뤄라",
+                  "source": "1-C 코드 접근법 가이드 반복. AI 협업 맥락에서 재강조",
+                  "sourceId": null,
+                  "status": "●"
+                },
+                {
+                  "title": "3단계 글쓰기: 목적, 방법, 스타일",
+                  "source": "신규. 코드를 범위로 확인하는 습관을 글쓰기 프레임으로 확장",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "워밍업 실습 가이드",
+                  "source": "신규. AI와 협업 자세를 적용하며 따라하기 시연",
+                  "sourceId": null,
+                  "status": "○"
+                }
+              ],
+              "notes": [
+                "스토리 흐름: 세팅 완료 → AI와 대화할 준비 → 프레임 제시 → 실습으로 확인",
+                "김혁인 3기: '딸깍으로 나오는 게 아니라 계속 대화하면서 맞춰가는 것'"
+              ]
+            },
+            {
+              "id": "3-B",
+              "title": "오류는 흔한 것이다: 올바른 대처 방법",
+              "duration": 25,
+              "items": [
+                {
+                  "title": "'어디를 어떻게 수정할지 정확히 아는법'",
+                  "source": "3기 1-3-3 VOD화. 3가지 수정 미션 설명",
+                  "sourceId": null,
+                  "status": "◐"
+                },
+                {
+                  "title": "오류 유형과 대처법",
+                  "source": "신규. 컴파일러 오류(구문·빌드·런타임): 빨간 글씨 ≠ 재앙. 맥락적 오류: 아무도 경고하지 않으므로 설계 문서 기준 AI 검수 필요. 1-B-3 질문→결정→검수 + S3 3단계 글쓰기와 연결",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "스토리북/디자인 시스템 예고",
+                  "source": "3기 1-5-2 VOD화. '이 문제를 해결하는 방법이 있다'",
+                  "sourceId": null,
+                  "status": "◐"
+                }
+              ],
+              "notes": [
+                "ddd.k: '스토리북 없이 불편함을 먼저 느껴야 필요성을 이해한다'",
+                "맥락적 오류의 핵심: 컴파일러 오류는 눈에 보이지만, 맥락적 오류는 누가 잔소리하지 않는다. 기획서·UX Flow·정보구조 등 설계 문서가 검수 기준"
+              ]
+            },
+            {
+              "id": "3-EB",
+              "title": "코드 수정 + 자유 실습",
+              "duration": 40,
+              "items": [
+                {
+                  "title": "코드 수정 실습 (3가지: 색상, 레이아웃, 폰트)",
+                  "source": "3기 1-3-3 실습 가이드화",
+                  "sourceId": null,
+                  "status": "◐"
+                },
+                {
+                  "title": "자유 실습: 원하는 것 아무거나 만들기",
+                  "source": "3기 1-6-1 프롬프트 3개 재활용",
+                  "sourceId": null,
+                  "status": "●"
+                },
+                {
+                  "title": "git → Vercel 배포하기",
+                  "source": "C1-S2 재활용. 배포 기초",
+                  "sourceId": "C1-S2",
+                  "status": "●"
+                }
+              ]
+            }
+          ],
+          "checkpoint": {
+            "activities": [
+              "'나의 AI 협업 선언문' 3줄 작성 → 공유",
+              "'불편함 진단' — 코드 수정 시 뭐가 불편했는지 한줄 공유",
+              "자유 실습 결과물 스크린샷 공유",
+              "과제: 온보딩 결과물 '3가지 수정 시도' → vercel 배포"
+            ],
+            "channel": "#ch-2"
+          },
+          "supplements": null
+        }
+      ],
+      "context": {
+        "goal": "바이브 코딩 환경에서 창의적인 UI를 정확하게 구현합니다",
+        "description": "바이브 코딩에 대한 오해를 짚고 넘어가고, 디자인 관점에서 바이브 코딩 활용법에 익숙해집니다"
+      }
+    },
+    {
+      "id": "S2",
+      "title": "꼭 필요한 만큼의 디자인 시스템",
+      "chapters": [
+        {
+          "id": "Ch1",
+          "title": "그리는 것과 조합하는 건 어떻게 다를까?",
+          "position": "S2 프롤로그",
+          "coreMessage": "컴포넌트 단위로 쪼개면, 디자인 의도가 그대로 구현 단위가 된다",
+          "parts": [
+            {
+              "id": "S2-P-A",
+              "title": "그리는 것과 조합하는 건 어떻게 다를까?",
+              "duration": 5,
+              "items": [
+                {
+                  "title": "그리기에서 조합하기로: 의도를 쪼개는 단위가 컴포넌트",
+                  "source": "피그마에서 컴포넌트를 만들 때와 코드에서 컴포넌트를 만들 때, 같은 분해 구조를 쓴다는 발견",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "디자인 택소노미 관점에서 스타터키트 살펴보기",
+                  "source": "신규. 택소노미 15카테고리로 스타터키트 컴포넌트들을 분류하며 탐색",
+                  "sourceId": null,
+                  "status": "○"
+                }
+              ]
+            }
+          ],
+          "checkpoint": null,
+          "supplements": null
+        },
+        {
+          "id": "Ch2",
+          "title": "스토리북 + 스타터키트",
+          "position": "S2 전반부",
+          "coreMessage": "Ch2의 불편함을 해결하는 도구가 스토리북 — 쪼갠 의도가 제대로 구현되었는지 확인하는 거울",
+          "parts": [
+            {
+              "id": "2-A",
+              "title": "왜 스토리북인가",
+              "duration": 20,
+              "items": [
+                {
+                  "title": "Ch2 불편함 리캡: '코드 수정할 때 뭐가 불편했나?'",
+                  "source": "신규. 셀프 페이스 간격 보완용 리캡",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "스토리북 개념: '이 문제를 해결하기 위해 나온 것'",
+                  "source": "3기 2-1-2 VOD화",
+                  "sourceId": null,
+                  "status": "◐"
+                },
+                {
+                  "title": "dev vs storybook 명확 구분 (피그마 비유)",
+                  "source": "3기 2-1-3 VOD화",
+                  "sourceId": null,
+                  "status": "◐"
+                }
+              ],
+              "notes": [
+                "강혜인 3기: '구조를 이해하는 법을 배우고 있다'",
+                "리캡이 핵심: 셀프 페이스에서 Ch2↔Ch3 간격이 길 수 있음"
+              ]
+            },
+            {
+              "id": "2-B",
+              "title": "스타터키트: 디자인 시스템 살펴보기",
+              "duration": 20,
+              "items": [
+                {
+                  "title": "룰 파일 둘러보기 (claude.md, sub rules, skills)",
+                  "source": "3기 2-2-2 VOD화",
+                  "sourceId": null,
+                  "status": "◐"
+                },
+                {
+                  "title": "\"왜 이렇게 세팅되었나\": 스타터키트 맥락 문서",
+                  "source": "신규 (R2). P2(27.1%) 핵심 전환점. MUI 테마/Storybook 설정/빌드 환경/폴더 구조가 왜 이렇게 되어 있는지 맥락 제공. \"초반 단계를 건너뛴 느낌\" 해소",
+                  "sourceId": null,
+                  "status": "○",
+                  "changeRef": "R2",
+                  "personaImpact": {
+                    "P2": "핵심 — 경험 후 체계 학습 전환의 결정적 브릿지"
+                  }
+                },
+                {
+                  "title": "\"이걸 내 회사에 어떻게 도입하나\": 실무 도입 가이드",
+                  "source": "신규 (R2). P2 가속 대응 (3월 17명, 유일하게 가속하는 페르소나). 디자인 시스템 유무 진단 + 개발팀 컴포넌트 라이브러리 확인 + 코드 참여 방법",
+                  "sourceId": null,
+                  "status": "○",
+                  "changeRef": "R2"
+                },
+                {
+                  "title": "토큰 관리 전략 (Pro 한계, 5시간 갱신, 작업 쪼개기)",
+                  "source": "3기 2-2-3 VOD화",
+                  "sourceId": null,
+                  "status": "◐"
+                }
+              ],
+              "notes": [
+                "김두진(2기): '룰 부분도 자주 읽어야'",
+                "한지연(2기): '유독 토큰 낭비가 심한것 같았는데'",
+                "R2 반영: P2(27.1%)의 핵심 전환 장벽 = \"왜 이렇게 세팅되었는가\"의 맥락 부재. 브릿지 콘텐츠 품질이 시장 적합도에 직결"
+              ]
+            },
+            {
+              "id": "2-C",
+              "title": "스타터키트: 클로드 코드 컨텍스트 + 스킬 살펴보기",
+              "duration": 20,
+              "items": [
+                {
+                  "title": "컨텍스트 시스템 살펴보기 (CLAUDE.md, sub rules)",
+                  "source": "신규. 클로드 코드가 프로젝트를 이해하는 구조",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "스킬 시스템 살펴보기 (디자인 시스템 관리용 스킬)",
+                  "source": "신규. 디자인 시스템을 관리하기 위한 스킬들 탐색",
+                  "sourceId": null,
+                  "status": "○"
+                }
+              ]
+            }
+          ],
+          "checkpoint": {
+            "activities": [
+              "스타터키트 컴포넌트 5개 스크린샷 공유 ('이런 게 있었다')"
+            ],
+            "channel": "#ch-3"
+          },
+          "supplements": null
+        },
+        {
+          "id": "Ch3",
+          "title": "클론 실습 + 디자인 방법론",
+          "position": "S2 후반부",
+          "coreMessage": "레퍼런스 분해 → 의도 정리 → 프롬프트 → 결과물. 쪼개기가 파이프라인이 되는 첫 순환",
+          "parts": [
+            {
+              "id": "3-A",
+              "title": "Lumenstate 클론 시연",
+              "duration": 20,
+              "items": [
+                {
+                  "title": "실습 환경 세팅 (clone → install → dev/storybook)",
+                  "source": "3기 2-3-1 VOD화",
+                  "sourceId": null,
+                  "status": "●"
+                },
+                {
+                  "title": "asset 파일 구조 (md + 이미지 폴더)",
+                  "source": "3기 2-3-2 VOD화",
+                  "sourceId": null,
+                  "status": "●"
+                },
+                {
+                  "title": "Lumenstate 클론 시연 + git commit 습관",
+                  "source": "3기 2-3-3, 2-3-4 통합 VOD화",
+                  "sourceId": null,
+                  "status": "◐"
+                }
+              ],
+              "notes": [
+                "2기, 3기 모두 가장 효과적이었던 실습"
+              ]
+            },
+            {
+              "id": "3-EA",
+              "title": "Lumenstate 클론 따라하기",
+              "duration": 60,
+              "items": [
+                {
+                  "title": "Lumenstate 클론 실습 가이드",
+                  "source": "C2-6 실습 프롬프트 + asset 재활용",
+                  "sourceId": "C2-6",
+                  "status": "●"
+                }
+              ],
+              "notes": [
+                "타임라인 Q&A 밀집 예상: clone 후 pnpm install 오류, 프롬프트 결과 불일치"
+              ]
+            },
+            {
+              "id": "3-B",
+              "title": "디자인 방법론: 택소노미 실전 적용",
+              "duration": 30,
+              "items": [
+                {
+                  "title": "Visual Hacking + Design Taxonomy 양방향",
+                  "source": "C2-2 VOD화. Ch1에서 소개한 택소노미를 레퍼런스 분석에 실전 적용",
+                  "sourceId": "C2-2",
+                  "status": "◐"
+                },
+                {
+                  "title": "레퍼런스 사례 (Bellite, Lumenstate, 프로젝트 시리아)",
+                  "source": "C2-4 VOD화",
+                  "sourceId": "C2-4",
+                  "status": "◐"
+                },
+                {
+                  "title": "UX 다이아몬드 = 프롬프트 활용방식",
+                  "source": "C2-3 VOD화",
+                  "sourceId": "C2-3",
+                  "status": "◐"
+                },
+                {
+                  "title": "키워드 위키 소개",
+                  "source": "C2-1 재활용",
+                  "sourceId": "C2-1",
+                  "status": "●"
+                },
+                {
+                  "title": "반응형 기본 원칙 (고정값 vs 상대값)",
+                  "source": "반응형 기초 가이드",
+                  "sourceId": null,
+                  "status": "●"
+                }
+              ],
+              "notes": [
+                "Ch1 택소노미 개요 → Ch4 실전 적용의 연결",
+                "2기, 3기 모두 가장 반응이 좋았던 콘텐츠"
+              ]
+            },
+            {
+              "id": "3-EB",
+              "title": "레퍼런스 분석",
+              "duration": 20,
+              "items": [
+                {
+                  "title": "레퍼런스 1개 골라 분석하기",
+                  "source": "신규. 3기 강사 공통 피드백 '레퍼런스를 다층적으로' 반영",
+                  "sourceId": null,
+                  "status": "○"
+                }
+              ]
+            }
+          ],
+          "checkpoint": {
+            "activities": [
+              "Lumenstate 클론 결과물 스크린샷 공유",
+              "레퍼런스 분석 결과 공유 (사이트 URL + 분석 한줄)",
+              "과제: 미니 다작 3개 (리디자인/가상 브랜드/자유) → 링크 공유"
+            ],
+            "channel": "#ch-4"
+          },
+          "supplements": null
+        }
+      ],
+      "context": {
+        "goal": "랜딩페이지, 브랜드 페이지, 포트폴리오 수준의 웹사이트를 체계적으로 제작, 배포 가능합니다",
+        "description": "디자인 시스템의 역할을 이해하고, 미리 세팅된 스타터키트 사용법을 클론 디자인을 통해 익힙니다"
+      }
+    },
+    {
+      "id": "S3",
+      "title": "제품으로서의 확장",
+      "context": {
+        "goal": "온전한 웹 서비스 구축을 독립적으로 할 수 있게 됩니다",
+        "description": "기획이 이미 완료된 레퍼런스 아카이빙 서비스 MUSE를 온전한 서비스 단계까지 제작해봅니다",
+        "guidedProject": {
+          "name": "MUSE",
+          "description": "레퍼런스 분류·분석 서비스",
+          "pipeline": "3단계 글쓰기(기획) → 디자인 → 프론트엔드 → 백엔드(Supabase) → 배포 → 운영",
+          "whyMuse": [
+            "S2에서 레퍼런스 분석을 해봤으므로 기획이 쉬움",
+            "데이터 구조 명확 (URL, 이미지, 카테고리, 태그, 메모) → BaaS 학습에 최적",
+            "결과물 지속 사용 — S4 개인 프로젝트에서 레퍼런스 정리에 직접 활용",
+            "풀 파이프라인 가능 (CRUD + 필터 + 이미지)"
+          ]
+        },
+        "threeStepWriting": {
+          "description": "글이 곧 코드의 컨텍스트다. 3개 문서가 Claude Code의 규칙이 된다.",
+          "steps": [
+            {
+              "step": 1,
+              "document": "Project Summary",
+              "question": "WHAT — 무엇을, 누구를 위해, 왜",
+              "rule": "rules/project-summary.md"
+            },
+            {
+              "step": 2,
+              "document": "UX Flow",
+              "question": "HOW — 시나리오→페이지→기능→컴포넌트",
+              "rule": "rules/ux-flow.md"
+            },
+            {
+              "step": 3,
+              "document": "정보구조",
+              "question": "WITH WHAT — 데이터 모델 + 콘텐츠 구조",
+              "rule": "rules/info-architecture.md"
+            }
+          ]
+        }
+      },
+      "chapters": [
+        {
+          "id": "Ch1",
+          "title": "글 세 편이 하나의 서비스가 될 수 있을까?",
+          "position": "S3 프롤로그",
+          "coreMessage": "글로 의도를 쪼개면, 코드는 그 조각을 따라간다",
+          "parts": [
+            {
+              "id": "S3-P-A",
+              "title": "글 세 편이 하나의 서비스가 될 수 있을까?",
+              "duration": 5,
+              "items": [
+                {
+                  "title": "글 세 편이 서비스가 되는 과정: MUSE 프로젝트 미리보기",
+                  "source": "Project Summary → UX Flow → 정보구조. 각 글이 의도를 어떤 단위로 쪼개는지, 그 조각이 코드의 어떤 부분이 되는지 미리 안내",
+                  "sourceId": null,
+                  "status": "○"
+                }
+              ]
+            }
+          ],
+          "checkpoint": null,
+          "supplements": null
+        },
+        {
+          "id": "Ch2",
+          "title": "MUSE 기획 + 디자인 + 프론트",
+          "position": "S3 전반부",
+          "coreMessage": "글이 곧 코드의 설계도다. 의도를 글로 쪼개두면 프롬프트가 짧아진다",
+          "parts": [
+            {
+              "id": "2-A",
+              "title": "3단계 글쓰기로 MUSE 기획",
+              "duration": 30,
+              "items": [
+                {
+                  "title": "S1~S2 리캡: '여기까지 배운 것' 프로그레스 맵",
+                  "source": "신규. 셀프 페이스 전환점 역할",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "3단계 글쓰기 프레임 소개 + MUSE 소개",
+                  "source": "신규. 왜 레퍼런스 서비스인가. 완성된 MUSE 데모",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "1단계: MUSE Project Summary 작성 시연",
+                  "source": "C3-2 + Project Summary Sub Rule VOD화",
+                  "sourceId": "C3-2",
+                  "status": "◐"
+                },
+                {
+                  "title": "2단계: MUSE UX Flow 작성 시연",
+                  "source": "3기 3-1-2 VOD화",
+                  "sourceId": null,
+                  "status": "◐"
+                },
+                {
+                  "title": "3단계: MUSE 정보구조 작성 시연",
+                  "source": "N3-2(데이터 모델) 확장 VOD화. JSON 구조 + 섹션 콘텐츠",
+                  "sourceId": "N3-2",
+                  "status": "◐"
+                },
+                {
+                  "title": "3개 문서 → claude/rules 등록",
+                  "source": "C3-4 재활용",
+                  "sourceId": "C3-4",
+                  "status": "●"
+                },
+                {
+                  "title": "노드식 작업 분해 가이드",
+                  "source": "작업 분해 심화",
+                  "sourceId": null,
+                  "status": "◐"
+                }
+              ],
+              "notes": [
+                "이호준 3기: '정리된 상태로 단계별로 설명하면 결과도 더 정돈되어 나온다'",
+                "김승한 3기: '나도 모르는 작업을 시키면 안 된다'"
+              ]
+            },
+            {
+              "id": "2-EA",
+              "title": "MUSE 기획문서 작성 + 등록",
+              "duration": 40,
+              "items": [
+                {
+                  "title": "VOD 따라 3개 문서 작성 + claude/rules 등록",
+                  "source": "신규. 단계별 실습 가이드",
+                  "sourceId": null,
+                  "status": "○"
+                }
+              ],
+              "notes": [
+                "3기 강사 공통 피드백: '콘텐츠/텍스트를 먼저 정리해라' (전원)",
+                "MUSE도 '메인 페이지 1개'로 범위 제한"
+              ]
+            },
+            {
+              "id": "2-B",
+              "title": "MUSE 디자인 + 프론트 구현",
+              "duration": 25,
+              "items": [
+                {
+                  "title": "Visual Direction 결정 (갤러리형 톤)",
+                  "source": "N3-1(Visual Direction 가이드) VOD화",
+                  "sourceId": "N3-1",
+                  "status": "◐"
+                },
+                {
+                  "title": "디자인 토큰 커스텀 시연",
+                  "source": "C4-1 확장 VOD화. 컬러/간격/카드 스타일",
+                  "sourceId": "C4-1",
+                  "status": "◐"
+                },
+                {
+                  "title": "UX Flow → 컴포넌트 매핑 (스타터키트 재활용 우선)",
+                  "source": "신규. ReferenceCard→CustomCard, FilterBar→CategoryTab 등",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "MUSE 컴포넌트 생성 + 페이지 조립 시연",
+                  "source": "신규. '기획문서가 컨텍스트에 있으니 프롬프트가 짧다' 체험",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "레이아웃 구성 튜토리얼",
+                  "source": "C3-6 재활용. 레이아웃 기초",
+                  "sourceId": "C3-6",
+                  "status": "●"
+                }
+              ],
+              "notes": [
+                "3기 강사 공통 피드백: '컴포넌트 기반으로 사고해라' (4/8명)"
+              ]
+            },
+            {
+              "id": "2-EB",
+              "title": "MUSE 프론트엔드 구현",
+              "duration": 60,
+              "items": [
+                {
+                  "title": "디자인 토큰 적용 + 컴포넌트 생성",
+                  "source": "신규. 단계별 실습 가이드",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "페이지 조립 + 필터/검색 연결 (목데이터)",
+                  "source": "신규. JSON 목데이터로 동작 확인",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "git commit",
+                  "source": "C2-8 재활용",
+                  "sourceId": "C2-8",
+                  "status": "●"
+                }
+              ]
+            }
+          ],
+          "checkpoint": {
+            "activities": [
+              "MUSE 기획문서 3종 (Summary, UX Flow, 정보구조) 공유",
+              "MUSE 프론트엔드 스크린샷 공유"
+            ],
+            "channel": "#ch-5"
+          },
+          "supplements": null
+        },
+        {
+          "id": "Ch3",
+          "title": "MUSE 백엔드 + 배포 + 운영",
+          "position": "S3 후반부",
+          "coreMessage": "정보구조 문서가 DB 스키마가 된다. 글이 백엔드를 만든다",
+          "parts": [
+            {
+              "id": "3-A",
+              "title": "Supabase 백엔드",
+              "duration": 25,
+              "items": [
+                {
+                  "title": "BaaS 개념 + Supabase 소개",
+                  "source": "신규. '백엔드를 직접 만들지 않고 서비스로 사용'",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "정보구조 문서 → DB 스키마 변환 시연",
+                  "source": "N3-2 확장 VOD화. Ch5에서 작성한 문서가 스키마의 소스",
+                  "sourceId": "N3-2",
+                  "status": "◐"
+                },
+                {
+                  "title": "Supabase MCP 세팅 시연",
+                  "source": "C4-2 확장 VOD화. 프로젝트 생성 → MCP 연동 → 테이블 생성",
+                  "sourceId": "C4-2",
+                  "status": "◐"
+                },
+                {
+                  "title": "환경변수 설정 (.env)",
+                  "source": "신규. API 키가 코드에 직접 들어가면 안 되는 이유",
+                  "sourceId": null,
+                  "status": "○"
+                }
+              ],
+              "notes": [
+                "고민아 2기: '데이터는 어떻게 써야 하는지 모르겠어요'"
+              ]
+            },
+            {
+              "id": "3-EA",
+              "title": "MUSE Supabase 연동",
+              "duration": 40,
+              "items": [
+                {
+                  "title": "Supabase 프로젝트 생성 + MCP 연동",
+                  "source": "신규. 단계별 실습 가이드",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "목데이터 → Supabase 실데이터 전환",
+                  "source": "신규. Ch5에서 만든 프론트와 연동",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "등록/조회 동작 확인",
+                  "source": "신규",
+                  "sourceId": null,
+                  "status": "○"
+                }
+              ],
+              "notes": [
+                "타임라인 Q&A 밀집 예상: Supabase 계정/설치, 환경변수 설정, 데이터 연동 오류"
+              ]
+            },
+            {
+              "id": "3-B",
+              "title": "배포 + 서비스 운영",
+              "duration": 25,
+              "items": [
+                {
+                  "title": "Vercel 배포 (환경변수 포함)",
+                  "source": "C1-S2 확장 VOD화. Supabase 환경변수를 Vercel에도 등록",
+                  "sourceId": "C1-S2",
+                  "status": "◐"
+                },
+                {
+                  "title": "보안 기초: RLS + API 키 관리",
+                  "source": "신규. '데이터를 누가 읽고 쓸 수 있는가'",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "에러 대응 기초 (콘솔, 네트워크 탭, Supabase 로그)",
+                  "source": "신규. '에러가 났을 때 당황하지 않는 법'",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "프론트 vs 백엔드 구조",
+                  "source": "신규. 브라우저(React) ↔ API(Supabase) ↔ DB(PostgreSQL)",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "배포 후 생존 가이드: 유지보수·운영 최소 가이드",
+                  "source": "신규 (N4). Vercel 배포→도메인→환경변수, git push 자동 재배포, Vercel Analytics 기본, 에러 로그 읽는 법, 무료 티어 범위. 걱정 \"유지보수/운영\" 8건 + P4 독립 서비스 런칭 기대 46% 대응",
+                  "sourceId": null,
+                  "status": "○",
+                  "changeRef": "N4",
+                  "personaImpact": {
+                    "P4": "핵심 — 만든 후의 운영 불안 해소",
+                    "P3": "확인용 — 이미 가능하지만 체크리스트"
+                  }
+                }
+              ],
+              "notes": [
+                "신지예 2기: '검은화면에 밝은 글씨로 뭔가 주르르륵...' — 에러 두려움 해소"
+              ]
+            },
+            {
+              "id": "3-EB",
+              "title": "배포 + 확인",
+              "duration": 20,
+              "items": [
+                {
+                  "title": "Vercel 배포 + 실 URL에서 CRUD 동작 확인",
+                  "source": "신규. 각자 배포된 MUSE에 레퍼런스 1개 등록",
+                  "sourceId": null,
+                  "status": "○"
+                }
+              ]
+            }
+          ],
+          "checkpoint": {
+            "activities": [
+              "배포된 MUSE URL 공유 + 레퍼런스 1개 등록 스크린샷",
+              "'S3에서 가장 놀라웠던 것' 한줄 공유"
+            ],
+            "channel": "#ch-6"
+          },
+          "supplements": null
+        }
+      ]
+    },
+    {
+      "id": "S4",
+      "title": "내 프로젝트에 적용해보기 (챌린지)",
+      "context": {
+        "goal": "웹 서비스 운영 과정에서 필요한 유지보수 능력을 훈련합니다",
+        "description": "여러분의 개인 과제를 직접 진행하는 챌린지입니다. 저 또한 제로 베이스에서 새로운 서비스 기획, 작업 과정을 공유합니다",
+        "principles": [
+          {
+            "principle": "S3 파이프라인 반복",
+            "application": "MUSE에서 했던 것과 같은 순서: 기획→디자인→구현→배포. 이번엔 혼자"
+          },
+          {
+            "principle": "기획이 먼저",
+            "application": "Ch7 전반부를 3단계 글쓰기에 집중. 기획 없이 구현 착수 금지"
+          },
+          {
+            "principle": "범위 축소",
+            "application": "'메인 페이지 1개 + 디자인 컨셉 + 배포'가 최소 목표"
+          },
+          {
+            "principle": "유형별 분기",
+            "application": "3기 과제 분석 4유형(비즈니스/서비스/브랜드/시스템)에 따른 경로 안내"
+          },
+          {
+            "principle": "Supabase는 선택",
+            "application": "S3에서 경험했으므로 적용 가능하지만, 프론트만으로도 완성"
+          }
+        ]
+      },
+      "chapters": [
+        {
+          "id": "Ch1",
+          "title": "왜 내 의도를 설명하는 게 제일 어려울까?",
+          "position": "S4 프롤로그",
+          "coreMessage": "남의 의도를 따라 쪼개는 것과, 내 의도를 스스로 쪼개는 것은 완전히 다른 근육",
+          "parts": [
+            {
+              "id": "S4-P-A",
+              "title": "왜 내 의도를 설명하는 게 제일 어려울까?",
+              "duration": 5,
+              "items": [
+                {
+                  "title": "왜 내 의도를 쪼개는 게 제일 어려울까: 독립 적용의 시작",
+                  "source": "S3에서는 정해진 프로젝트의 의도를 따라 쪼갰지만, 이제 \"내가 뭘 만들고 싶은가\"를 스스로 분해해야 한다. 그 어려움이 진짜 성장",
+                  "sourceId": null,
+                  "status": "○"
+                }
+              ]
+            }
+          ],
+          "checkpoint": null,
+          "supplements": null
+        },
+        {
+          "id": "Ch2",
+          "title": "개인 프로젝트 기획 + 착수",
+          "position": "S4 전반부",
+          "coreMessage": "S3에서 했던 것을 이제 내 프로젝트에. 글부터 시작한다",
+          "parts": [
+            {
+              "id": "2-A",
+              "title": "개인 프로젝트 3단계 글쓰기",
+              "duration": 25,
+              "items": [
+                {
+                  "title": "S3 리캡: MUSE에서 배운 파이프라인 정리",
+                  "source": "신규. '같은 과정을 이제 내 프로젝트에 적용'",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "개인 프로젝트 Project Summary 작성 가이드",
+                  "source": "Ch5 내용 재정리. 이번엔 개인 프로젝트 맥락",
+                  "sourceId": null,
+                  "status": "◐"
+                },
+                {
+                  "title": "유형별 분기 가이드",
+                  "source": "3기 3-2-1 VOD화. 4유형별 '첫 1시간에 할 것'",
+                  "sourceId": null,
+                  "status": "◐"
+                }
+              ],
+              "notes": [
+                "3기 과제 분석: 윤규(비즈니스), 김승한(서비스), 구보명(브랜드), 강혜인(시스템)",
+                "온보딩에서 작성한 Project Brief가 이 시점에 활용됨"
+              ]
+            },
+            {
+              "id": "2-EA",
+              "title": "개인 프로젝트 기획문서 작성",
+              "duration": 60,
+              "openEnded": true,
+              "items": [
+                {
+                  "title": "3단계 글쓰기: Project Summary + UX Flow + 정보구조",
+                  "source": "Ch5 실습 가이드를 개인 프로젝트 맥락으로 재구성",
+                  "sourceId": null,
+                  "status": "◐"
+                },
+                {
+                  "title": "claude/rules 등록",
+                  "source": "C3-4 재활용",
+                  "sourceId": "C3-4",
+                  "status": "●"
+                }
+              ],
+              "notes": [
+                "코스의 핵심 전환점. S3에서 MUSE로 연습했으므로 '어떻게 쓰는지'는 이미 알고 있음",
+                "'무엇을 쓸지'에 집중하는 시간"
+              ]
+            },
+            {
+              "id": "2-B",
+              "title": "Visual Direction + 프로젝트 착수",
+              "duration": 20,
+              "items": [
+                {
+                  "title": "Visual Direction 결정 (문서 유추 vs 레퍼런스 매핑)",
+                  "source": "3기 3-2-2 VOD화",
+                  "sourceId": null,
+                  "status": "◐"
+                },
+                {
+                  "title": "디자인 시스템 3단계 (Perceptual→Functional→Contextual)",
+                  "source": "C3-5 VOD화",
+                  "sourceId": "C3-5",
+                  "status": "◐"
+                },
+                {
+                  "title": "Figma MCP 연동 (컴포넌트 단위)",
+                  "source": "3기 3-3-1 VOD화",
+                  "sourceId": null,
+                  "status": "◐"
+                }
+              ],
+              "notes": [
+                "ddd.k: '페이지 전체가 아니라 섹션 단위로 옮기는 게 중요'"
+              ]
+            },
+            {
+              "id": "2-EB",
+              "title": "프로젝트 착수",
+              "duration": 40,
+              "openEnded": true,
+              "items": [
+                {
+                  "title": "유형별 착수 체크리스트",
+                  "source": "신규. 4유형별 '첫 1시간'",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "첫 컴포넌트 만들기 + 스토리북 등록",
+                  "source": "3기 3-4-1 실습 가이드화",
+                  "sourceId": null,
+                  "status": "◐"
+                },
+                {
+                  "title": "'Claude에게 3가지 질문하기' 미션",
+                  "source": "3기 3-4-4 재활용",
+                  "sourceId": null,
+                  "status": "●"
+                }
+              ],
+              "notes": [
+                "ddd.k: '1,2기 모두 느끼는건 클로드에게 질문을 너무 안한다'"
+              ]
+            }
+          ],
+          "checkpoint": {
+            "activities": [
+              "개인 기획문서 3종 공유 + 피어 피드백 요청 (핵심)",
+              "'나는 어떤 유형?' — 유형 선언",
+              "컴포넌트 1개 스토리북 등록 스크린샷",
+              "git push 완료"
+            ],
+            "channel": "#ch-7"
+          },
+          "supplements": null
+        },
+        {
+          "id": "Ch3",
+          "title": "완성 + 배포 + 회고",
+          "position": "S4 후반부",
+          "coreMessage": "끝이 아니라 시작이다",
+          "parts": [
+            {
+              "id": "3-A",
+              "title": "디자인 실험 + 인터랙션",
+              "duration": 25,
+              "items": [
+                {
+                  "title": "Visual Hacking으로 디자인 토큰 변경 시연",
+                  "source": "3기 4-1-1 VOD화",
+                  "sourceId": null,
+                  "status": "◐"
+                },
+                {
+                  "title": "Placeholder 전략: '못생겨도 구조가 잡히면 성공'",
+                  "source": "3기 4-1-2 VOD화",
+                  "sourceId": null,
+                  "status": "◐"
+                },
+                {
+                  "title": "인터랙션 패턴 레퍼런스 북 소개 (스크롤/마우스/전환/시각화)",
+                  "source": "3기 4-2-1 VOD화",
+                  "sourceId": null,
+                  "status": "◐"
+                },
+                {
+                  "title": "패턴 1개 적용 시연",
+                  "source": "3기 4-2-2 VOD화",
+                  "sourceId": null,
+                  "status": "◐"
+                }
+              ],
+              "notes": [
+                "이유진(2기): '컨텐츠가 못생겨서 들여다보기 싫었다'",
+                "조선영(2기): '인터랙션 요소를 넣고 싶은데 어디서 아이디어를 찾아야 하는지 방향을 잃었음'"
+              ]
+            },
+            {
+              "id": "3-EA",
+              "title": "프로젝트 마무리 + 배포",
+              "duration": 60,
+              "openEnded": true,
+              "items": [
+                {
+                  "title": "디자인 토큰 적용 + 인터랙션 1개 적용",
+                  "source": "3기 4-2-2 실습 가이드화",
+                  "sourceId": null,
+                  "status": "◐"
+                },
+                {
+                  "title": "인터랙션 프롬프트 예시집",
+                  "source": "신규. 패턴별 프롬프트 3~5개",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "프로젝트 마무리 + Vercel 배포",
+                  "source": "C1-S2 확장. (선택) Supabase 연동 시 환경변수 포함",
+                  "sourceId": "C1-S2",
+                  "status": "◐"
+                },
+                {
+                  "title": "배포 전 체크리스트",
+                  "source": "신규",
+                  "sourceId": null,
+                  "status": "○"
+                }
+              ],
+              "notes": [
+                "S3에서 배포를 이미 경험했으므로 '두 번째 배포'는 훨씬 수월"
+              ]
+            },
+            {
+              "id": "3-B",
+              "title": "회고 + 학습 방향",
+              "duration": 20,
+              "items": [
+                {
+                  "title": "코스 회고 가이드",
+                  "source": "3기 4-5-1 VOD화",
+                  "sourceId": null,
+                  "status": "◐"
+                },
+                {
+                  "title": "앞으로의 학습 방향 + 대안 도구 안내",
+                  "source": "3기 4-5-2, 4-5-3 통합 VOD화",
+                  "sourceId": null,
+                  "status": "◐"
+                },
+                {
+                  "title": "스타터키트 직접 만들기 가이드",
+                  "source": "독립 환경 구축",
+                  "sourceId": null,
+                  "status": "●"
+                },
+                {
+                  "title": "스택 선택 가이드",
+                  "source": "신규. 스택 선택",
+                  "sourceId": null,
+                  "status": "○"
+                }
+              ],
+              "notes": [
+                "조선영(2기): '리미트 걸렸을때 agent 모드로 무료로 코드 작성할 수 있는 방법'"
+              ]
+            }
+          ],
+          "checkpoint": {
+            "activities": [
+              "최종 프로젝트 공유 — vercel 링크 + 스크린샷 + 한줄 소개",
+              "회고문 — ① 가장 큰 전환점 ② 아직 모르는 것 ③ 다음에 시도할 것"
+            ],
+            "channel": "#ch-8"
+          },
+          "supplements": null
+        }
+      ]
+    },
+    {
+      "id": "S5",
+      "title": "디자인 에이전트: 이성과 감성사이의 파이프라인",
+      "chapters": [
+        {
+          "id": "Ch1",
+          "title": "패턴에서 에이전트로",
+          "position": "S5 프롤로그",
+          "coreMessage": "S1-S4에서 반복한 기획→디자인→구현 흐름, 이 패턴 자체를 자동화할 수 있다",
+          "parts": [
+            {
+              "id": "S5-P-A",
+              "title": "패턴에서 에이전트로",
+              "duration": 10,
+              "items": [
+                {
+                  "title": "기획→디자인→구현: 반복된 패턴 돌아보기",
+                  "source": "신규. S1-S4에서 수동으로 반복한 워크플로우 패턴을 정리",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "디자인 에이전트란 무엇인가",
+                  "source": "신규. 스타터키트의 rules/skills이 이미 에이전트의 뼈대라는 것을 인식",
+                  "sourceId": null,
+                  "status": "○"
+                }
+              ]
+            }
+          ],
+          "checkpoint": null,
+          "supplements": null
+        },
+        {
+          "id": "Ch2",
+          "title": "에이전트 설계와 제작",
+          "position": "S5 전반부",
+          "coreMessage": "내 디자인 원칙과 워크플로우를 에이전트에 인코딩한다",
+          "parts": [
+            {
+              "id": "2-A",
+              "title": "에이전트의 뼈대 만들기",
+              "duration": 30,
+              "items": [
+                {
+                  "title": "Claude 컨텍스트 구조 복습: CLAUDE.md, rules, skills",
+                  "source": "신규. S2에서 살펴본 구조를 '만드는 입장'으로 다시 보기",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "내 디자인 원칙을 rule로 작성하기",
+                  "source": "신규. 프로젝트의 디자인 언어, 컬러, 타이포 규칙을 rule 파일로",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "반복 작업을 skill로 만들기",
+                  "source": "신규. 페이지 생성, 컴포넌트 조합 등 반복 패턴을 skill로 자동화",
+                  "sourceId": null,
+                  "status": "○"
+                }
+              ]
+            },
+            {
+              "id": "2-B",
+              "title": "디자인 시스템 연동 에이전트",
+              "duration": 25,
+              "items": [
+                {
+                  "title": "디자인 토큰 자동 적용",
+                  "source": "신규. rule에 등록된 토큰을 에이전트가 컴포넌트에 자동 매핑",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "택소노미 기반 컴포넌트 자동 조합",
+                  "source": "신규. 페이지 구조를 지시하면 택소노미에서 컴포넌트를 선택하여 조합",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "Figma MCP 연동 워크플로우",
+                  "source": "신규. Figma 디자인 → 에이전트가 코드로 변환하는 파이프라인",
+                  "sourceId": null,
+                  "status": "○"
+                }
+              ]
+            },
+            {
+              "id": "2-EA",
+              "title": "에이전트 제작 실습",
+              "duration": 30,
+              "items": [
+                {
+                  "title": "내 프로젝트의 반복 패턴 분석하기",
+                  "source": "신규. S4 프로젝트에서 반복한 작업 패턴을 추출",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "커스텀 skill 1개 만들기",
+                  "source": "신규. 추출한 패턴으로 실제 동작하는 skill 제작",
+                  "sourceId": null,
+                  "status": "○"
+                }
+              ]
+            }
+          ],
+          "checkpoint": {
+            "activities": [
+              "커스텀 rule + skill 파일 공유",
+              "에이전트로 생성한 결과물 스크린샷"
+            ],
+            "channel": "#ch-s5-2"
+          },
+          "supplements": null
+        },
+        {
+          "id": "Ch3",
+          "title": "에이전트로 빌딩하기",
+          "position": "S5 후반부",
+          "coreMessage": "기획서 하나로 에이전트가 페이지를 만들어내는 경험",
+          "parts": [
+            {
+              "id": "3-A",
+              "title": "기획서에서 페이지까지",
+              "duration": 30,
+              "items": [
+                {
+                  "title": "Project Summary → 에이전트 → 페이지 자동 생성",
+                  "source": "신규. S3-S4에서 수동으로 했던 과정을 에이전트가 수행",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "Visual Direction → 에이전트 → 스타일 자동 적용",
+                  "source": "신규. 비주얼 디렉션 문서를 기반으로 에이전트가 디자인 토큰 매핑",
+                  "sourceId": null,
+                  "status": "○"
+                }
+              ]
+            },
+            {
+              "id": "3-B",
+              "title": "에이전트 워크플로우 개선하기",
+              "duration": 25,
+              "items": [
+                {
+                  "title": "프롬프트 체인: 분석 → 설계 → 구현 → 검수",
+                  "source": "신규. 단일 프롬프트가 아닌 단계별 체인으로 품질 향상",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "에이전트 결과물 검수하기",
+                  "source": "신규. 질문→결정→검수 프레임을 에이전트 워크플로우에도 적용",
+                  "sourceId": null,
+                  "status": "○"
+                }
+              ]
+            },
+            {
+              "id": "3-C",
+              "title": "앞으로의 확장",
+              "duration": 15,
+              "items": [
+                {
+                  "title": "에이전트 공유와 협업: 팀 워크플로우로 확장",
+                  "source": "신규. 만든 에이전트를 팀/조직에서 활용하는 방법",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "디자인 에이전트의 다음 단계",
+                  "source": "신규. MCP 확장, 멀티 에이전트, 디자인 QA 자동화 등 방향 제시",
+                  "sourceId": null,
+                  "status": "○"
+                }
+              ]
+            }
+          ],
+          "checkpoint": {
+            "activities": [
+              "에이전트로 생성한 페이지 배포 링크 공유",
+              "내 에이전트 워크플로우 설명 (rule + skill + 프롬프트 체인)"
+            ],
+            "channel": "#ch-s5-3"
+          },
+          "supplements": null
+        }
+      ],
+      "context": {
+        "goal": "나만의 디자인 에이전트를 만들어 반복되는 디자인 워크플로우를 자동화합니다",
+        "description": "에이전트 설계 + 제작. S1-S4에서 반복한 패턴을 분석하고, 커스텀 rules/skills로 나만의 디자인 에이전트를 만든다"
+      }
+    },
+    {
+      "id": "S6",
+      "title": "실전 서비스 운영 시나리오 대응",
+      "context": {
+        "goal": "SEO, 보안, DB 관리를 포함한 프로덕션 서비스 운영 역량을 갖춥니다",
+        "description": "S3에서 만든 MUSE를 기반으로 실제 서비스 운영간 발생하는 시나리오에 대응해봅니다",
+        "nextjsStarterKit": {
+          "description": "Next.js 기반 스타터키트. S1-S4의 React(Vite) 스타터키트에서 프로덕션 프레임워크로 전환",
+          "whyNow": [
+            "SEO가 필요해지면 CSR의 한계에 부딪힘",
+            "보안(서버 사이드 로직)이 필요해지면 프론트엔드만으로 불충분",
+            "DB 변경/마이그레이션은 서버 환경에서 관리해야 안전"
+          ]
+        }
+      },
+      "chapters": [
+        {
+          "id": "Ch1",
+          "title": "서비스 운영중 발생하는 시나리오",
+          "position": "S6 프롤로그",
+          "coreMessage": "사용자가 오기 시작하면, 만든 것보다 지키는 것이 더 중요해진다",
+          "parts": [
+            {
+              "id": "S6-P-A",
+              "title": "서비스 운영중 발생하는 시나리오",
+              "duration": 5,
+              "items": [
+                {
+                  "title": "배포 이후의 현실: 검색, 보안, 데이터 변경",
+                  "source": "신규. S4에서 배포까지 했지만, 실서비스 운영에서는 새로운 문제가 발생한다",
+                  "sourceId": null,
+                  "status": "○"
+                }
+              ]
+            }
+          ],
+          "checkpoint": null,
+          "supplements": null
+        },
+        {
+          "id": "Ch2",
+          "title": "SEO가 필요한 경우",
+          "position": "S6 전반부",
+          "coreMessage": "사용자가 내 서비스를 찾으려면: CSR의 한계와 Next.js가 해결하는 것",
+          "parts": [
+            {
+              "id": "2-A",
+              "title": "왜 Next.js인가: 더 넓은 가능성으로",
+              "duration": 25,
+              "items": [
+                {
+                  "title": "CSR vs SSR: 검색엔진이 내 페이지를 못 읽는 이유",
+                  "source": "신규. Vite(CSR)로 만든 S4 프로젝트가 구글에 안 뜨는 이유",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "Next.js 스타터키트 소개 + 구조 비교",
+                  "source": "신규. Vite 스타터키트 vs Next.js 스타터키트 구조 비교",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "SSR/SSG/ISR 개념 정리",
+                  "source": "신규. '내 페이지가 언제, 어디서 만들어지는가'",
+                  "sourceId": null,
+                  "status": "○"
+                }
+              ]
+            },
+            {
+              "id": "2-EA",
+              "title": "Next.js 전환 실습",
+              "duration": 30,
+              "items": [
+                {
+                  "title": "기존 프로젝트를 Next.js로 전환하기",
+                  "source": "신규. S4 프로젝트 또는 MUSE를 Next.js로 마이그레이션",
+                  "sourceId": null,
+                  "status": "○"
+                }
+              ]
+            },
+            {
+              "id": "2-B",
+              "title": "SEO 실전 적용",
+              "duration": 20,
+              "items": [
+                {
+                  "title": "메타데이터 + OG 태그 설정",
+                  "source": "신규. 카카오톡/슬랙 공유 시 미리보기가 왜 안 뜨는가",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "시맨틱 HTML + 구조화된 데이터",
+                  "source": "신규. 검색엔진 최적화 기초",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "Lighthouse 점수 확인 + 개선",
+                  "source": "신규. 성능/접근성/SEO 점수 측정",
+                  "sourceId": null,
+                  "status": "○"
+                }
+              ]
+            }
+          ],
+          "checkpoint": {
+            "activities": [
+              "Next.js 전환 후 Lighthouse SEO 점수 스크린샷 공유"
+            ],
+            "channel": "#ch-s6-2"
+          },
+          "supplements": null
+        },
+        {
+          "id": "Ch3",
+          "title": "서비스 운영의 현실: 보안 + DB 변경",
+          "position": "S6 후반부",
+          "coreMessage": "사용자 데이터를 다루는 순간, 보안과 DB 관리는 선택이 아니라 책임이 된다",
+          "parts": [
+            {
+              "id": "3-A",
+              "title": "서비스 보안 기초",
+              "duration": 25,
+              "items": [
+                {
+                  "title": "환경변수 관리: API 키가 노출되는 경로",
+                  "source": "신규. .env 파일, 서버 사이드 vs 클라이언트 사이드 변수",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "인증과 인가 기초",
+                  "source": "신규. NextAuth/Supabase Auth 기반",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "보안 헤더 + CORS: Next.js middleware 활용",
+                  "source": "신규. CSP, X-Frame-Options 등",
+                  "sourceId": null,
+                  "status": "○"
+                }
+              ]
+            },
+            {
+              "id": "3-B",
+              "title": "DB 변경과 운영",
+              "duration": 25,
+              "items": [
+                {
+                  "title": "DB 스키마 변경과 마이그레이션",
+                  "source": "신규. 컬럼 추가/삭제/변경 시 기존 데이터는 어떻게 되는가",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "데이터 백업과 복구",
+                  "source": "신규. Supabase 백업 + 실수 방지 패턴",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "운영 중 발생하는 시나리오: 에러 모니터링 + 대응",
+                  "source": "신규. 에러 로그 확인, Sentry/Vercel Analytics 기초",
+                  "sourceId": null,
+                  "status": "○"
+                }
+              ]
+            },
+            {
+              "id": "3-C",
+              "title": "React.js → Next.js로 변환하기",
+              "duration": 30,
+              "items": [
+                {
+                  "title": "React(Vite) → Next.js 전환 실습",
+                  "source": "신규. 라우팅, 레이아웃, 데이터 페칭 등 주요 변환 포인트",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
+                  "title": "Next.js 스타터키트 구조 살펴보기",
+                  "source": "신규. Next.js 스타터키트의 폴더 구조, 설정, 규칙 비교",
+                  "sourceId": null,
+                  "status": "○"
+                }
+              ]
+            }
+          ],
+          "checkpoint": {
+            "activities": [
+              "보안 체크리스트 자가 점검 결과 공유",
+              "DB 마이그레이션 1회 실행 스크린샷",
+              "Next.js 전환 결과물 배포 링크 공유"
+            ],
+            "channel": "#ch-s6-3"
+          },
+          "supplements": null
+        }
+      ]
+    }
+  ],
+  "community": {
+    "channels": [
+      {
+        "name": "#공지",
+        "purpose": "코스 업데이트, 공통 안내"
+      },
+      {
+        "name": "#온보딩",
+        "purpose": "환경세팅 결과 공유, 처음 인사"
+      },
+      {
+        "name": "#ch-1",
+        "purpose": "Ch1 결과물 공유 + 질문 + 토론"
+      },
+      {
+        "name": "#ch-2",
+        "purpose": "Ch2 결과물 공유 + 질문 + 토론"
+      },
+      {
+        "name": "#ch-3",
+        "purpose": "Ch3 결과물 공유 + 질문 + 토론"
+      },
+      {
+        "name": "#ch-4",
+        "purpose": "Ch4 결과물 공유 + 질문 + 토론"
+      },
+      {
+        "name": "#ch-5",
+        "purpose": "Ch5 결과물 공유 + 질문 + 토론"
+      },
+      {
+        "name": "#ch-6",
+        "purpose": "Ch6 결과물 공유 + 질문 + 토론"
+      },
+      {
+        "name": "#ch-7",
+        "purpose": "Ch7 기획문서 + 피드백 (핵심 채널)"
+      },
+      {
+        "name": "#ch-8",
+        "purpose": "Ch8 최종 프로젝트 + 회고"
+      },
+      {
+        "name": "#프로젝트-쇼케이스",
+        "purpose": "최종 프로젝트 발표 (Ch8 이후)"
+      },
+      {
+        "name": "#자유-실험",
+        "purpose": "다작 결과물, 코스 외 시도 자유 공유"
+      },
+      {
+        "name": "#트러블슈팅",
+        "purpose": "기술적 문제 (챕터 무관). 페르소나별 태그 활용 권장"
+      }
+    ],
+    "principles": [
+      {
+        "rule": "코스 리드는 #ch-7에 집중",
+        "reason": "개인 기획문서 피드백이 가장 중요. S3 MUSE 경험 후 기획 품질이 올라간 상태에서 피드백"
+      },
+      {
+        "rule": "타임라인 Q&A가 1차 질문 채널",
+        "reason": "VOD 내 특정 지점 질문은 타임라인 Q&A에. 커뮤니티는 심화 토론용"
+      },
+      {
+        "rule": "#ch-N 채널은 누적",
+        "reason": "셀프 페이스이므로 다른 시점에 같은 채널에 글이 올라옴 → 기존 글이 FAQ 역할"
+      },
+      {
+        "rule": "유형 태그",
+        "reason": "#ch-7에서 프로젝트 유형 태그 (비즈니스/서비스/브랜드/시스템) 활용"
+      },
+      {
+        "rule": "Q&A 아카이빙 + 페르소나별 필터",
+        "reason": "P4(37명)의 직무 다양성(8개+ 직군)으로 질문 폭이 넓어짐. 디자이너 중심 FAQ만으로는 부족. 직무별 태깅 또는 페르소나별 필터 도입",
+        "changeRef": "R3"
+      },
+      {
+        "rule": "난이도 태깅 연동",
+        "reason": "입문/초급/중급/고급 레벨 태깅에 페르소나 가이드 병행. \"이 내용은 P1에게 특히 중요\" 같은 안내로 자기 위치 파악 지원",
+        "changeRef": "R4"
+      }
+    ],
+    "qaSystem": {
+      "description": "R3 — 구조화된 Q&A 아카이빙 시스템",
+      "flow": [
+        {
+          "stage": "실시간",
+          "channel": "VOD 타임라인 Q&A",
+          "description": "특정 시점 질문"
+        },
+        {
+          "stage": "비동기",
+          "channel": "#ch-N 채널",
+          "description": "심화 토론. 기존 글이 FAQ 역할"
+        },
+        {
+          "stage": "영구",
+          "channel": "FAQ (좋아요순)",
+          "description": "페르소나별 필터 + 직무별 태깅"
+        }
+      ]
+    }
+  }
+}

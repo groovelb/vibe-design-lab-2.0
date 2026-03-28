@@ -2,56 +2,8 @@
  * Course Detail 페이지 목 데이터
  *
  * Phase 1 정적 데이터. 실제 Supabase 연동 전까지 사용.
- * 출처: vibedesignlab.net 레퍼런스 + contents.md
+ * 커리큘럼 데이터는 src/data/program/vdsk_online_curriculum.json 직접 사용.
  */
-
-// ============================================================
-// 커리큘럼 챕터
-// ============================================================
-
-export const CURRICULUM_CHAPTERS = [
-  {
-    id: 'ch1',
-    order: 1,
-    title: '바이브 디자인 환경 완벽 적응하기',
-    items: [
-      '디자인과 개발 생태계의 연관성 완벽 이해',
-      '스타터 키트의 기본 구성과 역할 파악',
-      'UX 계층구조 관점에서 바라본 바이브 코딩 방법론',
-    ],
-  },
-  {
-    id: 'ch2',
-    order: 2,
-    title: '응용 1 – 감도높은 브랜드 웹사이트 클론디자인',
-    items: [
-      '조명 브랜드에 맞는 레이아웃·컬러·타이포 튜닝',
-      '조명 브랜드 UX 섹션 구조 설계와 컴포넌트 매핑',
-      '스타터 키트 기반 조명 브랜드 랜딩 페이지 클론',
-      '영상 수업: Supabase로 2주차 결과 어드민·백엔드 구성',
-    ],
-  },
-  {
-    id: 'ch3',
-    order: 3,
-    title: '응용 2 – 스타터 베이스 만들기',
-    items: [
-      '각자 서비스 아이디어를 기획 관점에서 정리하기',
-      '컨셉 디자인을 위한 레퍼런스 조사와 무드 정리',
-      '스타터 키트를 레이아웃·토큰·컴포넌트 중심으로 커스텀하는 흐름 정리',
-    ],
-  },
-  {
-    id: 'ch4',
-    order: 4,
-    title: '개인 사이드 프로젝트 완성',
-    items: [
-      '스타터 베이스 위에 핵심 화면 구현 및 완성',
-      '디자인 시스템 기반 최종 스타일 튜닝',
-      '결과물 발표 및 피드백',
-    ],
-  },
-];
 
 // ============================================================
 // FAQ
@@ -162,8 +114,8 @@ export const SCHEDULE_TIMELINE = [
 
 export const TARGET_PERSONAS = [
   {
-    role: '프로덕트 디자이너',
-    imageSrc: '/assets/course/course_cover_ver3-1.png',
+    role: '프로덕트 디자이너·프리랜서',
+    videoSrc: new URL('../assets/audiance/a1.mp4', import.meta.url).href,
     descriptions: [
       '내 디자인 & 아이디어 구현 능력.',
       '실제 웹서비스로 제작 & 운영 역량.',
@@ -171,7 +123,7 @@ export const TARGET_PERSONAS = [
   },
   {
     role: '프론트엔드·1인 개발자',
-    imageSrc: '/assets/course/course_cover_ver5-1.png',
+    videoSrc: new URL('../assets/audiance/a2.mp4', import.meta.url).href,
     descriptions: [
       '바이브 코딩환경에서 디자인 능력 향상.',
       '기획·디자인까지 1인 서비스 운영 역량.',
@@ -179,7 +131,7 @@ export const TARGET_PERSONAS = [
   },
   {
     role: '팀 리드·PM',
-    imageSrc: '/assets/course/course_cover_ver6-1.png',
+    videoSrc: new URL('../assets/audiance/a3.mp4', import.meta.url).href,
     descriptions: [
       '팀내 AI 협업 방식을 체계화하고 싶음.',
       '바이브 코딩 프로세스를 최적화하고 싶음.',

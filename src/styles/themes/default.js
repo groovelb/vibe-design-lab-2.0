@@ -64,7 +64,7 @@ const typography = {
   fontWeightMedium: 500,
   fontWeightBold: 700,
 
-  // 헤딩 — SUIT
+  // 헤딩 — SUITh1
   h1: {
     fontFamily: suitFamily,
     fontWeight: 700,
@@ -116,12 +116,12 @@ const typography = {
 
   // 본문 — SUIT (fontFamily 상속)
   body1: {
-    fontSize: '1rem',
+    fontSize: '1.25rem',
     lineHeight: 1.7,
     letterSpacing: '0',
   },
   body2: {
-    fontSize: '0.85rem',
+    fontSize: '1rem',
     lineHeight: 1.7,
     letterSpacing: '0',
   },

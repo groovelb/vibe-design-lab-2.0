@@ -7,6 +7,8 @@ import { LandingCourseReview } from '../../components/templates/LandingCourseRev
 import { LandingDictionaryPreview } from '../../components/templates/LandingDictionaryPreview';
 import { LandingCommunitySnapshot } from '../../components/templates/LandingCommunitySnapshot';
 import { LandingFooterCTA } from '../../components/templates/LandingFooterCTA';
+import { LandingShowcaseOriginal } from '../../components/templates/LandingShowcaseOriginal';
+import { LandingShowcaseMagnifier } from '../../components/templates/LandingShowcaseMagnifier';
 
 export default {
   title: 'Template/Landing',
@@ -71,6 +73,18 @@ export const S7_DictionaryPreview = {
 export const S8_CommunitySnapshot = {
   name: 'S8. Community Snapshot',
   render: () => <LandingCommunitySnapshot />,
+};
+
+/** Showcase — Original (hover 재생 + opacity) */
+export const Showcase_Original = {
+  name: 'Showcase — Original',
+  render: () => <LandingShowcaseOriginal />,
+};
+
+/** Showcase — Magnifier (Fixed-Frame dual-layer) */
+export const Showcase_Magnifier = {
+  name: 'Showcase — Magnifier',
+  render: () => <LandingShowcaseMagnifier />,
 };
 
 /** S9. Final CTA — "시작합니다" */

@@ -1,8 +1,16 @@
 'use client';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import Box from '@mui/material/Box';
 // eslint-disable-next-line no-unused-vars
 import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
+
+/**
+ * smoothstep 이징: t ∈ [0,1] → 부드러운 S-curve
+ * 각 스냅 구간 내에서 가속→감속 전환 생성
+ */
+function smoothstep(t) {
+  return t * t * (3 - 2 * t);
+}
 
 /**
  * HorizontalScrollContainer - 가로 스크롤 컨테이너
@@ -27,9 +35,10 @@ import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-mot
  * @param {string} headerSpacing - header 하단 여백 (CSS 단위) [Optional, 기본값: '0px']
  * @param {string} footerSpacing - footer 상단 여백 (CSS 단위) [Optional, 기본값: '0px']
  * @param {function} onScrollProgress - 스크롤 진행도 콜백 (0-1) [Optional]
+ * @param {number} snapCount - 스냅 포인트 수 (슬라이드 개수). 지정 시 캐러셀 스냅 동작 [Optional]
  *
  * Example usage:
- * <HorizontalScrollContainer gap="24px" padding="40px">
+ * <HorizontalScrollContainer gap="24px" padding="40px" snapCount={6}>
  *   <HorizontalScrollContainer.Slide>콘텐츠1</HorizontalScrollContainer.Slide>
  *   <HorizontalScrollContainer.Slide>콘텐츠2</HorizontalScrollContainer.Slide>
  *   <HorizontalScrollContainer.Slide>콘텐츠3</HorizontalScrollContainer.Slide>
@@ -45,6 +54,7 @@ function HorizontalScrollContainer({
   headerSpacing = '0px',
   footerSpacing = '0px',
   onScrollProgress,
+  snapCount,
 }) {
   const containerRef = useRef(null);
   const trackRef = useRef(null);
@@ -74,21 +84,35 @@ function HorizontalScrollContainer({
     offset: ['start start', 'end end'],
   });
 
-  // 스크롤 진행도 콜백 호출
+  /**
+   * snapProgress: raw progress(0-1)를 스냅 이징된 progress로 변환
+   * snapCount가 없으면 raw를 그대로 반환 (선형)
+   * 각 구간 내에서 smoothstep 이징 적용 → 카드별 스냅 동작
+   */
+  const snapProgress = useCallback((raw) => {
+    if (!snapCount || snapCount <= 1) return raw;
+    const steps = snapCount - 1;
+    const stepSize = 1 / steps;
+    const segment = raw / stepSize;
+    const idx = Math.min(Math.floor(segment), steps - 1);
+    const t = Math.min(segment - idx, 1);
+    return Math.min((idx + smoothstep(t)) / steps, 1);
+  }, [snapCount]);
+
+  // 스크롤 진행도 콜백 호출 (스냅 적용)
   useMotionValueEvent(scrollYProgress, 'change', (v) => {
-    onScrollProgress?.(v);
+    onScrollProgress?.(snapProgress(v));
   });
 
   /** reduced-motion 감지 시 가로 스크롤 효과 비활성화 */
   const prefersReducedMotion = typeof window !== 'undefined'
     && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // 가로 이동 변환: 0px → -scrollDistance px
-  const x = useTransform(
-    scrollYProgress,
-    [0, 1],
-    prefersReducedMotion ? [0, 0] : [0, -scrollDistance]
-  );
+  // 가로 이동 변환: 0px → -scrollDistance px (스냅 적용)
+  const x = useTransform(scrollYProgress, (latest) => {
+    if (prefersReducedMotion) return 0;
+    return -snapProgress(latest) * scrollDistance;
+  });
 
   return (
     <Box

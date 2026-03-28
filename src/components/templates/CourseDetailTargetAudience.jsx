@@ -46,16 +46,22 @@ export function CourseDetailTargetAudience() {
                   flexDirection: 'column',
                 }}
               >
-                {/* 이미지 */}
+                {/* 비디오 */}
                 <Box
-                  component="img"
-                  src={persona.imageSrc}
-                  alt={persona.role}
+                  component="video"
+                  src={persona.videoSrc}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
                   sx={{
                     width: '100%',
                     aspectRatio: '4/3',
                     objectFit: 'cover',
                     display: 'block',
+                    '@media (prefers-reduced-motion: reduce)': {
+                      display: 'none',
+                    },
                   }}
                 />
 

@@ -3,13 +3,14 @@ import { useRef } from 'react';
 import { CourseDetailHero } from '../templates/CourseDetailHero';
 import { CourseDetailTargetAudience } from '../templates/CourseDetailTargetAudience';
 import { CourseDetailReview } from '../templates/CourseDetailReview';
-import { CourseDetailVision } from '../templates/CourseDetailVision';
+// import { CourseDetailVision } from '../templates/CourseDetailVision';
 import { CourseDetailShowcase } from '../templates/CourseDetailShowcase';
 import { CourseDetailRole } from '../templates/CourseDetailRole';
 import { CourseDetailCurriculum } from '../templates/CourseDetailCurriculum';
+import { CourseDetailBenefits } from '../templates/CourseDetailBenefits';
 import { CourseDetailFAQ } from '../templates/CourseDetailFAQ';
 import { CourseDetailInstructor } from '../templates/CourseDetailInstructor';
-import { CourseDetailEarlyBird } from '../templates/CourseDetailEarlyBird';
+
 import { CourseDetailCTA } from '../templates/CourseDetailCTA';
 import { FloatingCTA } from '../navigation/FloatingCTA';
 import { PageContainer } from '../layout/PageContainer';
@@ -38,13 +39,14 @@ export function CourseDetailPage() {
       <CourseDetailHero />
       <CourseDetailTargetAudience />
       <CourseDetailReview />
-      <CourseDetailVision />
+      {/* <CourseDetailVision /> */}
       <CourseDetailShowcase />
       <CourseDetailRole />
       <CourseDetailCurriculum />
+      <CourseDetailBenefits />
       <CourseDetailFAQ />
       <CourseDetailInstructor />
-      <CourseDetailEarlyBird />
+
       <CourseDetailCTA ref={ctaRef} />
       <FloatingCTA
         label={floatingCta.label}

@@ -27,6 +27,7 @@ import { CardTextStack } from '../typography/CardTextStack';
  * @param {string} title - 코스 제목 [Required]
  * @param {string} subtitle - 한 줄 부제 [Optional]
  * @param {string} description - 코스 설명 [Optional]
+ * @param {Array} highlights - 커리큘럼 요약 리스트 [Optional]
  * @param {string} target - 수강 대상 [Optional]
  * @param {string} ctaLabel - CTA 버튼 텍스트 [Optional]
  * @param {function} onCtaClick - CTA 클릭 핸들러 [Optional]
@@ -57,6 +58,7 @@ const CourseDetailCard = forwardRef(function CourseDetailCard({
   title,
   subtitle,
   description,
+  highlights,
   target,
   ctaLabel,
   onCtaClick,
@@ -140,10 +142,24 @@ const CourseDetailCard = forwardRef(function CourseDetailCard({
               description={description}
             />
 
-            {target && (
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                대상: {target}
-              </Typography>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }} />
+
+            {highlights && highlights.length > 0 && (
+              <Stack spacing={0.5}>
+                {highlights.map((item, i) => (
+                  <Stack key={i} direction="row" spacing={1.5} alignItems="baseline">
+                    <Typography
+                      variant="caption"
+                      sx={{ color: 'text.secondary', fontWeight: 600, minWidth: 20, flexShrink: 0 }}
+                    >
+                      {String(i + 1).padStart(2, '0')}
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: 'text.primary' }}>
+                      {item}
+                    </Typography>
+                  </Stack>
+                ))}
+              </Stack>
             )}
           </Stack>
 

@@ -9,7 +9,7 @@ import { CourseDetailComposition } from '../../components/templates/CourseDetail
 import { CourseDetailCurriculum } from '../../components/templates/CourseDetailCurriculum';
 import { CourseDetailFAQ } from '../../components/templates/CourseDetailFAQ';
 import { CourseDetailInstructor } from '../../components/templates/CourseDetailInstructor';
-import { CourseDetailEarlyBird } from '../../components/templates/CourseDetailEarlyBird';
+
 import { CourseDetailCTA } from '../../components/templates/CourseDetailCTA';
 
 export default {
@@ -95,11 +95,6 @@ export const S11_CourseLead = {
   render: () => <CourseDetailInstructor />,
 };
 
-/** S12. Early Bird — 얼리버드 혜택 */
-export const S12_EarlyBird = {
-  name: 'S12. Early Bird',
-  render: () => <CourseDetailEarlyBird />,
-};
 
 /** S13. CTA — 최종 CTA + 부가 링크 */
 export const S13_CTA = {

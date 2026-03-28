@@ -143,7 +143,7 @@ const CourseDetailCTA = forwardRef(function CourseDetailCTA(props, ref) {
                 {hero.priceNote}
               </Typography>
             </Stack>
-            <Button variant="contained" size="large" sx={{ flexShrink: 0 }}>
+            <Button variant="contained" color="error" size="large" sx={{ flexShrink: 0 }}>
               {cta.ctaLabel}
             </Button>
           </Stack>

@@ -93,6 +93,7 @@ const FloatingCTA = forwardRef(function FloatingCTA({
         )}
         <Button
           variant="contained"
+          color="error"
           href={href}
           sx={{ minWidth: 140 }}
         >
