@@ -1,2 +1,2 @@
 "use client";
-export { LandingShowcaseMagnifier as LandingShowcase } from "./LandingShowcaseMagnifier";
+export { LandingShowcaseOriginal as LandingShowcase } from "./LandingShowcaseOriginal";

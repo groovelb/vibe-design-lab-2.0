@@ -1,19 +1,16 @@
 'use client';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 import { SectionContainer } from '../container/SectionContainer';
 import { VdlLogo } from '../typography/VdlLogo';
 import FadeTransition from '../motion/FadeTransition';
-import { PAGES } from '../../data/contents';
-
-const { footerCta } = PAGES.landing;
 
 /**
  * LandingFooterCTA 섹션 템플릿
  *
  * Landing 페이지의 최종 CTA 섹션.
- * 전환 퍼널의 마지막 단계. 극적인 대형 디스플레이 헤드라인 + CTA 버튼.
- * 충분한 수직 여백으로 섹션의 무게감을 부여한다.
+ * FooterShifting 레이아웃과 함께 사용된다.
+ * 전환 퍼널의 마지막 단계. 공식 오픈 날짜 안내 메시지.
  *
  * Example usage:
  * <LandingFooterCTA />
@@ -21,29 +18,26 @@ const { footerCta } = PAGES.landing;
 export function LandingFooterCTA() {
   return (
     <SectionContainer>
-        <FadeTransition direction="up" isTriggerOnView threshold={0.5}>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              textAlign: 'center',
-              py: { xs: 4, md: 8 },
-            }}
+      <FadeTransition direction="up" isTriggerOnView threshold={0.3}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            textAlign: 'center',
+            py: { xs: 8, md: 16 },
+          }}
+        >
+          <VdlLogo size={96} />
+          <Typography
+            variant="h1"
+            component="p"
+            sx={{ fontWeight: 700, mt: { xs: 4, md: 5 } }}
           >
-            <Box sx={{ mb: { xs: 4, md: 5 } }}>
-              <VdlLogo size={64} />
-            </Box>
-            <Button
-              variant="contained"
-              size="large"
-              href="/course"
-              sx={{ px: 5, py: 1.5 }}
-            >
-              {footerCta.cta}
-            </Button>
-          </Box>
-        </FadeTransition>
+            4월 7일 공식 오픈
+          </Typography>
+        </Box>
+      </FadeTransition>
     </SectionContainer>
   );
 }

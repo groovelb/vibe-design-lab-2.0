@@ -318,6 +318,18 @@ export const PAGES = {
       headline: '철저히 디자인 중심 사고로 시작합니다.',
       subtitle: '오프라인 3기, 30명의 실무자 피드백을 반영해 완성도를 높였습니다.',
       note: '* 6섹션 18챕터 · 총 ~20시간 · 주 2챕터 (~4주 완주) · 모든 세션은 온라인으로 진행됩니다.\n* 4/7일 오픈 · 1주 단위로 섹션 업데이트',
+      tools: [
+        {
+          label: '개발 환경',
+          description: 'AI 에이전트 기반 IDE에서 실시간 코딩',
+          badges: ['Antigravity', 'Claude'],
+        },
+        {
+          label: '프레임워크',
+          description: '디자인 시스템 친화적 스택',
+          badges: ['Next.js', 'React.js', 'Storybook', 'MUI'],
+        },
+      ],
     },
     benefits: {
       dividerLabel: 'Benefits',

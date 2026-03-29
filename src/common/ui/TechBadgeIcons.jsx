@@ -4,7 +4,8 @@
  * 기술 브랜드 아이콘 맵
  *
  * 학습 목표, 코스 카드, 기술 스택 섹션 등에서 공용으로 사용하는
- * 기술 브랜드 SVG 아이콘 컬렉션.
+ * 기술 브랜드 아이콘 컬렉션.
+ * 공식 SVG는 public/assets/toolLogos/에 위치하며, 나머지는 인라인 SVG.
  *
  * @example
  * import { TECH_BADGE_ICONS } from '../../common/ui/TechBadgeIcons';
@@ -12,72 +13,19 @@
  */
 export const TECH_BADGE_ICONS = {
 	'React.js': (
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			viewBox="-11.5 -10.23174 23 20.46348"
-			width="14"
-			height="14"
-		>
-			<circle cx="0" cy="0" r="2.05" fill="#61dafb" />
-			<g stroke="#61dafb" strokeWidth="1" fill="none">
-				<ellipse rx="11" ry="4.2" />
-				<ellipse rx="11" ry="4.2" transform="rotate(60)" />
-				<ellipse rx="11" ry="4.2" transform="rotate(120)" />
-			</g>
-		</svg>
+		<img src="/assets/toolLogos/react.svg" alt="React" width={14} height={14} />
 	),
 	Storybook: (
-		<svg
-			viewBox="0 0 24 24"
-			xmlns="http://www.w3.org/2000/svg"
-			fill="#FF4785"
-			width="14"
-			height="14"
-		>
-			<path d="M16.71.243l-.12 2.71a.18.18 0 00.29.15l1.06-.8.9.7a.18.18 0 00.28-.14l-.1-2.76 1.33-.1a1.2 1.2 0 011.279 1.2v21.596a1.2 1.2 0 01-1.26 1.2l-16.096-.72a1.2 1.2 0 01-1.15-1.16l-.75-19.797a1.2 1.2 0 011.13-1.27L16.7.222zM13.64 9.3c0 .47 3.16.24 3.59-.08 0-3.2-1.72-4.89-4.859-4.89-3.15 0-4.899 1.72-4.899 4.29 0 4.45 5.999 4.53 5.999 6.959 0 .7-.32 1.1-1.05 1.1-.96 0-1.35-.49-1.3-2.16 0-.36-3.649-.48-3.769 0-.27 4.03 2.23 5.2 5.099 5.2 2.79 0 4.969-1.49 4.969-4.18 0-4.77-6.099-4.64-6.099-6.999 0-.97.72-1.1 1.13-1.1.45 0 1.25.07 1.19 1.87z" />
-		</svg>
+		<img src="/assets/toolLogos/storybook.svg" alt="Storybook" width={14} height={14} />
 	),
 	Antigravity: (
-		<svg
-			viewBox="0 0 16 15"
-			fill="none"
-			xmlns="http://www.w3.org/2000/svg"
-			width="14"
-			height="13"
-		>
-			<mask
-				id="ag-mask"
-				style={{ maskType: 'alpha' }}
-				maskUnits="userSpaceOnUse"
-				x="0"
-				y="0"
-				width="16"
-				height="15"
-			>
-				<path
-					d="M14.0777 13.984C14.945 14.6345 16.2458 14.2008 15.0533 13.0084C11.476 9.53949 12.2349 0 7.79033 0C3.34579 0 4.10461 9.53949 0.527295 13.0084C-0.773543 14.3092 0.635692 14.6345 1.50293 13.984C4.86344 11.7076 4.64663 7.69664 7.79033 7.69664C10.934 7.69664 10.7172 11.7076 14.0777 13.984Z"
-					fill="black"
-				/>
-			</mask>
-			<g mask="url(#ag-mask)">
-				<rect width="16" height="15" fill="#FFE432" />
-				<circle cx="12" cy="4" r="6" fill="#FC413D" opacity="0.8" />
-				<circle cx="4" cy="6" r="6" fill="#00B95C" opacity="0.8" />
-				<circle cx="10" cy="12" r="5" fill="#3186FF" opacity="0.8" />
-				<circle cx="6" cy="2" r="4" fill="#FBBC04" opacity="0.7" />
-			</g>
-		</svg>
+		<img src="/assets/toolLogos/antigravity-emblem.svg" alt="Antigravity" width={14} height={14} />
 	),
 	Claude: (
-		<svg
-			viewBox="0 0 24 24"
-			xmlns="http://www.w3.org/2000/svg"
-			fill="#D97757"
-			width="14"
-			height="14"
-		>
-			<path d="M17.3041 3.541h-3.6718l6.696 16.918H24Zm-10.6082 0L0 20.459h3.7442l1.3693-3.5527h7.0052l1.3693 3.5528h3.7442L10.5363 3.5409Zm-.3712 10.2232 2.2914-5.9456 2.2914 5.9456Z" />
-		</svg>
+		<img src="/assets/toolLogos/claude.svg" alt="Claude" width={14} height={14} />
+	),
+	'Next.js': (
+		<img src="/assets/toolLogos/nextjs-emblem.svg" alt="Next.js" width={14} height={14} />
 	),
 	Figma: (
 		<svg

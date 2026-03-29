@@ -8,14 +8,13 @@ import { LandingLearningMethod } from '../templates/LandingLearningMethod';
 import { LandingCourseHighlight } from '../templates/LandingCourseHighlight';
 import { LandingCourseReview } from '../templates/LandingCourseReview';
 import { LandingFooterCTA } from '../templates/LandingFooterCTA';
-import { PageContainer } from '../layout/PageContainer';
+import { FooterShifting } from '../layout/FooterShifting';
 
 /**
  * LandingPage 컴포넌트
  *
  * VDL Landing 페이지 콘텐츠를 조립하는 페이지 컴포넌트.
- * PageContainer는 페이지당 한 번만 사용하며, 각 섹션은
- * SectionContainer를 통해 자체적으로 콘텐츠 폭을 결정한다.
+ * FooterShifting으로 감싸 마지막 섹션이 스크롤 시 슬라이드업되며 드러난다.
  *
  * 퍼널 흐름:
  * Hook (Hero) → Pain (Problem) → Why (인식전환) →
@@ -27,7 +26,7 @@ import { PageContainer } from '../layout/PageContainer';
  */
 export function LandingPage() {
   return (
-    <PageContainer>
+    <FooterShifting footer={<LandingFooterCTA />}>
       <LandingHero />
       <LandingProblem />
       <LandingWhyVibeDesign />
@@ -36,7 +35,6 @@ export function LandingPage() {
       <LandingLearningMethod />
       <LandingCourseHighlight />
       <LandingCourseReview />
-      <LandingFooterCTA />
-    </PageContainer>
+    </FooterShifting>
   );
 }

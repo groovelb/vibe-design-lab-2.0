@@ -1,10 +1,14 @@
 'use client';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import Chip from '@mui/material/Chip';
 import { SectionContainer } from '../container/SectionContainer';
 import { SectionDivider } from '../typography/SectionDivider';
 import { SectionTitle } from '../typography/SectionTitle';
 import { AccordionSection } from '../data-display/AccordionSection';
 import FadeTransition from '../motion/FadeTransition';
+import { TECH_BADGE_ICONS } from '../../common/ui/TechBadgeIcons';
 import { PAGES } from '../../data/contents';
 import curriculumJson from '../../data/program/vdsk_online_curriculum.json';
 
@@ -48,10 +52,61 @@ export function CourseDetailCurriculum() {
         {curriculum.note && (
           <Typography
             variant="caption"
-            sx={{ color: 'text.secondary', mb: { xs: 6, md: 10 }, display: 'block', whiteSpace: 'pre-line' }}
+            sx={{ color: 'text.secondary', mb: 3, display: 'block', whiteSpace: 'pre-line' }}
           >
             {curriculum.note}
           </Typography>
+        )}
+
+        {curriculum.tools && (
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: { xs: 'column', sm: 'row' },
+              gap: 3,
+              mb: { xs: 6, md: 10 },
+            }}
+          >
+            {curriculum.tools.map((tool) => (
+              <Box
+                key={tool.label}
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 1,
+                  p: 2.5,
+                  borderRadius: 1,
+                  border: '1px solid',
+                  borderColor: 'divider',
+                  flex: 1,
+                }}
+              >
+                <Typography variant="caption" sx={{ fontWeight: 700, color: 'text.secondary' }}>
+                  {tool.label}
+                </Typography>
+                <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: 13 }}>
+                  {tool.description}
+                </Typography>
+                <Stack direction="row" spacing={1} flexWrap="wrap" sx={{ mt: 0.5 }}>
+                  {tool.badges.map((badge) => (
+                    <Chip
+                      key={badge}
+                      icon={TECH_BADGE_ICONS[badge]}
+                      label={badge}
+                      size="small"
+                      sx={{
+                        bgcolor: 'action.hover',
+                        color: 'text.primary',
+                        fontSize: '0.75rem',
+                        borderRadius: '4px',
+                        '& .MuiChip-icon': { ml: 0.5 },
+                      }}
+                    />
+                  ))}
+                </Stack>
+              </Box>
+            ))}
+          </Box>
         )}
       </FadeTransition>
 

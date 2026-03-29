@@ -63,7 +63,7 @@ export function LandingHeroPainPoints() {
                   isTriggerOnView={false}
                   delay={blockDelay}
                   isIdleVisible
-                  sx={{ mt: 2 }}
+                  sx={{ mt: 1 }}
                 />
               </Box>
             </Grid>

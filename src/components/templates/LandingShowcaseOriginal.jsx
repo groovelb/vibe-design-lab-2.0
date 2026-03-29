@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { HorizontalScrollContainer } from "../content-transition/HorizontalScrollContainer";
@@ -7,49 +7,40 @@ import { RatioContainer } from "../container/RatioContainer";
 import { AreaConstruct } from "../motion/AreaConstruct";
 import { EXAMPLES } from "../../data/example";
 
+const N = EXAMPLES.length;
+
 /**
- * ShowcaseCard — 호버 시 재생 + grayscale→color 전환 카드
+ * ShowcaseCard — 비디오 카드
  *
  * @param {object} example - { id, title, description, src } [Required]
+ * @param {function} cardRef - DOM 참조 콜백 [Required]
  *
  * Example usage:
- * <ShowcaseCard example={EXAMPLES[0]} />
+ * <ShowcaseCard example={EXAMPLES[0]} cardRef={(el) => { refs[0] = el; }} />
  */
-function ShowcaseCard({ example }) {
-	const videoRef = useRef(null);
-
-	const handleMouseEnter = useCallback(() => {
-		const v = videoRef.current;
-		if (v) { v.currentTime = 0; v.play(); }
-	}, []);
-
-	const handleMouseLeave = useCallback(() => {
-		const v = videoRef.current;
-		if (v) v.pause();
-	}, []);
-
+function ShowcaseCard({ example, cardRef }) {
 	return (
 		<Box
-			sx={{ width: "calc(50vw - 80px)", cursor: "pointer" }}
-			onMouseEnter={handleMouseEnter}
-			onMouseLeave={handleMouseLeave}
+			ref={cardRef}
+			sx={{
+				width: "calc(50vw - 80px)",
+				opacity: 0.5,
+				transition: "opacity 0.4s ease",
+			}}
 		>
 			<AreaConstruct sx={{ borderRadius: 4 }}>
 				<RatioContainer
-					ratio="4:3"
+					ratio="3:2"
 					isContained
+					data-role="frame"
 					sx={{
 						borderRadius: 1,
 						overflow: "hidden",
-						border: "1px solid",
-						borderColor: "divider",
-						opacity: 0.6,
-						transition: "opacity 0.4s ease",
-						"&:hover": { opacity: 1 },
+						border: "1px solid transparent",
+						transition: "border-color 0.4s ease",
 					}}
 				>
 					<video
-						ref={videoRef}
 						src={example.src}
 						loop
 						muted
@@ -80,47 +71,62 @@ function ShowcaseCard({ example }) {
  *
  * 바이브 디자인 결과물을 가로 스크롤로 보여주는 쇼케이스 섹션.
  * HorizontalScrollContainer로 세로→가로 스크롤 변환.
- * 상단 타이틀 + 하단 예제 요약 + 슬라이드 카드.
- * 각 카드는 hover 시 재생 + opacity 전환.
+ * 활성 카드는 border + 영상 재생, 비활성은 opacity 0.5.
  *
  * Example usage:
  * <LandingShowcaseOriginal />
  */
 export function LandingShowcaseOriginal() {
+	const cardRefs = useRef([]);
+
+	const updateAll = useCallback((progress) => {
+		const activeIdx = Math.round(progress * (N - 1));
+
+		cardRefs.current.forEach((el, i) => {
+			if (!el) return;
+			const isActive = i === activeIdx;
+			const video = el.querySelector("video");
+			const frame = el.querySelector("[data-role='frame']");
+
+			el.style.opacity = isActive ? "1" : "0.33";
+
+			if (frame) {
+				frame.style.borderColor = isActive ? "rgba(255,255,255,0.3)" : "transparent";
+			}
+
+			if (video) {
+				if (isActive) {
+					if (video.paused) video.play();
+				} else {
+					if (!video.paused) video.pause();
+				}
+			}
+		});
+	}, []);
+
+	useEffect(() => {
+		requestAnimationFrame(() => updateAll(0));
+	}, [updateAll]);
+
 	return (
 		<HorizontalScrollContainer
 			gap="24px"
 			padding="max(16px, calc(50vw - 704px))"
 			headerSpacing={14}
 			footerSpacing={14}
+			onScrollProgress={updateAll}
 			header={
 				<Typography variant="h2" sx={{ color: "text.primary" }}>
 					Figma를 스킵하고 바이브 디자인으로 만든 결과물입니다.
 				</Typography>
 			}
-			footer={
-				<Box
-					sx={{
-						display: "flex",
-						flexDirection: "column",
-						gap: 0.5,
-					}}
-				>
-					{EXAMPLES.map((ex) => (
-						<Typography
-							key={ex.id}
-							variant="body2"
-							sx={{ color: "text.secondary" }}
-						>
-							{ex.title} — {ex.description}
-						</Typography>
-					))}
-				</Box>
-			}
 		>
-			{EXAMPLES.map((ex) => (
+			{EXAMPLES.map((ex, i) => (
 				<HorizontalScrollContainer.Slide key={ex.id}>
-					<ShowcaseCard example={ex} />
+					<ShowcaseCard
+						example={ex}
+						cardRef={(el) => { cardRefs.current[i] = el; }}
+					/>
 				</HorizontalScrollContainer.Slide>
 			))}
 		</HorizontalScrollContainer>

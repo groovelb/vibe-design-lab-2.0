@@ -78,16 +78,6 @@ export function LandingSolution() {
                   delay={colDelay + VISUAL_LEAD + 200}
                   sx={{ mt: 1 }}
                 />
-                {howDifferent.details?.[index] && (
-                  <ConstructButton
-                    size="small"
-                    delay={colDelay + VISUAL_LEAD + 400}
-                    onClick={() => setOpenIndex(index)}
-                    sx={{ mt: 2 }}
-                  >
-                    자세히
-                  </ConstructButton>
-                )}
               </Box>
             </Grid>
           );

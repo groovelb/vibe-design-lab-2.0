@@ -116,12 +116,12 @@ const typography = {
 
   // 본문 — SUIT (fontFamily 상속)
   body1: {
-    fontSize: '1.25rem',
+    fontSize: '1rem',
     lineHeight: 1.7,
     letterSpacing: '0',
   },
   body2: {
-    fontSize: '1rem',
+    fontSize: '0.85rem',
     lineHeight: 1.7,
     letterSpacing: '0',
   },
