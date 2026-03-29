@@ -35,7 +35,7 @@ export function CourseDetailRole() {
 
       <Grid container spacing={3}>
         {role.cards.map((card, index) => (
-          <Grid key={card.problem} size={{ xs: 12, md: 6 }}>
+          <Grid key={card.problem} size={{ xs: 12, sm: 6, md: 6 }}>
             <FadeTransition direction="up" delay={index * 120} isTriggerOnView>
               <Box
                 sx={{

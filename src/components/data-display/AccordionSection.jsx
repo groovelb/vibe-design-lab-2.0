@@ -99,27 +99,37 @@ const AccordionSection = forwardRef(function AccordionSection({
               }}
             >
               {variant === 'curriculum' ? (
-                <Stack spacing={2.5}>
-                  <Stack direction="row" spacing={3} alignItems="center">
-                    <Typography
-                      variant="body2"
-                      sx={{ color: 'error.main', flexShrink: 0, fontWeight: 600, minWidth: { md: 72 } }}
-                    >
-                      {labelPrefix} {index + 1}
-                    </Typography>
+                <Stack spacing={{ xs: 1.5, md: 2.5 }}>
+                  <Stack direction={{ xs: 'column', md: 'row' }} spacing={{ xs: 0.5, md: 3 }} alignItems={{ md: 'center' }}>
+                    <Stack direction="row" spacing={1.5} alignItems="center">
+                      <Typography
+                        variant="body2"
+                        sx={{ color: 'error.main', flexShrink: 0, fontWeight: 600, minWidth: { md: 72 } }}
+                      >
+                        {labelPrefix} {index + 1}
+                      </Typography>
+                      {item.openDate && (
+                        <Typography
+                          variant="caption"
+                          sx={{ color: 'text.secondary', flexShrink: 0, display: { md: 'none' } }}
+                        >
+                          {item.openDate}
+                        </Typography>
+                      )}
+                    </Stack>
                     <Typography variant="h3" sx={{ fontWeight: 700 }}>
                       {item.title}
                     </Typography>
                     {item.openDate && (
                       <Typography
                         variant="caption"
-                        sx={{ color: 'text.secondary', flexShrink: 0 }}
+                        sx={{ color: 'text.secondary', flexShrink: 0, display: { xs: 'none', md: 'block' } }}
                       >
                         {item.openDate}
                       </Typography>
                     )}
                   </Stack>
-                  <Stack spacing={0.5}>
+                  <Stack spacing={0.5} sx={{ display: { xs: 'none', md: 'flex' } }}>
                     {item.description && (
                       <Stack direction="row" spacing={3} alignItems="center">
                         <Typography
@@ -171,7 +181,7 @@ const AccordionSection = forwardRef(function AccordionSection({
                       )}
                       <Box sx={{ py: 2.5 }}>
                         {/* 챕터 헤더 */}
-                        <Stack direction="row" spacing={3} alignItems="center" sx={{ mb: 2 }}>
+                        <Stack direction={{ xs: 'column', md: 'row' }} spacing={{ xs: 0.5, md: 3 }} alignItems={{ md: 'center' }} sx={{ mb: 2 }}>
                           <Typography
                             variant="body2"
                             sx={{ color: 'text.secondary', flexShrink: 0, fontWeight: 700, minWidth: { md: 72 } }}

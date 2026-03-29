@@ -119,7 +119,7 @@ const FloatingCTA = forwardRef(function FloatingCTA({
             direction="row"
             spacing={1.5}
             alignItems="center"
-            sx={{ ml: 'auto' }}
+            sx={{ ml: { xs: 0, md: 'auto' }, width: { xs: '100%', md: 'auto' }, justifyContent: { xs: 'center', md: 'flex-end' } }}
           >
             {inquiryLabel && (
               <Button

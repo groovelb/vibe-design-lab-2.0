@@ -41,7 +41,7 @@ export function CourseDetailHero({
           position: 'relative',
           overflow: 'hidden',
           minHeight: '100vh',
-          py: 14,
+          py: { xs: 8, md: 14 },
         }}
       >
         <CourseDetailHeroBackground />

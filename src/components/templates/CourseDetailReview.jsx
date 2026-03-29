@@ -119,7 +119,7 @@ export function CourseDetailReview() {
           />
         </FadeTransition>
 
-        <LineGrid container gap={48} borderColor="divider">
+        <LineGrid container gap={{ xs: 24, md: 48 }} borderColor="divider">
           {visibleWebinarReviews.map((review, index) => (
             <Grid key={review.userId} size={{ xs: 12, sm: 6, md: 3 }}>
               <FadeTransition

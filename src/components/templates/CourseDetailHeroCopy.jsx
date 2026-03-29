@@ -16,14 +16,14 @@ import FadeTransition from '../motion/FadeTransition';
  */
 export function CourseDetailHeroCopy({ subCopy, description }) {
   return (
-    <Box sx={{ flex: '0 0 66%', maxWidth: { md: '66%' } }}>
+    <Box sx={{ flex: { xs: '0 0 auto', md: '0 0 66%' }, maxWidth: { md: '66%' } }}>
       <FadeTransition direction="up" delay={100} isTriggerOnView>
         <Typography
           variant="display"
           component="h1"
           sx={{
             fontWeight: 800,
-            fontSize: '5.5rem',
+            fontSize: { xs: '2.5rem', sm: '3.5rem', md: '5.5rem' },
             textTransform: 'uppercase',
             wordBreak: 'keep-all',
             color: 'text.primary',
@@ -36,7 +36,7 @@ export function CourseDetailHeroCopy({ subCopy, description }) {
       </FadeTransition>
 
       <FadeTransition direction="up" delay={200} isTriggerOnView>
-        <Box sx={{ mt: 12, maxWidth: '75%' }}>
+        <Box sx={{ mt: { xs: 6, md: 12 }, maxWidth: { xs: '100%', md: '75%' } }}>
           <Typography
             variant="h3"
             sx={{ fontWeight: 900, color: 'text.primary' }}

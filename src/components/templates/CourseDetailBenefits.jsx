@@ -32,7 +32,7 @@ export function CourseDetailBenefits() {
 
       <Grid container spacing={3}>
         {benefits.items.map((item, index) => (
-          <Grid key={item.title} size={{ xs: 12, md: 4 }}>
+          <Grid key={item.title} size={{ xs: 12, sm: 6, md: 4 }}>
             <FadeTransition direction="up" delay={index * 100} isTriggerOnView>
               <Box
                 sx={{

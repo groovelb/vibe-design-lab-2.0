@@ -20,7 +20,7 @@ import { GLASS_SX } from '../../common/ui/glassSx';
  */
 export function CourseDetailHeroGoalsBar({ goals }) {
   return (
-    <Box sx={{ mt: 10, ...GLASS_SX }}>
+    <Box sx={{ mt: { xs: 6, md: 10 }, ...GLASS_SX }}>
       <FadeTransition direction="up" delay={400} isTriggerOnView>
         <Box
           sx={{

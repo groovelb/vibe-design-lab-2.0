@@ -35,7 +35,7 @@ export function CourseDetailTargetAudience() {
 
       <Grid container spacing={3}>
         {TARGET_PERSONAS.map((persona, index) => (
-          <Grid key={persona.role} size={{ xs: 12, md: 4 }}>
+          <Grid key={persona.role} size={{ xs: 12, sm: 6, md: 4 }}>
             <FadeTransition direction="up" delay={index * 100} isTriggerOnView>
               <Box
                 sx={{

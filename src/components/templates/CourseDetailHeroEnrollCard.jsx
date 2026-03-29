@@ -35,7 +35,7 @@ export function CourseDetailHeroEnrollCard({
   return (
     <Box sx={{ flex: '1 1 auto', ...GLASS_SX }}>
       <FadeTransition direction="up" delay={300} isTriggerOnView>
-        <Box sx={{ p: 5, wordBreak: 'keep-all' }}>
+        <Box sx={{ p: { xs: 3, md: 5 }, wordBreak: 'keep-all' }}>
           <Stack spacing={4}>
             <Typography
               variant="h5"

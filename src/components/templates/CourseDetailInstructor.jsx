@@ -1,8 +1,9 @@
 'use client';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
 import { SectionContainer } from '../container/SectionContainer';
 import { SectionDivider } from '../typography/SectionDivider';
 import { SectionTitle } from '../typography/SectionTitle';
@@ -15,11 +16,15 @@ import { INSTRUCTOR_PROFILE } from '../../data/courseDetailMockData';
 
 const { courseLead } = PAGES.courseDetail;
 
+/** 모바일에서 기본 노출 프로젝트 수 */
+const VISIBLE_MOBILE_COUNT = 4;
+
 /**
  * CourseDetailInstructor 섹션 템플릿
  *
  * Course Lead 소개. LandingLearningMethod의 코스 리드 프로필과 동일한 구조:
  * 좌측(비디오 + SVG 이름 + 타이틀), 우측(프로젝트 이력).
+ * 모바일에서는 프로젝트 목록을 4개까지만 노출하고 펼쳐보기 토글 제공.
  *
  * Example usage:
  * <CourseDetailInstructor />
@@ -27,6 +32,7 @@ const { courseLead } = PAGES.courseDetail;
 export function CourseDetailInstructor() {
   const videoRef = useRef(null);
   const [inViewRef, isInView] = useInView({ trigger: 0.3 });
+  const [isMobileExpanded, setIsMobileExpanded] = useState(false);
 
   useEffect(() => {
     if (isInView && videoRef.current) {
@@ -114,13 +120,36 @@ export function CourseDetailInstructor() {
               {INSTRUCTOR_PROFILE.projects.map((project, index) => (
                 <ConstructBlock
                   key={index}
-                  text={`${project.year} ${project.title}`}
+                  text={`· ${project.year} ${project.title}`}
                   variant="body2"
                   delay={200 + index * 40}
-                  sx={{ '& .MuiTypography-root': { color: 'text.secondary' } }}
+                  sx={{
+                    '& .MuiTypography-root': { color: 'text.secondary' },
+                    ...(index >= VISIBLE_MOBILE_COUNT && !isMobileExpanded && {
+                      display: { xs: 'none', md: 'block' },
+                    }),
+                  }}
                 />
               ))}
             </Stack>
+            {INSTRUCTOR_PROFILE.projects.length > VISIBLE_MOBILE_COUNT && (
+              <Button
+                variant="text"
+                size="small"
+                onClick={() => setIsMobileExpanded((prev) => !prev)}
+                sx={{
+                  display: { xs: 'inline-flex', md: 'none' },
+                  alignSelf: 'flex-start',
+                  color: 'text.secondary',
+                  p: 0,
+                  minWidth: 0,
+                }}
+              >
+                {isMobileExpanded
+                  ? '접기'
+                  : `펼쳐보기 (+${INSTRUCTOR_PROFILE.projects.length - VISIBLE_MOBILE_COUNT})`}
+              </Button>
+            )}
           </Stack>
         </Grid>
       </Grid>

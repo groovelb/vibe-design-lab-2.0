@@ -53,7 +53,7 @@ export function CourseDetailShowcase() {
       {/* 프로젝트 카드 3칼럼 — gap 24px (프로덕션 동일) */}
       <Grid container spacing={3}>
         {SHOWCASE_PORTFOLIO.map((item, index) => (
-          <Grid key={item.id} size={{ xs: 12, md: 4 }}>
+          <Grid key={item.id} size={{ xs: 12, sm: 6, md: 4 }}>
             <FadeTransition
               direction="up"
               delay={(index % 3) * COL_STAGGER}
