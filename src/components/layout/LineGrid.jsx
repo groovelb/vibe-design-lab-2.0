@@ -48,12 +48,17 @@ const LineGrid = React.forwardRef(({
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
+  // Support responsive gap: number or { xs: number, md: number }
+  const resolvedGap = typeof gap === 'object'
+    ? (isMobile ? (gap.xs ?? gap.md ?? 0) : (gap.md ?? gap.xs ?? 0))
+    : gap;
+
   // Stack mode (no container prop)
   if (!container) {
     return (
       <Stack
         ref={ref}
-        spacing={gap / 8}
+        spacing={resolvedGap / 8}
         divider={
           <Divider
             sx={{
@@ -126,7 +131,7 @@ const LineGrid = React.forwardRef(({
   const shouldFixHeight = equalHeight || (rowHeights && Array.isArray(rowHeights));
 
   return (
-    <Grid container spacing={gap / 8} ref={ref} {...props} sx={{ width: '100%', height: shouldFixHeight ? '100%' : 'auto' }}>
+    <Grid container spacing={resolvedGap / 8} ref={ref} {...props} sx={{ width: '100%', height: shouldFixHeight ? '100%' : 'auto' }}>
       {childrenArray.map((child, index) => {
         if (!React.isValidElement(child)) return child;
 
@@ -147,7 +152,7 @@ const LineGrid = React.forwardRef(({
               '&::before': {
                 content: '""',
                 position: 'absolute',
-                left: `-${gap / 2}px`,
+                left: `-${resolvedGap / 2}px`,
                 top: 0,
                 bottom: 0,
                 width: '1px',
@@ -161,7 +166,7 @@ const LineGrid = React.forwardRef(({
               '&::after': {
                 content: '""',
                 position: 'absolute',
-                top: `-${gap / 2}px`,
+                top: `-${resolvedGap / 2}px`,
                 left: 0,
                 right: 0,
                 height: '1px',

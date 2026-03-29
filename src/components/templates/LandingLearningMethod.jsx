@@ -133,9 +133,9 @@ export function LandingLearningMethod() {
         </Grid>
       </Grid>
 
-      <LineGrid container gap={120} borderColor="divider">
+      <LineGrid container gap={{ xs: 48, md: 120 }} borderColor="divider">
         {learningMethod.methods.map((method, index) => (
-          <Grid key={method.label} size={{ xs: 12, md: 6 }}>
+          <Grid key={method.label} size={{ xs: 12, sm: 6, md: 6 }}>
             <MethodCard
               icon={METHOD_ICONS[index]}
               label={method.label}

@@ -2,6 +2,8 @@
 import { useCallback, useRef, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { HorizontalScrollContainer } from "../content-transition/HorizontalScrollContainer";
 import { RatioContainer } from "../container/RatioContainer";
 import { AreaConstruct } from "../motion/AreaConstruct";
@@ -20,6 +22,16 @@ const FRAME_W = `${FRAME_VW}vw`;
 const CARD_W = `calc(27.5vw - 72px)`;
 const TRACK_PAD = `calc(36.25vw + 36px)`;
 const GAP = `${GAP_PX}px`;
+
+/* ── 모바일 레이아웃 상수 ──
+ * 프레임을 거의 풀 와이드로 확대하여 카드가 보이도록 함.
+ * 카드는 프레임보다 약간 좁게 → push offset 효과 유지.
+ */
+const M_FRAME_W = "calc(100vw - 48px)";
+const M_CARD_W = "calc(100vw - 80px)";
+const M_TRACK_PAD = "40px";
+const M_GAP_PX = 16;
+
 const N = EXAMPLES.length;
 
 /**
@@ -27,16 +39,17 @@ const N = EXAMPLES.length;
  *
  * @param {object} example - { id, title, description, src } [Required]
  * @param {function} cardRef - DOM 참조 콜백 [Required]
+ * @param {string} cardWidth - CSS 너비 값 [Optional]
  *
  * Example usage:
  * <ShowcaseCard example={EXAMPLES[0]} cardRef={(el) => { refs[0] = el; }} />
  */
-function ShowcaseCard({ example, cardRef }) {
+function ShowcaseCard({ example, cardRef, cardWidth = CARD_W }) {
 	return (
 		<Box
 			ref={cardRef}
 			sx={{
-				width: CARD_W,
+				width: cardWidth,
 				willChange: "opacity, filter, transform",
 				opacity: 0.75,
 				filter: "brightness(0.4)",
@@ -81,6 +94,15 @@ function ShowcaseCard({ example, cardRef }) {
  * <LandingShowcaseMagnifier />
  */
 export function LandingShowcaseMagnifier() {
+	const theme = useTheme();
+	const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
+	const frameWidth = isMobile ? M_FRAME_W : FRAME_W;
+	const cardW = isMobile ? M_CARD_W : CARD_W;
+	const trackPadding = isMobile ? M_TRACK_PAD : TRACK_PAD;
+	const gapPx = isMobile ? M_GAP_PX : GAP_PX;
+	const gapStr = `${gapPx}px`;
+
 	const cardRefs = useRef([]);
 	const magnifiedTrackRef = useRef(null);
 	const frameRef = useRef(null);
@@ -89,6 +111,8 @@ export function LandingShowcaseMagnifier() {
 	const labelWrapRef = useRef(null);
 	const isHighlightRef = useRef(false);
 	const prevDxRef = useRef([]);
+	const gapPxRef = useRef(gapPx);
+	gapPxRef.current = gapPx;
 
 	/**
 	 * 1. 베이스 카드: proximity 기반 brightness 디밍
@@ -112,10 +136,12 @@ export function LandingShowcaseMagnifier() {
 			"(prefers-reduced-motion: reduce)",
 		).matches;
 
+		const currentGapPx = gapPxRef.current;
+
 		/* ── 베이스 카드 디밍 + 클리핑 + push offset ── */
 		const fr = frameRef.current?.getBoundingClientRect();
-		const clearL = fr ? fr.left - GAP_PX : -Infinity;
-		const clearR = fr ? fr.right + GAP_PX : Infinity;
+		const clearL = fr ? fr.left - currentGapPx : -Infinity;
+		const clearR = fr ? fr.right + currentGapPx : Infinity;
 		const frameWpx = fr ? fr.width : 0;
 		const firstCard = cardRefs.current[0];
 		const cardWpx = firstCard ? firstCard.getBoundingClientRect().width : 0;
@@ -189,7 +215,7 @@ export function LandingShowcaseMagnifier() {
 		/* ── 확대 트랙 동기 스크롤 ── */
 		if (magnifiedTrackRef.current && frameRef.current) {
 			const frameW = frameRef.current.clientWidth;
-			const magnifiedStride = frameW + 24;
+			const magnifiedStride = frameW + currentGapPx;
 			const totalScroll = magnifiedStride * (N - 1);
 			magnifiedTrackRef.current.style.transform = `translateX(${-progress * totalScroll}px)`;
 		}
@@ -215,28 +241,12 @@ export function LandingShowcaseMagnifier() {
 
 	return (
 		<HorizontalScrollContainer
-			gap={GAP}
-			padding={TRACK_PAD}
+			gap={gapStr}
+			padding={trackPadding}
 			snapCount={N}
 			onScrollProgress={updateAll}
 			header={
 				<>
-					{/* ── 좌측 상단 타이틀 오버레이 (top은 JS로 프레임 상단에 동기화) ── */}
-					{/* <Typography
-						ref={titleRef}
-						variant="h3"
-						sx={{
-							position: "absolute",
-							top: "50%",
-							left: (t) => t.spacing(5),
-							color: "text.primary",
-							zIndex: 11,
-						}}
-					>
-						Figma를 스킵하고
-						<br />바이브 디자인으로 만들었습니다.
-					</Typography> */}
-
 					{/* ── 마스킹 프레임 (overflow:hidden = clip mask) ── */}
 					<Box
 						ref={frameRef}
@@ -245,7 +255,7 @@ export function LandingShowcaseMagnifier() {
 							top: "50%",
 							left: "50%",
 							transform: "translate(-50%, -50%)",
-							width: FRAME_W,
+							width: frameWidth,
 							aspectRatio: "3/2",
 							outline: (t) => `1px solid ${t.palette.divider}`,
 							overflow: "hidden",
@@ -258,7 +268,7 @@ export function LandingShowcaseMagnifier() {
 							ref={magnifiedTrackRef}
 							sx={{
 								display: "flex",
-								gap: "24px",
+								gap: gapStr,
 								height: "100%",
 								alignItems: "center",
 								willChange: "transform",
@@ -268,7 +278,7 @@ export function LandingShowcaseMagnifier() {
 								<Box
 									key={ex.id}
 									sx={{
-										width: FRAME_W,
+										width: frameWidth,
 										flexShrink: 0,
 										height: "100%",
 									}}
@@ -321,7 +331,10 @@ export function LandingShowcaseMagnifier() {
 									position: "absolute",
 									left: "50%",
 									transform: "translateX(-50%)",
-									whiteSpace: "nowrap",
+									whiteSpace: { xs: "normal", md: "nowrap" },
+									maxWidth: "90vw",
+									overflow: "hidden",
+									textOverflow: "ellipsis",
 									opacity: i === 0 ? 1 : 0,
 									transition: "opacity 0.25s ease",
 									willChange: "opacity",
@@ -338,6 +351,7 @@ export function LandingShowcaseMagnifier() {
 				<HorizontalScrollContainer.Slide key={ex.id}>
 					<ShowcaseCard
 						example={ex}
+						cardWidth={cardW}
 						cardRef={(el) => {
 							cardRefs.current[i] = el;
 						}}

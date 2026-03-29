@@ -187,7 +187,7 @@ const CarouselContainer = forwardRef(function CarouselContainer({
    */
   const navOffset = navPosition === 'inside'
     ? { xs: 8, sm: 12, md: 16 }
-    : { xs: -20, sm: -24, md: -48 };
+    : { xs: 8, sm: 12, md: -48 };
 
   /**
    * 아이콘 크기 (반응형)

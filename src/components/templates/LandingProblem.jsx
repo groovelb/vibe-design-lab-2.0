@@ -37,7 +37,7 @@ const PERSONA_MEDIA = VISIBLE_INDICES.map((i) => ALL_PERSONA_MEDIA[i]);
 export function LandingProblem() {
   return (
     <SectionContainer>
-      <Stack spacing={12}>
+      <Stack spacing={{ xs: 6, md: 12 }}>
         <Box sx={{ mb: { xs: 4, md: 6 } }}>
           <SectionDivider label="Problem" sx={{ mb: 3 }} />
           <ConstructType
@@ -47,11 +47,11 @@ export function LandingProblem() {
             sx={{ letterSpacing: '-0.02em', wordSpacing: '0.15em', '& .MuiTypography-root': { lineHeight: 1.71 } }}
           />
         </Box>
-        <LineGrid container gap={144} borderColor="divider">
+        <LineGrid container gap={{ xs: 48, md: 144 }} borderColor="divider">
           {problem.career.filter((_, i) => VISIBLE_INDICES.includes(i)).map((item, index) => {
             const colDelay = (index % 2) * COL_STAGGER;
             return (
-              <Grid key={item.subtitle} size={{ xs: 12, md: 6 }}>
+              <Grid key={item.subtitle} size={{ xs: 12, sm: 6, md: 6 }}>
                 <Box sx={{ mixBlendMode: 'screen' }}>
                 <AreaConstruct isTriggerOnView delay={colDelay}>
                   <Box sx={{ width: '100%', aspectRatio: '4/3', overflow: 'hidden' }}>

@@ -40,7 +40,7 @@ const MethodCard = forwardRef(function MethodCard({
   return (
     <Stack ref={ref} spacing={4} sx={sx} {...props}>
       {Icon && <Icon size={40} strokeWidth={1} style={{ flexShrink: 0 }} />}
-      <Stack spacing={2} width={'75%'}>
+      <Stack spacing={2} sx={{ width: { xs: '100%', md: '75%' } }}>
         <Stack spacing={0.5}>
           {label && (
             <Typography

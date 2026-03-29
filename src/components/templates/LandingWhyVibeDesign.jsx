@@ -44,7 +44,7 @@ export function LandingWhyVibeDesign() {
 				<Container
 					maxWidth="xl"
 					sx={{
-						width: { md: "75%" },
+						width: { xs: "100%", md: "75%" },
 						position: "relative",
 						zIndex: 1,
 						height: "100%",
@@ -52,16 +52,16 @@ export function LandingWhyVibeDesign() {
 						alignItems: "center",
 					}}
 				>
-					<Stack spacing={{ xs: 8, md: 14 }}>
-						<VdlLogo size={64} />
+					<Stack spacing={{ xs: 4, md: 14 }}>
+						<VdlLogo size={64} sx={{ fontSize: { xs: 32, md: 64 } }} />
 						<ScrollRevealText
 							text={whyVibeDesign.statement}
 							progress={progress}
-							variant="h2"
+							variant="h3"
 							isSplitSentences={false}
 							sx={{
 								fontWeight: "600 !important",
-								te67xtAlign: "left",
+								textAlign: "left",
 								letterSpacing: "-0.02em",
 								wordSpacing: "0.15em",
 								"& .MuiTypography-root": {
@@ -69,7 +69,7 @@ export function LandingWhyVibeDesign() {
 									textAlign: "left",
 								},
 							}}
-							mb={{ xs: 8, md: 14 }}
+							mb={{ xs: 4, md: 14 }}
 						/>
 					</Stack>
 				</Container>

@@ -54,7 +54,7 @@ export function LandingSolution() {
       />
 
       {/* 가치 제안 — 3컬럼 + 자세히 버튼 */}
-      <LineGrid container gap={96} borderColor="divider">
+      <LineGrid container gap={{ xs: 48, md: 96 }} borderColor="divider">
         {VALUE_PROPOSITIONS.map((vp, index) => {
           const Illustration = ILLUSTRATIONS[index];
           const colDelay = (index % 3) * COL_STAGGER;

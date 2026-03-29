@@ -38,7 +38,7 @@ const TITLE_HALF = Math.round(
 export function LandingHeroPainPoints() {
   return (
     <Stack sx={{ height: '100%' }} justifyContent="center">
-      <LineGrid container gap={96} borderColor="divider">
+      <LineGrid container gap={{ xs: 48, md: 96 }} borderColor="divider">
         {hero.painPoints.map((point, index) => {
           const colDelay = index * COL_STAGGER;
           const titleDelay = PAIN_START + colDelay;
