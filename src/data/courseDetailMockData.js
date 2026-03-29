@@ -92,18 +92,21 @@ export const INSTRUCTOR_PROFILE = {
 export const SHOWCASE_PORTFOLIO = [
   {
     id: 'showcase-1',
-    title: '몰입형 쇼핑몰 실험',
-    tags: ['다이나믹 그리드 규칙 설계', '미드저니 모션 UI와 연동', '2차원 Carousel 인터랙션'],
+    title: '실습 예제1: 가상의 조명 브랜드',
+    mediaSrc: '/video/showcase-s1.mp4',
+    tags: ['3단계 글쓰기: 기획, UX, 비쥬얼 디렉션', '컨텐츠, 이미지 정보구조 등록', '정보구조로 레이아웃 잡기'],
   },
   {
     id: 'showcase-2',
-    title: '반응형 조명 브랜드',
-    tags: ['인터랙티브 테마 전환', '비디오 스크러빙 효과', '조명 조도 전환 효과'],
+    title: '스토리북 활용: 정보구조 설계하기',
+    mediaSrc: '/video/showcase-s2.mp4',
+    tags: ['기획서 X 나노 바나나 이미지 생성', '컨텐츠 목차 및 데이터화', '브랜드 이미지 생성 및 등록'],
   },
   {
     id: 'showcase-3',
-    title: '명상 커뮤니티 랜딩페이지',
-    tags: ['스크롤 인터랙션 설계', 'three.js 파티클 연동', 'Fade 인터랙션 설계'],
+    title: '스토리북 활용: 디자인 시스템 구축하기',
+    mediaSrc: '/video/showcase-s3.mp4',
+    tags: ['인터랙티브 테마 전환', '컨텐츠 X 그리드 디자인', '조명 조도 전환 효과'],
   },
 ];
 

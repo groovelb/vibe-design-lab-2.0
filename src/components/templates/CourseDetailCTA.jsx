@@ -4,14 +4,11 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import Chip from '@mui/material/Chip';
 import { SectionContainer } from '../container/SectionContainer';
 import { SectionDivider } from '../typography/SectionDivider';
 import { SectionTitle } from '../typography/SectionTitle';
 import FadeTransition from '../motion/FadeTransition';
 import { PAGES } from '../../data/contents';
-import { Mail, Video } from 'lucide-react';
-
 const { cta, hero } = PAGES.courseDetail;
 
 /**
@@ -37,75 +34,6 @@ const CourseDetailCTA = forwardRef(function CourseDetailCTA({ enrollUrl, ...prop
         />
       </FadeTransition>
 
-      {/* 웨비나 + 문의 카드 */}
-      <FadeTransition direction="up" delay={100} isTriggerOnView threshold={0.5}>
-        <Stack
-          direction={{ xs: 'column', md: 'row' }}
-          spacing={3}
-          sx={{ mb: { xs: 6, md: 10 } }}
-        >
-          {/* 웨비나 카드 */}
-          <Box
-            sx={{
-              flex: 1,
-              p: 4,
-              border: 1,
-              borderColor: 'divider',
-            }}
-          >
-            <Stack spacing={2}>
-              <Stack direction="row" spacing={1} alignItems="center">
-                <Video size={16} />
-                <Typography variant="overline" sx={{ color: 'text.secondary' }}>
-                  Case Study
-                </Typography>
-              </Stack>
-              <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                {cta.webinar.label}
-              </Typography>
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {cta.webinar.description}
-              </Typography>
-              <Box>
-                <Button variant="text" size="small">
-                  {cta.webinar.ctaLabel}
-                </Button>
-              </Box>
-            </Stack>
-          </Box>
-
-          {/* 문의 카드 */}
-          <Box
-            sx={{
-              flex: 1,
-              p: 4,
-              border: 1,
-              borderColor: 'divider',
-            }}
-          >
-            <Stack spacing={2}>
-              <Stack direction="row" spacing={1} alignItems="center">
-                <Mail size={16} />
-                <Typography variant="overline" sx={{ color: 'text.secondary' }}>
-                  Q&A
-                </Typography>
-              </Stack>
-              <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                {cta.inquiry.label}
-              </Typography>
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {cta.inquiry.description}
-              </Typography>
-              <Box>
-                <Button variant="text" size="small">
-                  {cta.inquiry.ctaLabel}
-                </Button>
-              </Box>
-            </Stack>
-          </Box>
-        </Stack>
-      </FadeTransition>
-
       {/* 최종 가격 + CTA 바 */}
       <FadeTransition direction="up" delay={200} isTriggerOnView threshold={0.5}>
         <Box
@@ -121,11 +49,9 @@ const CourseDetailCTA = forwardRef(function CourseDetailCTA({ enrollUrl, ...prop
             spacing={3}
           >
             <Stack spacing={1.5}>
-              <Chip
-                label="온라인 얼리버드 모집 중"
-                size="small"
-                sx={{ bgcolor: 'error.main', color: 'error.contrastText', fontSize: '0.75rem' }}
-              />
+              <Typography variant="body2" sx={{ color: 'error.main', fontWeight: 700 }}>
+                온라인 얼리버드 모집 중 · 4/15 마감
+              </Typography>
               <Stack spacing={0.5}>
                 <Typography variant="caption" sx={{ color: 'text.secondary' }}>
                   수강료
@@ -134,7 +60,7 @@ const CourseDetailCTA = forwardRef(function CourseDetailCTA({ enrollUrl, ...prop
                   <Typography variant="h5" sx={{ fontWeight: 700 }}>
                     {hero.price}
                   </Typography>
-                  <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                  <Typography variant="caption" sx={{ color: 'text.secondary', textDecoration: 'line-through' }}>
                     {hero.priceOriginal}
                   </Typography>
                 </Stack>

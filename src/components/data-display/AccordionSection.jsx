@@ -217,6 +217,8 @@ const AccordionSection = forwardRef(function AccordionSection({
                   sx={{
                     color: 'text.secondary',
                     lineHeight: 1.75,
+                    whiteSpace: 'pre-line',
+                    maxWidth: '72ch',
                   }}
                 >
                   {item.answer || item.content}

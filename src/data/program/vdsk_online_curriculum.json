@@ -426,6 +426,12 @@
                   "status": "○"
                 },
                 {
+                  "title": "Claude Code의 역할: 코딩 도구가 아니라 협업 파트너",
+                  "source": "신규. Claude Code가 단순 코드 생성기가 아니라 설계 의도를 함께 검증하고 조립하는 파트너임을 이해. 질문→결정→검수 프레임과 연결",
+                  "sourceId": null,
+                  "status": "○"
+                },
+                {
                   "title": "워밍업 실습 가이드",
                   "source": "신규. AI와 협업 자세를 적용하며 따라하기 시연",
                   "sourceId": null,

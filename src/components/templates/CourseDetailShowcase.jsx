@@ -61,15 +61,32 @@ export function CourseDetailShowcase() {
               threshold={0.5}
             >
               <Stack spacing={3}>
-                {/* 스크린샷 placeholder */}
-                <Box
-                  sx={{
-                    width: '100%',
-                    aspectRatio: '4/3',
-                    border: '1px dashed',
-                    borderColor: 'divider',
-                  }}
-                />
+                {/* 미디어 */}
+                {item.mediaSrc && /\.(mp4|webm|mov)$/i.test(item.mediaSrc) ? (
+                  <Box
+                    component="video"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    src={item.mediaSrc}
+                    sx={{
+                      width: '100%',
+                      aspectRatio: '3/2',
+                      objectFit: 'cover',
+                      display: 'block',
+                    }}
+                  />
+                ) : (
+                  <Box
+                    sx={{
+                      width: '100%',
+                      aspectRatio: '3/2',
+                      border: '1px dashed',
+                      borderColor: 'divider',
+                    }}
+                  />
+                )}
                 {/* 타이틀 */}
                 <Typography variant="h6" sx={{ fontWeight: 700 }}>
                   {item.title}

@@ -29,6 +29,7 @@ import { CardTextStack } from '../typography/CardTextStack';
  * @param {string} description - 코스 설명 [Optional]
  * @param {Array} highlights - 커리큘럼 요약 리스트 [Optional]
  * @param {string} target - 수강 대상 [Optional]
+ * @param {string} estimate - 소요 기간 텍스트 (예: '약 6주 소요') [Optional]
  * @param {string} ctaLabel - CTA 버튼 텍스트 [Optional]
  * @param {function} onCtaClick - CTA 클릭 핸들러 [Optional]
  * @param {string} ctaHref - CTA 링크 URL [Optional]
@@ -60,13 +61,14 @@ const CourseDetailCard = forwardRef(function CourseDetailCard({
   description,
   highlights,
   target,
+  estimate,
   ctaLabel,
   onCtaClick,
   ctaHref,
   sx,
   ...props
 }, ref) {
-  const metaParts = [duration, chapters != null && `${chapters}챕터`].filter(Boolean);
+  const metaParts = [duration, chapters != null && `${chapters}챕터`, estimate].filter(Boolean);
 
   const renderMedia = () => {
     if (mediaSlot) return mediaSlot;

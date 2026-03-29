@@ -33,6 +33,7 @@ export function LandingCourseHighlight() {
           posterSrc={coursePoster.src || coursePoster}
           duration={`${curriculumJson.sections.length}섹션`}
           chapters={curriculumJson.sections.reduce((sum, s) => sum + s.chapters.length, 0)}
+          estimate="약 6주 소요"
           title={course.title}
           subtitle={course.subtitle}
           highlights={CURRICULUM_HIGHLIGHTS}
