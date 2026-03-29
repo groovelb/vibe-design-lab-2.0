@@ -35,7 +35,7 @@ export function LandingHero() {
         position: 'absolute',
         top: 0,
         left: { xs: '16px', md: 'max(24px, calc(50vw - 696px))' },
-        right: 0,
+        right: { xs: '-100vw', md: 0 },
         height: '60%',
         pointerEvents: 'none',
         willChange: 'transform',
@@ -59,7 +59,8 @@ export function LandingHero() {
             primary={
               <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%' }}>
                 <LandingHeroMessage />
-                <Box sx={{ mt: { xs: 6, md: 10 } }}>
+                {/* 3pp — PC에서만 100svh 안에 표시 */}
+                <Box sx={{ mt: 10, display: { xs: 'none', md: 'block' } }}>
                   <LandingHeroPainPoints />
                 </Box>
               </Box>
@@ -68,6 +69,13 @@ export function LandingHero() {
         </Container>
       </ParallaxLayer>
     </GridBackground>
+
+    {/* 3pp — 모바일에서 100svh 아래에 표시 */}
+    <Box sx={{ display: { xs: 'block', md: 'none' }, py: 6 }}>
+      <Container maxWidth="xl">
+        <LandingHeroPainPoints />
+      </Container>
+    </Box>
     </SectionContainer>
   );
 }

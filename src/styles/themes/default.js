@@ -42,7 +42,20 @@ const customShadows = {
 };
 
 // ============================================================
-// 3. Typography Tokens (타이포그래피 토큰)
+// 3. Breakpoints (타이포그래피 반응형에서 참조하므로 먼저 선언)
+// ============================================================
+const breakpoints = {
+  values: {
+    xs: 0,
+    sm: 768,
+    md: 900,
+    lg: 1200,
+    xl: 1440,
+  },
+};
+
+// ============================================================
+// 4. Typography Tokens (타이포그래피 토큰)
 // ============================================================
 
 // 폰트 패밀리 상수
@@ -64,30 +77,39 @@ const typography = {
   fontWeightMedium: 500,
   fontWeightBold: 700,
 
-  // 헤딩 — SUITh1
+  // 헤딩 — SUIT (모바일 기본 → md+ 데스크탑)
   h1: {
     fontFamily: suitFamily,
     fontWeight: 700,
-    fontSize: '2.75rem',
+    fontSize: '1.75rem',
     lineHeight: 1.075,
     letterSpacing: '-0.03em',
     wordSpacing: '0.1em',
+    [`@media (min-width:${breakpoints.values.md}px)`]: {
+      fontSize: '2.75rem',
+    },
   },
   h2: {
     fontFamily: suitFamily,
     fontWeight: 700,
-    fontSize: '2.5rem',
+    fontSize: '1.5rem',
     lineHeight: 1.2,
     letterSpacing: '-0.02em',
     wordSpacing: '0.1em',
+    [`@media (min-width:${breakpoints.values.md}px)`]: {
+      fontSize: '2.5rem',
+    },
   },
   h3: {
     fontFamily: suitFamily,
     fontWeight: 500,
-    fontSize: '2rem',
+    fontSize: '1.375rem',
     lineHeight: 1.25,
     letterSpacing: '-0.01em',
     wordSpacing: '0.1em',
+    [`@media (min-width:${breakpoints.values.md}px)`]: {
+      fontSize: '2rem',
+    },
   },
   h4: {
     fontFamily: suitFamily,
@@ -114,11 +136,14 @@ const typography = {
     wordSpacing: '0.1em',
   },
 
-  // 본문 — SUIT (fontFamily 상속)
+  // 본문 — SUIT (모바일 기본 → md+ 데스크탑)
   body1: {
-    fontSize: '1.25rem',
+    fontSize: '1rem',
     lineHeight: 1.7,
     letterSpacing: '0',
+    [`@media (min-width:${breakpoints.values.md}px)`]: {
+      fontSize: '1.25rem',
+    },
   },
   body2: {
     fontSize: '1rem',
@@ -165,10 +190,13 @@ const typography = {
   display: {
     fontFamily: suitFamily,
     fontWeight: 700,
-    fontSize: 'clamp(4rem, 7vw, 4.5rem)',
+    fontSize: '2.25rem',
     lineHeight: 1.1,
     letterSpacing: '-0.01em',
     wordSpacing: '0.06em',
+    [`@media (min-width:${breakpoints.values.md}px)`]: {
+      fontSize: 'clamp(4rem, 7vw, 4.5rem)',
+    },
   },
 
   // 신규 variant — Code (IBM Plex Mono)
@@ -201,20 +229,7 @@ const shape = {
 };
 
 // ============================================================
-// 6. Breakpoints
-// ============================================================
-const breakpoints = {
-  values: {
-    xs: 0,
-    sm: 768,
-    md: 900,
-    lg: 1200,
-    xl: 1440,
-  },
-};
-
-// ============================================================
-// 7. Z-Index
+// 6. Z-Index
 // ============================================================
 const zIndex = {
   mobileStepper: 1000,

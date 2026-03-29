@@ -59,7 +59,7 @@ export function LandingSolution() {
           const Illustration = ILLUSTRATIONS[index];
           const colDelay = (index % 3) * COL_STAGGER;
           return (
-            <Grid key={vp.name} size={{ xs: 12, md: 4 }}>
+            <Grid key={vp.name} size={{ xs: 12, sm: 6, md: 4 }}>
               <AreaConstruct isTriggerOnView delay={colDelay}>
                 <Illustration delay={CONSTRUCT_OVERHEAD + colDelay} />
               </AreaConstruct>

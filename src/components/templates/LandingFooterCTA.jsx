@@ -35,13 +35,14 @@ export function LandingFooterCTA() {
           flexDirection: 'column',
           alignItems: 'center',
           textAlign: 'center',
-          py: { xs: 8, md: 16 },
+          py: { xs: 4, md: 16 },
         }}
       >
         <FadeTransition direction="up" isTriggerOnView threshold={0.3}>
           <VdlLogo
             size={96}
             sx={{
+              fontSize: { xs: 32, md: 64 },
               background: 'linear-gradient(135deg, var(--vdl-50), var(--vdl-100), var(--vdl-50))',
               backgroundSize: '200% auto',
               backgroundRepeat: 'repeat-x',
@@ -55,7 +56,7 @@ export function LandingFooterCTA() {
           <Typography
             variant="h1"
             component="p"
-            sx={{ fontWeight: 700, mt: { xs: 4, md: 5 } }}
+            sx={{ fontWeight: 700, mt: { xs: 3, md: 5 } }}
           >
             4월 7일 공식 오픈
           </Typography>
@@ -71,12 +72,13 @@ export function LandingFooterCTA() {
             sx={{
               ...GLASS_SX,
               display: 'flex',
+              flexDirection: { xs: 'column', sm: 'row' },
               alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: { xs: 3, md: 6 },
-              px: { xs: 4, md: 6 },
-              py: { xs: 4, md: 5 },
-              mt: { xs: 6, md: 8 },
+              justifyContent: { xs: 'center', sm: 'space-between' },
+              gap: { xs: 2, md: 6 },
+              px: { xs: 3, md: 6 },
+              py: { xs: 3, md: 5 },
+              mt: { xs: 4, md: 8 },
               width: '100%',
               maxWidth: 720,
               textDecoration: 'none',
@@ -84,17 +86,15 @@ export function LandingFooterCTA() {
               '&:hover': { borderColor: 'rgba(255,255,255,0.2)' },
             }}
           >
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 3, textAlign: 'left' }}>
-              <DiscordIcon size={36} />
-              <Box>
-                <Typography variant="h5" sx={{ fontWeight: 700, color: 'text.primary' }}>
-                  Vibe Design Lab — Discord
-                </Typography>
-              </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1.5, md: 3 }, textAlign: 'left' }}>
+              <DiscordIcon size={24} />
+              <Typography variant="h6" sx={{ fontWeight: 700, color: 'text.primary' }}>
+                Discord 커뮤니티
+              </Typography>
             </Box>
             <Typography
-              variant="body1"
-              sx={{ color: 'text.secondary', whiteSpace: 'nowrap', flexShrink: 0, fontWeight: 500 }}
+              variant="body2"
+              sx={{ color: 'text.secondary', whiteSpace: 'nowrap', flexShrink: 0, fontWeight: 500, display: { xs: 'none', sm: 'block' } }}
             >
               입장하기 →
             </Typography>

@@ -45,13 +45,24 @@ export function CourseDetailBenefits() {
                 <Stack spacing={2}>
                   <Typography
                     variant="h3"
-                    sx={{ fontWeight: 800, color: 'text.secondary' }}
+                    sx={{ fontWeight: 800, color: 'error.main' }}
                   >
                     {index + 1}
                   </Typography>
                   <Typography variant="h5" sx={{ fontWeight: 700 }}>
                     {item.title}
                   </Typography>
+                  {item.quote && (
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        fontWeight: 600,
+                        color: 'text.secondary',
+                      }}
+                    >
+                      &ldquo;{item.quote}&rdquo;
+                    </Typography>
+                  )}
                   <Typography
                     variant="body2"
                     sx={{ color: 'text.secondary', lineHeight: 1.7 }}

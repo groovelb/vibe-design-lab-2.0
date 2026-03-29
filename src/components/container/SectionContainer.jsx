@@ -23,7 +23,7 @@ export const SectionContainer = ({ children, isFullWidth = false, sx, ...props }
       component="section"
       sx={{
         width: '100%',
-        py: { xs: 8, md: 16 },
+        py: { xs: 6, md: 16 },
         ...sx
       }}
       {...props}

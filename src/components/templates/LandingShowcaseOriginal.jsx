@@ -23,7 +23,7 @@ function ShowcaseCard({ example, cardRef }) {
 		<Box
 			ref={cardRef}
 			sx={{
-				width: "calc(50vw - 80px)",
+				width: { xs: "calc(85vw - 32px)", md: "calc(50vw - 80px)" },
 				opacity: 0.5,
 				transition: "opacity 0.4s ease",
 			}}
