@@ -53,29 +53,29 @@ export function LandingProblem() {
             return (
               <Grid key={item.subtitle} size={{ xs: 12, md: 6 }}>
                 <Box sx={{ mixBlendMode: 'screen' }}>
-                  <AreaConstruct isTriggerOnView delay={colDelay}>
-                    <Box sx={{ width: '100%', aspectRatio: '4/3', overflow: 'hidden' }}>
-                      <Box
-                        component="video"
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        preload="none"
-                        poster={PERSONA_MEDIA[index].poster}
-                        sx={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover',
-                          display: 'block',
-                          filter: 'contrast(1.8) brightness(1.3)',
-                          ...(index >= 1 && { transform: 'translateY(24px)' }),
-                        }}
-                      >
-                        <source src={PERSONA_MEDIA[index].video} type="video/mp4" />
-                      </Box>
+                <AreaConstruct isTriggerOnView delay={colDelay}>
+                  <Box sx={{ width: '100%', aspectRatio: '4/3', overflow: 'hidden' }}>
+                    <Box
+                      component="video"
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      preload="none"
+                      poster={PERSONA_MEDIA[index].poster}
+                      sx={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        display: 'block',
+                        filter: 'contrast(1.8) brightness(1.3)',
+                        ...(index >= 1 && { transform: 'translateY(24px)' }),
+                      }}
+                    >
+                      <source src={PERSONA_MEDIA[index].video} type="video/mp4" />
                     </Box>
-                  </AreaConstruct>
+                  </Box>
+                </AreaConstruct>
                 </Box>
                 <Box sx={{ mt: 6 }}>
                   <ConstructType

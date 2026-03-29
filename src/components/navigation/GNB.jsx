@@ -84,10 +84,10 @@ const GNB = forwardRef(function GNB({
     justifyContent: 'space-between',
     height,
     px: { xs: 2, sm: 3, md: 4 },
-    backgroundColor: isTransparent ? 'transparent' : 'background.paper',
+    backgroundColor: 'transparent',
     borderBottom: hasBorder ? '1px solid' : 'none',
     borderColor: 'divider',
-    backdropFilter: isTransparent ? 'blur(12px)' : 'none',
+    backdropFilter: 'none',
     ...sx,
   };
 

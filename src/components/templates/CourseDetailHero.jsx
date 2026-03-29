@@ -32,7 +32,7 @@ const defaultCourse = COURSES[0];
 export function CourseDetailHero({
   hero = defaultHero,
   learningGoals = defaultLearningGoals,
-  course = defaultCourse,
+  enrollUrl,
 } = {}) {
   return (
     <SectionContainer isFullWidth sx={{ py: 0 }}>
@@ -50,7 +50,7 @@ export function CourseDetailHero({
           <Container maxWidth="xl">
             <FadeTransition direction="up" isTriggerOnView>
               <Typography
-                variant="body2"
+                variant="body1"
                 sx={{ color: 'error.main', fontWeight: 500, mb: 1.5 }}
               >
                 {hero.badge}
@@ -66,7 +66,6 @@ export function CourseDetailHero({
               }}
             >
               <CourseDetailHeroCopy
-                courseTitle={course.title}
                 subCopy={hero.subCopy}
                 description={hero.description}
               />
@@ -78,6 +77,7 @@ export function CourseDetailHero({
                 priceDiscount={hero.priceDiscount}
                 priceNote={hero.priceNote}
                 ctaLabel={hero.ctaLabel}
+                enrollUrl={enrollUrl}
               />
             </Box>
 

@@ -54,12 +54,12 @@ function ShowcaseCard({ example, cardRef }) {
 				</RatioContainer>
 			</AreaConstruct>
 			<Typography
-				variant="body1"
-				sx={{ mt: 1.5, color: "text.primary" }}
+				variant="h5"
+				sx={{ mt: 2, color: "text.primary" }}
 			>
 				{example.title}
 			</Typography>
-			<Typography variant="body2" sx={{ color: "text.secondary" }}>
+			<Typography variant="body1" sx={{ color: "text.secondary" }}>
 				{example.description}
 			</Typography>
 		</Box>

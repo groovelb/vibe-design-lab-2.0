@@ -20,7 +20,7 @@ const ERASE_SPEED = 30;
  * <VdlLogo size={24} isExtend />
  * <VdlLogo size={14} isExtend={false} />
  */
-function VdlLogo({ size = 18, isExtend = true }) {
+function VdlLogo({ size = 18, isExtend = true, sx }) {
   const hasMounted = useRef(false);
   const timerRef = useRef(null);
   const posRef = useRef(isExtend ? LOGO_TEXT.length : 1);
@@ -103,12 +103,14 @@ function VdlLogo({ size = 18, isExtend = true }) {
         fontWeight: 900,
         fontSize: size,
         letterSpacing: '-0.02em',
+        wordSpacing:'0.15em',
         color: 'text.primary',
         whiteSpace: 'nowrap',
         display: 'inline-flex',
         alignItems: 'center',
         lineHeight: 1,
         userSelect: 'none',
+        ...sx,
       }}
     >
       {text}

@@ -25,7 +25,7 @@ const { cta, hero } = PAGES.courseDetail;
  * Example usage:
  * <CourseDetailCTA ref={ctaRef} />
  */
-const CourseDetailCTA = forwardRef(function CourseDetailCTA(props, ref) {
+const CourseDetailCTA = forwardRef(function CourseDetailCTA({ enrollUrl, ...props }, ref) {
   return (
     <SectionContainer ref={ref} id="enroll">
       {/* 헤더 */}
@@ -143,7 +143,15 @@ const CourseDetailCTA = forwardRef(function CourseDetailCTA(props, ref) {
                 {hero.priceNote}
               </Typography>
             </Stack>
-            <Button variant="contained" color="error" size="large" sx={{ flexShrink: 0 }}>
+            <Button
+              variant="contained"
+              color="error"
+              size="large"
+              href={enrollUrl || '#enroll'}
+              target={enrollUrl ? '_blank' : undefined}
+              rel={enrollUrl ? 'noopener noreferrer' : undefined}
+              sx={{ flexShrink: 0 }}
+            >
               {cta.ctaLabel}
             </Button>
           </Stack>

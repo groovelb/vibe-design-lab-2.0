@@ -51,7 +51,7 @@ export function CourseDetailRole() {
                     <GeometricX
                       size={28}
                       strokeWidth={2}
-                      color="var(--vdl-500)"
+                      color="var(--mui-palette-error-main)"
                       delay={index * 120 + 300}
                     />
                     <Typography

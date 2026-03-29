@@ -74,7 +74,7 @@ const AccordionSection = forwardRef(function AccordionSection({
             <AccordionSummary
               expandIcon={
                 <ChevronDown
-                  size={variant === 'curriculum' ? 28 : 20}
+                  size={28}
                   style={{
                     transition: 'transform 200ms ease',
                   }}
@@ -82,7 +82,7 @@ const AccordionSection = forwardRef(function AccordionSection({
               }
               sx={{
                 px: 0,
-                py: variant === 'curriculum' ? { xs: 3, md: 4 } : 2,
+                py: { xs: 3, md: 4 },
                 minHeight: 'unset',
                 color: 'text.primary',
                 '& .MuiAccordionSummary-expandIconWrapper': {
@@ -110,17 +110,25 @@ const AccordionSection = forwardRef(function AccordionSection({
                     <Typography variant="h3" sx={{ fontWeight: 700 }}>
                       {item.title}
                     </Typography>
+                    {item.openDate && (
+                      <Typography
+                        variant="caption"
+                        sx={{ color: 'text.secondary', flexShrink: 0 }}
+                      >
+                        {item.openDate}
+                      </Typography>
+                    )}
                   </Stack>
                   <Stack spacing={0.5}>
                     {item.description && (
                       <Stack direction="row" spacing={3} alignItems="center">
                         <Typography
-                          variant="body2"
+                          variant="body1"
                           sx={{ color: 'text.secondary', flexShrink: 0, fontWeight: 500, minWidth: { md: 72 } }}
                         >
                           요약
                         </Typography>
-                        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                        <Typography variant="body1" sx={{ color: 'text.secondary' }}>
                           {item.description}
                         </Typography>
                       </Stack>
@@ -128,12 +136,12 @@ const AccordionSection = forwardRef(function AccordionSection({
                     {item.goal && (
                       <Stack direction="row" spacing={3} alignItems="center">
                         <Typography
-                          variant="body2"
+                          variant="body1"
                           sx={{ color: 'text.secondary', flexShrink: 0, fontWeight: 500, minWidth: { md: 72 } }}
                         >
                           목표
                         </Typography>
-                        <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 500 }}>
+                        <Typography variant="body1" sx={{ color: 'text.secondary', fontWeight: 500 }}>
                           {item.goal}
                         </Typography>
                       </Stack>
@@ -141,7 +149,7 @@ const AccordionSection = forwardRef(function AccordionSection({
                   </Stack>
                 </Stack>
               ) : (
-                <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                <Typography variant="h4" sx={{ fontWeight: 500 }}>
                   {item.question || item.title}
                 </Typography>
               )}
@@ -149,7 +157,7 @@ const AccordionSection = forwardRef(function AccordionSection({
             <AccordionDetails
               sx={{
                 px: 0,
-                pb: variant === 'curriculum' ? 8 : 3,
+                pb: 8,
                 pt: 0,
               }}
             >
@@ -170,7 +178,7 @@ const AccordionSection = forwardRef(function AccordionSection({
                           >
                             {chapter.label}
                           </Typography>
-                          <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                          <Typography variant="body1" sx={{ fontWeight: 600 }}>
                             {chapter.title}
                           </Typography>
                         </Stack>
@@ -179,7 +187,7 @@ const AccordionSection = forwardRef(function AccordionSection({
                           {chapter.parts.map((part, partIndex) => (
                             <Typography
                               key={`${id}-ch-${chIndex}-p-${partIndex}`}
-                              variant="body2"
+                              variant="body1"
                               sx={{ color: 'text.secondary' }}
                             >
                               · {part.title}

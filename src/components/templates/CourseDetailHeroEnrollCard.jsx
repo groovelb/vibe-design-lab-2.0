@@ -30,6 +30,7 @@ export function CourseDetailHeroEnrollCard({
   priceDiscount,
   priceNote,
   ctaLabel,
+  enrollUrl,
 }) {
   return (
     <Box sx={{ flex: '1 1 auto', ...GLASS_SX }}>
@@ -97,7 +98,9 @@ export function CourseDetailHeroEnrollCard({
               variant="contained"
               color="error"
               size="large"
-              href="#enroll"
+              href={enrollUrl || '#enroll'}
+              target={enrollUrl ? '_blank' : undefined}
+              rel={enrollUrl ? 'noopener noreferrer' : undefined}
               fullWidth
               sx={{ py: 2.5, fontSize: '1.125rem', fontWeight: 700 }}
             >

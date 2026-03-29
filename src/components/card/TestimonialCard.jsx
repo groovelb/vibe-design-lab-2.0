@@ -52,6 +52,11 @@ const TestimonialCard = forwardRef(function TestimonialCard({
   const isCompact = variant === 'compact';
   const displayQuote = isCompact && quoteShort ? quoteShort : quote;
   const imgSrc = typeof thumbnailSrc === 'string' ? thumbnailSrc : thumbnailSrc?.src;
+  const isVideo = typeof imgSrc === 'string' && /\.(mp4|webm|mov)$/i.test(imgSrc);
+
+  const mediaSx = mediaRatio === 'auto'
+    ? { display: 'block', width: '100%', height: 'auto', objectFit: 'contain', aspectRatio: 'auto' }
+    : { width: '100%', aspectRatio: mediaRatio, objectFit: 'cover', display: 'block' };
 
   return (
     <Box
@@ -66,15 +71,24 @@ const TestimonialCard = forwardRef(function TestimonialCard({
     >
       {/* 썸네일 */}
       {imgSrc ? (
-        <Box
-          component="img"
-          src={imgSrc}
-          alt={thumbnailAlt || `${memberName}의 결과물`}
-          sx={mediaRatio === 'auto'
-            ? { display: 'block', width: '100%', height: 'auto', objectFit: 'contain', aspectRatio: 'auto' }
-            : { width: '100%', aspectRatio: mediaRatio, objectFit: 'cover', display: 'block' }
-          }
-        />
+        isVideo ? (
+          <Box
+            component="video"
+            src={imgSrc}
+            autoPlay
+            loop
+            muted
+            playsInline
+            sx={mediaSx}
+          />
+        ) : (
+          <Box
+            component="img"
+            src={imgSrc}
+            alt={thumbnailAlt || `${memberName}의 결과물`}
+            sx={mediaSx}
+          />
+        )
       ) : (
         <Box
           sx={{

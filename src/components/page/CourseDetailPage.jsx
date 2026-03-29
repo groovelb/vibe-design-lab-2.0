@@ -16,7 +16,8 @@ import { FloatingCTA } from '../navigation/FloatingCTA';
 import { PageContainer } from '../layout/PageContainer';
 import { PAGES } from '../../data/contents';
 
-const { floatingCta, hero } = PAGES.courseDetail;
+const { floatingCta, hero, cta } = PAGES.courseDetail;
+const ENROLL_URL = 'https://forms.gle/HSbH3j3McYVqsHe29';
 
 /**
  * CourseDetailPage 컴포넌트
@@ -36,7 +37,7 @@ export function CourseDetailPage() {
 
   return (
     <PageContainer>
-      <CourseDetailHero />
+      <CourseDetailHero enrollUrl={ENROLL_URL} />
       <CourseDetailTargetAudience />
       <CourseDetailReview />
       {/* <CourseDetailVision /> */}
@@ -47,11 +48,14 @@ export function CourseDetailPage() {
       <CourseDetailFAQ />
       <CourseDetailInstructor />
 
-      <CourseDetailCTA ref={ctaRef} />
+      <CourseDetailCTA ref={ctaRef} enrollUrl={ENROLL_URL} />
       <FloatingCTA
-        label={floatingCta.label}
-        href="#enroll"
-        subText={hero.price}
+        label={hero.ctaLabel}
+        href={ENROLL_URL}
+        target="_blank"
+        title="Vibe Design Starter Kit"
+        subText={hero.priceDiscount}
+        inquiryLabel="문의하기"
         hideWhenVisible={ctaRef}
       />
     </PageContainer>

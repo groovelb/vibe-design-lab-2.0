@@ -47,6 +47,7 @@ function HorizontalScrollContainer({
   const containerRef = useRef(null);
   const trackRef = useRef(null);
   const [scrollDistance, setScrollDistance] = useState(0);
+  const [windowHeight, setWindowHeight] = useState(0);
 
   /** 이산 스냅용 motionValue — snap index 변경 시 spring 애니메이션 */
   const x = useMotionValue(0);
@@ -59,6 +60,7 @@ function HorizontalScrollContainer({
       if (!trackRef.current) return;
       const trackWidth = trackRef.current.getBoundingClientRect().width;
       const viewportWidth = window.innerWidth;
+      setWindowHeight(window.innerHeight);
       setScrollDistance(Math.max(0, trackWidth - viewportWidth));
     };
 
@@ -68,7 +70,7 @@ function HorizontalScrollContainer({
   }, [children, gap, padding]);
 
   // 세로 스크롤 영역 높이 = 뷰포트 높이 + 가로 이동 거리 (px)
-  const containerHeight = window.innerHeight + scrollDistance;
+  const containerHeight = windowHeight + scrollDistance;
 
   // 스크롤 진행도 추적
   const { scrollYProgress } = useScroll({

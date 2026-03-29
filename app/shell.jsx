@@ -1,14 +1,16 @@
 'use client';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
+import Link from 'next/link';
+
 import { AppShell } from '@/components/layout/AppShell';
 import { NavMenu } from '@/components/navigation/NavMenu';
+import { VdlLogo } from '@/components/typography/VdlLogo';
 import { AmbientGrainedBackground } from '@/components/dynamic-color/AmbientGrainedBackground';
 import { GNB as GNB_DATA } from '@/data/contents';
 
 const navItems = GNB_DATA.menus.map((menu) => ({
   id: menu.href,
   label: menu.label,
+  href: menu.href,
 }));
 
 /**
@@ -30,21 +32,28 @@ export default function SiteShell({ children }) {
     <AppShell
       sx={{ position: 'relative' }}
       logo={
-        <Typography variant="h6" sx={{ fontFamily: 'Inter, sans-serif', fontWeight: 800, letterSpacing: '-0.02em', textTransform: 'uppercase' }}>
-          {GNB_DATA.logo}
-        </Typography>
+        <Link href="/" style={{ textDecoration: 'none' }}>
+          <VdlLogo size={16} />
+        </Link>
       }
       headerCollapsible={
-        <NavMenu items={navItems} variant="underline" />
-      }
-      headerPersistent={
-        <Button
-          variant="contained"
-          size="small"
-          sx={{ display: { xs: 'none', sm: 'flex' } }}
-        >
-          {GNB_DATA.cta}
-        </Button>
+        <NavMenu
+          items={navItems}
+          linkComponent={Link}
+          size="md"
+          sx={{
+            gap: 0.5,
+            '& [role="menuitem"]': {
+              color: 'text.secondary',
+              fontWeight: 400,
+              fontSize: 14,
+              letterSpacing: '0.02em',
+              backgroundColor: 'transparent !important',
+              '&:hover': { color: 'text.primary', backgroundColor: 'transparent !important' },
+              '&[aria-current="page"]': { color: 'text.primary', fontWeight: 500, backgroundColor: 'transparent !important' },
+            },
+          }}
+        />
       }
       isHeaderTransparent
       hasHeaderBorder={false}

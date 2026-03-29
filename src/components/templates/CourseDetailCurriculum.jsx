@@ -14,12 +14,16 @@ import curriculumJson from '../../data/program/vdsk_online_curriculum.json';
 
 const { curriculum } = PAGES.courseDetail;
 
+/** 섹션별 오픈 날짜 (S1: 4/7, 이후 매주 월요일) */
+const SECTION_OPEN_DATES = ['4/7 오픈', '4/14 오픈', '4/21 오픈', '4/28 오픈', '5/5 오픈', '5/12 오픈'];
+
 /** JSON sections → AccordionSection items 변환 */
-const CURRICULUM_ITEMS = curriculumJson.sections.map((section) => ({
+const CURRICULUM_ITEMS = curriculumJson.sections.map((section, index) => ({
   id: section.id,
   title: section.title,
   description: section.context?.description || null,
   goal: section.context?.goal || null,
+  openDate: SECTION_OPEN_DATES[index] || null,
   chapters: section.chapters.map((ch, chIndex) => ({
     label: `Ch${chIndex + 1}`,
     title: ch.title,
@@ -81,10 +85,10 @@ export function CourseDetailCurriculum() {
                   flex: 1,
                 }}
               >
-                <Typography variant="caption" sx={{ fontWeight: 700, color: 'text.secondary' }}>
+                <Typography variant="body1" sx={{ fontWeight: 700, color: 'text.secondary' }}>
                   {tool.label}
                 </Typography>
-                <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: 13 }}>
+                <Typography variant="body1" sx={{ color: 'text.secondary', fontSize: 13 }}>
                   {tool.description}
                 </Typography>
                 <Stack direction="row" spacing={1} flexWrap="wrap" sx={{ mt: 0.5 }}>

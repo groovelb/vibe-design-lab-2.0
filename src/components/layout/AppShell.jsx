@@ -84,6 +84,7 @@ const AppShell = forwardRef(function AppShell({
           display: 'flex',
           flexDirection: 'column',
           minWidth: 0,
+          ...(isHeaderTransparent && { marginTop: `-${headerHeight}px` }),
         }}
       >
         {children}

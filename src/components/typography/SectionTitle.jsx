@@ -27,7 +27,7 @@ const SectionTitle = forwardRef(function SectionTitle({
       <Typography
         variant="h2"
         component="h2"
-        sx={{ fontWeight: 800 }}
+        sx={{ fontWeight: 700 }}
       >
         {headline}
       </Typography>

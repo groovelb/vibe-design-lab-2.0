@@ -181,6 +181,11 @@ export const PAGES = {
     footerCta: {
       headline: '시작합니다',
       cta: '코스 보기',
+      discord: {
+        label: '커뮤니티',
+        headline: '오픈 전, 디스코드에서 먼저 시작하기',
+        cta: 'Discord 입장하기',
+      },
     },
   },
 
@@ -468,12 +473,10 @@ export const COMPARISON_TABLE = [
 export const GNB = {
   logo: _BRAND.name,
   menus: [
-    { label: 'Course', href: '/course' },
+    { label: 'Course', href: '/course/starter-kit' },
     { label: 'Dictionary', href: '/dictionary' },
     { label: 'Experiment', href: '/experiment' },
-    { label: 'Story', href: '/story' },
   ],
-  cta: '코스 보기',
 };
 
 export const FOOTER = {

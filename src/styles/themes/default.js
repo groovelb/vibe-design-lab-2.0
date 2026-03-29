@@ -46,7 +46,7 @@ const customShadows = {
 // ============================================================
 
 // 폰트 패밀리 상수
-const suitFamily = 'var(--font-suit, "SUIT Variable"), SUIT, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif';
+const suitFamily = 'var(--font-suit, "Pretendard Variable"), "Pretendard Variable", -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif';
 const brandFamily = 'var(--font-brand, "Inter"), "Inter", sans-serif';
 const codeFamily = 'var(--font-mono, "IBM Plex Mono"), "IBM Plex Mono", monospace';
 
@@ -116,12 +116,12 @@ const typography = {
 
   // 본문 — SUIT (fontFamily 상속)
   body1: {
-    fontSize: '1rem',
+    fontSize: '1.25rem',
     lineHeight: 1.7,
     letterSpacing: '0',
   },
   body2: {
-    fontSize: '0.85rem',
+    fontSize: '1rem',
     lineHeight: 1.7,
     letterSpacing: '0',
   },
@@ -167,7 +167,7 @@ const typography = {
     fontWeight: 700,
     fontSize: 'clamp(4rem, 7vw, 4.5rem)',
     lineHeight: 1.1,
-    letterSpacing: '-0.04em',
+    letterSpacing: '-0.01em',
     wordSpacing: '0.06em',
   },
 

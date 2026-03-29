@@ -12,7 +12,7 @@ import Box from '@mui/material/Box';
  * 1. footer가 뷰포트 하단에 있을 때 translateY(-50%) 상태 (콘텐츠 뒤에 숨음)
  * 2. 스크롤에 따라 translateY(0)으로 슬라이드업
  * 3. background.default 오버레이가 페이드아웃되며 footerBg 색상이 드러남
- * 4. 메인 콘텐츠(children)는 z-index: 20으로 footer 위에 표시됨
+ * 4. footer는 z-index: -1로 콘텐츠 뒤에 배치 (콘텐츠에 stacking context를 만들지 않아 blend mode 관통 가능)
  *
  * @param {ReactNode} children - 메인 콘텐츠 [Required]
  * @param {ReactNode} footer - 슬라이드업 효과가 적용될 footer 콘텐츠 [Required]
@@ -51,16 +51,18 @@ export function FooterShifting({ children, footer, sx, ...props }) {
   }, []);
 
   return (
-    <Box sx={{ position: 'relative', ...sx }} {...props}>
-      {/* 메인 콘텐츠 — footer 위에 표시 */}
-      <Box sx={{ position: 'relative', zIndex: 20 }}>
+    <Box sx={{ position: 'relative', zIndex: 0, ...sx }} {...props}>
+      {/* 메인 콘텐츠 — stacking context 없이 blend mode 관통 허용 */}
+      <Box sx={{ position: 'relative' }}>
         {children}
       </Box>
 
-      {/* 슬라이드업 footer */}
+      {/* 슬라이드업 footer — negative z-index로 콘텐츠 뒤에 배치 */}
       <Box
         ref={footerRef}
         sx={{
+          position: 'relative',
+          zIndex: -1,
           minHeight: '100svh',
           overflow: 'hidden',
           display: 'flex',
