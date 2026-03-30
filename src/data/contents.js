@@ -334,6 +334,11 @@ export const PAGES = {
           description: '디자인 시스템 친화적 스택',
           badges: ['Next.js', 'React.js', 'Storybook', 'MUI'],
         },
+        {
+          label: '옵션',
+          description: '필수는 아니지만, 다루는 내용들',
+          badges: ['Figma', 'Midjourney', 'Gemini'],
+        },
       ],
     },
     benefits: {

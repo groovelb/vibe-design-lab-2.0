@@ -57,6 +57,37 @@ export const TECH_BADGE_ICONS = {
 			/>
 		</svg>
 	),
+	Midjourney: (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			fill="currentColor"
+			width="14"
+			height="14"
+		>
+			<path d="M3.495 2h2.183a.5.5 0 0 1 .39.187l5.82 7.267a.5.5 0 0 0 .778.003l5.86-7.274A.5.5 0 0 1 18.917 2h2.182a.5.5 0 0 1 .39.813l-8.123 10.2a.5.5 0 0 0-.025.596l5.621 8.382a.5.5 0 0 1-.416.777h-2.32a.5.5 0 0 1-.415-.22l-3.81-5.648a.5.5 0 0 0-.83 0l-3.81 5.649a.5.5 0 0 1-.416.22H4.627a.5.5 0 0 1-.416-.778l5.62-8.382a.5.5 0 0 0-.024-.596L1.683 2.813A.5.5 0 0 1 2.074 2z" />
+		</svg>
+	),
+	Gemini: (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			fill="none"
+			width="14"
+			height="14"
+		>
+			<path
+				d="M12 2C12 7.52 7.52 12 2 12c5.52 0 10 4.48 10 10 0-5.52 4.48-10 10-10-5.52 0-10-4.48-10-10z"
+				fill="url(#gemini-grad)"
+			/>
+			<defs>
+				<linearGradient id="gemini-grad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+					<stop stopColor="#4285F4" />
+					<stop offset="1" stopColor="#886FBF" />
+				</linearGradient>
+			</defs>
+		</svg>
+	),
 	MUI: (
 		<svg
 			viewBox="0 0 24 24"
