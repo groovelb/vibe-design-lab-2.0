@@ -3,6 +3,8 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { Check } from 'lucide-react';
 import { SectionContainer } from '../container/SectionContainer';
 import { SectionDivider } from '../typography/SectionDivider';
@@ -25,6 +27,9 @@ const { showcase } = PAGES.courseDetail;
  * <CourseDetailShowcase />
  */
 export function CourseDetailShowcase() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
     <SectionContainer>
       <FadeTransition direction="up" isTriggerOnView threshold={0.5}>
@@ -43,7 +48,7 @@ export function CourseDetailShowcase() {
           </Typography>
           <Typography
             variant="body1"
-            sx={{ color: 'text.secondary', whiteSpace: 'pre-line', lineHeight: 1.7 }}
+            sx={{ color: 'text.secondary', whiteSpace: { xs: 'normal', md: 'pre-line' }, lineHeight: 1.7 }}
           >
             {showcase.description}
           </Typography>
@@ -51,9 +56,21 @@ export function CourseDetailShowcase() {
       </FadeTransition>
 
       {/* 프로젝트 카드 3칼럼 — gap 24px (프로덕션 동일) */}
-      <Grid container spacing={3}>
+      <Grid container spacing={{ xs: 0, sm: 3 }}>
         {SHOWCASE_PORTFOLIO.map((item, index) => (
-          <Grid key={item.id} size={{ xs: 12, sm: 6, md: 4 }}>
+          <Grid
+            key={item.id}
+            size={{ xs: 12, sm: 6, md: 4 }}
+            sx={{
+              /* 모바일: 카드 사이 border + 간격 */
+              ...(isMobile && index > 0 && {
+                borderTop: 1,
+                borderColor: 'divider',
+                pt: 4,
+                mt: 4,
+              }),
+            }}
+          >
             <FadeTransition
               direction="up"
               delay={(index % 3) * COL_STAGGER}
@@ -75,6 +92,8 @@ export function CourseDetailShowcase() {
                       aspectRatio: '3/2',
                       objectFit: 'cover',
                       display: 'block',
+                      border: 1,
+                      borderColor: 'divider',
                     }}
                   />
                 ) : (
@@ -87,12 +106,15 @@ export function CourseDetailShowcase() {
                     }}
                   />
                 )}
-                {/* 타이틀 */}
-                <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                {/* 타이틀 — 모바일 한 단계 축소 */}
+                <Typography
+                  variant={isMobile ? 'subtitle1' : 'h6'}
+                  sx={{ fontWeight: 700 }}
+                >
                   {item.title}
                 </Typography>
                 {/* 체크리스트 */}
-                <Stack spacing={1}>
+                <Stack spacing={0.5}>
                   {item.tags.map((tag) => (
                     <Stack key={tag} direction="row" spacing={1} alignItems="center">
                       <Check size={16} />

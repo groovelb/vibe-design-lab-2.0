@@ -138,16 +138,16 @@ export const TARGET_PERSONAS = [
     role: '프론트엔드·1인 개발자',
     videoSrc: new URL('../assets/audiance/a2.mp4', import.meta.url).href,
     descriptions: [
-      '바이브 코딩환경에서 디자인 능력 향상.',
-      '기획·디자인까지 1인 서비스 운영 역량.',
+      '디자인 능력 향상.',
+      '1인 서비스 운영 역량.',
     ],
   },
   {
     role: '팀 리드·PM',
     videoSrc: new URL('../assets/audiance/a3.mp4', import.meta.url).href,
     descriptions: [
-      '팀내 AI 협업 방식을 체계화하고 싶음.',
-      '바이브 코딩 프로세스를 최적화하고 싶음.',
+      'AI 협업 방식 체계화.',
+      '바이브 코딩 프로세스 최적화.',
     ],
   },
 ];
