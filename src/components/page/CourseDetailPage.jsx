@@ -1,5 +1,6 @@
 'use client';
 import { useRef } from 'react';
+import Box from '@mui/material/Box';
 import { CourseDetailHero } from '../templates/CourseDetailHero';
 import { CourseDetailTargetAudience } from '../templates/CourseDetailTargetAudience';
 import { CourseDetailReview } from '../templates/CourseDetailReview';
@@ -33,11 +34,14 @@ const ENROLL_URL = 'https://forms.gle/HSbH3j3McYVqsHe29';
  * <CourseDetailPage />
  */
 export function CourseDetailPage() {
+  const heroRef = useRef(null);
   const ctaRef = useRef(null);
 
   return (
     <PageContainer>
-      <CourseDetailHero enrollUrl={ENROLL_URL} />
+      <Box ref={heroRef}>
+        <CourseDetailHero enrollUrl={ENROLL_URL} />
+      </Box>
       <CourseDetailTargetAudience />
       <CourseDetailReview />
       {/* <CourseDetailVision /> */}
@@ -56,6 +60,8 @@ export function CourseDetailPage() {
         title="Vibe Design Starter Kit"
         subText={hero.priceDiscount}
         inquiryLabel="문의하기"
+        inquiryHref="https://open.kakao.com/o/soQF9geh"
+        showAfterHidden={heroRef}
         hideWhenVisible={ctaRef}
       />
     </PageContainer>

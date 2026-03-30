@@ -43,7 +43,7 @@ export function CourseDetailHeroCopy({ subCopy, description }) {
       </FadeTransition>
 
       <FadeTransition direction="up" delay={200} isTriggerOnView>
-        <Box sx={{ mt: { xs: 6, md: 12 }, maxWidth: { xs: '100%', md: '75%' } }}>
+        <Box sx={{ mt: { xs: 20, md: 12 }, maxWidth: { xs: '100%', md: '75%' } }}>
           <Typography
             variant="h3"
             sx={{

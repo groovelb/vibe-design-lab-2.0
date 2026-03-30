@@ -21,6 +21,7 @@ import { MessageSquare } from 'lucide-react';
  * @param {string} inquiryLabel - 문의 버튼 텍스트 [Optional]
  * @param {string} inquiryHref - 문의 링크 [Optional]
  * @param {object} hideWhenVisible - 이 요소가 뷰포트에 보이면 CTA 숨김 (ref 객체) [Optional]
+ * @param {object} showAfterHidden - 이 요소가 뷰포트에서 사라진 후에만 CTA 표시 (ref 객체) [Optional]
  * @param {object} sx - 추가 스타일 [Optional]
  *
  * Example usage:
@@ -41,25 +42,34 @@ const FloatingCTA = forwardRef(function FloatingCTA({
   inquiryLabel,
   inquiryHref,
   hideWhenVisible,
+  showAfterHidden,
   sx,
   ...props
 }, ref) {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isGateGone, setIsGateGone] = useState(!showAfterHidden);
+  const [isTargetHidden, setIsTargetHidden] = useState(true);
+
+  useEffect(() => {
+    if (!showAfterHidden?.current) { setIsGateGone(true); return; }
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsGateGone(!entry.isIntersecting),
+      { threshold: 0.1 },
+    );
+    observer.observe(showAfterHidden.current);
+    return () => observer.disconnect();
+  }, [showAfterHidden]);
 
   useEffect(() => {
     if (!hideWhenVisible?.current) return;
-
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsVisible(!entry.isIntersecting);
-      },
-      { threshold: 0.1 }
+      ([entry]) => setIsTargetHidden(!entry.isIntersecting),
+      { threshold: 0.1 },
     );
-
     observer.observe(hideWhenVisible.current);
-
     return () => observer.disconnect();
   }, [hideWhenVisible]);
+
+  const isVisible = isGateGone && isTargetHidden;
 
   return (
     <Box
@@ -126,6 +136,8 @@ const FloatingCTA = forwardRef(function FloatingCTA({
                 variant="outlined"
                 size="small"
                 href={inquiryHref}
+                target="_blank"
+                rel="noopener noreferrer"
                 startIcon={<MessageSquare size={14} />}
                 sx={{
                   borderColor: 'divider',

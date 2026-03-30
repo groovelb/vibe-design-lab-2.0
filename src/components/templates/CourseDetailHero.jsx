@@ -51,7 +51,7 @@ export function CourseDetailHero({
             <FadeTransition direction="up" isTriggerOnView>
               <Typography
                 variant="body1"
-                sx={{ color: 'error.main', fontWeight: 500, mb: 1.5 }}
+                sx={{ color: 'error.main', fontWeight: 500, mb: 0.5 }}
               >
                 {hero.badge}
               </Typography>
