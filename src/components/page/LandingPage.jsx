@@ -5,6 +5,7 @@ import { LandingWhyVibeDesign } from '../templates/LandingWhyVibeDesign';
 import { LandingShowcase } from '../templates/LandingShowcase';
 import { LandingSolution } from '../templates/LandingSolution';
 import { LandingLearningMethod } from '../templates/LandingLearningMethod';
+import { CourseDetailInstructor } from '../templates/CourseDetailInstructor';
 import { LandingCourseHighlight } from '../templates/LandingCourseHighlight';
 import { LandingCourseReview } from '../templates/LandingCourseReview';
 import { LandingFooterCTA } from '../templates/LandingFooterCTA';
@@ -33,6 +34,7 @@ export function LandingPage() {
       <LandingWhyVibeDesign />
       <LandingShowcase />
       <LandingSolution />
+      <CourseDetailInstructor />
       <LandingLearningMethod />
       <LandingCourseHighlight />
       <LandingCourseReview />

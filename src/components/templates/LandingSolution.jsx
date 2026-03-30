@@ -6,8 +6,11 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Grid';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import CloseIcon from '@mui/icons-material/Close';
 import { SectionContainer } from '../container/SectionContainer';
+import { PeekScroll } from '../container/PeekScroll';
 import LineGrid from '../layout/LineGrid';
 import { SectionDivider } from '../typography/SectionDivider';
 import { SectionTitle } from '../typography/SectionTitle';
@@ -40,6 +43,8 @@ const { howDifferent } = PAGES.landing;
  * <LandingSolution />
  */
 export function LandingSolution() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [openIndex, setOpenIndex] = useState(null);
 
   const activeDetail = openIndex !== null ? howDifferent.details?.[openIndex] : null;
@@ -53,36 +58,67 @@ export function LandingSolution() {
         sx={{ mb: { xs: 6, md: 10 } }}
       />
 
-      {/* 가치 제안 — 3컬럼 + 자세히 버튼 */}
-      <LineGrid container gap={{ xs: 48, md: 96 }} borderColor="divider">
-        {VALUE_PROPOSITIONS.map((vp, index) => {
-          const Illustration = ILLUSTRATIONS[index];
-          const colDelay = (index % 3) * COL_STAGGER;
-          return (
-            <Grid key={vp.name} size={{ xs: 12, sm: 6, md: 4 }}>
-              <AreaConstruct isTriggerOnView delay={colDelay}>
-                <Illustration delay={CONSTRUCT_OVERHEAD + colDelay} />
-              </AreaConstruct>
-              <Box sx={{ mt: 6 }}>
-                <ConstructType
-                  text={vp.name}
-                  variant="h4"
-                  typingSpeed={20}
-                  delay={colDelay + VISUAL_LEAD}
-                  sx={{ '& .MuiTypography-root': { fontWeight: 900, textTransform: 'uppercase' } }}
-                />
-                <ConstructBlock
-                  text={vp.description}
-                  variant="body1"
-                  duration={800}
-                  delay={colDelay + VISUAL_LEAD + 200}
-                  sx={{ mt: 1 }}
-                />
+      {/* 가치 제안 — 모바일: PeekScroll / 데스크톱: 3컬럼 LineGrid */}
+      {isMobile ? (
+        <PeekScroll peek={40} gap={16}>
+          {VALUE_PROPOSITIONS.map((vp, index) => {
+            const Illustration = ILLUSTRATIONS[index];
+            return (
+              <Box key={vp.name}>
+                <AreaConstruct isTriggerOnView>
+                  <Illustration delay={CONSTRUCT_OVERHEAD} />
+                </AreaConstruct>
+                <Box sx={{ mt: 6 }}>
+                  <ConstructType
+                    text={vp.name}
+                    variant="h4"
+                    typingSpeed={20}
+                    delay={VISUAL_LEAD}
+                    sx={{ '& .MuiTypography-root': { fontWeight: 900, textTransform: 'uppercase' } }}
+                  />
+                  <ConstructBlock
+                    text={vp.description}
+                    variant="body1"
+                    duration={800}
+                    delay={VISUAL_LEAD + 200}
+                    sx={{ mt: 1 }}
+                  />
+                </Box>
               </Box>
-            </Grid>
-          );
-        })}
-      </LineGrid>
+            );
+          })}
+        </PeekScroll>
+      ) : (
+        <LineGrid container gap={{ xs: 48, md: 96 }} borderColor="divider">
+          {VALUE_PROPOSITIONS.map((vp, index) => {
+            const Illustration = ILLUSTRATIONS[index];
+            const colDelay = (index % 3) * COL_STAGGER;
+            return (
+              <Grid key={vp.name} size={{ xs: 12, sm: 6, md: 4 }}>
+                <AreaConstruct isTriggerOnView delay={colDelay}>
+                  <Illustration delay={CONSTRUCT_OVERHEAD + colDelay} />
+                </AreaConstruct>
+                <Box sx={{ mt: 6 }}>
+                  <ConstructType
+                    text={vp.name}
+                    variant="h4"
+                    typingSpeed={20}
+                    delay={colDelay + VISUAL_LEAD}
+                    sx={{ '& .MuiTypography-root': { fontWeight: 900, textTransform: 'uppercase' } }}
+                  />
+                  <ConstructBlock
+                    text={vp.description}
+                    variant="body1"
+                    duration={800}
+                    delay={colDelay + VISUAL_LEAD + 200}
+                    sx={{ mt: 1 }}
+                  />
+                </Box>
+              </Grid>
+            );
+          })}
+        </LineGrid>
+      )}
 
       {/* 상세 모달 */}
       <Dialog

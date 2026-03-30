@@ -142,12 +142,18 @@ const CourseDetailCard = forwardRef(function CourseDetailCard({
               title={title}
               subtitle={subtitle}
               description={description}
+              sx={{
+                /* 모바일: description 숨김, title·subtitle 한 단계 축소 */
+                '& > .MuiTypography-body1': { display: { xs: 'none', md: 'block' } },
+                '& .MuiTypography-h3': { fontSize: { xs: '1.25rem', md: undefined } },
+                '& .MuiTypography-h4': { fontSize: { xs: '1.125rem', md: undefined } },
+              }}
             />
 
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }} />
 
             {highlights && highlights.length > 0 && (
-              <Stack spacing={0.5}>
+              <Stack spacing={0.5} sx={{ display: { xs: 'none', md: 'flex' } }}>
                 {highlights.map((item, i) => (
                   <Stack key={i} direction="row" spacing={1.5} alignItems="baseline">
                     <Typography

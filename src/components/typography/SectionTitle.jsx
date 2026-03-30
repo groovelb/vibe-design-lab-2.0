@@ -27,7 +27,7 @@ const SectionTitle = forwardRef(function SectionTitle({
       <Typography
         variant="h2"
         component="h2"
-        sx={{ fontWeight: 700 }}
+        sx={{ fontWeight: 700, fontSize: { xs: '1.25rem', md: '2.5rem' }, wordBreak: 'keep-all' }}
       >
         {headline}
       </Typography>
@@ -35,7 +35,7 @@ const SectionTitle = forwardRef(function SectionTitle({
         <Typography
           variant="h3"
           component="p"
-          sx={{ color: 'text.secondary', mt: 1, fontWeight: 400 }}
+          sx={{ color: 'text.secondary', mt: { xs: 0.5, md: 1 }, fontWeight: 400, fontSize: { xs: '1rem', md: '2rem' }, wordBreak: 'keep-all' }}
         >
           {subtitle}
         </Typography>

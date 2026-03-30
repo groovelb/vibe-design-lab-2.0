@@ -44,7 +44,14 @@ export function LandingProblem() {
             text={problem.headline}
             variant="h1"
             typingSpeed={20}
-            sx={{ letterSpacing: '-0.02em', wordSpacing: '0.15em', '& .MuiTypography-root': { lineHeight: 1.71 } }}
+            sx={{
+              letterSpacing: '-0.02em',
+              wordSpacing: '0.15em',
+              '& .MuiTypography-root': {
+                lineHeight: 1.71,
+                whiteSpace: { xs: 'normal', md: 'pre-wrap' },
+              },
+            }}
           />
         </Box>
         <LineGrid container gap={{ xs: 48, md: 144 }} borderColor="divider">

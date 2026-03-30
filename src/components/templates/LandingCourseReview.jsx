@@ -6,8 +6,11 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { SectionContainer } from '../container/SectionContainer';
 import { CarouselContainer } from '../container/CarouselContainer';
+import { PeekScroll } from '../container/PeekScroll';
 import LineGrid from '../layout/LineGrid';
 import { TestimonialCard } from '../card/TestimonialCard';
 import FadeTransition from '../motion/FadeTransition';
@@ -41,6 +44,8 @@ function formatRole(review) {
  * <LandingCourseReview />
  */
 export function LandingCourseReview() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [expandedCourse, setExpandedCourse] = useState({});
   const [isWebinarExpanded, setIsWebinarExpanded] = useState(false);
 

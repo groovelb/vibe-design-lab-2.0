@@ -81,7 +81,7 @@ const typography = {
   h1: {
     fontFamily: suitFamily,
     fontWeight: 700,
-    fontSize: '1.75rem',
+    fontSize: '1.5rem',
     lineHeight: 1.075,
     letterSpacing: '-0.03em',
     wordSpacing: '0.1em',
