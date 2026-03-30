@@ -164,19 +164,19 @@ export const TIMING = {
 // 노드 등장과 라인 드로잉이 겹치며 캐스케이드
 export const INTRO = {
   promptDelay: 0,
-  promptDur: 0.35,
-  barStart: 0.2,         // 프롬프트 후
-  barStagger: 0.06,      // bar 9개: 0.2~0.68s
-  barDur: 0.3,
-  outputStart: 0.5,      // bar 중반부터 output 시작
-  outputStagger: 0.08,   // output 5개: 0.5~0.82s
-  outputDur: 0.3,
-  lineStart: 0.4,        // 노드 등장 중 S1 라인 시작
-  line1Stagger: 0.06,    // S1 라인 간 딜레이 (0.03→0.06)
-  line2Start: 0.8,       // S2 시작 더 늦게 (0.65→0.8)
-  line2Stagger: 0.04,    // S2 라인 간 딜레이 (0.02→0.04)
-  lineDur: 1.0,          // 라인 드로잉 속도 느리게 (0.6→1.0)
-  total: 2.2,            // 전체 인트로 확장 (1.8→2.2)
+  promptDur: 0.25,
+  barStart: 0.1,         // 프롬프트 후
+  barStagger: 0.04,      // bar 9개: 0.1~0.42s
+  barDur: 0.2,
+  outputStart: 0.25,     // bar 초반부터 output 시작
+  outputStagger: 0.05,   // output 5개: 0.25~0.45s
+  outputDur: 0.2,
+  lineStart: 0.15,       // 노드 등장 중 S1 라인 시작
+  line1Stagger: 0.04,
+  line2Start: 0.4,       // S2 시작
+  line2Stagger: 0.03,
+  lineDur: 0.7,
+  total: 1.2,            // 전체 인트로 (2.2→1.2)
 };
 
 // ============================================================

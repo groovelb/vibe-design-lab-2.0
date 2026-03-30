@@ -77,16 +77,17 @@ function HorizontalScanLines({ accentColor, isReducedMotion }) {
 // ConnectionPaths — 가이드 베지어 커브
 // ============================================================
 
-function ConnectionPaths({ accentColor, stage1Paths, stage2Paths, isReducedMotion }) {
+function ConnectionPaths({ accentColor, stage1Paths, stage2Paths, isReducedMotion, isSkipIntro }) {
+  const drawIntro = !isReducedMotion && !isSkipIntro;
   return (
     <g opacity={0.25}>
       {stage1Paths.map((p, i) => (
         <path key={`s1-${i}`} d={p.path}
           fill="none" stroke={accentColor}
           strokeWidth={0.7}
-          {...(!isReducedMotion && { pathLength: 1, strokeDasharray: 1, strokeDashoffset: 1 })}
+          {...(drawIntro && { pathLength: 1, strokeDasharray: 1, strokeDashoffset: 1 })}
         >
-          {!isReducedMotion && (
+          {drawIntro && (
             <animate
               attributeName="stroke-dashoffset"
               from="1" to="0"
@@ -101,9 +102,9 @@ function ConnectionPaths({ accentColor, stage1Paths, stage2Paths, isReducedMotio
         <path key={`s2-${i}`} d={p.path}
           fill="none" stroke={accentColor}
           strokeWidth={0.7}
-          {...(!isReducedMotion && { pathLength: 1, strokeDasharray: 1, strokeDashoffset: 1 })}
+          {...(drawIntro && { pathLength: 1, strokeDasharray: 1, strokeDashoffset: 1 })}
         >
-          {!isReducedMotion && (
+          {drawIntro && (
             <animate
               attributeName="stroke-dashoffset"
               from="1" to="0"
@@ -149,17 +150,17 @@ function DataReadout({ accentColor }) {
 // 멀티라인 순차 타이핑 + 라인별 독립 clipPath + 커서 라인 추적
 // ============================================================
 
-function PromptInput({ accentColor, isReducedMotion }) {
+function PromptInput({ accentColor, isReducedMotion, isSkipIntro, introTotal }) {
   const { containerX, containerY, containerW, containerH } = LAYOUT_V2;
   const { fontSize, lineHeight, cursorBlinkDur } = TYPING_TIMING;
   const tc = CYCLE;
   const textX = containerX + 16;
 
-  const introBegin = `${INTRO.total}s`;
+  const cycleBegin = `${introTotal}s`;
 
   return (
-    <g opacity={isReducedMotion ? 1 : 0}>
-      {!isReducedMotion && (
+    <g opacity={(isReducedMotion || isSkipIntro) ? 1 : 0}>
+      {!isReducedMotion && !isSkipIntro && (
         <animate
           attributeName="opacity"
           from="0" to="1"
@@ -282,7 +283,7 @@ function PromptInput({ accentColor, isReducedMotion }) {
                       keyTimes={clip.keyTimes}
                       values={clip.values}
                       dur={`${tc}s`}
-                      begin={introBegin}
+                      begin={cycleBegin}
                       fill="freeze"
                     />
                   </rect>
@@ -310,7 +311,7 @@ function PromptInput({ accentColor, isReducedMotion }) {
                 keyTimes={ckt.join(';')}
                 values={cxv.join(';')}
                 dur={`${tc}s`}
-                begin={introBegin}
+                begin={cycleBegin}
                 fill="freeze"
               />
               <animate
@@ -318,14 +319,14 @@ function PromptInput({ accentColor, isReducedMotion }) {
                 keyTimes={ckt.join(';')}
                 values={cyv.join(';')}
                 dur={`${tc}s`}
-                begin={introBegin}
+                begin={cycleBegin}
                 fill="freeze"
               />
               <animate
                 attributeName="opacity"
                 values="0.7;0.01;0.7"
                 dur={`${cursorBlinkDur}s`}
-                begin={introBegin}
+                begin={cycleBegin}
                 repeatCount="indefinite"
               />
             </rect>
@@ -342,7 +343,7 @@ function PromptInput({ accentColor, isReducedMotion }) {
 
 const BAR_DEPTH_OPACITY = [0.8, 0.8, 0.75, 0.75, 0.7, 0.7, 0.65, 0.6, 0.55];
 
-function BarNode({ bar, index, accentColor, isReducedMotion }) {
+function BarNode({ bar, index, accentColor, isReducedMotion, isSkipIntro, introTotal }) {
   const { barX } = LAYOUT_V2;
   const barH = 20;
   const barY = bar.y - barH / 2;
@@ -355,8 +356,8 @@ function BarNode({ bar, index, accentColor, isReducedMotion }) {
   const introDelay = INTRO.barStart + index * INTRO.barStagger;
 
   return (
-    <g opacity={isReducedMotion ? nodeOpacity : 0}>
-      {!isReducedMotion && (
+    <g opacity={(isReducedMotion || isSkipIntro) ? nodeOpacity : 0}>
+      {!isReducedMotion && !isSkipIntro && (
         <animate
           attributeName="opacity"
           from="0" to={nodeOpacity}
@@ -400,7 +401,7 @@ function BarNode({ bar, index, accentColor, isReducedMotion }) {
             attributeName="opacity"
             values="0.15;0.7;0.15"
             dur="2.5s"
-            begin={`${INTRO.total + glowDelay}s`}
+            begin={`${introTotal + glowDelay}s`}
             repeatCount="indefinite"
           />
         )}
@@ -453,7 +454,7 @@ function IconEmbed({ iconKey, cx, cy, accentColor }) {
 // OutputEndpoint — 단일 출력 엔드포인트 + 아이콘
 // ============================================================
 
-function OutputEndpoint({ channel, index, accentColor, isReducedMotion }) {
+function OutputEndpoint({ channel, index, accentColor, isReducedMotion, isSkipIntro, introTotal }) {
   const { outputX } = LAYOUT_V2;
   const cx = outputX;
   const cy = channel.y;
@@ -463,8 +464,8 @@ function OutputEndpoint({ channel, index, accentColor, isReducedMotion }) {
   const introDelay = INTRO.outputStart + index * INTRO.outputStagger;
 
   return (
-    <g opacity={isReducedMotion ? 1 : 0}>
-      {!isReducedMotion && (
+    <g opacity={(isReducedMotion || isSkipIntro) ? 1 : 0}>
+      {!isReducedMotion && !isSkipIntro && (
         <animate
           attributeName="opacity"
           from="0" to="1"
@@ -496,7 +497,7 @@ function OutputEndpoint({ channel, index, accentColor, isReducedMotion }) {
             attributeName="opacity"
             values="0.15;0.35;0.15"
             dur={`${TIMING.outputPulseDur}s`}
-            begin={`${INTRO.total + index * TIMING.outputPulseStagger}s`}
+            begin={`${introTotal + index * TIMING.outputPulseStagger}s`}
             repeatCount="indefinite"
           />
         )}
@@ -551,9 +552,9 @@ function OutputEndpoint({ channel, index, accentColor, isReducedMotion }) {
 // 모든 파티클이 동일 dur(CYCLE)로 루프, keyTimes로 활성 구간 제어
 // ============================================================
 
-function ParticleSystem({ stage1Paths, stage2Paths, accentColor }) {
+function ParticleSystem({ stage1Paths, stage2Paths, accentColor, introTotal }) {
   const tc = CYCLE;
-  const introBegin = `${INTRO.total}s`;
+  const cycleBegin = `${introTotal}s`;
   const particles = [];
 
   // Stage 1 파티클 (컨테이너→바, 6×6 네모, 경로당 1개)
@@ -564,7 +565,7 @@ function ParticleSystem({ stage1Paths, stage2Paths, accentColor }) {
         fill={accentColor} opacity={0}>
         <animateMotion
           dur={`${tc}s`}
-          begin={introBegin}
+          begin={cycleBegin}
           repeatCount="indefinite"
           calcMode="linear"
           keyPoints={pm.motion.keyPoints}
@@ -576,7 +577,7 @@ function ParticleSystem({ stage1Paths, stage2Paths, accentColor }) {
           values={pm.opacity.values}
           keyTimes={pm.opacity.keyTimes}
           dur={`${tc}s`}
-          begin={introBegin}
+          begin={cycleBegin}
           repeatCount="indefinite"
         />
       </rect>,
@@ -591,7 +592,7 @@ function ParticleSystem({ stage1Paths, stage2Paths, accentColor }) {
         fill={accentColor} opacity={0}>
         <animateMotion
           dur={`${tc}s`}
-          begin={introBegin}
+          begin={cycleBegin}
           repeatCount="indefinite"
           calcMode="linear"
           keyPoints={pm.motion.keyPoints}
@@ -603,7 +604,7 @@ function ParticleSystem({ stage1Paths, stage2Paths, accentColor }) {
           values={pm.opacity.values}
           keyTimes={pm.opacity.keyTimes}
           dur={`${tc}s`}
-          begin={introBegin}
+          begin={cycleBegin}
           repeatCount="indefinite"
         />
       </rect>,
@@ -625,14 +626,18 @@ function ParticleSystem({ stage1Paths, stage2Paths, accentColor }) {
  * SVG SMIL 기반 타이핑 리빌, 파티클 모션, 글로우 필터, 헥사 그리드 배경.
  *
  * @param {string} accentColor - 강조 색상 CSS 값 [Optional, 기본값: 'var(--vdl-200)']
+ * @param {boolean} isInstant - true: 인트로 애니메이션 스킵 (모바일용) [Optional, 기본값: false]
+ * @param {boolean} isEager - true: IO 관찰 없이 즉시 SVG 마운트 (히어로 등 뷰포트 내 사용) [Optional, 기본값: false]
  * @param {object} sx - 추가 MUI 스타일 [Optional]
  *
  * Example usage:
  * <ContextEngineV2 />
- * <ContextEngineV2 accentColor="var(--vdl-200)" sx={{ opacity: 0.5 }} />
+ * <ContextEngineV2 isEager isInstant={isMobile} />
  */
 const ContextEngineV2 = forwardRef(function ContextEngineV2({
   accentColor = ACCENT,
+  isInstant = false,
+  isEager = false,
   sx,
 }, ref) {
   const isReducedMotion = useSyncExternalStore(
@@ -641,11 +646,16 @@ const ContextEngineV2 = forwardRef(function ContextEngineV2({
     getReducedMotionServer,
   );
 
+  const isSkipIntro = isInstant && !isReducedMotion;
+  const introTotal = isSkipIntro ? 0 : INTRO.total;
+
   const stage1Paths = useMemo(() => buildStage1Paths(), []);
   const stage2Paths = useMemo(() => buildStage2Paths(), []);
 
-  // 뷰포트 진입 시 SVG 마운트 → SMIL 타임라인 0에서 시작
-  const [isVisible, setIsVisible] = useState(false);
+  // isEager: 히어로 등 항상 뷰포트 내 → SSR 첫 렌더부터 SVG 마운트 (useMediaQuery 지연 무관)
+  // isInstant/isReducedMotion: 즉시 표시
+  // 그 외: IO 관찰로 뷰포트 진입 시 마운트
+  const [isVisible, setIsVisible] = useState(isEager || isInstant || isReducedMotion);
   const localRef = useRef(null);
   const mergedRef = useCallback((node) => {
     localRef.current = node;
@@ -654,7 +664,7 @@ const ContextEngineV2 = forwardRef(function ContextEngineV2({
   }, [ref]);
 
   useEffect(() => {
-    if (isReducedMotion) { setIsVisible(true); return; }
+    if (isEager || isReducedMotion || isInstant) { setIsVisible(true); return; }
     const el = localRef.current;
     if (!el) return;
     const observer = new IntersectionObserver(
@@ -663,7 +673,7 @@ const ContextEngineV2 = forwardRef(function ContextEngineV2({
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, [isReducedMotion]);
+  }, [isEager, isReducedMotion, isInstant]);
 
   return (
     <Box
@@ -691,24 +701,24 @@ const ContextEngineV2 = forwardRef(function ContextEngineV2({
         <HorizontalScanLines accentColor={accentColor} isReducedMotion={isReducedMotion} />
 
         {/* Layer 1: Guide paths */}
-        <ConnectionPaths accentColor={accentColor} stage1Paths={stage1Paths} stage2Paths={stage2Paths} isReducedMotion={isReducedMotion} />
+        <ConnectionPaths accentColor={accentColor} stage1Paths={stage1Paths} stage2Paths={stage2Paths} isReducedMotion={isReducedMotion} isSkipIntro={isSkipIntro} />
 
         {/* Layer 2: Ambient data readouts */}
         <DataReadout accentColor={accentColor} />
 
         {/* Layer 3: Particles (synced to CYCLE) */}
         {!isReducedMotion && (
-          <ParticleSystem stage1Paths={stage1Paths} stage2Paths={stage2Paths} accentColor={accentColor} />
+          <ParticleSystem stage1Paths={stage1Paths} stage2Paths={stage2Paths} accentColor={accentColor} introTotal={introTotal} />
         )}
 
         {/* Layer 4: Prompt input container (LEFT) */}
-        <PromptInput accentColor={accentColor} isReducedMotion={isReducedMotion} />
+        <PromptInput accentColor={accentColor} isReducedMotion={isReducedMotion} isSkipIntro={isSkipIntro} introTotal={introTotal} />
 
         {/* Layer 5: Bar nodes (MIDDLE) */}
         <g>
           {PROCESS_BARS.map((bar, i) => (
             <BarNode key={i} bar={bar} index={i}
-              accentColor={accentColor} isReducedMotion={isReducedMotion} />
+              accentColor={accentColor} isReducedMotion={isReducedMotion} isSkipIntro={isSkipIntro} introTotal={introTotal} />
           ))}
         </g>
 
@@ -716,7 +726,7 @@ const ContextEngineV2 = forwardRef(function ContextEngineV2({
         <g>
           {OUTPUT_CHANNELS_V2.map((c, i) => (
             <OutputEndpoint key={i} channel={c} index={i}
-              accentColor={accentColor} isReducedMotion={isReducedMotion} />
+              accentColor={accentColor} isReducedMotion={isReducedMotion} isSkipIntro={isSkipIntro} introTotal={introTotal} />
           ))}
         </g>
       </svg>}

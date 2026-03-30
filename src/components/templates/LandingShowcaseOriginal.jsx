@@ -42,6 +42,7 @@ function ShowcaseCard({ example, cardRef }) {
 				>
 					<video
 						src={example.src}
+						preload="none"
 						loop
 						muted
 						playsInline

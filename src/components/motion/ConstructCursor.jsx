@@ -30,7 +30,8 @@ function ConstructCursor({ text, variant = 'h2', typingSpeed = 30, isActive = fa
   const cursorRef = useRef(null);
   const charWidthsRef = useRef([]);
   const lineHeightRef = useRef(0);
-  const timeoutRef = useRef(null);
+  const rafRef = useRef(null);
+  const doneTimerRef = useRef(null);
 
   const chars = useMemo(() => text.split(''), [text]);
 
@@ -74,7 +75,7 @@ function ConstructCursor({ text, variant = 'h2', typingSpeed = 30, isActive = fa
     setCursorSize(Math.round(fontSize * CURSOR_RATIO));
   }, [text, variant]);
 
-  /** 타이핑 진행 — 직접 DOM 조작으로 React 리렌더 제거 */
+  /** 타이핑 진행 — rAF 루프로 프레임 동기화, 배치 DOM 쓰기 */
   useEffect(() => {
     if (!isActive || hasStartedRef.current) return;
     hasStartedRef.current = true;
@@ -84,45 +85,77 @@ function ConstructCursor({ text, variant = 'h2', typingSpeed = 30, isActive = fa
     if (!el || !cursor) return;
 
     const spans = el.querySelectorAll('[data-char]');
+    const widths = charWidthsRef.current;
     const lh = lineHeightRef.current;
 
-    const moveCursor = (idx) => {
-      const x = charWidthsRef.current[idx] || 0;
-      const gridSlot = yGridIndices[Math.min(idx, yGridIndices.length - 1)] || 0;
-      const y = lh > 0 ? (gridSlot / 5) * lh - lh / 2 : 0;
-      cursor.style.transform = `translate3d(${x}px, calc(-50% + ${y}px), 0)`;
-    };
+    // 문자별 등장 시각을 사전 계산 (ms)
+    const timings = [];
+    let cumTime = typingSpeed;
+    for (let i = 0; i < chars.length; i++) {
+      timings.push(cumTime);
+      cumTime += chars[i] === ' ' ? typingSpeed * WORD_DELAY_MULTIPLIER : typingSpeed;
+    }
+
+    // transition을 한 번에 일괄 설정 (tick마다 쓰지 않음)
+    for (let i = 0; i < spans.length; i++) {
+      spans[i].style.transition = `opacity 60ms ${EASE_OUT}`;
+    }
 
     cursor.style.opacity = '1';
     cursor.style.transition = `transform ${typingSpeed}ms ${EASE_OUT}, opacity 150ms ${EASE_OUT}`;
 
-    const tick = (idx) => {
-      if (idx >= chars.length) {
-        timeoutRef.current = setTimeout(() => {
+    let lastRevealed = -1;
+    const startTime = performance.now();
+
+    const frame = (now) => {
+      const elapsed = now - startTime;
+
+      // 경과 시간 기준으로 보여야 할 마지막 문자 인덱스 산출
+      let target = lastRevealed;
+      while (target + 1 < chars.length && timings[target + 1] <= elapsed) {
+        target++;
+      }
+
+      // 새로 드러날 문자를 한 프레임에 배치 리빌
+      if (target > lastRevealed) {
+        for (let i = lastRevealed + 1; i <= target; i++) {
+          if (spans[i]) spans[i].style.opacity = '1';
+        }
+        lastRevealed = target;
+
+        // 커서를 최신 위치로 이동 (프레임당 1회)
+        const ci = Math.min(target, yGridIndices.length - 1);
+        const x = widths[target + 1] || 0;
+        const gridSlot = yGridIndices[ci] || 0;
+        const y = lh > 0 ? (gridSlot / 5) * lh - lh / 2 : 0;
+        cursor.style.transform = `translate3d(${x}px, calc(-50% + ${y}px), 0)`;
+      }
+
+      if (lastRevealed < chars.length - 1) {
+        rafRef.current = requestAnimationFrame(frame);
+      } else {
+        // 완료 — 커서 페이드아웃
+        doneTimerRef.current = setTimeout(() => {
           cursor.style.opacity = '0.01';
           cursor.style.transition = `opacity 150ms ${EASE_OUT}`;
           onComplete?.();
         }, 150);
-        return;
       }
-      if (spans[idx]) {
-        spans[idx].style.opacity = '1';
-        spans[idx].style.transition = `opacity 60ms ${EASE_OUT}`;
-      }
-      moveCursor(idx + 1);
-      const delay = chars[idx] === ' ' ? typingSpeed * WORD_DELAY_MULTIPLIER : typingSpeed;
-      timeoutRef.current = setTimeout(() => tick(idx + 1), delay);
     };
 
-    timeoutRef.current = setTimeout(() => tick(0), typingSpeed);
+    rafRef.current = requestAnimationFrame(frame);
 
-    return () => clearTimeout(timeoutRef.current);
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      clearTimeout(doneTimerRef.current);
+    };
   }, [isActive, chars, typingSpeed, onComplete, yGridIndices]);
 
   /** 리셋 (text 변경 시) */
   useEffect(() => {
     hasStartedRef.current = false;
-    clearTimeout(timeoutRef.current);
+    cancelAnimationFrame(rafRef.current);
+    clearTimeout(doneTimerRef.current);
   }, [text]);
 
   return (

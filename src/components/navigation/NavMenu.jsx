@@ -59,19 +59,19 @@ const NavMenu = forwardRef(function NavMenu({
   const sizeMap = {
     sm: {
       padding: '6px 12px',
-      fontSize: 13,
+      typographyVariant: 'caption',
       iconSize: 18,
       gap: 0.75,
     },
     md: {
       padding: '8px 16px',
-      fontSize: 14,
+      typographyVariant: 'button',
       iconSize: 20,
       gap: 1,
     },
     lg: {
       padding: '12px 20px',
-      fontSize: 15,
+      typographyVariant: 'body2',
       iconSize: 22,
       gap: 1.25,
     },
@@ -100,7 +100,6 @@ const NavMenu = forwardRef(function NavMenu({
       justifyContent: isIconOnly ? 'center' : 'flex-start',
       gap: sizeStyle.gap,
       padding: sizeStyle.padding,
-      fontSize: sizeStyle.fontSize,
       fontWeight: isActive ? 600 : 400,
       textDecoration: 'none',
       borderRadius: variant === 'pills' ? 99 : 1,
@@ -218,11 +217,11 @@ const NavMenu = forwardRef(function NavMenu({
             {/* Label */}
             {!isIconOnly && (
               <Typography
+                variant={sizeStyle.typographyVariant}
                 component="span"
                 sx={{
-                  fontSize: 'inherit',
                   fontWeight: 'inherit',
-                  lineHeight: 1.2,
+                  textTransform: 'none',
                 }}
               >
                 {item.label}

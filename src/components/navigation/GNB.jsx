@@ -150,7 +150,7 @@ const GNB = forwardRef(function GNB({
             height: '100%',
           }}
         >
-          {/* Drawer Header — 로고 + 닫기 */}
+          {/* Drawer Header — 로고(클릭 시 닫기) + 닫기 */}
           <Box
             sx={{
               display: 'flex',
@@ -161,7 +161,9 @@ const GNB = forwardRef(function GNB({
               flexShrink: 0,
             }}
           >
-            {drawerHeader || logo}
+            <Box onClick={closeDrawer} sx={{ cursor: 'pointer' }}>
+              {drawerHeader || logo}
+            </Box>
             <IconButton
               onClick={closeDrawer}
               size="medium"
@@ -188,10 +190,10 @@ const GNB = forwardRef(function GNB({
                 gap: 1,
               },
               '& [role="menuitem"]': {
-                fontSize: '2rem',
+                fontSize: 'h2.fontSize',
                 fontWeight: 500,
                 letterSpacing: '0.02em',
-                color: 'text.secondary',
+                color: 'common.white',
                 py: 1.5,
                 px: 3,
                 '&:hover': { color: 'text.primary' },

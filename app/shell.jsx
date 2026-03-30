@@ -7,11 +7,14 @@ import { VdlLogo } from '@/components/typography/VdlLogo';
 import { AmbientGrainedBackground } from '@/components/dynamic-color/AmbientGrainedBackground';
 import { GNB as GNB_DATA } from '@/data/contents';
 
-const navItems = GNB_DATA.menus.map((menu) => ({
-  id: menu.href,
-  label: menu.label,
-  href: menu.href,
-}));
+const navItems = [
+  { id: '/', label: 'Home', href: '/' },
+  ...GNB_DATA.menus.map((menu) => ({
+    id: menu.href,
+    label: menu.label,
+    href: menu.href,
+  })),
+];
 
 /**
  * SiteShell 컴포넌트
@@ -44,14 +47,14 @@ export default function SiteShell({ children }) {
           sx={{
             gap: 0.5,
             '& [role="menuitem"]': {
-              color: 'text.secondary',
-              fontWeight: 400,
-              fontSize: 14,
+              color: 'text.primary',
+              fontWeight: 500,
               letterSpacing: '0.02em',
               backgroundColor: 'transparent !important',
               '&:hover': { color: 'text.primary', backgroundColor: 'transparent !important' },
               '&[aria-current="page"]': { color: 'text.primary', fontWeight: 500, backgroundColor: 'transparent !important' },
             },
+            '& [role="menuitem"]:first-child': { display: { md: 'none' } },
           }}
         />
       }

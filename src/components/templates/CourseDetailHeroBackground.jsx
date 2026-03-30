@@ -42,7 +42,7 @@ export function CourseDetailHeroBackground() {
           loop
           muted
           playsInline
-          sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          sx={{ position: 'absolute', right: 0, top: 0, height: { xs: 'auto', md: '100%' }, width: { xs: '100%', md: 'auto' }, maxWidth: 'none' }}
         />
       </ParallaxLayer>
 

@@ -1,5 +1,7 @@
 'use client';
 import Box from '@mui/material/Box';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { GridBackground } from '../dynamic-color/GridBackground';
 import { ContextEngineV2 } from '../motion/ContextEngineV2';
 import Container from '@mui/material/Container';
@@ -23,6 +25,9 @@ import { BG_PARALLAX_SPEED } from '../motion/constants';
  * <LandingHero />
  */
 export function LandingHero() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
   return (
     <SectionContainer isFullWidth sx={{ py: 0 }}>
     <GridBackground
@@ -36,7 +41,7 @@ export function LandingHero() {
         top: 0,
         left: { xs: '16px', md: 'max(24px, calc(50vw - 696px))' },
         right: { xs: '-100vw', md: 0 },
-        height: '60%',
+        height: { xs: '86%', md: '60%' },
         pointerEvents: 'none',
         willChange: 'transform',
         maskImage: 'linear-gradient(to bottom, black 55%, rgba(0,0,0,0.4)), linear-gradient(to right, black 92%, transparent)',
@@ -44,7 +49,7 @@ export function LandingHero() {
         WebkitMaskImage: 'linear-gradient(to bottom, black 55%, rgba(0,0,0,0.4)), linear-gradient(to right, black 92%, transparent)',
         WebkitMaskComposite: 'source-in',
       }}>
-        <ContextEngineV2 />
+        <ContextEngineV2 isEager isInstant={isMobile} />
       </ParallaxLayer>
 
       <ParallaxLayer speed={1.08} sx={{ height: '100svh', position: 'relative' }}>
@@ -57,7 +62,7 @@ export function LandingHero() {
             sx={{ height: '100%' }}
             secondary={<Box />}
             primary={
-              <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%' }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: { xs: 'flex-end', md: 'center' }, height: '100%', pb: { xs: 6, md: 0 } }}>
                 <LandingHeroMessage />
                 {/* 3pp — PC에서만 100svh 안에 표시 */}
                 <Box sx={{ mt: 10, display: { xs: 'none', md: 'block' } }}>
@@ -70,10 +75,10 @@ export function LandingHero() {
       </ParallaxLayer>
     </GridBackground>
 
-    {/* 3pp — 모바일에서 100svh 아래에 표시 */}
+    {/* 3pp — 모바일에서 100svh 아래에 표시 (뷰포트 트리거) */}
     <Box sx={{ display: { xs: 'block', md: 'none' }, py: 6 }}>
       <Container maxWidth="xl">
-        <LandingHeroPainPoints />
+        <LandingHeroPainPoints isDelayed={false} />
       </Container>
     </Box>
     </SectionContainer>

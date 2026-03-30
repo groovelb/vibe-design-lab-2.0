@@ -15,8 +15,8 @@ const countSpaces = (str) => (str.match(/ /g) || []).length;
 const typingDuration = (str, speed) =>
   str.length * speed + countSpaces(str) * speed * (WORD_DELAY_MULTIPLIER - 1);
 
-/** 인터랙티브 인트로(2.2s) 완료 후 3pp 등장 */
-const PAIN_START = 2400;
+/** 인터랙티브 인트로 캐스케이드 중 3pp 등장 */
+const PAIN_START = 400;
 
 /** 타이틀 50% 지점에서 설명 시작 */
 const TITLE_SPEED = 20;
@@ -32,16 +32,19 @@ const TITLE_HALF = Math.round(
  * 1. 각 카드 타이틀 (ConstructType) — 좌→우 COL_STAGGER
  * 2. 각 카드 설명 (ConstructBlock) — 타이틀 완료 후
  *
+ * @param {boolean} isDelayed - true: 시간 기반 delay + idle 커서, false: 뷰포트 트리거 [Optional, 기본값: true]
+ *
  * Example usage:
  * <LandingHeroPainPoints />
+ * <LandingHeroPainPoints isDelayed={false} />
  */
-export function LandingHeroPainPoints() {
+export function LandingHeroPainPoints({ isDelayed = true }) {
   return (
     <Stack sx={{ height: '100%' }} justifyContent="center">
       <LineGrid container gap={{ xs: 48, md: 96 }} borderColor="divider">
         {hero.painPoints.map((point, index) => {
           const colDelay = index * COL_STAGGER;
-          const titleDelay = PAIN_START + colDelay;
+          const titleDelay = isDelayed ? PAIN_START + colDelay : colDelay;
           const blockDelay = titleDelay + TITLE_HALF;
 
           return (
@@ -51,18 +54,18 @@ export function LandingHeroPainPoints() {
                   text={point.label}
                   variant="h4"
                   typingSpeed={TITLE_SPEED}
-                  isTriggerOnView={false}
+                  isTriggerOnView={!isDelayed}
                   delay={titleDelay}
-                  isIdleVisible
+                  isIdleVisible={isDelayed}
                   sx={{ '& .MuiTypography-root': { fontWeight: 900 } }}
                 />
                 <ConstructBlock
                   text={point.text}
                   variant="body1"
                   duration={800}
-                  isTriggerOnView={false}
+                  isTriggerOnView={!isDelayed}
                   delay={blockDelay}
-                  isIdleVisible
+                  isIdleVisible={isDelayed}
                   sx={{ mt: 1 }}
                 />
               </Box>

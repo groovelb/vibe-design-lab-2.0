@@ -1,5 +1,5 @@
 'use client';
-import { forwardRef } from 'react';
+import { forwardRef, useEffect, useRef } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
@@ -49,10 +49,25 @@ const TestimonialCard = forwardRef(function TestimonialCard({
   sx,
   ...props
 }, ref) {
+  const videoRef = useRef(null);
   const isCompact = variant === 'compact';
   const displayQuote = isCompact && quoteShort ? quoteShort : quote;
   const imgSrc = typeof thumbnailSrc === 'string' ? thumbnailSrc : thumbnailSrc?.src;
   const isVideo = typeof imgSrc === 'string' && /\.(mp4|webm|mov)$/i.test(imgSrc);
+
+  useEffect(() => {
+    const el = videoRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) el.play();
+        else el.pause();
+      },
+      { threshold: 0.3 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [imgSrc]);
 
   const mediaSx = mediaRatio === 'auto'
     ? { display: 'block', width: '100%', height: 'auto', objectFit: 'contain', aspectRatio: 'auto' }
@@ -74,8 +89,9 @@ const TestimonialCard = forwardRef(function TestimonialCard({
         isVideo ? (
           <Box
             component="video"
+            ref={videoRef}
             src={imgSrc}
-            autoPlay
+            preload="none"
             loop
             muted
             playsInline

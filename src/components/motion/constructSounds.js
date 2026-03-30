@@ -56,7 +56,7 @@ function click() {
 
   const master = ctx.createGain();
   master.gain.setValueAtTime(0, t);
-  master.gain.linearRampToValueAtTime(0.1, t + 0.008);
+  master.gain.linearRampToValueAtTime(0.075, t + 0.008);
   master.gain.exponentialRampToValueAtTime(0.001, t + 0.053);
 
   filter.connect(master).connect(ctx.destination);
