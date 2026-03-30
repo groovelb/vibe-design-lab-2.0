@@ -18,3 +18,4 @@
 | 컴포넌트, 스타일, 토큰, 비주얼 | `src/docs/ux/design-system-optimization.md` |
 | 데이터 모델, API, 상태 관리, 라이브러리 | `src/docs/ux/technical.md` |
 | 텍스트, 메시지, 이미지, 미디어 | `src/docs/ux/contents.md` |
+| 프레젠테이션 슬라이드 시스템 | `src/docs/ux/presentation-system.md` |

@@ -26,9 +26,9 @@ import { DesignAsBuild } from '../../assets/brandIllustration/DesignAsBuild';
 
 const ILLUSTRATIONS = [SystemOverDrawingV3, VibeStandardTree, DesignAsBuild];
 
-// AreaConstruct reveal까지: tag(80) + scatter(290) + reveal opacity ramp ≈ 520ms
+// AreaConstruct reveal까지: tag(80) + scatter(250) + settle(40) + reveal(150) = 520ms
 // + illustration IO가 construct IO보다 ~300ms 먼저 발동 (threshold 0.2 vs center)
-const CONSTRUCT_OVERHEAD = T.tag + T.scatter + T.settle + T.reveal + 1200;
+const CONSTRUCT_OVERHEAD = T.tag + T.scatter + T.settle + T.reveal + 300;
 
 const { howDifferent } = PAGES.landing;
 

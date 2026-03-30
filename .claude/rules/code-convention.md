@@ -7,24 +7,9 @@
 
 ## Props 주석 규칙
 
-컴포넌트 함수 선언부 위에 아래 형식으로 props를 문서화한다:
-
-```jsx
-/**
- * Button 컴포넌트
- *
- * @param {string} label - 버튼 텍스트 [Required]
- * @param {function} onClick - 클릭 핸들러 [Optional]
- * @param {boolean} isActive - 활성화 여부 [Optional, 기본값: true]
- *
- * Example usage:
- * <Button label="확인" onClick={handleClick} />
- */
-function Button({ label, onClick, isActive = true }) { ... }
-```
-
+컴포넌트 함수 선언부 위에 JSDoc으로 props 문서화. 형식: `@param {type} name - 설명 [Required/Optional]`
 - boolean props는 `is`/`has`, 함수형 props는 `on`으로 시작
-- [Required] / [Optional] 구분 명시
+- 기존 컴포넌트의 JSDoc 패턴을 따를 것
 
 ## API 키 / 시크릿 규칙 (CRITICAL)
 

@@ -1,3 +1,10 @@
+---
+paths:
+  - "src/components/**/*"
+  - "src/stories/**/*"
+  - "src/common/**/*"
+---
+
 # Project Directory Rules (MUST)
 
 새로운 컴포넌트를 추가할 때는 아래 텍소노미 분류를 따른다.

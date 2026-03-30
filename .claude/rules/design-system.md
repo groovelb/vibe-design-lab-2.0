@@ -1,3 +1,9 @@
+---
+paths:
+  - "src/components/**/*"
+  - "src/common/**/*"
+---
+
 # Design System (MUST)
 
 ## 1. 기존 컴포넌트 재활용 (CRITICAL)
