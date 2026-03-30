@@ -2,8 +2,11 @@ import { GoogleGenAI } from '@google/genai';
 import fs from 'node:fs';
 import path from 'node:path';
 
-const API_KEY = 'AIzaSyBA4hGbaxIsxy0QiEN7kdLqIjKKdoibp_8';
-const ai = new GoogleGenAI({ apiKey: API_KEY });
+if (!process.env.GEMINI_API_KEY) {
+  console.error('❌ GEMINI_API_KEY 환경변수를 설정하세요.');
+  process.exit(1);
+}
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 const v17Base64 = fs.readFileSync(path.resolve('public/assets/lead/lead-profile-v17-1.png')).toString('base64');
 const cosBase64 = fs.readFileSync(path.resolve('public/assets/lead/cos.png')).toString('base64');

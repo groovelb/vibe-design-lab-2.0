@@ -4,8 +4,9 @@ import Divider from '@mui/material/Divider';
 import { SectionContainer } from '@/components/container/SectionContainer';
 
 export const metadata = {
-  title: 'Experiment | Vibe Design Labs',
-  description: '가상 브랜드·서비스 웹사이트 실험 프로젝트',
+  title: 'Experiment',
+  description:
+    'Vibe Dictionary의 어휘 체계로 설계하고 바이브 코딩으로 구현한 가상 브랜드·서비스 웹사이트 실험 프로젝트.',
 };
 
 export default function ExperimentPage() {

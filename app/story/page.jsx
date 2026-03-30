@@ -2,8 +2,9 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
 export const metadata = {
-  title: 'Story | Vibe Design Labs',
-  description: 'Vibe Design Labs 브랜드 스토리',
+  title: 'Story',
+  description:
+    'Vibe Design Labs의 미션, 철학, 가치 제안. 사고와 구현의 주체를 일치시킨다.',
 };
 
 export default function StoryPage() {

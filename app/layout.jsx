@@ -5,10 +5,22 @@ import { inter, suit, ibmPlexMono } from './fonts';
 import './globals.css';
 
 export const metadata = {
-  title: 'Vibe Design Labs',
-  description: 'Design language system for vibe coding education',
+  title: {
+    default: 'Vibe Design Labs',
+    template: '%s | Vibe Design Labs',
+  },
+  description:
+    '디자이너를 위한 바이브 코딩 교육 플랫폼. 커뮤니티와 챌린지 중심 피어 학습으로 도구가 바뀌어도 유효한 디자인 언어 체계를 습득합니다.',
   icons: {
     icon: '/favicon.svg',
+  },
+  openGraph: {
+    type: 'website',
+    siteName: 'Vibe Design Labs',
+    locale: 'ko_KR',
+  },
+  twitter: {
+    card: 'summary_large_image',
   },
 };
 

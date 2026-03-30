@@ -4,8 +4,9 @@ import Divider from '@mui/material/Divider';
 import { SectionContainer } from '@/components/container/SectionContainer';
 
 export const metadata = {
-  title: 'Dictionary | Vibe Design Labs',
-  description: '디자인 택소노미 기반 표준 어휘 체계',
+  title: 'Dictionary',
+  description:
+    'Vibe Dictionary — 디자인 패턴의 분류 체계. 도구가 바뀌어도 유효한 200개 이상의 디자인 키워드를 제공합니다.',
 };
 
 export default function DictionaryPage() {
