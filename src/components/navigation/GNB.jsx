@@ -70,6 +70,10 @@ const GNB = forwardRef(function GNB({
   const toggleDrawer = () => setIsDrawerOpen((prev) => !prev);
   const closeDrawer = () => setIsDrawerOpen(false);
 
+  /* CSS 기반 반응형 (useMediaQuery 지연 방지) */
+  const desktopDisplay = { xs: 'none', [breakpoint]: 'flex' };
+  const mobileDisplay = { xs: 'flex', [breakpoint]: 'none' };
+
   /**
    * 헤더 스타일
    */
@@ -91,69 +95,6 @@ const GNB = forwardRef(function GNB({
     ...sx,
   };
 
-  /**
-   * 드로어 콘텐츠
-   */
-  const renderDrawerContent = () => (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-        width: drawerWidth,
-      }}
-    >
-      {/* Drawer Header */}
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          height,
-          px: 2,
-          borderBottom: '1px solid',
-          borderColor: 'divider',
-          flexShrink: 0,
-        }}
-      >
-        {drawerHeader || logo}
-        <IconButton
-          onClick={closeDrawer}
-          size="small"
-          aria-label="Close menu"
-        >
-          <CloseIcon />
-        </IconButton>
-      </Box>
-
-      {/* Drawer Content */}
-      <Box
-        sx={{
-          flex: 1,
-          overflow: 'auto',
-          py: 2,
-          px: 2,
-        }}
-      >
-        {navContent}
-      </Box>
-
-      {/* Drawer Footer */}
-      {drawerFooter && (
-        <Box
-          sx={{
-            p: 2,
-            borderTop: '1px solid',
-            borderColor: 'divider',
-            flexShrink: 0,
-          }}
-        >
-          {drawerFooter}
-        </Box>
-      )}
-    </Box>
-  );
-
   return (
     <GNBContext.Provider value={{ isDrawerOpen, toggleDrawer, closeDrawer, isMobile }}>
       {/* Header */}
@@ -168,16 +109,19 @@ const GNB = forwardRef(function GNB({
           {/* Persistent (always visible) */}
           {persistent}
 
-          {/* Desktop: Show navContent */}
-          {!isMobile && navContent}
+          {/* Desktop: navContent (CSS 기반 숨김) */}
+          <Box sx={{ display: desktopDisplay, alignItems: 'center' }}>
+            {navContent}
+          </Box>
 
-          {/* Mobile: Hamburger menu */}
-          {isMobile && navContent && (
+          {/* Mobile: Hamburger (CSS 기반 숨김) */}
+          {navContent && (
             <IconButton
               onClick={toggleDrawer}
               size="medium"
               aria-label="Open menu"
               aria-expanded={isDrawerOpen}
+              sx={{ display: mobileDisplay }}
             >
               <MenuIcon />
             </IconButton>
@@ -185,19 +129,95 @@ const GNB = forwardRef(function GNB({
         </Box>
       </Box>
 
-      {/* Mobile Drawer */}
+      {/* Full-screen Mobile Drawer */}
       <Drawer
-        anchor="right"
+        anchor="top"
         open={isDrawerOpen}
         onClose={closeDrawer}
         sx={{
           '& .MuiDrawer-paper': {
-            width: drawerWidth,
-            boxSizing: 'border-box',
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'var(--vdl-950)',
+            backgroundImage: 'none',
           },
         }}
       >
-        {renderDrawerContent()}
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%',
+          }}
+        >
+          {/* Drawer Header — 로고 + 닫기 */}
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              height,
+              px: { xs: 2, sm: 3 },
+              flexShrink: 0,
+            }}
+          >
+            {drawerHeader || logo}
+            <IconButton
+              onClick={closeDrawer}
+              size="medium"
+              aria-label="Close menu"
+              sx={{ color: 'text.primary' }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </Box>
+
+          {/* Drawer Content — 수직 중앙 대형 메뉴 */}
+          <Box
+            onClick={closeDrawer}
+            sx={{
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 1,
+              '& nav': {
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 1,
+              },
+              '& [role="menuitem"]': {
+                fontSize: '2rem',
+                fontWeight: 500,
+                letterSpacing: '0.02em',
+                color: 'text.secondary',
+                py: 1.5,
+                px: 3,
+                '&:hover': { color: 'text.primary' },
+                '&[aria-current="page"]': {
+                  color: 'text.primary',
+                  fontWeight: 600,
+                },
+              },
+            }}
+          >
+            {navContent}
+          </Box>
+
+          {/* Drawer Footer */}
+          {drawerFooter && (
+            <Box
+              sx={{
+                p: 3,
+                textAlign: 'center',
+                flexShrink: 0,
+              }}
+            >
+              {drawerFooter}
+            </Box>
+          )}
+        </Box>
       </Drawer>
     </GNBContext.Provider>
   );

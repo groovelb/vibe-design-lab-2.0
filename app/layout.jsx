@@ -5,6 +5,7 @@ import { inter, suit, ibmPlexMono } from './fonts';
 import './globals.css';
 
 export const metadata = {
+  metadataBase: new URL('https://vibedesignlab.net'),
   title: {
     default: 'Vibe Design Labs',
     template: '%s | Vibe Design Labs',

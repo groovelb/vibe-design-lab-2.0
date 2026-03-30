@@ -66,7 +66,9 @@ export function LandingSolution() {
             return (
               <Box key={vp.name}>
                 <AreaConstruct isTriggerOnView>
-                  <Illustration delay={CONSTRUCT_OVERHEAD} />
+                  <Box sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 1, overflow: 'hidden' }}>
+                    <Illustration delay={CONSTRUCT_OVERHEAD} />
+                  </Box>
                 </AreaConstruct>
                 <Box sx={{ mt: 6 }}>
                   <ConstructType
