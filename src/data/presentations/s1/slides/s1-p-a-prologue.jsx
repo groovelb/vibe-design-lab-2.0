@@ -12,13 +12,14 @@ import {
 	SlideDescList,
 } from "../../../../components/presentation";
 import Box from "@mui/material/Box";
+import { TaxonomySection } from "../../../../components/data-display/TaxonomySection";
 import { presentationTokens as t } from "../../../../styles/themes/presentation";
 
-import refDashboard from "../../assets/reference/dashboard.png";
-import refDynamicGrid from "../../assets/reference/dynamic-grid.png";
-import refLumenState from "../../assets/reference/lumen-state.png";
-import refPlasticLiteracy from "../../assets/reference/plastic-literacy.png";
-import refDigitalMayor from "../../assets/reference/digital_mayor.png";
+import refDashboard from "../../assets/s1/ch1/ref-dashboard.png";
+import refDigitalMayor from "../../assets/s1/ch1/ref-digital-mayor.png";
+import refDynamicGrid from "../../assets/s1/ch1/ref-dynamic-grid.png";
+import refLumenState from "../../assets/s1/ch1/ref-lumen-state.png";
+import refPlasticLiteracy from "../../assets/s1/ch1/ref-plastic-literacy.png";
 
 // ═══════════════════════════════════════════════════════════
 // 텍스트 & 이미지 데이터
@@ -773,18 +774,44 @@ const contentSlides = [
 	},
 	{
 		id: "S1-P-A-15",
-		title: "글로 디자인하는 시대",
+		title: "언어로 하는 바이브 코딩 & 디자인",
 		render: () => (
-			<SlideHSplit>
-				<SlideStorytelling
-					from={WRITING_ERA.storytelling.from}
-					to={WRITING_ERA.storytelling.to}
+			<Box sx={{ display: "flex", flexDirection: "column", height: "100%", overflow: "hidden" }}>
+				<Box sx={{ fontFamily: t.fontFamily.heading, fontSize: t.typo.title.fontSize, fontWeight: 700, color: t.color.text, mb: `${t.spacing.element}px` }}>
+					언어로 하는 바이브 코딩 &amp; 디자인
+				</Box>
+				<Box sx={{ flex: 1, overflow: "auto", position: "relative" }}>
+					<TaxonomySection defaultViewMode="list" />
+				</Box>
+			</Box>
+		),
+	},
+	{
+		id: "S1-P-A-16",
+		title: "FAQ",
+		render: () => (
+			<SlideGrid columns={2}>
+				<SlideDescList
+					items={[{ title: "Q. 모든 키워드를 외워야 하나요?", desc: "언어적인 관점에서 접근해야 합니다. 영어를 처음 공부할 때 기본 어휘 50~100개를 배우고 시작하듯, 디자인 키워드를 모두 외울 필요는 없습니다. 다만 대략 어떤 카테고리의 단어들이 있는지, 왜 필요한지는 알면 좋습니다.\n\n2주 차에 본격적으로 뜯어볼 스타터 키트에는, 여러분이 작성한 기획 문서를 어떤 디자인 키워드로 의도를 쪼갤지 도와주는 장치가 준비되어 있습니다. 지금은 디자인 언어 중심으로 내 의도를 전달하는 연습에 집중하시면 됩니다." }]}
+					level="headline"
+					sx={{ "& h4": { fontWeight: 700 } }}
 				/>
-				<SlideTypoStack
-					headline={WRITING_ERA.headline}
-					body={WRITING_ERA.body}
+				<SlideDescList
+					items={[{ title: "Q. 디자인 키워드는 디자인만 만드나요?", desc: "디자인에는 여러 계층이 있습니다. 흔히 말하는 UI 디자인은 우리가 겉으로 보는 UI의 형태, 디자인 시스템과 관련되어 있습니다.\n\n그리고 UX 설계는 웹사이트·서비스에서 다룰 데이터, 동작 방식, 서버와의 연동 방식과 연관이 있습니다. 이 수업의 2/3는 전자에 초점을 맞추고 있고, 마지막 1/3에서 후자를 연습합니다." }]}
+					level="headline"
+					sx={{ "& h4": { fontWeight: 700 } }}
 				/>
-			</SlideHSplit>
+				<SlideDescList
+					items={[{ title: "Q. 이 언어 체계가 바이브 코딩이랑 어떻게 연결되나요?", desc: "제가 생각하는 올바른 바이브 코딩은, 아무리 자연어로 개발하더라도 개발의 결과물을 충분히 유추할 수 있는 언어 체계를 사용하는 것입니다.\n\n코드 자체를 해석하기보다는, 각 코드가 어떤 역할을 하고 어떻게 연결되는지 마치 자동차 부품처럼 그 구조를 파악하는 능력이 핵심입니다. 물론 이 과정에서 필연적으로 알아야 할 최소한의 개발 지식이 있습니다." }]}
+					level="headline"
+					sx={{ "& h4": { fontWeight: 700 } }}
+				/>
+				<SlideDescList
+					items={[{ title: "Q. 개발·디자인 지식은 얼마나 알아야 하나요?", desc: "당연히 같은 조건이면 많이 아는 게 좋습니다. 하지만 오프라인 3기를 운영하면서 확인한 건, 실무 경력보다 사고 성향이 더 크게 작용한다는 점이었습니다.\n\n현업 디자이너도 원하는 결과물에 어떤 디자인 개념이 적용되는지 빠르게 찾아내고 조립하는 부분을 어려워하는 경우가 있었고, 디자이너도 개발자도 아닌 분이 잘 따라오는 경우도 있었습니다. 이 코스는 코드를 짜는 법이 아니라, 디자인 결정이 코드에 미치는 영향을 이해하는 데 초점을 둡니다. 도구는 AI가, 언어는 여러분이 담당합니다." }]}
+					level="headline"
+					sx={{ "& h4": { fontWeight: 700 } }}
+				/>
+			</SlideGrid>
 		),
 	},
 ];

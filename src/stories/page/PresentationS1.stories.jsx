@@ -38,10 +38,13 @@ const allSlides = flattenSlides(S1);
 
 function DrawerToC({ slides, currentIdx, onSelect }) {
   let lastPart = '';
+  let num = 0;
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
       {slides.map((slide, i) => {
+        if (!slide.title) return null;
+        num += 1;
         const showPartHeader = slide.breadcrumb.part !== lastPart;
         lastPart = slide.breadcrumb.part;
 
@@ -80,7 +83,7 @@ function DrawerToC({ slides, currentIdx, onSelect }) {
                   color: i === currentIdx ? t.color.accent : t.color.textTertiary,
                 }}
               >
-                {i + 1}. {slide.title}
+                {num}. {slide.title}
               </Typography>
             </Box>
           </Box>

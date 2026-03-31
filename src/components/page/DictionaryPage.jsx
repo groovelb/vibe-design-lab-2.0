@@ -8,7 +8,6 @@ import { SectionDivider } from '../typography/SectionDivider';
 import { SectionTitle } from '../typography/SectionTitle';
 import { TaxonomySection } from '../data-display/TaxonomySection';
 import { PageContainer } from '../layout/PageContainer';
-import { TAXONOMY, TAXONOMY_STATS } from '../../data/taxonomyData';
 import { PAGES } from '../../data/contents';
 
 const { dictionary } = PAGES;
@@ -35,7 +34,7 @@ export function DictionaryPage() {
       </SectionContainer>
 
       {/* Taxonomy */}
-      <TaxonomySection data={TAXONOMY} stats={TAXONOMY_STATS} />
+      <TaxonomySection />
 
       {/* Bottom CTA */}
       <SectionContainer>
