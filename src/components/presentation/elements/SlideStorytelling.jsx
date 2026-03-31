@@ -28,6 +28,8 @@ function SlideStorytelling({ from, to, arrowLabel, direction = 'vertical', sx })
         display: 'flex',
         flexDirection: isVertical ? 'column' : 'row',
         alignItems: 'center',
+        justifyContent: 'center',
+        height: '100%',
         gap: `${t.spacing.element}px`,
         ...sx,
       }}
@@ -43,6 +45,7 @@ function SlideStorytelling({ from, to, arrowLabel, direction = 'vertical', sx })
           color: t.color.text,
           textAlign: 'center',
           wordBreak: 'keep-all',
+          whiteSpace: 'pre-line',
         }}
       >
         {from}
@@ -105,6 +108,7 @@ function SlideStorytelling({ from, to, arrowLabel, direction = 'vertical', sx })
           color: t.color.accent,
           textAlign: 'center',
           wordBreak: 'keep-all',
+          whiteSpace: 'pre-line',
         }}
       >
         {to}

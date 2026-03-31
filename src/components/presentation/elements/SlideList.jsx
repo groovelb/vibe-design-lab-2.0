@@ -44,6 +44,7 @@ function SlideList({ items, variant = 'bullet', level = 'body', gap = t.spacing.
             lineHeight: scale.lineHeight,
             letterSpacing: scale.letterSpacing,
             color: t.color.text,
+            whiteSpace: 'pre-line',
             '&::marker': {
               color: t.color.textSecondary,
             },

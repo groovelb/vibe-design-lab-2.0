@@ -28,6 +28,7 @@ function SlideTitle({ children, level = 1, sx }) {
         lineHeight: scale.lineHeight,
         letterSpacing: scale.letterSpacing,
         color: t.color.text,
+        whiteSpace: 'pre-line',
         m: 0,
         ...sx,
       }}

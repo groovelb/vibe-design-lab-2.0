@@ -61,6 +61,7 @@ function SlideChapterTitle({ overline, title, summary, toc, sx }) {
           lineHeight: t.typo.title.lineHeight,
           letterSpacing: t.typo.title.letterSpacing,
           color: t.color.text,
+          whiteSpace: 'pre-line',
           m: 0,
         }}
       >
@@ -76,6 +77,7 @@ function SlideChapterTitle({ overline, title, summary, toc, sx }) {
             fontWeight: t.typo.body.fontWeight,
             lineHeight: t.typo.body.lineHeight,
             color: t.color.textSecondary,
+            whiteSpace: 'pre-line',
             maxWidth: '70%',
             mt: `-${t.spacing.tight}px`,
           }}

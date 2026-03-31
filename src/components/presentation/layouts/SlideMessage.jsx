@@ -35,6 +35,7 @@ function SlideMessage({ children, sx }) {
           lineHeight: t.typo.title.lineHeight,
           letterSpacing: t.typo.title.letterSpacing,
           color: t.color.accent,
+          whiteSpace: 'pre-line',
           maxWidth: '80%',
         }}
       >
