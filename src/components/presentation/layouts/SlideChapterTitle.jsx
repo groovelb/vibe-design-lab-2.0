@@ -10,7 +10,7 @@ import { presentationTokens as t } from '../../../styles/themes/presentation';
  * @param {string} overline - 챕터 라벨 (예: "CHAPTER 02") [Optional]
  * @param {string} title - 챕터 제목 [Required]
  * @param {string} summary - 챕터 요약 [Optional]
- * @param {string[]} toc - 목차 항목 배열 [Optional]
+ * @param {string[]} toc - 목차 항목 배열 (falsy 값은 자동 생략) [Optional]
  * @param {object} sx - 추가 스타일 [Optional]
  *
  * Example usage:
@@ -98,7 +98,7 @@ function SlideChapterTitle({ overline, title, summary, toc, sx }) {
             listStyleType: '"▪  "',
           }}
         >
-          {toc.map((item, i) => (
+          {toc.filter(Boolean).map((item, i) => (
             <Box
               key={i}
               component="li"

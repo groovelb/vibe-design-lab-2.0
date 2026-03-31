@@ -42,6 +42,7 @@ function SlideStorytelling({ from, to, arrowLabel, direction = 'vertical', sx })
           letterSpacing: t.typo.subtitle.letterSpacing,
           color: t.color.text,
           textAlign: 'center',
+          wordBreak: 'keep-all',
         }}
       >
         {from}
@@ -103,6 +104,7 @@ function SlideStorytelling({ from, to, arrowLabel, direction = 'vertical', sx })
           letterSpacing: t.typo.subtitle.letterSpacing,
           color: t.color.accent,
           textAlign: 'center',
+          wordBreak: 'keep-all',
         }}
       >
         {to}
