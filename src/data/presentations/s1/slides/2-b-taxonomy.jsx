@@ -3,7 +3,6 @@
  */
 import {
   SlideChapterTitle,
-  SlideGrid,
   SlideHSplit,
   SlideMessage,
   SlideTypoStack,

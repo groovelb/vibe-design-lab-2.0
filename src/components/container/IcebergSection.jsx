@@ -98,7 +98,7 @@ const IcebergSection = forwardRef(function IcebergSection(
           <FadeTransition isTriggerOnView direction="up" delay={100}>
             <Typography
               variant="h2"
-              sx={{ maxWidth: 800, mb: { xs: 6, md: 8 } }}
+              sx={{ mb: { xs: 6, md: 8 } }}
             >
               {tagline}
             </Typography>
@@ -122,7 +122,6 @@ const IcebergSection = forwardRef(function IcebergSection(
               variant="body1"
               sx={{
                 color: depth === 'surface' ? 'grey.600' : 'text.secondary',
-                fontStyle: 'italic',
               }}
             >
               {transition}

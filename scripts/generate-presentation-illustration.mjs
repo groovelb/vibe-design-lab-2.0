@@ -402,6 +402,106 @@ Key elements:
 
 Emphasis: The outer circle rim is the dominant contour.`,
   },
+
+  // ── 2-A-4: 프로그래밍 언어의 추상화 과정 4단계 (테크 아이소, 1:1) ──
+
+  {
+    name: 'abstraction-punch-card',
+    type: 'tech-iso',
+    referenceImage: null,
+    configOverride: { imageConfig: { aspectRatio: '1:1', imageSize: '1K', numberOfImages: 2 } },
+    content: `\
+Subject: A punch card machine — a large isometric mechanical device \
+with a rectangular card slot and rows of tiny cylindrical pins \
+arranged in a grid pattern on its surface.
+
+Composition: Single hero object centered on canvas, viewed from \
+isometric three-quarter angle.
+
+Key elements:
+- One large isometric box (the machine body) with visible top, \
+front, and side faces
+- Top face: a grid of small cylindrical pin holes in neat rows
+- Front face: a narrow rectangular card insertion slot
+- A small isometric punch card floating beside the slot
+- Internal wireframe detail showing mechanical gears inside
+
+Emphasis: The machine body is the hero — largest and brightest \
+strokes. The floating card uses secondary stroke brightness.`,
+  },
+  {
+    name: 'abstraction-compiler',
+    type: 'tech-iso',
+    referenceImage: null,
+    configOverride: { imageConfig: { aspectRatio: '1:1', imageSize: '1K', numberOfImages: 2 } },
+    content: `\
+Subject: A compiler as a translation machine — an isometric funnel \
+or hourglass-shaped module. Varied geometric blocks enter from the \
+top and uniform small cubes exit from the bottom.
+
+Composition: Vertical flow, centered. Hero funnel module at center, \
+input blocks above, output cubes below.
+
+Key elements:
+- Top: 3-4 small isometric blocks of different shapes and sizes \
+(representing diverse high-level code constructs)
+- Center: a large isometric hourglass/funnel module with internal \
+wireframe detail showing the transformation process
+- Bottom: uniform tiny isometric cubes in a neat row (machine code)
+- Thin connection lines from input blocks to funnel top
+
+Emphasis: The central funnel module is the hero with brightest \
+strokes and most internal wireframe detail.`,
+  },
+  {
+    name: 'abstraction-modern-prog',
+    type: 'tech-iso',
+    referenceImage: null,
+    configOverride: { imageConfig: { aspectRatio: '1:1', imageSize: '1K', numberOfImages: 2 } },
+    content: `\
+Subject: A layered isometric tower of stacked platform modules — \
+representing modern programming abstraction layers from OS at \
+the bottom to application at the top.
+
+Composition: Vertical stack, centered, bottom-up pyramid-like \
+arrangement.
+
+Key elements:
+- Bottom: wide flat isometric platform (OS/runtime layer)
+- Middle: two medium isometric boxes side by side on the platform \
+(frameworks/libraries)
+- Top: one tall isometric box with rich internal wireframe panels \
+and nested subdivisions (application/IDE layer)
+- Small circular node markers at connection points between layers
+
+Emphasis: The top application box is the hero — tallest, most \
+internal detail, brightest strokes.`,
+  },
+  {
+    name: 'abstraction-vibe-coding',
+    type: 'tech-iso',
+    referenceImage: null,
+    configOverride: { imageConfig: { aspectRatio: '1:1', imageSize: '1K', numberOfImages: 2 } },
+    content: `\
+Subject: An isometric speech bubble module on the left connected \
+by flowing lines to an isometric code editor module on the right — \
+representing natural language transforming into code via AI.
+
+Composition: Diagonal flow from upper-left to lower-right, two \
+hero-sized modules connected by curved lines with node dots.
+
+Key elements:
+- Left: a rounded isometric speech bubble box with soft edges \
+and simple internal lines (natural language input)
+- Right: a rectangular isometric screen/editor module with inner \
+wireframe grid showing code-like rows (generated output)
+- Center: 3-4 curved connection lines flowing between them with \
+small circular node markers at junction points
+- A small isometric AI chip or brain module floating between them
+
+Emphasis: Both the speech bubble and code editor share hero status \
+with brightest strokes. The AI module in between uses secondary.`,
+  },
 ];
 
 // ═══════════════════════════════════════════════════════════

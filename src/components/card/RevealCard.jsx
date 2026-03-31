@@ -2,26 +2,13 @@
 import { forwardRef } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { CardContainer } from './CardContainer';
 import FadeTransition from '../motion/FadeTransition';
-
-/**
- * surpriseLevel → 좌측 border 명도 매핑
- * 높을수록 밝아진다 (주목도 증가)
- */
-const ACCENT_MAP = {
-  1: 'grey.700',
-  2: 'grey.700',
-  3: 'grey.500',
-  4: 'grey.200',
-  5: 'grey.100',
-};
 
 /**
  * RevealCard
  *
- * 스크롤 진입 시 드러나는 서프라이즈 발견 카드.
- * reveals.json의 개별 항목을 렌더링한다.
+ * 스크롤 진입 시 드러나는 서프라이즈 발견 블록.
+ * 에디토리얼 플랫 레이아웃 — 타이틀 + 설명 인라인, 코드 인용 하단.
  *
  * @param {string} title - Reveal 제목 [Required]
  * @param {string} description - Reveal 설명 [Required]
@@ -34,57 +21,40 @@ const RevealCard = forwardRef(function RevealCard(
   { title, description, quote, surpriseLevel = 3, delay = 200, sx, ...props },
   ref
 ) {
-  const accentColor = ACCENT_MAP[surpriseLevel] || ACCENT_MAP[3];
-
   return (
     <FadeTransition isTriggerOnView direction="up" delay={delay}>
-      <CardContainer
+      <Box
         ref={ref}
-        variant="ghost"
-        padding="md"
-        radius="none"
         sx={{
-          borderLeft: '1px solid',
-          borderLeftColor: accentColor,
+          py: 3,
+          borderTop: '1px solid',
+          borderColor: 'divider',
           ...sx,
         }}
         {...props}
       >
-        <Typography
-          variant="overline"
-          sx={{ color: 'text.secondary', display: 'block', mb: 1 }}
-        >
-          Discovery
-        </Typography>
-
-        <Typography variant="h4" sx={{ color: 'text.primary', mb: 2 }}>
-          {title}
-        </Typography>
-
-        <Typography variant="body2" sx={{ color: 'text.secondary', mb: quote ? 2 : 0 }}>
+        <Typography variant="body2" component="div" sx={{ color: 'text.secondary' }}>
+          <Typography
+            component="span"
+            variant="body2"
+            sx={{ fontWeight: 600, color: 'text.primary' }}
+          >
+            {title}
+          </Typography>
+          {' — '}
           {description}
         </Typography>
 
         {quote && (
-          <Box
-            sx={{
-              mt: 2,
-              py: 1.5,
-              px: 2,
-              bgcolor: 'action.hover',
-              borderRadius: 0,
-            }}
+          <Typography
+            variant="code"
+            component="div"
+            sx={{ color: 'text.secondary', mt: 1.5 }}
           >
-            <Typography
-              variant="code"
-              component="div"
-              sx={{ color: 'text.primary' }}
-            >
-              {quote}
-            </Typography>
-          </Box>
+            {quote}
+          </Typography>
         )}
-      </CardContainer>
+      </Box>
     </FadeTransition>
   );
 });

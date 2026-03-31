@@ -6,6 +6,7 @@ import {
   SlideGrid,
   SlideHSplit,
   SlideMessage,
+  SlideStorytelling,
   SlideTypoStack,
   SlideList,
 } from '../../../../components/presentation';
@@ -21,6 +22,7 @@ export const devSetupSlides = [
         title="개발환경 세팅 & 익숙해지기"
         summary="처음이라 낯설 뿐, 어렵지 않습니다"
         toc={[
+          'Spec-Driven vs Procedural',
           '개발환경 용어 정리',
           '사전 점검 스크립트',
           'Claude Code 설치',
@@ -32,6 +34,23 @@ export const devSetupSlides = [
   },
   {
     id: '2-E-2',
+    title: 'Spec-Driven vs Procedural',
+    render: () => (
+      <SlideHSplit>
+        <SlideStorytelling
+          from="Procedural: 1번 하고 2번 하고 3번 해라"
+          to="Spec-Driven: 이 상태가 되어야 합니다"
+          arrowLabel="전환"
+        />
+        <SlideTypoStack
+          headline="이 과정이 바이브 코딩 그 자체입니다"
+          body={'수강생마다 OS, 버전, 기존 설치 상태가 다릅니다.\n절차적 튜토리얼은 환경이 다르면 막히죠.\n\n스펙을 정의하고, AI가 절차를 처리하고,\n결과가 스펙을 충족하는지 검수하는 루프 —\n지금 세팅하는 이 과정이 앞으로 코딩할 때의 과정과 똑같습니다.'}
+        />
+      </SlideHSplit>
+    ),
+  },
+  {
+    id: '2-E-3',
     title: '사전 점검 스크립트 실행',
     render: () => (
       <SlideHSplit>
@@ -44,7 +63,7 @@ export const devSetupSlides = [
     ),
   },
   {
-    id: '2-E-3',
+    id: '2-E-4',
     title: '개발환경 가이드 실행',
     render: () => (
       <SlideHSplit>
@@ -57,14 +76,14 @@ export const devSetupSlides = [
     ),
   },
   {
-    id: '2-E-4',
+    id: '2-E-5',
     title: 'Claude Code 설치',
     render: () => (
       <SlideMessage>Claude Code 설치</SlideMessage>
     ),
   },
   {
-    id: '2-E-5',
+    id: '2-E-6',
     title: '빌드와 npm 이해하기',
     render: () => (
       <SlideHSplit>
@@ -84,7 +103,7 @@ export const devSetupSlides = [
     ),
   },
   {
-    id: '2-E-6',
+    id: '2-E-7',
     title: '터미널 첫 경험 + 걱정 FAQ',
     render: () => (
       <SlideHSplit>
@@ -104,7 +123,7 @@ export const devSetupSlides = [
     ),
   },
   {
-    id: '2-E-7',
+    id: '2-E-8',
     title: 'AntiGravity 사용법',
     render: () => (
       <SlideGrid columns={2}>
@@ -116,7 +135,7 @@ export const devSetupSlides = [
     ),
   },
   {
-    id: '2-E-8',
+    id: '2-E-9',
     title: 'Claude CLI 사용법',
     render: () => (
       <SlideGrid columns={2}>

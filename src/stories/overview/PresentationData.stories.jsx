@@ -42,7 +42,7 @@ function Part({ part }) {
         </Box>
       </AccordionSummary>
       <AccordionDetails sx={ { pt: 0, pb: 1 } }>
-        { part.slides.map((slide, i) => (
+        { part.slides.filter((s) => s.title).map((slide, i) => (
           <Box key={ slide.id } sx={ { display: 'flex', gap: 1, py: 0.25, pl: 1 } }>
             <Typography sx={ { ...mono, color: 'text.secondary', flexShrink: 0, minWidth: 20 } }>
               { i + 1 }.
