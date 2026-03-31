@@ -1,0 +1,74 @@
+[
+  {
+    "act": 1,
+    "title_ko": "터미널의 동반자",
+    "title_en": "Terminal Companion",
+    "tagline": "터미널에 글자를 치면, 무엇이 일어날까요?",
+    "layers": ["L1"],
+    "domains": ["surface"],
+    "highlight_nodes": ["cli_repl", "bash_tool", "file_tools", "agent_tool", "permission_prompt", "mcp_public"],
+    "transition": "하지만 이게 전부가 아니었습니다",
+    "report_path": "reports/report-1_anatomy.md",
+    "description": "사용자가 알고 있는 Claude Code — CLI 채팅, 파일 편집, 검색, Git. 익숙한 표면 아래에 무엇이 있는지 암시하며 시작한다."
+  },
+  {
+    "act": 2,
+    "title_ko": "1,297줄의 심장",
+    "title_en": "The 1,297-Line Heart",
+    "tagline": "1,297줄의 코드가 당신의 한 줄을 기다리고 있었습니다",
+    "layers": ["L2"],
+    "domains": ["engine", "memory", "runtime"],
+    "highlight_nodes": ["query_engine", "system_prompt", "tool_registry", "compact_service", "claudemd", "bun_runtime", "react_ink"],
+    "transition": "엔진은 완벽했습니다. 그런데 누가 이 엔진을 지켜보고 있을까요?",
+    "report_path": "reports/report-1_anatomy.md",
+    "description": "수면 아래 첫 번째 세계. QueryEngine의 async generator 루프, 40+ 도구 조립, 915줄 시스템 프롬프트, CLAUDE.md 6계층 메모리를 해부한다."
+  },
+  {
+    "act": 3,
+    "title_ko": "보이지 않는 눈",
+    "title_en": "The Invisible Eyes",
+    "tagline": "당신이 Claude를 사용하는 동안, Claude도 당신을 보고 있었습니다",
+    "layers": ["L3"],
+    "domains": ["telemetry", "enterprise", "protection", "security"],
+    "highlight_nodes": ["feature_flags", "growthbook", "otel_pipeline", "undercover_mode", "anti_distillation", "secret_scanner", "mdm_system", "transcript_classifier"],
+    "transition": "관찰만 하는 게 아닙니다. 군단이 깨어나고 있습니다.",
+    "report_path": "reports/report-2_watchtower.md",
+    "description": "651+ 추적 이벤트, 60+ 피처 플래그, GrowthBook A/B 테스트, MDM 원격 관리. Anthropic이 제품과 사용자를 어떻게 관찰하고 제어하는지."
+  },
+  {
+    "act": 4,
+    "title_ko": "깨어나는 군단",
+    "title_en": "The Awakening Legion",
+    "tagline": "하나의 Claude는 시작일 뿐이었습니다",
+    "layers": ["L4"],
+    "domains": ["orchestration"],
+    "highlight_nodes": ["coordinator_mode", "agent_swarms", "team_create", "send_message", "pane_backend", "worktree_isolation", "shutdown_protocol"],
+    "transition": "군단은 명령을 기다립니다. 하지만 만약 스스로 깨어난다면?",
+    "report_path": "reports/report-3_legion.md",
+    "description": "AgentTool이 팀을 소환하고, tmux에서 병렬 에이전트가 뛰고, 파일 기반 메일박스로 통신하는 멀티에이전트 군단 시스템."
+  },
+  {
+    "act": 5,
+    "title_ko": "잠들지 않는 코드",
+    "title_en": "The Sleepless Code",
+    "tagline": "내일, Claude는 당신이 부르기 전에 먼저 일어날 것입니다",
+    "layers": ["L4"],
+    "domains": ["autonomy"],
+    "highlight_nodes": ["kairos", "proactive", "sleep_tool", "auto_dream", "cron_scheduler", "remote_trigger", "daemon"],
+    "transition": "자율 에이전트의 청사진이 완성되었습니다. 하지만 512,000줄 속에는 한 가지 더 숨겨진 것이 있습니다.",
+    "report_path": "reports/report-4_awakening.md",
+    "description": "수동→예약→반응→능동→상주→자율. CLI 도구에서 자율 에이전트 플랫폼으로의 진화 여정. SleepTool의 5분 캐시 균형, 터미널 포커스 감지, AutoDream."
+  },
+  {
+    "act": "epilogue",
+    "title_ko": "buddy/",
+    "title_en": "buddy/",
+    "tagline": "512,000줄 속에서, 개발자들은 친구를 만들고 있었습니다",
+    "layers": ["L4"],
+    "domains": ["culture"],
+    "highlight_nodes": ["buddy_system", "gacha_rng", "ascii_sprites", "companion_soul"],
+    "transition": null,
+    "report_path": "reports/report-5_human.md",
+    "description": "18종 ASCII 생명체, Mulberry32 결정론적 가챠, SALT='friend-2026-401'. 엔터프라이즈 코드 한 구석에 숨겨진 가상 펫과 개발팀의 인간적 메시지."
+  }
+]

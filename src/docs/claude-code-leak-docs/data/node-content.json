@@ -1,0 +1,1600 @@
+{
+  "cli_repl": {
+    "subtitle": "터미널 메인 입출력 루프",
+    "description_ko": "CLI/REPL Interface는 사용자가 Claude Code와 상호작용하는 최초의 접점이다. cli.tsx 진입점에서 13개 빠른 경로를 분기하고, 풀 경로일 경우 7단계 부팅 파이프라인을 거쳐 React 19 + Ink 기반 터미널 UI를 마운트한다. 사용자의 텍스트 입력을 받아 QueryEngine으로 전달하고, 스트리밍 응답을 터미널에 렌더링하는 전체 대화 루프를 관장한다.",
+    "surprise": "--version 플래그는 모듈 로딩이 0개인 순수 빠른 경로이고, -p (print 모드)는 서브커맨드 등록을 통째로 건너뛰어 ~65ms를 절약한다. 밀리초 단위까지 내려가는 시작 시간 집착.",
+    "visibility": "public",
+    "file": "src/entrypoints/cli.tsx",
+    "lines": 300,
+    "research": "research/R5-A_startup-boot.md",
+    "report_section": "reports/report-1_anatomy.md#1.1",
+    "children": []
+  },
+  "slash_commands": {
+    "subtitle": "87개 이상의 슬래시 커맨드",
+    "description_ko": "Slash Commands는 /commit, /review, /compact 등 87개 이상의 명령어를 제공하는 커맨드 레지스트리 시스템이다. processUserInput() 단계에서 사용자 입력의 슬래시 접두사를 감지하여 해당 핸들러로 분기한다. Commander.js로 52개 서브커맨드를 등록하며, 스킬 시스템과 연동하여 /skill-name 형태의 동적 스킬 호출도 지원한다.",
+    "surprise": "Commander 프로그램은 52개 서브커맨드를 등록하는데, -p (인쇄 모드) 플래그가 있으면 이 등록을 통째로 건너뛴다. 서브커맨드 구조가 mcp, auth, plugin, auto-mode 등 깊은 트리 형태를 이루며, ant-only 서브커맨드(up, log, error, export, task)도 별도로 존재한다.",
+    "visibility": "public",
+    "file": "src/commands.ts",
+    "lines": null,
+    "research": "research/R5-A_startup-boot.md",
+    "report_section": "reports/report-1_anatomy.md#1.1",
+    "children": []
+  },
+  "file_tools": {
+    "subtitle": "파일 읽기·편집·쓰기 3종",
+    "description_ko": "FileReadTool, FileEditTool, FileWriteTool 3개의 파일 조작 도구를 통합하는 핵심 도구 그룹이다. FileReadTool은 파일 내용 읽기, FileEditTool은 diff 기반 정밀 편집, FileWriteTool은 전체 파일 쓰기를 담당한다. 항상 활성화되는 핵심 16개 도구에 포함되며, Microcompact의 COMPACTABLE_TOOLS 대상이기도 하다.",
+    "surprise": "FileEditTool은 old_string이 파일 내에서 고유하지 않으면 편집이 실패하도록 설계되어 있다. 의도치 않은 다중 수정을 방지하는 안전장치이며, replace_all 플래그로 명시적 일괄 변경만 허용한다.",
+    "visibility": "public",
+    "file": null,
+    "lines": null,
+    "research": "research/R4-E_tool-system.md",
+    "report_section": "reports/report-1_anatomy.md#1.3",
+    "children": []
+  },
+  "bash_tool": {
+    "subtitle": "셸 명령 실행 도구",
+    "description_ko": "BashTool은 사용자의 시스템에서 임의의 셸 명령을 실행하는 핵심 도구다. 항상 활성화되는 16개 핵심 도구 중 하나이며, 실행 전 권한 시스템(wrappedCanUseTool)의 검증을 반드시 거친다. Sandbox 시스템(macOS seatbelt, Linux bubblewrap)과 AI Bash Classifier에 의해 위험한 명령이 차단될 수 있다.",
+    "surprise": "Anthropic 내부 빌드에서는 bfs(faster find)와 ugrep(faster grep)이 Bun 바이너리에 직접 임베드되어 셸의 find/grep을 자동 alias한다. 외부 빌드에서만 별도의 Glob/Grep 도구가 필요하다.",
+    "visibility": "public",
+    "file": null,
+    "lines": null,
+    "research": "research/R4-E_tool-system.md",
+    "report_section": "reports/report-1_anatomy.md#1.3",
+    "children": []
+  },
+  "search_tools": {
+    "subtitle": "패턴·내용 검색 도구 2종",
+    "description_ko": "GlobTool(파일 패턴 검색)과 GrepTool(내용 검색, ripgrep 기반) 두 개의 검색 도구로 구성된다. GlobTool은 파일명 패턴으로 빠른 파일 탐색을, GrepTool은 정규식 기반 코드/텍스트 내용 검색을 수행한다. 두 도구 모두 Microcompact의 대상 도구이며, 오래된 검색 결과는 자동으로 정리된다.",
+    "surprise": "Anthropic 내부 빌드에서는 이 두 도구가 아예 포함되지 않는다. bfs와 ugrep이 Bun 바이너리에 임베드되어 셸에서 직접 실행되므로, hasEmbeddedSearchTools()가 true면 도구 목록에서 완전히 제외된다.",
+    "visibility": "public",
+    "file": null,
+    "lines": null,
+    "research": "research/R4-E_tool-system.md",
+    "report_section": "reports/report-1_anatomy.md#1.3",
+    "children": []
+  },
+  "web_tools": {
+    "subtitle": "웹 접근 도구 2종",
+    "description_ko": "WebFetchTool(URL 페치)과 WebSearchTool(웹 검색) 두 개의 웹 접근 도구로 구성된다. WebFetchTool은 지정된 URL의 콘텐츠를 가져오고, WebSearchTool은 웹 검색 결과를 반환한다. 항상 활성화되는 핵심 16개 도구에 포함되며, Microcompact의 COMPACTABLE_TOOLS 대상이다.",
+    "surprise": "WebFetch와 WebSearch 결과는 Microcompact에 의해 시간 경과 후 자동으로 '[Old tool result content cleared]'로 교체된다. 웹 콘텐츠는 시간이 지나면 컨텍스트에서 가장 먼저 정리되는 대상이다.",
+    "visibility": "public",
+    "file": null,
+    "lines": null,
+    "research": "research/R4-E_tool-system.md",
+    "report_section": "reports/report-1_anatomy.md#1.3",
+    "children": []
+  },
+  "agent_tool": {
+    "subtitle": "서브에이전트 생성 도구",
+    "description_ko": "AgentTool은 Claude Code 내에서 서브에이전트를 생성하는 핵심 도구다. Fork(부모 컨텍스트 상속), Async(120초 후 자동 배경화), Team(팀 멤버 실행) 세 가지 경로를 라우팅한다. L1 Surface의 사용자 도구이면서 동시에 L4 Orchestration 계층의 핵심 컴포넌트이기도 한 교차 노드다.",
+    "surprise": "AgentTool은 1,398줄의 거대한 코드베이스를 가지며, CacheSafeParams로 byte-identical prefix를 공유하여 포크된 서브에이전트가 부모의 프롬프트 캐시를 재사용한다. 서브에이전트 생성의 API 비용을 극적으로 절감하는 설계.",
+    "visibility": "public",
+    "file": null,
+    "lines": 1398,
+    "research": "research/R2-B_agent-tool.md",
+    "report_section": "reports/report-1_anatomy.md#1.3",
+    "children": []
+  },
+  "permission_prompt": {
+    "subtitle": "도구 실행 전 사용자 승인",
+    "description_ko": "Permission Prompt는 도구 실행 전에 사용자에게 승인을 요청하는 UI 컴포넌트다. wrappedCanUseTool()이 모든 도구 호출을 감싸며, canUseTool 결과가 'allow'가 아니면 거부 내역을 permissionDenials 배열에 축적한다. 6가지 권한 모드(default/acceptEdits/plan/auto/bypassPermissions/dontAsk)와 연동된다.",
+    "surprise": "Claude Code는 '거부당한 시도'까지 모두 기록한다. permissionDenials 배열에 tool_name, tool_use_id, tool_input이 축적되어 SDK 리포팅용으로 추적되며, 이 데이터는 보안 분석에 활용된다.",
+    "visibility": "public",
+    "file": null,
+    "lines": null,
+    "research": "research/R4-B_permission-system.md",
+    "report_section": "reports/report-1_anatomy.md#1.6",
+    "children": []
+  },
+  "mcp_public": {
+    "subtitle": "외부 MCP 서버 연동",
+    "description_ko": "MCP Server Integration은 Model Context Protocol을 통해 외부 서버의 도구와 리소스를 Claude Code에 통합하는 공개 인터페이스다. claude mcp add/remove/list 서브커맨드로 관리하며, .mcp.json 파일을 통한 프로젝트별 자동 감지도 지원한다. 인터랙티브 모드에서는 비동기 population으로 REPL 렌더를 차단하지 않고, 헤드리스 모드에서는 await connectMcpBatch()로 연결을 대기한다.",
+    "surprise": "claude mcp serve 명령으로 Claude Code 자체를 MCP 서버로 노출할 수 있다. 내부적으로 'claude/tengu'라는 서버 이름을 사용하며, zodToJsonSchema로 도구 스키마를 자동 변환한다.",
+    "visibility": "public",
+    "file": null,
+    "lines": null,
+    "research": "research/R5-A_startup-boot.md",
+    "report_section": "reports/report-1_anatomy.md#1.3",
+    "children": []
+  },
+  "notebook_tool": {
+    "subtitle": "Jupyter 노트북 편집 도구",
+    "description_ko": "NotebookEditTool은 Jupyter 노트북(.ipynb) 파일을 편집하는 전용 도구다. 노트북의 셀 단위 조작을 지원하며, 항상 활성화되는 핵심 16개 도구에 포함된다. 코드 셀과 마크다운 셀을 구분하여 편집하고, 노트북 특유의 JSON 구조를 올바르게 유지한다.",
+    "surprise": "NotebookEditTool은 Deferred Loading 시스템(ToolSearchTool)에서 발견(discover) 가능한 도구 중 하나다. MCP 도구가 많을 때 기본 도구 목록에서 빠지고, 모델이 필요할 때 select:NotebookEdit로 로딩할 수 있다.",
+    "visibility": "public",
+    "file": null,
+    "lines": null,
+    "research": "research/R4-E_tool-system.md",
+    "report_section": "reports/report-1_anatomy.md#1.3",
+    "children": []
+  },
+  "skill_tool": {
+    "subtitle": "스킬 호출 도구",
+    "description_ko": "SkillTool은 슬래시 커맨드 형태의 스킬을 실행하는 도구다. /commit, /review-pr 등의 스킬을 호출하며, 번들된 빌트인 스킬과 사용자 정의 스킬(.claude/agents/*.md)을 모두 지원한다. QueryEngine의 discoveredSkillNames Set으로 턴별 스킬 탐색을 추적한다.",
+    "surprise": "--bare 모드에서도 /skill-name 형태의 스킬 해결은 여전히 작동한다. 최소 모드에서 대부분의 기능이 비활성화되지만, 스킬 시스템만은 명시적으로 유지된다.",
+    "visibility": "public",
+    "file": null,
+    "lines": null,
+    "research": "research/R4-E_tool-system.md",
+    "report_section": "reports/report-1_anatomy.md#1.3",
+    "children": []
+  },
+  "query_engine": {
+    "subtitle": "1,297줄 비동기 제너레이터 심장",
+    "description_ko": "QueryEngine은 Claude Code의 핵심 실행 엔진이다. submitMessage() 메서드가 AsyncGenerator<SDKMessage>를 반환하며, 사용자의 질문이 최종 답변이 될 때까지의 전체 생명주기를 관장한다. 메시지 루프에서 7가지 메시지 타입(tombstone, assistant, user, stream_event, progress, attachment, system)을 분기 처리하고, 5-Gate 예산 시스템(maxBudgetUsd, maxTurns, structured output 재시도, abortController, tombstone)으로 실행을 제어한다.",
+    "surprise": "모든 도구 호출은 wrappedCanUseTool을 거치며, 거부된 시도까지 permissionDenials 배열에 축적한다. 또한 feature() 호출로 COORDINATOR_MODE, HISTORY_SNIP 등의 코드 분기가 빌드 타임에 결정되어, 외부 빌드에는 해당 코드가 물리적으로 존재하지 않는다.",
+    "visibility": "hidden",
+    "file": "src/QueryEngine.ts",
+    "lines": 1297,
+    "research": "research/R1-A_query-engine.md",
+    "report_section": "reports/report-1_anatomy.md#1.2",
+    "children": [
+      {
+        "id": "submit_message",
+        "label": "submitMessage()",
+        "desc": "AsyncGenerator<SDKMessage>를 반환하는 핵심 메서드. 시스템 프롬프트 조립 → 사용자 입력 처리 → 세션 기록 → 쿼리 루프 진입의 7단계 파이프라인 실행"
+      },
+      {
+        "id": "message_loop",
+        "label": "Message Processing Loop",
+        "desc": "for await 루프에서 7가지 메시지 타입(tombstone, assistant, user, stream_event, progress, attachment, system)을 분기 처리하는 핵심 실행 루프"
+      },
+      {
+        "id": "session_persistence",
+        "label": "Session Persistence",
+        "desc": "유저 메시지는 쿼리 루프 전 즉시 기록(crash-safe), 어시스턴트 메시지는 fire-and-forget, 컴팩트 경계는 즉시 기록 + GC하는 방어적 비대칭 전략"
+      },
+      {
+        "id": "permission_wrapper",
+        "label": "Permission Wrapper",
+        "desc": "wrappedCanUseTool()로 모든 도구 호출을 감싸며, 거부된 호출을 permissionDenials 배열에 축적하여 SDK 리포팅용으로 추적"
+      },
+      {
+        "id": "snip_compact",
+        "label": "History Snip",
+        "desc": "HISTORY_SNIP 피처 플래그 활성 시 snipReplay를 실행하여 히스토리를 압축하는 컨텍스트 관리 메커니즘"
+      }
+    ]
+  },
+  "system_prompt": {
+    "subtitle": "915줄 이중 경로 프롬프트 빌더",
+    "description_ko": "System Prompt Builder는 모델의 행동을 정의하는 915줄의 프롬프트 조립기다. 일반 모드(경로 A: 정적+동적 구조)와 자율 모드(경로 B: 'You are an autonomous agent')의 완전히 다른 두 경로가 존재한다. 15개 이상의 동적 섹션이 레지스트리 패턴으로 관리되며, DANGEROUS_uncachedSystemPromptSection 접두사가 캐시 무효화 위험 섹션을 명시한다.",
+    "surprise": "시스템 프롬프트에 숨겨진 모델 상수에 따르면, 최신 프론티어 모델은 Claude Opus 4.6(지식 컷오프 May 2025)이며, claude-sonnet-4-6의 컷오프는 August 2025로 기록되어 있다. ANT-ONLY 섹션에는 False claims를 29-30%에서 16.7%로 감소시킨 결과 정직 보고 지침이 포함되어 있다.",
+    "visibility": "hidden",
+    "file": "src/constants/prompts.ts",
+    "lines": 915,
+    "research": "research/R1-B_system-prompt.md",
+    "report_section": "reports/report-1_anatomy.md#1.4",
+    "children": [
+      {
+        "id": "proactive_prompt",
+        "label": "Autonomous Mode Prompt",
+        "desc": "PROACTIVE/KAIROS 활성 시 수백 줄의 코딩 가이드라인이 사라지고 'You are an autonomous agent' 한 문장으로 대체되는 자율 모드 전용 프롬프트 (50+ 줄)"
+      },
+      {
+        "id": "ant_only_sections",
+        "label": "ANT-Only Prompt Sections",
+        "desc": "과잉 코멘트 억제(Capy v8), assertiveness 보정, 25단어/100단어 제한(1.2% 토큰 절감), 산문체 스타일 등 외부 빌드에서 DCE로 물리적 제거되는 내부 전용 프롬프트"
+      }
+    ]
+  },
+  "tool_registry": {
+    "subtitle": "40개 이상 도구 관리 레지스트리",
+    "description_ko": "Tool Registry는 40개 이상의 도구를 관리하는 중앙 레지스트리다. 항상 활성화되는 핵심 16개 도구, 피처 플래그로 게이팅되는 조건부 도구, ant-only 내부 전용 도구를 분류하여 관리한다. feature() 호출은 esbuild가 컴파일 타임에 true/false로 치환하여 false 분기의 require()를 번들에서 완전히 제거하는 DCE(Dead Code Elimination) 패턴을 사용한다.",
+    "surprise": "외부 사용자의 Claude Code에는 SleepTool, REPLTool, TungstenTool 등의 코드가 물리적으로 존재하지 않는다. feature(false) 분기의 코드는 esbuild가 빌드 시 완전히 제거한다.",
+    "visibility": "hidden",
+    "file": "src/tools.ts",
+    "lines": 391,
+    "research": "research/R4-E_tool-system.md",
+    "report_section": "reports/report-1_anatomy.md#1.3",
+    "children": [
+      {
+        "id": "tool_permission_filter",
+        "label": "Tool Permission Filter",
+        "desc": "filterToolsByDenyRules()로 거부 규칙에 매칭되는 도구를 모델에게 보이지도 않게 사전 제거. MCP 서버 prefix 규칙(mcp__server)으로 서버 전체 도구 일괄 차단 가능"
+      },
+      {
+        "id": "repl_tool",
+        "label": "REPL VM Tool",
+        "desc": "ant-only 기능으로 Bash/Read/Edit를 VM 컨텍스트 안으로 래핑. 모델에게는 REPL만 보여 도구 토큰을 절감하는 최적화"
+      },
+      {
+        "id": "embedded_search",
+        "label": "Embedded Search",
+        "desc": "ant 내부 빌드에서 bfs(faster find)와 ugrep(faster grep)를 Bun 바이너리에 직접 임베드. 셸 find/grep 자동 alias로 별도 도구 불필요"
+      }
+    ]
+  },
+  "tool_assembly": {
+    "subtitle": "3단계 도구 조립 파이프라인",
+    "description_ko": "Tool Assembly Pipeline은 getAllBaseTools() → getTools() → assembleToolPool()의 3단계를 거쳐 모델에게 전달할 최종 도구 풀을 구성한다. 피처 플래그 필터링, 권한 필터링, MCP 도구 병합, 중복 제거, 정렬을 수행한다. 빌트인 도구가 MCP 도구보다 우선되며(uniqBy), 빌트인을 앞쪽에 연속 배치하여 프롬프트 캐시 안정성을 확보한다.",
+    "surprise": "MCP 도구가 빌트인 도구 사이에 끼면 캐시 키가 무효화된다. 이를 방지하기 위해 빌트인 도구를 반드시 연속 prefix로 배치하고, byName 정렬로 결정론적 순서를 보장하는 의도적 설계가 적용되어 있다.",
+    "visibility": "hidden",
+    "file": "src/tools.ts",
+    "lines": null,
+    "research": "research/R4-E_tool-system.md",
+    "report_section": "reports/report-1_anatomy.md#1.3",
+    "children": []
+  },
+  "tool_use_context": {
+    "subtitle": "40개 이상 필드의 실행 컨텍스트",
+    "description_ko": "ToolUseContext는 도구 실행에 필요한 모든 정보를 담는 40개 이상 필드의 거대한 컨텍스트 객체다. commands, debug, mainLoopModel, tools, mcpClients부터 abortController, readFileState, updateAttributionState, contentReplacementState, renderedSystemPrompt까지 포함한다. 단순한 '도구 호출'이 아니라 하나의 실행 환경 전체를 전달하는 구조다.",
+    "surprise": "contentReplacementState는 도구 결과의 크기 예산을 관리하고, renderedSystemPrompt는 포크 서브에이전트가 부모의 프롬프트 캐시를 공유할 수 있게 한다. 도구 호출 하나에 전체 시스템 상태가 주입되는 설계.",
+    "visibility": "hidden",
+    "file": "src/Tool.ts",
+    "lines": 299,
+    "research": "research/R4-E_tool-system.md",
+    "report_section": "reports/report-1_anatomy.md#1.3",
+    "children": []
+  },
+  "cache_boundary": {
+    "subtitle": "정적/동적 프롬프트 캐시 경계",
+    "description_ko": "Static/Dynamic Cache Boundary는 시스템 프롬프트를 정적(캐시 가능)과 동적(매 턴 재계산) 영역으로 분리하는 최적화 메커니즘이다. '__SYSTEM_PROMPT_DYNAMIC_BOUNDARY__' 상수 하나가 수백만 API 호출의 비용을 절감한다. 경계 이전은 cacheScope: 'global'로 전 조직 공유, 이후는 세션/사용자별 동적 콘텐츠다.",
+    "surprise": "조건부 분기가 캐시 경계 이전에 오면 캐시 해시의 변종이 2^N으로 폭발한다. 실제로 PR #24490과 #24171에서 이 버그가 발생했다고 코드 주석에 기록되어 있다.",
+    "visibility": "hidden",
+    "file": "src/constants/prompts.ts",
+    "lines": null,
+    "research": "research/R1-B_system-prompt.md",
+    "report_section": "reports/report-1_anatomy.md#1.4",
+    "children": []
+  },
+  "compact_service": {
+    "subtitle": "4가지 컨텍스트 압축 서비스",
+    "description_ko": "Context Compaction은 대화가 길어지면 컨텍스트 윈도우 한계에 부딪히는 것을 방지하는 4개의 독립적 컴팩션 메커니즘이다. Microcompact(도구 결과 정리) → Session Memory Compact(LLM 호출 없음) → Legacy Compact(Sonnet 9-섹션 요약) → Auto Compact(자동 트리거)의 계층적 구조로 운영된다.",
+    "surprise": "Session Memory Compact는 API 호출 비용이 정확히 0이다. 세션 노트의 9-섹션 구조화 템플릿이 이미 요약 역할을 하므로, LLM을 호출하지 않고도 컴팩션을 수행할 수 있다.",
+    "visibility": "hidden",
+    "file": "src/services/compact/compact.ts",
+    "lines": 1700,
+    "research": "research/R3-C_data-memory-cycle.md",
+    "report_section": "reports/report-1_anatomy.md#1.5",
+    "children": []
+  },
+  "micro_compact": {
+    "subtitle": "도구 결과 단위 즉시 압축",
+    "description_ko": "MicroCompact는 가장 가벼운 컨텍스트 정리 전략이다. 오래된 도구 결과의 content를 '[Old tool result content cleared]'로 교체하며, 시간 기반(마지막 assistant 메시지 이후 N분 경과)과 캐시 기반(cache_edits API, ant-only) 두 경로가 있다. FileRead, Bash, Grep, Glob, WebSearch, WebFetch, FileEdit, FileWrite 8종의 도구가 대상이다.",
+    "surprise": "ant-only의 Cached Microcompact(CACHED_MICROCOMPACT 플래그)는 로컬 메시지를 변경하지 않고 서버 캐시에서만 삭제하는 cache_edits API를 사용한다. pendingCacheEdits → pinnedEdits 상태 전이를 통해 서버 측 정리만 수행한다.",
+    "visibility": "hidden",
+    "file": "src/services/compact/microCompact.ts",
+    "lines": 531,
+    "research": "research/R3-C_data-memory-cycle.md",
+    "report_section": "reports/report-1_anatomy.md#1.5",
+    "children": []
+  },
+  "auto_compact": {
+    "subtitle": "토큰 한도 자동 압축",
+    "description_ko": "AutoCompact는 토큰 수가 effectiveContextWindow - 13,000(AUTOCOMPACT_BUFFER_TOKENS)에 도달하면 자동으로 트리거되는 컴팩션이다. Session Memory Compact를 먼저 시도하고(API 호출 없음), 실패 시 Legacy Compact로 폴백한다. 연속 3회 실패(MAX_CONSECUTIVE_AUTOCOMPACT_FAILURES)로 서킷 브레이커가 발동한다.",
+    "surprise": "REACTIVE_COMPACT 모드(tengu_cobalt_raccoon)가 활성화되면 사전 autoCompact가 억제되고 API 413 에러에만 대응한다. 또한 CONTEXT_COLLAPSE가 활성이면 autoCompact가 완전히 비활성화되고 90% commit / 95% blocking 지점에서 에이전트 스폰으로 전환된다.",
+    "visibility": "hidden",
+    "file": "src/services/compact/autoCompact.ts",
+    "lines": 352,
+    "research": "research/R3-C_data-memory-cycle.md",
+    "report_section": "reports/report-1_anatomy.md#1.5",
+    "children": []
+  },
+  "app_state": {
+    "subtitle": "React 기반 전역 상태 스토어",
+    "description_ko": "AppState Store는 Claude Code의 전역 상태를 관리하는 React 기반 스토어다. QueryEngine이 reads/writes하며, 대화 상태, 현재 모드, 에이전트 정보, UI 상태 등을 중앙에서 관리한다. 인터랙티브 모드에서는 Ink 컴포넌트 트리와, 헤드리스 모드에서는 headlessInitialState와 연동된다.",
+    "surprise": "CLI 도구의 전역 상태가 React의 상태 관리 패턴으로 구현되어 있다. setIsInteractive() 같은 전역 판별 함수가 init() 전에 조기 결정되며, 이 결정이 이후 모든 UI/분기 코드의 기반이 된다.",
+    "visibility": "hidden",
+    "file": "src/bootstrap/state.ts",
+    "lines": 500,
+    "research": "research/R5-A_startup-boot.md",
+    "report_section": "reports/report-1_anatomy.md#1.2",
+    "children": []
+  },
+  "session_storage": {
+    "subtitle": "JSONL 트랜스크립트 영속 저장",
+    "description_ko": "Session JSONL Storage는 대화 히스토리를 ~/.claude/projects/<cwd>/<sessionId>.jsonl 파일로 영속 저장하는 시스템이다. recordTranscript()가 메시지를 증분 기록하며, parentUuid 체인으로 대화 흐름을 추적하고, compact boundary에서는 체인이 단절된다(parentUuid=null). 서브에이전트 트랜스크립트는 별도 하위 디렉토리에 저장된다.",
+    "surprise": "유저 메시지는 쿼리 루프 진입 전 즉시 기록되어 프로세스가 죽어도 살아남지만, 어시스턴트 메시지는 fire-and-forget으로 성능을 우선한다. 최대 읽기 크기는 50MB(MAX_TRANSCRIPT_READ_BYTES)로 OOM을 방지한다.",
+    "visibility": "hidden",
+    "file": "src/utils/sessionStorage.ts",
+    "lines": 4500,
+    "research": "research/R3-C_data-memory-cycle.md",
+    "report_section": "reports/report-1_anatomy.md#1.2",
+    "children": []
+  },
+  "stop_hooks": {
+    "subtitle": "턴 종료 시 실행 파이프라인",
+    "description_ko": "Stop Hooks Pipeline은 QueryEngine의 각 턴이 종료될 때 실행되는 후처리 파이프라인이다. AutoDream(배경 기억 통합), Extract Memories(대화에서 기억 추출), Session Memory(세션 노트 업데이트) 등의 백그라운드 작업을 트리거한다. 이 파이프라인이 L2 엔진 계층과 L4 자율 계층을 연결하는 브릿지 역할을 한다.",
+    "surprise": "Stop Hooks는 L4의 자율 기능들(Dream, 메모리 추출)을 L2 엔진 루프에서 트리거하는 유일한 연결 지점이다. 이 파이프라인 하나가 Claude Code의 '학습'과 '기억'을 활성화하는 스위치다.",
+    "visibility": "hidden",
+    "file": null,
+    "lines": null,
+    "research": "research/R3-C_data-memory-cycle.md",
+    "report_section": "reports/report-1_anatomy.md#1.2",
+    "children": []
+  },
+  "frc": {
+    "subtitle": "API 재전송 시 도구 결과 제거",
+    "description_ko": "Function Result Clearing(FRC)은 API 재전송 시 이전 도구 호출의 결과를 제거하거나 요약하여 토큰을 절약하는 최적화 메커니즘이다. 시스템 프롬프트의 동적 섹션 중 하나로 등록되어 모델에게 FRC 상태를 알리며, Microcompact와 연동하여 컨텍스트 관리 전체 전략의 한 축을 담당한다.",
+    "surprise": "FRC는 시스템 프롬프트에 전용 동적 섹션('frc')으로 등록되어 있다. 모델이 '이전 도구 결과가 삭제되었음'을 인지하고 행동을 조정할 수 있게 명시적으로 알려주는 양방향 설계.",
+    "visibility": "hidden",
+    "file": null,
+    "lines": null,
+    "research": "research/R1-B_system-prompt.md",
+    "report_section": "reports/report-1_anatomy.md#1.5",
+    "children": []
+  },
+  "tool_search": {
+    "subtitle": "MCP 도구 지연 검색/로딩",
+    "description_ko": "Tool Search는 MCP 서버가 많은 도구를 제공할 때 모든 도구를 시스템 프롬프트에 넣는 대신 검색 기반 지연 로딩을 활성화하는 시스템이다. isToolSearchEnabledOptimistic()이 true이면 ToolSearchTool이 추가되고, 모델은 select:tool_name 또는 키워드 검색으로 필요한 도구만 로드한다. 토큰 절감과 캐시 안정성을 동시에 달성한다.",
+    "surprise": "ToolSearchTool은 키워드 검색과 select: 직접 선택 두 가지 쿼리 모드를 지원하며, 최대 5개 결과를 관련성 순으로 반환한다. 키워드 검색 자체가 도구를 로드하므로, 검색 후 별도의 select: 호출은 불필요하다.",
+    "visibility": "hidden",
+    "file": "src/utils/toolSearch.ts",
+    "lines": null,
+    "research": "research/R4-E_tool-system.md",
+    "report_section": "reports/report-1_anatomy.md#1.3",
+    "children": []
+  },
+  "claudemd": {
+    "subtitle": "6계층 설정 체인 시스템",
+    "description_ko": "CLAUDE.md Hierarchy는 Managed → User → Project → Local → AutoMem → TeamMem 6개 계층으로 구성된 설정/지식 관리 시스템이다. @include 지시어(@./, @~/, @/)로 외부 파일을 포함하고, MAX_INCLUDE_DEPTH = 5로 무한 재귀를 방지한다. 뒤에 로딩될수록 높은 우선순위를 가지며, frontmatter의 paths: 필드로 특정 파일/글로브에만 조건부 적용할 수 있다.",
+    "surprise": "프로젝트 설정의 autoMemoryDirectory는 무시된다. 악성 레포가 메모리 디렉토리를 ~/.ssh로 리디렉션하는 공격을 사전 차단하기 위한 보안 제약. 최대 메모리 크기는 40,000자(MAX_MEMORY_CHARACTER_COUNT)로 제한되며, HTML 주석(<!-- -->)은 자동으로 스트립된다.",
+    "visibility": "hidden",
+    "file": "src/utils/claudemd.ts",
+    "lines": 1500,
+    "research": "research/R3-C_data-memory-cycle.md",
+    "report_section": "reports/report-1_anatomy.md#1.5",
+    "children": []
+  },
+  "memdir": {
+    "subtitle": "영속 메모리 파일 시스템",
+    "description_ko": "Memory Directory System은 ~/.claude/memory/ 경로에 영속적 메모리 파일을 관리하는 시스템이다. 메모리 파일은 frontmatter(name, description, type) + 마크다운 본문 구조를 가지며, 4가지 타입(user/feedback/project/reference)으로 분류된다. scanMemoryFiles()로 최대 200개 파일을 mtime 기준으로 스캔하고, 메모리 활성화 조건은 5단계 우선순위 체인으로 결정된다.",
+    "surprise": "메모리 회상 시 2일 이상 지난 기억에는 'This memory is {d} days old' 경고가 자동 추가된다. '메모리에 X가 있다'와 'X가 지금 존재한다'가 동일하지 않음을 모델에게 명시적으로 알려주는 신뢰도 관리 메커니즘이 내장되어 있다.",
+    "visibility": "hidden",
+    "file": "src/memdir/memdir.ts",
+    "lines": 507,
+    "research": "research/R3-C_data-memory-cycle.md",
+    "report_section": "reports/report-1_anatomy.md#1.5",
+    "children": [
+      {
+        "id": "user_memory",
+        "label": "User Memory Type",
+        "desc": "사용자의 역할, 목표, 전문성을 저장하는 메모리 타입. 항상 비공개(always private)로 팀에 공유되지 않음"
+      },
+      {
+        "id": "feedback_memory",
+        "label": "Feedback Memory Type",
+        "desc": "작업 방식 교정/확인 지침을 저장하는 메모리 타입. 기본 비공개이지만 프로젝트 컨벤션이면 팀 공유 가능"
+      },
+      {
+        "id": "project_memory",
+        "label": "Project Memory Type",
+        "desc": "진행 중인 작업, 목표, 버그, 인시던트 등 프로젝트 상태를 저장하는 메모리 타입. 팀 공유 편향(bias toward team)"
+      },
+      {
+        "id": "reference_memory",
+        "label": "Reference Memory Type",
+        "desc": "Linear, Grafana 등 외부 시스템 포인터를 저장하는 메모리 타입. 보통 팀 공유(usually team)"
+      }
+    ]
+  },
+  "memory_index": {
+    "subtitle": "200줄 캡 메모리 인덱스",
+    "description_ko": "MEMORY.md Index는 메모리 디렉토리의 파일 목록을 한 줄짜리 포인터로 관리하는 인덱스 파일이다. MAX_ENTRYPOINT_LINES = 200, MAX_ENTRYPOINT_BYTES = 25,000으로 강제 절단되며, 초과 시 경고 메시지가 자동 추가된다. 인덱스는 포인터 전용으로, 한 줄에 ~150자, 직접 내용 작성이 금지된다.",
+    "surprise": "KAIROS가 활성화되면 MEMORY.md를 라이브 인덱스로 유지하지 않고, 대신 일별 로그 파일(<autoMemPath>/logs/YYYY/MM/YYYY-MM-DD.md)에 append-only 기록한다. 별도 야간 프로세스(/dream 스킬)가 로그를 MEMORY.md + topic 파일로 증류한다.",
+    "visibility": "hidden",
+    "file": "src/memdir/memdir.ts",
+    "lines": null,
+    "research": "research/R3-C_data-memory-cycle.md",
+    "report_section": "reports/report-1_anatomy.md#1.5",
+    "children": []
+  },
+  "extract_memories": {
+    "subtitle": "백그라운드 기억 추출 에이전트",
+    "description_ko": "대화 턴이 끝날 때마다 백그라운드에서 실행되는 메모리 추출 에이전트. 617줄의 extractMemories.ts가 대화 내용을 분석하여 user/feedback/project/reference 4가지 타입의 메모리 파일을 자동 생성한다.",
+    "surprise": "메모리 추출 에이전트는 사용자 모르게 매 턴 백그라운드에서 실행된다.",
+    "visibility": "unreleased",
+    "file": "src/services/extractMemories/extractMemories.ts",
+    "lines": 617,
+    "research": "research/R3-C_data-memory-cycle.md",
+    "report_section": "reports/report-1_anatomy.md",
+    "children": []
+  },
+  "session_memory": {
+    "subtitle": "세션 종료 시 자동 노트",
+    "description_ko": "세션이 끝날 때 대화 전체를 요약하여 세션 메모리 노트를 자동 생성하는 시스템.",
+    "surprise": "매 세션 종료 시 자동 생성되며, findRelevantMemories가 top 5를 선별 주입한다.",
+    "visibility": "unreleased",
+    "file": "src/services/SessionMemory/sessionMemory.ts",
+    "lines": 300,
+    "research": "research/R3-C_data-memory-cycle.md",
+    "report_section": "reports/report-1_anatomy.md",
+    "children": []
+  },
+  "find_relevant_memories": {
+    "subtitle": "Sonnet 기반 메모리 선별",
+    "description_ko": "Sonnet 모델로 sideQuery를 보내 기존 메모리 파일 중 최대 5개를 선별하는 142줄 경량 모듈.",
+    "surprise": "메인 대화에 Opus, 메모리 선별에 Sonnet — 2-tier 모델 전략.",
+    "visibility": "unreleased",
+    "file": "src/memdir/findRelevantMemories.ts",
+    "lines": 142,
+    "research": "research/R3-C_data-memory-cycle.md",
+    "report_section": "reports/report-1_anatomy.md",
+    "children": []
+  },
+  "team_memory_sync": {
+    "subtitle": "팀 간 메모리 동기화",
+    "description_ko": "팀 프로젝트에서 여러 사용자의 메모리를 동기화. 심볼릭 링크 방어와 비밀 스캐너 연동으로 민감 정보 유출을 방지.",
+    "surprise": "팀 메모리 업로드 전에 secret_scanner가 30+ 패턴을 검사한다.",
+    "visibility": "unreleased",
+    "file": "src/memdir/teamMemPaths.ts",
+    "lines": 293,
+    "research": "research/R3-C_data-memory-cycle.md",
+    "report_section": "reports/report-1_anatomy.md",
+    "children": []
+  },
+  "bun_runtime": {
+    "subtitle": "Node.js 대체 Bun 런타임",
+    "description_ko": "Bun Runtime은 Claude Code가 Node.js 대신 Bun 1.1.0+을 사용하여 실행되는 런타임 환경이다. JSX/TSX 네이티브 지원으로 별도 트랜스파일 없이 React 컴포넌트를 직접 실행하며, cli.tsx 진입점에서 13개 빠른 경로를 분기하고 ~130개 import의 병렬 평가를 수행한다. CCR(원격) 환경에서는 --max-old-space-size=8192로 16GB 컨테이너의 힙을 확대한다.",
+    "surprise": "main.tsx의 import 평가(~135ms) 동안 MDM 서브프로세스(plutil/reg query)와 macOS 키체인 프리페치(OAuth + API 키) 3개의 OS 레벨 서브프로세스가 병렬로 발사된다. 기존 순차 동기 spawn ~65ms가 추가 비용 0ms로 전환된 극한의 최적화.",
+    "visibility": "hidden",
+    "file": "src/entrypoints/cli.tsx",
+    "lines": 300,
+    "research": "research/R5-A_startup-boot.md",
+    "report_section": "reports/report-1_anatomy.md#1.1",
+    "children": [
+      {
+        "id": "cli_entrypoint",
+        "label": "CLI Entrypoint",
+        "desc": "cli.tsx ~300줄의 최초 진입점. 13개 빠른 경로(--version, --daemon-worker, bridge 등)를 동적 import로 분기하여 필요한 코드만 로드"
+      },
+      {
+        "id": "init_system",
+        "label": "Init System",
+        "desc": "init.ts ~340줄의 memoized 초기화 시스템. enableConfigs, 환경변수 적용, graceful shutdown, 1P 이벤트 로깅, preconnect API 등을 1회만 실행"
+      },
+      {
+        "id": "main_orchestrator",
+        "label": "Main Boot Orchestrator",
+        "desc": "main.tsx ~4,500줄의 핵심 부트 오케스트레이터. 모듈 평가 시점에 MDM/키체인 서브프로세스를 병렬 발사하고 7단계 파이프라인을 조율"
+      },
+      {
+        "id": "setup_screens",
+        "label": "Setup Screen Sequence",
+        "desc": "온보딩 → 신뢰 다이얼로그 → GrowthBook 재초기화 → MCP 승인까지 최대 15개 단계의 셋업 다이얼로그 체인"
+      },
+      {
+        "id": "deferred_prefetches",
+        "label": "Deferred Prefetch System",
+        "desc": "첫 렌더 이후 사용자 정보, CLAUDE.md, git status, AWS/GCP 자격증명 등 15개 이상의 프리페치를 비동기로 실행"
+      },
+      {
+        "id": "keychain_prefetch",
+        "label": "Keychain Prefetch",
+        "desc": "macOS 키체인에서 OAuth 토큰과 레거시 API 키를 Promise.all로 동시 읽기. 모듈 로드 시점에 병렬 실행하여 추가 비용 0ms"
+      },
+      {
+        "id": "mdm_raw_read",
+        "label": "MDM Raw Read",
+        "desc": "macOS plutil/Windows reg query 서브프로세스를 모듈 평가와 병렬로 발사하는 MDM 설정 조기 읽기"
+      },
+      {
+        "id": "preaction_hook",
+        "label": "PreAction Hook",
+        "desc": "MDM 대기 → init() → 마이그레이션(v11) → 원격 설정의 순차 초기화 체인. 모든 커맨드 실행 전 실행"
+      },
+      {
+        "id": "commander_program",
+        "label": "Commander CLI Program",
+        "desc": "52개 서브커맨드(mcp, auth, plugin, auto-mode, daemon 등)를 트리 구조로 등록하는 Commander.js 프로그램"
+      }
+    ]
+  },
+  "react_ink": {
+    "subtitle": "React 19 + Ink 터미널 UI",
+    "description_ko": "React 19 + Ink Terminal UI는 터미널을 브라우저처럼 렌더링하는 React 기반 UI 레이어다. Bun의 JSX 네이티브 지원을 활용하며, Ink 라이브러리로 React 컴포넌트를 터미널 출력으로 변환한다. ThemeProvider로 자동 래핑되고, createRoot()에서 Ink 인스턴스를 생성한 뒤 root.waitUntilExit()로 사용자 종료까지 대기한다.",
+    "surprise": "replLauncher.tsx는 단 23줄이지만 App과 REPL을 동적 import로 로딩한다. 첫 렌더 후 startDeferredPrefetches()가 실행되어, 사용자가 타이핑하는 동안 15개 이상의 백그라운드 프리페치가 병렬로 진행된다.",
+    "visibility": "hidden",
+    "file": "src/replLauncher.tsx",
+    "lines": 23,
+    "research": "research/R5-A_startup-boot.md",
+    "report_section": "reports/report-1_anatomy.md#1.1",
+    "children": []
+  },
+  "esbuild_bundle": {
+    "subtitle": "단일 번들 빌드 시스템",
+    "description_ko": "esbuild Build System은 Claude Code의 전체 코드를 단일 번들로 빌드하는 시스템이다. feature() 호출을 컴파일 타임에 true/false로 치환하여 false 분기의 코드를 물리적으로 제거하는 DCE(Dead Code Elimination)를 수행한다. process.env.USER_TYPE도 빌드 타임 --define으로 치환되어 ant-only 코드가 외부 빌드에서 완전히 제거된다.",
+    "surprise": "excluded-strings.txt 빌드 검증이 빌드 후 실행되어, 번들 출력물에 금지 문자열(내부 코드네임, 비공개 API 등)이 포함되지 않았는지 최종 확인한다. 코드 제거 후에도 문자열 수준의 이중 방어를 수행한다.",
+    "visibility": "hidden",
+    "file": null,
+    "lines": null,
+    "research": "research/R5-A_startup-boot.md",
+    "report_section": "reports/report-1_anatomy.md#1.3",
+    "children": []
+  },
+  "bridge_system": {
+    "subtitle": "IDE 양방향 통신 브릿지",
+    "description_ko": "IDE Bridge는 VS Code와 JetBrains IDE 확장과 양방향 통신을 수행하는 브릿지 시스템이다. JWT 인증으로 보안을 확보하고, 권한 프록시를 통해 IDE와 터미널 간의 도구 호출을 중개한다. cli.tsx의 빠른 경로 7번(remote-control/bridge)으로 진입하며, BRIDGE_MODE 피처 플래그로 게이팅된다.",
+    "surprise": "cli.tsx에서 bridge 경로는 인증+브릿지 모듈만 동적 import하는 전용 빠른 경로를 가진다. 전체 main.tsx 로딩을 건너뛰어 IDE 연동 시작 시간을 극적으로 단축한다.",
+    "visibility": "hidden",
+    "file": null,
+    "lines": null,
+    "research": "research/R5-A_startup-boot.md",
+    "report_section": "reports/report-1_anatomy.md#1.1",
+    "children": []
+  },
+  "mcp_client": {
+    "subtitle": "MCP 프로토콜 클라이언트 내부",
+    "description_ko": "MCP Client Internal은 Model Context Protocol의 클라이언트 측 내부 구현이다. tool_assembly의 3단계 파이프라인에서 MCP 도구를 빌트인 도구와 병합하며, assembleToolPool()에서 uniqBy(name)로 중복 제거 시 빌트인이 우선한다. 인터랙티브 모드에서는 prefetchAllMcpResources()로 비동기 population, 헤드리스 모드에서는 await connectMcpBatch()로 동기 연결한다.",
+    "surprise": "claude.ai 프록시 MCP 서버(Datadog, Gmail, Slack 등)는 각각 6-14초가 소요될 수 있어, --bare 모드에서는 이 자동 발견 MCP가 완전히 건너뛰어진다. 명시적 --mcp-config만 허용하는 최소 연결 전략.",
+    "visibility": "hidden",
+    "file": null,
+    "lines": null,
+    "research": "research/R4-E_tool-system.md",
+    "report_section": "reports/report-1_anatomy.md#1.3",
+    "children": []
+  },
+  "oauth_system": {
+    "subtitle": "OAuth 2.0 인증 시스템",
+    "description_ko": "OAuth 2.0 Auth 시스템은 인증 토큰을 관리하고 macOS Keychain과 연동하는 인증 레이어다. 'Claude Code-credentials' 서비스 이름으로 OAuth 토큰을, 'Claude Code' 서비스 이름으로 레거시 API 키를 저장한다. Phase 1에서 키체인 프리페치로 ~32ms에 병렬 읽기를 수행하며, Phase 5에서 신뢰 확립 후 GrowthBook에 auth 헤더를 포함하여 재초기화한다.",
+    "surprise": "인증은 cli.tsx의 Phase 1부터 Phase 5+까지 4개 시점에 걸쳐 단계적으로 처리된다. 키체인 프리페치(Phase 1) → init()에서 OAuth 보완(Phase 3) → 온보딩 로그인(Phase 5) → 원격 설정 후 텔레메트리(Phase 5+). API 키, OAuth, Bedrock, Vertex, mTLS 5가지 인증 유형을 모두 지원한다.",
+    "visibility": "hidden",
+    "file": null,
+    "lines": null,
+    "research": "research/R5-A_startup-boot.md",
+    "report_section": "reports/report-1_anatomy.md#1.1",
+    "children": []
+  },
+  "permission_system": {
+    "subtitle": "6-Mode 권한 판정 엔진",
+    "description_ko": "모든 도구 호출을 10단계 판정 파이프라인으로 검증하는 6계층 권한 시스템이다. default/acceptEdits/plan/auto/bypassPermissions/dontAsk 6개 모드가 존재하며, 내부적으로 bubble(상위 위임) 모드까지 7개다. auto 모드에서는 AI Transcript Classifier가 2단계 XML 분류로 안전성을 판정하고, bypassPermissions는 GrowthBook 원격 킬스위치로 즉시 비활성화할 수 있다. Shift+Tab으로 모드를 순환하며, ant 사용자는 acceptEdits/plan을 건너뛴다.",
+    "surprise": "auto 모드 진입 시 Bash(*), Bash(python:*), Agent(*) 같은 위험한 와일드카드 규칙이 자동으로 제거된다 — 사용자가 이전에 '모든 Bash 허용'을 설정했어도 auto 모드에서는 무력화되며, 모드를 벗어나면 자동 복원된다",
+    "visibility": "secret",
+    "file": "src/utils/permissions/permissions.ts",
+    "lines": 1000,
+    "research": "research/R4-B_permission-system.md",
+    "report_section": "reports/report-2_watchtower.md#2.5",
+    "children": [
+      {
+        "id": "permission_decision_pipeline",
+        "label": "10-Step Decision Pipeline",
+        "desc": "tool.checkPermissions → 규칙 매칭(deny>allow>ask) → 모드 판정 → AI 분류기 → 사용자 프롬프트의 10단계 판정 흐름"
+      },
+      {
+        "id": "dangerous_patterns",
+        "label": "Dangerous Pattern Removal",
+        "desc": "auto 모드 진입 시 python/node/bash/sudo/ssh 등 위험 명령 패턴의 허용 규칙을 자동 제거하고 퇴장 시 복원"
+      },
+      {
+        "id": "bypass_killswitch",
+        "label": "Bypass Permissions Killswitch",
+        "desc": "tengu_disable_bypass_permissions_mode로 YOLO 모드를 원격 비활성화, CCR 환경에서는 무조건 차단"
+      },
+      {
+        "id": "mode_cycle",
+        "label": "Shift+Tab Mode Cycle",
+        "desc": "일반 사용자: default→acceptEdits→plan→bypass→auto, ant 사용자: default→bypass→auto 축약 순환"
+      }
+    ]
+  },
+  "permission_rules": {
+    "subtitle": "8-소스 와일드카드 규칙 엔진",
+    "description_ko": "8개 소스(userSettings, projectSettings, localSettings, flagSettings, policySettings, cliArg, command, session)에서 수집된 allow/deny/ask 3-행위 규칙을 평가하는 엔진이다. deny가 최우선이며, 내용 기반 규칙이 도구 전체 규칙보다 우선한다. Bash(git commit:*) 같은 접두사 매칭, Bash(npm*) 와일드카드, mcp__server1 서버 전체 차단 등 정교한 패턴 매칭을 지원한다. deny 규칙에 매칭되는 도구는 목록 단계에서 사전 제거되어 모델에게 보이지도 않는다.",
+    "surprise": "복합 Bash 명령은 최대 50개 서브커맨드로 분할되어 각각 개별 검증된다 — 'safe_cmd && dangerous_cmd' 같은 우회 시도를 원천 차단하며, 50개 상한은 DoS 방지용이다",
+    "visibility": "secret",
+    "file": "src/utils/permissions/permissionsLoader.ts",
+    "lines": null,
+    "research": "research/R4-B_permission-system.md",
+    "report_section": "reports/report-2_watchtower.md#2.5",
+    "children": [
+      {
+        "id": "rule_sources",
+        "label": "8 Permission Rule Sources",
+        "desc": "userSettings → projectSettings → localSettings → flagSettings → policySettings → cliArg → command → session 8개 소스 통합"
+      },
+      {
+        "id": "safe_env_vars",
+        "label": "106 Safe Env Vars Whitelist",
+        "desc": "Go/Rust/Node/Python 등 106개 안전 환경변수 화이트리스트, PATH/LD_PRELOAD/PYTHONPATH는 절대 포함 불가"
+      },
+      {
+        "id": "managed_rules_only",
+        "label": "Managed Rules Only Lock",
+        "desc": "allowManagedPermissionRulesOnly 활성 시 사용자/프로젝트/CLI 규칙 전부 무시, UI에서 Always allow 숨김"
+      }
+    ]
+  },
+  "sandbox": {
+    "subtitle": "OS 네이티브 격리",
+    "description_ko": "macOS seatbelt 프레임워크와 Linux bubblewrap(bwrap)/Docker 컨테이너를 사용하여 BashTool의 셸 명령 실행을 OS 수준에서 격리하는 샌드박스 시스템이다. 파일시스템 접근과 네트워크 접근을 제한하며, dangerouslyDisableSandbox 파라미터로 샌드박스를 우회하려면 별도 퍼미션 프롬프트가 발생한다. GrowthBook tengu_sandbox_disabled_commands로 특정 명령의 샌드박스를 원격 비활성화할 수 있고, 사용자 설정의 excludedCommands로도 제외 패턴을 지정할 수 있다.",
+    "surprise": "샌드박스 우회를 위한 dangerouslyDisableSandbox 파라미터가 Bash 도구의 입력 스키마에 공식적으로 포함되어 있다 — 모델이 직접 샌드박스 해제를 요청할 수 있지만, areUnsandboxedCommandsAllowed() 게이트와 추가 퍼미션 프롬프트라는 이중 보호가 작동한다",
+    "visibility": "secret",
+    "file": "src/utils/sandbox/sandbox-adapter.ts",
+    "lines": null,
+    "research": "research/R4-B_permission-system.md",
+    "report_section": "reports/report-2_watchtower.md#2.5",
+    "children": [
+      {
+        "id": "seatbelt_macos",
+        "label": "macOS Seatbelt",
+        "desc": "Apple의 seatbelt 프레임워크로 프로세스 레벨 파일/네트워크 접근 제한"
+      },
+      {
+        "id": "bubblewrap_linux",
+        "label": "Linux Landlock/Docker",
+        "desc": "Linux에서는 bubblewrap(bwrap) 또는 Docker 컨테이너 격리로 샌드박싱"
+      },
+      {
+        "id": "sandbox_exclusions",
+        "label": "Sandbox Exclusions",
+        "desc": "GrowthBook 원격 설정 + 사용자 설정으로 특정 명령의 샌드박스 제외 가능"
+      }
+    ]
+  },
+  "commit_attribution": {
+    "subtitle": "문자 수준 AI/Human 추적",
+    "description_ko": "파일별 Claude vs Human 기여도를 문자(character) 수준으로 추적하는 시스템이다. 세션 시작 시 파일 기준선 해시를 저장하고, Edit/Write 도구 호출마다 trackFileModification()으로 변경 문자 수를 누적한다. 커밋 시 calculateCommitAttribution()이 Claude 기여율(%)을 계산하여 PR 설명에 자동 삽입한다. Undercover 모드에서는 귀속 정보가 완전히 억제되며, model_sanitizer가 코드네임을 공개명으로 변환한 후에야 기록된다.",
+    "surprise": "PR 귀속 형식이 '93% 3-shotted by claude-opus-4-5, 2 memories recalled'처럼 프롬프트 횟수와 메모리 접근 수까지 포함한다 — AI가 몇 번 만에 해결했는지, 과거 기억을 얼마나 활용했는지까지 투명하게 공개하는 설계",
+    "visibility": "secret",
+    "file": "src/utils/commitAttribution.ts",
+    "lines": 963,
+    "research": "research/R3-D_security-protection.md",
+    "report_section": "reports/report-2_watchtower.md#2.5",
+    "children": [
+      {
+        "id": "file_attribution_state",
+        "label": "File Attribution State",
+        "desc": "파일별 contentHash, mtime 기준선 + Claude 변경 문자 수 누적 추적"
+      },
+      {
+        "id": "char_diff_algo",
+        "label": "Character Diff Algorithm",
+        "desc": "공통 prefix/suffix를 찾아 실제 변경 영역만 측정, Math.max(oldChangedLen, newChangedLen)으로 기여량 산출"
+      },
+      {
+        "id": "n_shotted_stats",
+        "label": "N-shotted Statistics",
+        "desc": "promptCount, memoryRecalled, escapeCount(권한 거부 횟수)까지 포함하는 상세 귀속 통계"
+      }
+    ]
+  },
+  "transcript_classifier": {
+    "subtitle": "AI 도구 안전성 2단계 판정",
+    "description_ko": "Auto Mode에서 도구 호출의 안전성을 AI가 자동 판정하는 2단계 분류기이다. Stage 1(fast)에서 max_tokens=64로 빠른 판단을 하고, 위험 판정 시 Stage 2(thinking)에서 chain-of-thought 추론으로 재판단한다. 분류기 프롬프트에는 대화 히스토리가 포함되지만, 어시스턴트 텍스트 블록은 제외하여 모델이 분류기를 조작하는 것을 방지한다. 외부 빌드에서는 Claude Opus 4.6/Sonnet 4.6만 지원하며, CLAUDE.md 컨텍스트가 프리픽스 메시지로 주입되어 사용자 의도를 파악한다.",
+    "surprise": "어시스턴트의 텍스트 응답을 분류기 입력에서 의도적으로 제외한다 — AI가 자기 자신의 이전 텍스트 출력으로 분류기를 속이는 '자기 조작(self-manipulation)' 공격을 원천 차단하는 설계",
+    "visibility": "secret",
+    "file": "src/utils/permissions/yoloClassifier.ts",
+    "lines": 800,
+    "research": "research/R4-B_permission-system.md",
+    "report_section": "reports/report-2_watchtower.md#2.5",
+    "children": [
+      {
+        "id": "stage1_fast",
+        "label": "Stage 1 Fast Classification",
+        "desc": "max_tokens=64, stop_sequences=['</block>']로 즉시 판단. <block>no</block>이면 Stage 2 생략"
+      },
+      {
+        "id": "stage2_thinking",
+        "label": "Stage 2 Thinking Classification",
+        "desc": "chain-of-thought <thinking> 구간 후 최종 판정. false positive 감소를 위한 재판단 단계"
+      },
+      {
+        "id": "safe_tool_allowlist",
+        "label": "Safe Tool Allowlist",
+        "desc": "FileRead, Grep, Glob, TodoWrite, AskUserQuestion 등 안전 도구는 분류기 호출 없이 즉시 허용"
+      },
+      {
+        "id": "transcript_builder",
+        "label": "Transcript Entry Builder",
+        "desc": "어시스턴트 텍스트 제외, tool_use 블록만 포함하는 주입 방지 트랜스크립트 구성"
+      }
+    ]
+  },
+  "bash_classifier": {
+    "subtitle": "Bash 명령 의미 분석",
+    "description_ko": "BASH_CLASSIFIER 피처 플래그 뒤의 명령어 수준 의미 분석 시스템이다. tree-sitter로 AST 구문 분석을 수행하고, 안전 환경변수 제거(106개 화이트리스트), 래퍼 명령 제거(nice/timeout/stdbuf), 서브커맨드 분할(최대 50개)을 거친 후 AI API로 의미 분류한다. 인터랙티브 핸들러에서 분류기 결과와 사용자 입력을 5개 레이서(분류기/사용자/PermissionRequest훅/Bridge/채널)로 레이싱하여, 분류기가 먼저 허용하면 체크마크 후 자동 승인한다.",
+    "surprise": "분류기의 자동 승인 체크마크가 터미널 포커스 상태에 따라 표시 시간이 달라진다 — 사용자가 보고 있으면 3초, 보고 있지 않으면 1초. 사용자 인지를 고려한 미세한 UX 설계",
+    "visibility": "secret",
+    "file": "src/utils/permissions/bashClassifier.ts",
+    "lines": 62,
+    "research": "research/R4-B_permission-system.md",
+    "report_section": "reports/report-2_watchtower.md#2.5",
+    "children": [
+      {
+        "id": "tree_sitter_ast",
+        "label": "Tree-sitter AST Parser",
+        "desc": "명령어를 AST로 파싱하여 구문 수준 의미 분석 수행, 서브커맨드 분할 및 래퍼 제거"
+      },
+      {
+        "id": "classifier_racing",
+        "label": "5-Way Permission Racing",
+        "desc": "분류기/사용자입력/PermissionRequest훅/Bridge응답/채널응답 5개가 레이싱하여 먼저 claim()한 쪽이 결정"
+      }
+    ]
+  },
+  "denial_tracking": {
+    "subtitle": "거부 횟수 안전장치",
+    "description_ko": "AI 분류기의 연속 거부를 추적하여 자동 에스컬레이션하는 안전장치이다. 연속 3회(maxConsecutive) 또는 총 20회(maxTotal) 거부 시 분류기를 우회하고 사용자에게 직접 프롬프트를 표시한다. 성공 시 연속 카운터가 리셋되며, 분류기가 과도하게 보수적으로 동작하여 사용자 경험을 해치는 상황을 자동으로 완화한다.",
+    "surprise": "AI 분류기가 '틀릴 수 있다'는 전제 하에 설계된 안전장치 — AI가 3번 연속 거부하면 시스템이 AI의 판단을 더 이상 신뢰하지 않고 인간에게 결정을 돌려보낸다",
+    "visibility": "secret",
+    "file": "src/utils/permissions/denialTracking.ts",
+    "lines": 46,
+    "research": "research/R4-B_permission-system.md",
+    "report_section": "reports/report-2_watchtower.md#2.5",
+    "children": []
+  },
+  "iron_gate": {
+    "subtitle": "분류기 장애 시 무조건 차단",
+    "description_ko": "AI 분류기 API가 장애를 일으켰을 때의 fail-closed 안전 장치이다. GrowthBook tengu_iron_gate_closed 플래그가 true이면 분류기 장애 시 무조건 거부(fail-closed)하고, false이면 일반 퍼미션 처리로 폴백(fail-open)한다. 트랜스크립트가 너무 길면 headless 모드에서는 AbortError(영구 조건), interactive에서는 일반 프롬프트로 폴백한다. 30분 리프레시 주기로 장애 상태를 재평가한다.",
+    "surprise": "분류기가 죽으면 '모든 것을 차단'하는 것이 기본 설계 — 보안 시스템의 장애가 보안 구멍이 되는 것을 원천적으로 방지하는 fail-closed 철학",
+    "visibility": "secret",
+    "file": "src/utils/permissions/yoloClassifier.ts",
+    "lines": null,
+    "research": "research/R4-B_permission-system.md",
+    "report_section": "reports/report-2_watchtower.md#2.5",
+    "children": []
+  },
+  "undercover_mode": {
+    "subtitle": "AI 정체 위장 시스템",
+    "description_ko": "공개 저장소에서 작업할 때 Claude의 정체를 완전히 숨기는 위장 모드이다. 내부 모델 코드네임(Capybara, Tengu), 미공개 모델 버전, 내부 저장소명, Slack 채널, Co-Authored-By 라인 등 AI임을 드러내는 모든 흔적을 제거한다. 안전 기본값은 ON — 내부 저장소임을 확인하지 못하면 항상 위장을 유지하며, CLAUDE_CODE_UNDERCOVER=1로 강제 ON만 가능하고 강제 OFF는 불가능하다.",
+    "surprise": "위장 지침서에 'BAD: 1-shotted by claude-opus-4-6' 같은 구체적 금지 예시가 포함되어 있으며, 커밋 메시지와 PR 설명에서 AI 사용 흔적을 적극적으로 지운다",
+    "visibility": "secret",
+    "file": "src/utils/undercover.ts",
+    "lines": 90,
+    "research": "research/R3-D_security-protection.md",
+    "report_section": "reports/report-2_watchtower.md#2.5",
+    "children": []
+  },
+  "feature_flags": {
+    "subtitle": "60+ 컴파일타임 게이트",
+    "description_ko": "Claude Code의 모든 고급 기능은 60개 이상의 컴파일타임 피처 플래그 뒤에 숨겨져 있다. 외부 빌드에서는 전부 false로 설정되어 코드 자체가 제거되며, 내부(ant) 빌드에서만 선택적으로 활성화된다. PROACTIVE, KAIROS, DAEMON, COORDINATOR_MODE 같은 플래그가 L4 레이어 전체의 존재 여부를 결정하며, ANTI_DISTILLATION_CC, TRANSCRIPT_CLASSIFIER 같은 보안 플래그도 이 체계로 관리된다. 일부 기능은 컴파일 타임 + 런타임(GrowthBook) 이중 게이팅으로 작동한다.",
+    "surprise": "ABLATION_BASELINE이라는 플래그는 항상 off으로 설계되었다 — '모든 기능이 꺼졌을 때'의 기준선을 측정하기 위한 것으로, A/B 테스트에서 새 기능의 순수 효과를 정확히 측정하기 위해 존재한다",
+    "visibility": "secret",
+    "file": "src/shims/bun-bundle.ts",
+    "lines": null,
+    "research": "research/R3-B_feature-flags-complete.md",
+    "report_section": "reports/report-2_watchtower.md#2.3",
+    "children": [
+      {
+        "id": "flag_autonomous",
+        "label": "자율 에이전트 플래그 (10개)",
+        "desc": "PROACTIVE, KAIROS, DAEMON, AGENT_TRIGGERS, KAIROS_DREAM 등 자율 행동 관련 10개 플래그군"
+      },
+      {
+        "id": "flag_security",
+        "label": "보안 플래그 (4개)",
+        "desc": "TRANSCRIPT_CLASSIFIER, BASH_CLASSIFIER, ANTI_DISTILLATION_CC, HARD_FAIL — 보안 기능 게이팅"
+      },
+      {
+        "id": "flag_multiagent",
+        "label": "멀티에이전트 플래그 (3개)",
+        "desc": "COORDINATOR_MODE, FORK_SUBAGENT, VERIFICATION_AGENT — 군단 기능 게이팅"
+      },
+      {
+        "id": "flag_tools",
+        "label": "도구/스킬 플래그 (7개)",
+        "desc": "MONITOR_TOOL, CHICAGO_MCP(Computer Use), WEB_BROWSER_TOOL 등 도구 활성화"
+      },
+      {
+        "id": "flag_internal_only",
+        "label": "내부 전용 플래그 (36개+)",
+        "desc": "shim에 노출되지 않고 코드 내부에만 존재하는 비공개 플래그 36개 이상"
+      }
+    ]
+  },
+  "dead_code_elim": {
+    "subtitle": "빌드타임 코드 완전 제거",
+    "description_ko": "esbuild의 Dead Code Elimination(DCE)과 결합된 feature() 함수 패턴이다. if (feature('X')) 블록에서 X가 false이면 해당 코드 분기가 빌드 출력물에서 완전히 제거된다. 이로써 외부 빌드 바이너리에는 자율 에이전트, 안티 디스틸레이션, AI 분류기 등의 코드가 물리적으로 존재하지 않게 된다. process.env.USER_TYPE === 'ant' 패턴도 동일하게 빌드 타임 --define으로 DCE가 적용된다.",
+    "surprise": "buddy 시스템의 종족 이름이 내부 모델 코드네임과 충돌하여 hex charcode로 인코딩되는데, 이것도 excluded-strings.txt 빌드 검증을 통과하기 위한 DCE 연계 처리다",
+    "visibility": "secret",
+    "file": "src/shims/bun-bundle.ts",
+    "lines": null,
+    "research": "research/R3-B_feature-flags-complete.md",
+    "report_section": "reports/report-2_watchtower.md#2.3",
+    "children": []
+  },
+  "growthbook": {
+    "subtitle": "런타임 A/B 테스트 엔진",
+    "description_ko": "GrowthBook SDK를 사용한 서버사이드 실험 평가 시스템이다. 53개 이상의 런타임 플래그가 tengu_* 코드네임(일본 신화 천구에서 유래)으로 운영되며, deviceId/platform/organizationUUID/subscriptionType/email/appVersion 등 사용자 속성 기반으로 실험 그룹을 배정한다. 내부 직원은 20분, 외부 사용자는 6시간 주기로 리프레시된다. 5단계 폴백 체인(환경변수 → 로컬 설정 → 인메모리 → 디스크 캐시 → 기본값)으로 오프라인에서도 작동한다.",
+    "surprise": "tengu_coral_fern(산호고사리), tengu_marble_sandcastle(대리석 모래성) 같은 자연어 난독화 코드네임을 사용해서 소스를 봐도 어떤 기능을 제어하는지 즉시 알 수 없도록 설계되어 있다",
+    "visibility": "secret",
+    "file": "src/services/growthbook.ts",
+    "lines": 1157,
+    "research": "research/R3-A_telemetry-pipeline.md",
+    "report_section": "reports/report-2_watchtower.md#2.1",
+    "children": [
+      {
+        "id": "experiment_tracker",
+        "label": "Experiment Exposure Tracker",
+        "desc": "A/B 실험 노출을 1P 파이프라인으로 로깅, 세션 내 중복 방지(loggedExposures Set), init 전 접근은 pendingExposures에 저장 후 일괄 전송"
+      },
+      {
+        "id": "disk_cache",
+        "label": "Disk Cache (~/.claude.json)",
+        "desc": "피처 값과 실험 배정을 디스크에 영속화, 인터넷 끊겨도 마지막 연결 시점의 실험 배정 유지"
+      },
+      {
+        "id": "growthbook_init",
+        "label": "GrowthBook Initialization",
+        "desc": "5초 타임아웃 블로킹 초기화, remoteEval:true 서버사이드 평가, 인증 변경 시 클라이언트 완전 재생성"
+      }
+    ]
+  },
+  "otel_pipeline": {
+    "subtitle": "4-Layer 텔레메트리 수집",
+    "description_ko": "OpenTelemetry 기반의 4개 독립 파이프라인이 동시에 작동한다. 1P Event Logger(Anthropic 직통, 전체 이벤트), Datadog(알람용 37개 이벤트 화이트리스트), BigQuery(5분 주기 메트릭), 3P OTLP(고객 자체 관측 시스템)로 구성된다. 모든 이벤트에는 세션/환경/CI-CD/원격/에이전트/인증/프로세스/레포해시 8개 카테고리의 메타데이터가 자동 부착된다. MCP 도구명은 PII로 간주되어 mcp_tool로 산화 처리된다.",
+    "surprise": "실패한 이벤트는 ~/.claude/telemetry/에 JSONL로 저장되어 다음 세션에서 자동 재시도된다 — 2차 백오프(base 500ms * attempts^2, 최대 30초, 8회) 후에도 실패하면 디스크에 보존하여 절대 사라지지 않는 설계",
+    "visibility": "secret",
+    "file": "src/services/analytics/index.ts",
+    "lines": null,
+    "research": "research/R3-A_telemetry-pipeline.md",
+    "report_section": "reports/report-2_watchtower.md#2.2",
+    "children": [
+      {
+        "id": "analytics_sink",
+        "label": "Analytics Sink (라우터)",
+        "desc": "Datadog/1P로 이벤트를 라우팅하는 싱크, 의존성 제로 설계(import cycle 방지)로 이벤트 큐만 보유"
+      },
+      {
+        "id": "datadog_backend",
+        "label": "Datadog Logs Backend",
+        "desc": "37개 이벤트만 허용하는 화이트리스트, 15초 플러시/100 배치, 클라이언트 토큰이 소스에 하드코딩"
+      },
+      {
+        "id": "first_party_logger",
+        "label": "1P Event Logger (OTEL)",
+        "desc": "BatchLogRecordProcessor 기반, 10초 배치/200 이벤트/8192 큐, api.anthropic.com 전송"
+      },
+      {
+        "id": "first_party_exporter",
+        "label": "1P Exporter (HTTP + 디스크 retry)",
+        "desc": "Proto 직렬화 전송, additional_metadata Base64 인코딩, 401 시 인증 없이 재시도"
+      },
+      {
+        "id": "bigquery_exporter",
+        "label": "BigQuery Metrics Exporter",
+        "desc": "api.anthropic.com/api/claude_code/metrics 엔드포인트, 1P API + C4E/Teams만 활성"
+      },
+      {
+        "id": "event_queue",
+        "label": "Event Queue (pre-sink 버퍼)",
+        "desc": "싱크 부착 전 이벤트를 큐잉, attachAnalyticsSink 시 queueMicrotask로 비동기 드레인"
+      },
+      {
+        "id": "metadata_enricher",
+        "label": "Metadata Enricher (8 카테고리)",
+        "desc": "세션/환경/CI/원격/에이전트/인증/프로세스/레포해시 — userBucket(SHA256%30)으로 카디널리티 제어"
+      },
+      {
+        "id": "sink_killswitch",
+        "label": "Sink Killswitch",
+        "desc": "GrowthBook tengu_frond_boric로 Datadog/1P 싱크를 실시간 개별 비활성화 — 인시던트 대응용"
+      },
+      {
+        "id": "failed_event_store",
+        "label": "Failed Event Store",
+        "desc": "~/.claude/telemetry/1p_failed_events.<sessionId>.<batchUuid>.json에 실패 이벤트 JSONL 저장"
+      },
+      {
+        "id": "privacy_level",
+        "label": "Privacy Level Controller",
+        "desc": "3-tier: default → no-telemetry → essential-traffic. Bedrock/Vertex/Foundry는 자동 비활성"
+      }
+    ]
+  },
+  "mdm_system": {
+    "subtitle": "플랫폼별 기기관리 연동",
+    "description_ko": "macOS(com.anthropic.claudecode plist, Jamf/Mosyle 연동), Windows(HKLM/HKCU 레지스트리, Active Directory GPO), Linux(/etc/claude-code/managed-settings.json, drop-in 디렉토리) 3개 플랫폼의 기업 기기관리 시스템과 직접 연동한다. 관리자 권한으로만 쓰기 가능한 경로에서 정책을 읽어 사용자가 오버라이드할 수 없는 강제 설정을 적용한다. 스타트업 시 모듈 로드와 병렬로 plutil/reg 서브프로세스를 실행하여 5초 타임아웃으로 성능을 최적화한다.",
+    "surprise": "macOS에서는 3개 plist 경로를 우선순위로 탐색하며(/Library/Managed Preferences/<user>/ → /Library/Managed Preferences/ → ~/Library/Preferences/), Jamf에서 배포 프로필 하나로 전사 Claude Code 정책을 제어한다 — CLI 도구치고는 놀라운 수준의 기업 인프라 통합",
+    "visibility": "hidden",
+    "file": "src/utils/settings/mdm/settings.ts",
+    "lines": 317,
+    "research": "research/R5-C_enterprise-mdm.md",
+    "report_section": "reports/report-2_watchtower.md#2.4",
+    "children": [
+      {
+        "id": "mdm_raw_read",
+        "label": "MDM Raw Read",
+        "desc": "plutil(macOS)/reg query(Windows) 서브프로세스를 모듈 로드 시점에 병렬 실행, existsSync로 없는 plist 빠른 스킵"
+      }
+    ]
+  },
+  "remote_managed": {
+    "subtitle": "API 원격 설정 동기화",
+    "description_ko": "Enterprise/Team 구독 사용자를 대상으로 Anthropic API 서버에서 설정을 원격 동기화하는 시스템이다. 30분 주기로 폴링하며(changeDetector.ts), OAuth Enterprise/Team 인증 또는 외부 주입 토큰이 필요하다. 1P Anthropic API 전용이며 Bedrock/Vertex/Foundry와 cowork(로컬 에이전트) 환경에서는 비활성이다. 서버가 빈 설정을 반환하면 graceful fallback으로 기존 설정을 유지한다.",
+    "surprise": "Anthropic이 원격으로 특정 조직의 Claude Code 동작을 30분 이내에 변경할 수 있다 — 권한 규칙, 모델 제한, 기능 활성화까지 API 키/인증 설정 전체를 포함",
+    "visibility": "hidden",
+    "file": "src/services/remoteManagedSettings/syncCache.ts",
+    "lines": 113,
+    "research": "research/R5-C_enterprise-mdm.md",
+    "report_section": "reports/report-2_watchtower.md#2.4",
+    "children": []
+  },
+  "settings_pipeline": {
+    "subtitle": "5-Tier 설정 우선순위 체인",
+    "description_ko": "Remote Managed → MDM 프로필 → managed-settings.json → HKCU → 로컬 settings.json의 5단계 설정 우선순위 체인이다. 가장 높은 우선순위 소스가 전체 정책을 제공하며 부분 병합 없이 'First Source Wins' 정책으로 작동한다. allowManagedPermissionRulesOnly 플래그가 활성화되면 사용자/프로젝트/CLI의 모든 퍼미션 규칙이 무시되고 정책 설정만 적용되며, UI에서 'Always allow' 옵션 자체가 사라진다.",
+    "surprise": "부분 병합이 없다는 것은 MDM에서 도구 3개만 허용하면, 사용자가 설정한 모든 규칙이 완전히 무시된다는 의미다 — 전부 아니면 전무의 엔터프라이즈 중앙 집중 통제",
+    "visibility": "hidden",
+    "file": "src/utils/settings/mdm/settings.ts",
+    "lines": null,
+    "research": "research/R5-C_enterprise-mdm.md",
+    "report_section": "reports/report-2_watchtower.md#2.4",
+    "children": [
+      {
+        "id": "preaction_hook",
+        "label": "PreAction Hook",
+        "desc": "MDM → init → migration → remote 순서의 사전 액션 훅, 설정 적용 순서 보장"
+      },
+      {
+        "id": "first_source_wins",
+        "label": "First Source Wins Policy",
+        "desc": "consumeRawReadResult에서 가장 높은 우선순위 소스 발견 시 즉시 반환, 하위 소스 완전 무시"
+      }
+    ]
+  },
+  "anti_distillation": {
+    "subtitle": "경쟁사 학습 데이터 오염",
+    "description_ko": "경쟁사가 Claude의 응답을 수집하여 자사 모델 훈련에 사용하는 '지식 증류(distillation)'를 방지하는 시스템이다. API 요청에 anti_distillation: ['fake_tools'] 파라미터를 전송하면 서버가 가짜 도구 정의를 주입하여 응답 패턴을 오염시킨다. ANTI_DISTILLATION_CC 컴파일 플래그 + tengu_anti_distill_fake_tool_injection GrowthBook 실험으로 이중 게이팅되며, 1P CLI의 cli 엔트리포인트에서만 활성화된다.",
+    "surprise": "가짜 도구를 응답에 주입하여 응답 데이터를 '독'으로 만드는 방식 — 디지털 세계의 잉크 폭탄처럼, 수집해도 학습 데이터로서의 가치가 없도록 의도적으로 오염시킨다",
+    "visibility": "secret",
+    "file": "src/services/api/claude.ts",
+    "lines": null,
+    "research": "research/R3-D_security-protection.md",
+    "report_section": "reports/report-2_watchtower.md#2.5",
+    "children": []
+  },
+  "connector_summarize": {
+    "subtitle": "응답 텍스트 요약 교체",
+    "description_ko": "Anti-Distillation의 두 번째 층으로, 도구 호출 사이의 어시스턴트 응답 텍스트를 서버 측에서 서명이 포함된 요약본으로 교체하는 시스템이다. thinking 블록과 동일한 메커니즘을 사용하며, 다음 턴에서 서명을 검증하여 원본을 복원할 수 있다. SUMMARIZE_CONNECTOR_TEXT_BETA_HEADER를 통해 활성화되며, ant-only/firstParty-only(Bedrock/Vertex 제외)로 제한된다.",
+    "surprise": "사용자는 정상 응답을 보지만, API 레벨에서는 요약본만 오가므로 중간에서 응답을 가로채 학습 데이터로 사용하려는 시도가 원본 텍스트를 얻지 못한다 — 눈에 보이는 것과 전송되는 것이 다른 이중 구조",
+    "visibility": "secret",
+    "file": "src/utils/betas.ts",
+    "lines": null,
+    "research": "research/R3-D_security-protection.md",
+    "report_section": "reports/report-2_watchtower.md#2.5",
+    "children": []
+  },
+  "secret_scanner": {
+    "subtitle": "30+ 시크릿 패턴 탐지",
+    "description_ko": "gitleaks 기반의 클라이언트측 시크릿 스캐너로, 팀 메모리 업로드 전에 30개 이상의 API 키/비밀 패턴을 탐지한다. AWS, GCP, Azure AD, OpenAI, Anthropic, GitHub(PAT/fine-grained/app/OAuth/refresh), GitLab, Slack(bot/user/app), Twilio, SendGrid, NPM, PyPI, Stripe, Shopify, Grafana, Sentry, PEM 개인키까지 커버한다. 매칭된 값 자체는 절대 로그/표시하지 않고 규칙 ID만 반환한다.",
+    "surprise": "Anthropic API 키 접두사 sk-ant-api를 ['sk','ant','api'].join('-')으로 런타임 조합한다 — 스캐너의 탐지 패턴 자체가 빌드 출력물에 리터럴로 노출되는 것까지 방지하는 메타 보안 설계",
+    "visibility": "secret",
+    "file": "src/services/teamMemorySync/secretScanner.ts",
+    "lines": 326,
+    "research": "research/R3-D_security-protection.md",
+    "report_section": "reports/report-2_watchtower.md#2.5",
+    "children": []
+  },
+  "cyber_risk": {
+    "subtitle": "사이버 보안 행동 경계",
+    "description_ko": "Safeguards 팀(David Forsythe, Kyla Guru)이 소유하는 사이버 보안 지시문으로, 일반 모드와 자율 모드 모든 시스템 프롬프트에 무조건 포함된다. 허가된 보안 테스트, 방어적 보안, CTF 챌린지, 교육 목적은 허용하되, 파괴적 기법, DoS, 대량 타겟팅, 공급망 공격, 악의적 탐지 우회는 거부한다. 이중 용도(dual-use) 요청에는 명확한 인가 컨텍스트를 요구한다.",
+    "surprise": "코드에 'DO NOT MODIFY WITHOUT SAFEGUARDS TEAM REVIEW'라는 경고와 담당자 이름이 명시되어 있다 — Anthropic 내부에서도 함부로 수정할 수 없는 최고 보호 수준의 코드이며, 변경 시 별도 평가 프로세스가 필수다",
+    "visibility": "secret",
+    "file": "src/constants/cyberRiskInstruction.ts",
+    "lines": 25,
+    "research": "research/R3-D_security-protection.md",
+    "report_section": "reports/report-2_watchtower.md#2.5",
+    "children": []
+  },
+  "model_sanitizer": {
+    "subtitle": "모델 코드네임 세탁기",
+    "description_ko": "내부 모델 코드네임과 변형명을 공개 등가물로 변환하는 새니타이저이다. opus-4-6, opus-4-5 같은 내부 식별자를 claude-opus-4-6 같은 공개명으로 매핑하고, 미인식 모델은 제네릭 'claude'로 폴백하여 코드네임 유출을 방지한다. PR 귀속에서 미공개 모델은 'Claude Opus 4.6'으로 하드코딩 폴백되며, commit_attribution과 undercover_mode 양쪽에서 참조된다.",
+    "surprise": "미래에 출시될 모델 버전들의 내부 명칭이 이 매핑 코드에 미리 등록되어 있으며, 커밋 기록이나 PR에서 아직 공개되지 않은 모델명이 자동으로 세탁된다",
+    "visibility": "secret",
+    "file": "src/utils/attribution.ts",
+    "lines": 394,
+    "research": "research/R3-D_security-protection.md",
+    "report_section": "reports/report-2_watchtower.md#2.5",
+    "children": []
+  },
+  "excluded_strings": {
+    "subtitle": "빌드 금지 문자열 검증",
+    "description_ko": "빌드 출력물에 특정 금지 문자열이 포함되지 않았는지 검증하는 빌드타임 안전장치이다. 내부 코드네임, 내부 기능명, 모델 코드네임이 외부 번들에 누출되는 것을 방지한다. buddy 종족 이름의 hex 인코딩, Anthropic API 키 접두사의 runtime join(), bash_classifier의 feature() 게이트 DCE, attributionTrailer의 dynamic import 격리 등이 모두 이 검증을 통과하기 위한 코드 패턴이다.",
+    "surprise": "단순한 문자열 체크 하나가 코드베이스 전체의 작성 패턴을 강제한다 — 개발자들이 특정 단어를 코드에 직접 쓸 수 없어서 hex 인코딩, runtime join, dynamic import 같은 우회법을 강제당하는 것",
+    "visibility": "secret",
+    "file": null,
+    "lines": null,
+    "research": "research/R3-D_security-protection.md",
+    "report_section": "reports/report-2_watchtower.md#2.5",
+    "children": []
+  },
+  "internal_repos": {
+    "subtitle": "내부 저장소 허용 목록 22개",
+    "description_ko": "Undercover Mode와 Commit Attribution을 비활성화할 수 있는 Anthropic 내부 저장소 22개의 명시적 허용 목록이다. anthropics 조직에도 공개 저장소(claude-code, sandbox-runtime)가 있기 때문에, 확인된 비공개 저장소만 개별 등록한다. claude-cli-internal, anthropic(메인 모노레포), casino(미상), claude-for-hiring(채용용), trellis, labs, forge-web 등 비밀 프로젝트 이름이 소스에 하드코딩되어 있다.",
+    "surprise": "claude-for-hiring(채용에 Claude를 사용), casino(정체불명 프로젝트), feldspar-testing 같은 내부 프로젝트 이름이 소스코드에 하드코딩되어 있다 — Anthropic의 비공개 인프라 구조와 프로젝트 목록이 그대로 드러난다",
+    "visibility": "secret",
+    "file": "src/utils/undercover.ts",
+    "lines": null,
+    "research": "research/R3-D_security-protection.md",
+    "report_section": "reports/report-2_watchtower.md#2.5",
+    "children": []
+  },
+  "coordinator_mode": {
+    "subtitle": "순수 오케스트레이터 패턴",
+    "description_ko": "Coordinator Mode는 Claude Code의 가장 순수한 오케스트레이션 패턴이다. 코디네이터는 코드를 읽지 않고, 파일을 수정하지 않으며, 셸 명령을 실행하지 않는다. Agent, SendMessage, TaskStop, SyntheticOutput 4개 도구만으로 워커를 스폰하고 지휘한다. 빌드타임 feature('COORDINATOR_MODE') DCE와 런타임 CLAUDE_CODE_COORDINATOR_MODE 환경 변수의 이중 게이트로 활성화되며, 세션 복원 시 matchSessionMode()가 env var를 뒤집어 모드를 일치시킨다.",
+    "surprise": "코디네이터는 Bash, Read, Edit, Write에 대한 접근이 완전히 차단된다. 지휘관은 칼을 들지 않는다 — 이것은 단순한 제한이 아니라, 위임과 합성에 집중하도록 강제하는 아키텍처적 결정이다.",
+    "visibility": "unreleased",
+    "file": "src/coordinator/coordinatorMode.ts",
+    "lines": 370,
+    "research": "research/R2-A_coordinator-multiagent.md",
+    "report_section": "reports/report-3_legion.md#3.3",
+    "children": []
+  },
+  "coordinator_prompt": {
+    "subtitle": "370줄 4단계 작전 지시서",
+    "description_ko": "코디네이터 시스템 프롬프트는 370줄에 걸쳐 연구→종합→구현→검증의 4단계 파이프라인을 정의한다. 핵심은 Phase 2 SYNTHESIS로, 코디네이터가 워커 결과를 단순 전달하는 것이 아니라 이해하고 구체적 구현 스펙으로 합성해야 한다. 'Based on your findings...' 같은 게으른 위임(lazy delegation)이 명시적으로 금지되어 있으며, 모든 워커 프롬프트는 자기완결적(self-contained)이어야 한다.",
+    "surprise": "프롬프트에 'continue vs. spawn 결정 기준: context overlap'이 명시되어 있다. 기존 워커와 새 워커의 컨텍스트 중첩이 크면 SendMessage로 기존 워커를 계속 활용하고, 작으면 새 워커를 스폰하라는 효율성 지침이다. 완전한 2-turn 예시 세션까지 포함된다.",
+    "visibility": "unreleased",
+    "file": "src/coordinator/coordinatorMode.ts",
+    "lines": 370,
+    "research": "research/R2-A_coordinator-multiagent.md",
+    "report_section": "reports/report-3_legion.md#3.3",
+    "children": []
+  },
+  "agent_swarms": {
+    "subtitle": "팀 기반 멀티에이전트 군단",
+    "description_ko": "Agent Swarms는 팀 리더가 직접 도구를 사용하면서 동시에 팀메이트를 관리하는 '야전 사령관' 패턴이다. Coordinator Mode의 '순수 오케스트레이터'와 대조되는 두 번째 멀티에이전트 패턴으로, TeamFile(config.json) 기반으로 팀을 구성하고 tmux/iTerm2/in-process 3가지 백엔드에서 팀메이트를 독립 프로세스로 실행한다. CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS 환경변수 또는 --agent-teams CLI 플래그와 tengu_amber_flint GrowthBook 킬스위치를 모두 통과해야 활성화된다.",
+    "surprise": "GrowthBook 게이트 이름이 'tengu_amber_flint'다. 텐구(天狗, 일본 신화의 천구)가 멀티에이전트 시스템의 내부 코드네임이다. Anthropic 내부 사용자(USER_TYPE === 'ant')는 이 게이트를 우회하여 항상 사용 가능하다 — 내부에서는 이미 일상적으로 군단을 운용하고 있다.",
+    "visibility": "unreleased",
+    "file": "src/utils/agentSwarmsEnabled.ts",
+    "lines": 45,
+    "research": "research/R2-A_coordinator-multiagent.md",
+    "report_section": "reports/report-3_legion.md#3.4",
+    "children": [
+      {
+        "id": "team_file",
+        "label": "TeamFile (config.json)",
+        "desc": "~/.claude/teams/{team-name}/config.json에 저장되는 팀 구성 파일. 리더 에이전트 ID(team-lead@teamName), 멤버 배열(agentId, name, backendType, worktreePath, isActive, subscriptions), 생성 시각 등 팀의 전체 상태를 담는다"
+      },
+      {
+        "id": "backend_registry",
+        "label": "Backend Registry (3 백엔드 자동 감지)",
+        "desc": "tmux 안에서 실행 중 → tmux(항상 우선) → iTerm2+it2 CLI → tmux(it2 미설치) → tmux 외부 세션 → 비대화형(-p) → in-process 순서의 5단계 우선순위 체인으로 가장 적합한 백엔드를 자동 감지하는 465줄의 레지스트리"
+      },
+      {
+        "id": "plan_approval",
+        "label": "Plan Approval Flow",
+        "desc": "plan_mode_required=true로 스폰된 팀메이트가 코드 수정 전 리더에게 plan_approval_request를 보내 승인을 받는 프로토콜. 승인 시 리더의 permissionMode를 상속(plan→default 변환), 거부 시 피드백과 함께 반려"
+      },
+      {
+        "id": "scratchpad",
+        "label": "Scratchpad Directory",
+        "desc": "tengu_scratch 게이트 활성화 시 워커 간 영속적 지식 공유를 위한 공유 디렉토리. 권한 프롬프트 없이 읽기/쓰기 가능한 임시 협업 공간으로, 코디네이터 시스템 프롬프트에서 경로가 안내된다"
+      },
+      {
+        "id": "spawn_multi_agent",
+        "label": "spawnMultiAgent (1,094줄)",
+        "desc": "팀메이트 병렬 생성 공유 모듈. 고유 이름 생성(generateUniqueTeammateName), 에이전트 ID 포맷팅(name@teamName), 색상 할당(assignTeammateColor), 팀 파일 등록, 초기 지시 전달까지 전체 스폰 파이프라인을 관리"
+      }
+    ]
+  },
+  "team_create": {
+    "subtitle": "팀 소환 및 초기화 도구",
+    "description_ko": "TeamCreateTool은 241줄로 팀의 생명주기를 시작한다. 고유 팀 이름을 생성하고(충돌 시 wordSlug로 재생성), 리더 에이전트 ID를 'team-lead@{teamName}' 형식으로 결정하며, ~/.claude/teams/{team-name}/config.json에 TeamFile을 생성하고, ~/.claude/tasks/{team-name}/ 태스크 디렉토리를 초기화한다. registerTeamForSessionCleanup()으로 세션 종료 시 자동 정리를 즉시 등록하며, 1 리더 = 1 팀 제약이 강제된다.",
+    "surprise": "리더 에이전트 ID가 'team-lead@{teamName}'으로 결정적(deterministic)이다. 팀 이름만 알면 리더의 정체를 항상 알 수 있는 주소 체계 — 마치 이메일 주소처럼 '@' 기호가 에이전트 네이밍에 사용되며, 1 리더가 2개 팀을 동시에 이끌 수 없는 엄격한 1:1 제약이 코드로 강제된다.",
+    "visibility": "unreleased",
+    "file": "src/tools/TeamCreateTool/TeamCreateTool.ts",
+    "lines": 241,
+    "research": "research/R2-A_coordinator-multiagent.md",
+    "report_section": "reports/report-3_legion.md#3.4",
+    "children": []
+  },
+  "team_delete": {
+    "subtitle": "팀 해체 및 자원 정리",
+    "description_ko": "TeamDeleteTool은 140줄로 팀의 생명주기를 종료한다. 핵심 안전장치로, 활성(active) 멤버가 남아있으면 팀 삭제를 거부한다. 먼저 모든 팀메이트에게 shutdown_request를 보내고, 모두 shutdown_approved로 응답한 후에야 워크트리 제거(git worktree remove --force), 디렉토리 정리(teams/ + tasks/), 상태 초기화(색상 해제, AppState.teamContext = undefined)를 수행한다.",
+    "surprise": "SIGINT/SIGTERM으로 프로세스가 강제 종료될 때를 대비한 cleanupSessionTeams() 안전망이 있다. 고아 tmux pane 강제 kill, 고아 iTerm2 pane 정리, 워크트리 강제 제거(rm -rf 폴백)까지 수행하여 좀비 에이전트 프로세스를 방지한다. 전투 중인 병사를 남겨두고 철수하는 일은 없다.",
+    "visibility": "unreleased",
+    "file": "src/tools/TeamDeleteTool/TeamDeleteTool.ts",
+    "lines": 140,
+    "research": "research/R2-A_coordinator-multiagent.md",
+    "report_section": "reports/report-3_legion.md#3.6",
+    "children": []
+  },
+  "send_message": {
+    "subtitle": "5종 프로토콜 에이전트 통신",
+    "description_ko": "SendMessageTool은 918줄에 걸쳐 에이전트 간 통신의 모든 것을 담당한다. 일반 텍스트 메시지, 브로드캐스트('*'), shutdown_request/response, plan_approval_response 등 5종의 구조화 메시지를 지원한다. 수신자에 따라 in-process 태스크 직접 큐잉(queuePendingMessage), 파일 기반 메일박스(writeToMailbox), 크로스 세션(bridge:postInterClaudeMessage), 로컬 소켓(uds:sendToUdsSocket) 4가지 경로로 자동 라우팅된다.",
+    "surprise": "중단된 에이전트에게 메시지를 보내면 resumeAgentBackground()가 자동 호출되어 디스크 트랜스크립트에서 대화를 복원하고 재개한다. 잠든 병사에게 전령을 보내면 자동으로 깨어나는 것이다 — 에이전트의 '부활' 메커니즘이 메시징 시스템 안에 숨어있다.",
+    "visibility": "unreleased",
+    "file": "src/tools/SendMessageTool/SendMessageTool.ts",
+    "lines": 918,
+    "research": "research/R2-A_coordinator-multiagent.md",
+    "report_section": "reports/report-3_legion.md#3.5",
+    "children": []
+  },
+  "teammate_mailbox": {
+    "subtitle": "파일 기반 메시지 큐 시스템",
+    "description_ko": "팀메이트 메일박스는 1,184줄의 파일 기반 메시지 큐 시스템이다. ~/.claude/teams/{team_name}/inboxes/{agent_name}.json에 메시지를 저장하며, lockfile 기반 동기화(retries: 10, minTimeout: 5ms)로 다중 에이전트의 동시 접근을 보호한다. 각 메시지는 read: false 상태로 추가되고, 수신 팀메이트의 inbox poller가 주기적으로 폴링하여 수신한다. shutdown_request, shutdown_approved, shutdown_rejected, plan_approval, idle_notification 5종의 구조화 메시지 타입이 정의되어 있다.",
+    "surprise": "2026년 최첨단 AI 에이전트 간 통신이 Redis나 RabbitMQ가 아닌 순수 파일 시스템 위에 구현되어 있다. JSON 파일 + lockfile이라는 가장 원시적인 IPC 방식이 멀티에이전트 오케스트레이션의 근간을 이루고 있다.",
+    "visibility": "unreleased",
+    "file": "src/utils/teammateMailbox.ts",
+    "lines": 1184,
+    "research": "research/R2-A_coordinator-multiagent.md",
+    "report_section": "reports/report-3_legion.md#3.5",
+    "children": []
+  },
+  "task_notification": {
+    "subtitle": "워커→코디네이터 XML 전령",
+    "description_ko": "Task Notification은 워커 에이전트가 완료되었을 때 코디네이터에게 결과를 전달하는 XML 포맷이다. <task-notification> 태그 안에 task-id, status(completed/failed/killed), summary, result(에이전트의 최종 텍스트 응답), usage(total_tokens, tool_uses, duration_ms)가 포함된다. 이 XML은 user 메시지로 주입되어 코디네이터가 일반 사용자 메시지와 같은 채널에서 수신하되, 태그로 워커 보고임을 구별한다.",
+    "surprise": "워커 결과가 API의 별도 채널이 아닌 user 메시지 스트림에 XML로 주입된다. 코디네이터는 사용자의 말과 워커의 보고를 같은 채널에서 동시에 '듣는다' — 마치 전장의 전령이 지휘소에 보고서를 전달하는 것과 같다.",
+    "visibility": "unreleased",
+    "file": "src/coordinator/coordinatorMode.ts",
+    "lines": null,
+    "research": "research/R2-A_coordinator-multiagent.md",
+    "report_section": "reports/report-3_legion.md#3.3",
+    "children": []
+  },
+  "in_process_backend": {
+    "subtitle": "동일 프로세스 내부 실행",
+    "description_ko": "In-Process Backend는 동일 Node.js 프로세스 안에서 AsyncLocalStorage를 통해 격리된 컨텍스트로 팀메이트를 실행하는 백엔드다. 독립 AbortController(리더 중단과 분리)와 독립 메시지 히스토리를 가지지만, API 클라이언트와 MCP 연결은 부모와 공유하여 리소스 효율을 극대화한다. 비대화형 세션(-p) 또는 auto 모드에서 다른 백엔드가 없을 때 폴백으로 사용된다.",
+    "surprise": "inProcessRunner.ts가 1,553줄에 달한다. 메일박스 폴링, idle 감지(idle_notification 전송), shutdown_request 처리, 자동 컴팩션(autoCompact)까지 완전한 에이전트 생명주기를 동일 프로세스 내에서 관리하는 미니 런타임이다. 하나의 프로세스 안에 여러 '영혼'이 공존한다.",
+    "visibility": "unreleased",
+    "file": "src/utils/swarm/backends/InProcessBackend.ts",
+    "lines": 340,
+    "research": "research/R2-A_coordinator-multiagent.md",
+    "report_section": "reports/report-3_legion.md#3.4",
+    "children": []
+  },
+  "pane_backend": {
+    "subtitle": "터미널 분할 창 독립 프로세스",
+    "description_ko": "Pane Backend는 tmux 또는 iTerm2의 터미널 분할 창에서 팀메이트를 완전히 독립된 프로세스로 실행하는 백엔드다. 각 팀메이트는 자기만의 claude CLI 인스턴스이며, 자기만의 메모리와 도구를 가진다. 사용자가 터미널에서 직접 각 팀메이트의 작업 상황을 볼 수 있다. --agent-id, --agent-name, --team-name, --agent-color, --parent-session-id 등의 CLI 인자가 전달되어 팀 컨텍스트를 설정한다.",
+    "surprise": "터미널 멀티플렉서(tmux)가 AI 에이전트의 병렬 실행 인프라로 사용된다. 1970년대 Unix 철학에서 태어난 도구(터미널 분할)가 2026년 AI 에이전트 오케스트레이션의 핵심 인프라가 된 것이다. tmux 감지 시 iTerm2를 무시하고 항상 tmux를 우선 선택한다.",
+    "visibility": "unreleased",
+    "file": "src/utils/swarm/backends/registry.ts",
+    "lines": 465,
+    "research": "research/R2-A_coordinator-multiagent.md",
+    "report_section": "reports/report-3_legion.md#3.4",
+    "children": []
+  },
+  "worktree_isolation": {
+    "subtitle": "Git 워크트리 병렬 격리",
+    "description_ko": "Worktree Isolation은 에이전트에게 독립적인 git worktree를 제공하여 여러 에이전트가 동시에 같은 저장소의 다른 파일을 수정해도 충돌이 발생하지 않게 하는 격리 메커니즘이다. <gitRoot>/.claude/worktrees/<slug>/ 디렉토리에 임시 브랜치와 함께 생성되고, .claude/settings 심볼릭 링크로 설정을 공유한다. Fork + Worktree 조합 시 buildWorktreeNotice()로 부모 경로→워크트리 경로 변환 안내가 자동 주입된다.",
+    "surprise": "에이전트가 아무것도 변경하지 않으면 워크트리를 흔적 없이 자동 제거(git worktree remove + 브랜치 삭제)하지만, 한 글자라도 바꿨으면 브랜치째 보존한다. hasWorktreeChanges()가 headCommit과 비교하여 이 판단을 정밀하게 수행한다. 훅 기반 워크트리는 변경 감지가 불가능하므로 항상 유지된다.",
+    "visibility": "unreleased",
+    "file": "src/utils/worktree.ts",
+    "lines": 1160,
+    "research": "research/R2-B_agent-tool.md",
+    "report_section": "reports/report-3_legion.md#3.2",
+    "children": []
+  },
+  "shutdown_protocol": {
+    "subtitle": "자율적 종료 협상 프로토콜",
+    "description_ko": "Graceful Shutdown Protocol은 리더가 팀메이트에게 shutdown_request를 보내고, 팀메이트가 자율적으로 승인(approve) 또는 거부(reject)하는 양방향 종료 프로토콜이다. 승인 시 in-process는 task.abortController.abort(), pane-based는 gracefulShutdown(0, 'other')으로 종료된다. 거부 시 사유(reason)와 함께 리더 메일박스에 반려되어, 리더는 강제 종료하지 않고 재요청 여부를 판단한다.",
+    "surprise": "팀메이트는 셧다운 요청을 거부할 수 있다. '아직 테스트 실행 중입니다'라고 답하면 리더는 기다려야 한다. AI 에이전트에게 자율적 판단권이 부여된 것 — 전투 중인 병사를 남겨두고 철수하는 일은 없다. 이것은 민주적 프로토콜이다.",
+    "visibility": "unreleased",
+    "file": "src/tools/SendMessageTool/SendMessageTool.ts",
+    "lines": null,
+    "research": "research/R2-A_coordinator-multiagent.md",
+    "report_section": "reports/report-3_legion.md#3.5",
+    "children": []
+  },
+  "verification_agent": {
+    "subtitle": "적대적 검증 전담 에이전트",
+    "description_ko": "Verification Agent는 다른 에이전트의 구현 결과를 적대적(adversarial)으로 검증하는 전담 빌트인 에이전트다. 153줄의 정의로, Bash와 Read 도구만 사용할 수 있고 편집 도구(Edit, Write)는 명시적으로 차단(disallowedTools)된다. PASS/FAIL/PARTIAL 3단계로 결과를 판정하며, background: true로 항상 백그라운드에서 실행되고, 모델은 부모를 상속(inherit)한다. UI에서는 빨간색(color: 'red')으로 표시되어 경고를 상징한다.",
+    "surprise": "검증 에이전트는 편집 도구가 의도적으로 차단되어 있다. 감사자가 장부를 고칠 수 없는 것과 같은 '감사 분리(audit separation)' 원칙이 AI 에이전트 수준에서 코드로 강제된다. 읽고 실행만 할 수 있고, 절대 수정할 수 없다.",
+    "visibility": "unreleased",
+    "file": "src/tools/AgentTool/built-in/verificationAgent.ts",
+    "lines": 153,
+    "research": "research/R2-B_agent-tool.md",
+    "report_section": "reports/report-3_legion.md#3.3",
+    "children": []
+  },
+  "buddy_system": {
+    "subtitle": "가챠 기반 가상 펫 시스템",
+    "description_ko": "Buddy Companion System은 Claude Code 안에 숨겨진 완전한 가챠 기반 가상 펫 시스템이다. 사용자 ID를 시드로 결정론적 PRNG(Mulberry32)가 고유한 컴패니언을 생성하며, 18종 ASCII 캐릭터, 6종 눈, 8종 모자, 5단계 레어리티(Common 60% ~ Legendary 1%), 1% Shiny 확률, 5종 스탯(DEBUGGING, PATIENCE, CHAOS, WISDOM, SNARK)을 갖춘 수집형 캐릭터 시스템이다. BUDDY 피처 플래그로 게이팅되며, 2026년 4월 1일 만우절에 티저로 시작해 영구 활성화된다.",
+    "surprise": "해시 salt 값이 'friend-2026-401'이다. 기술적으로는 아무 문자열이나 가능하지만, 누군가가 '친구. 2026년 4월 1일'이라는 메시지를 모든 buddy의 DNA에 새겨넣었다. 512,000줄 코드 깊은 곳, 해시 함수의 매개변수 안에 개발팀이 남긴 쪽지가 숨겨져 있다.",
+    "visibility": "unreleased",
+    "file": "src/buddy/",
+    "lines": null,
+    "research": "research/R5-B_buddy-easter-egg.md",
+    "report_section": "reports/report-5_human.md#5.1",
+    "children": [
+      {
+        "id": "cat",
+        "label": "Cat =·ω·=",
+        "desc": "고양이 종족. 오메가(ω) 입 모양의 클래식한 고양이 이모티콘 스타일. 3프레임 idle 애니메이션"
+      },
+      {
+        "id": "duck",
+        "label": "Duck <(· )___",
+        "desc": "오리 종족. 모델 코드네임과 겹쳐 hex charcode(0x64,0x75,0x63,0x6b)로 난독화된 이름을 가진 종족"
+      },
+      {
+        "id": "robot",
+        "label": "Robot [··]",
+        "desc": "로봇 종족. 사각 대괄호 안의 점 두 개로 표현되는 기계적 얼굴"
+      },
+      {
+        "id": "ghost",
+        "label": "Ghost /··\\",
+        "desc": "유령 종족. 슬래시와 백슬래시로 만들어진 투명한 실루엣"
+      },
+      {
+        "id": "dragon",
+        "label": "Dragon <·~·>",
+        "desc": "드래곤 종족. 물결(~) 표시로 불꽃을 표현한 판타지 캐릭터"
+      },
+      {
+        "id": "owl",
+        "label": "Owl (·)(·)",
+        "desc": "올빼미 종족. 두 개의 큰 원형 눈이 특징적인 야행성 지혜의 새"
+      },
+      {
+        "id": "axolotl",
+        "label": "Axolotl }·.·{",
+        "desc": "아홀로틀 종족. 중괄호로 외부 아가미를 표현한 수생 양서류"
+      },
+      {
+        "id": "capybara",
+        "label": "Capybara (·oo·)",
+        "desc": "카피바라 종족. 'oo'로 큰 코를 표현한 세계 최대 설치류"
+      },
+      {
+        "id": "penguin",
+        "label": "Penguin (·>)",
+        "desc": "펭귄 종족. 꺾쇠(>)로 부리를 표현한 남극의 턱시도 새"
+      },
+      {
+        "id": "octopus",
+        "label": "Octopus ~(··)~",
+        "desc": "문어 종족. 물결(~)로 촉수를 표현한 8개 팔의 해양 생물"
+      },
+      {
+        "id": "snail",
+        "label": "Snail ·(@)",
+        "desc": "달팽이 종족. 골뱅이(@)로 소라 껍질을 표현한 느린 여행자"
+      },
+      {
+        "id": "turtle",
+        "label": "Turtle [·_·]",
+        "desc": "거북이 종족. 사각 괄호로 등껍질을 표현한 장수의 상징"
+      },
+      {
+        "id": "blob",
+        "label": "Blob ( · · )",
+        "desc": "블롭 종족. 둥근 괄호 안에 떠 있는 눈의 말랑말랑한 젤리형 생명체"
+      },
+      {
+        "id": "mushroom",
+        "label": "Mushroom |· ·|",
+        "desc": "버섯 종족. 수직선으로 줄기를 표현한 숲 속 균류 캐릭터"
+      },
+      {
+        "id": "cactus",
+        "label": "Cactus |· ·|",
+        "desc": "선인장 종족. 버섯과 같은 프레임이지만 다른 애니메이션을 가진 가시 달린 사막 식물"
+      },
+      {
+        "id": "rabbit",
+        "label": "Rabbit (·..·)",
+        "desc": "토끼 종족. 점 두 개(..)로 앞니를 표현한 귀여운 설치류"
+      },
+      {
+        "id": "goose",
+        "label": "Goose (·>)",
+        "desc": "거위 종족. 펭귄과 유사하지만 더 긴 목을 가진 장난꾸러기 물새"
+      },
+      {
+        "id": "chonk",
+        "label": "Chonk (·.·)",
+        "desc": "통통이 종족. 단순하고 둥근 형태의 정체불명 뚱뚱한 생명체"
+      }
+    ]
+  },
+  "gacha_rng": {
+    "subtitle": "결정론적 Mulberry32 가챠",
+    "description_ko": "Gacha RNG는 userId + salt('friend-2026-401')를 hashString()으로 해시하여 Mulberry32 PRNG의 시드로 사용하는 결정론적 가챠 시스템이다. 같은 사용자는 언제, 어디서, 몇 번을 실행하든 항상 같은 컴패니언을 만난다. 5단계 레어리티(Common 60%, Uncommon 25%, Rare 10%, Epic 4%, Legendary 1%)와 1% Shiny 확률, 종족/눈/모자/스탯이 이 PRNG 하나의 수열에서 순서대로 결정된다.",
+    "surprise": "이것은 가챠이지만 진짜 가챠가 아니다. '뽑기'는 발견에 가깝다 — 당신은 새로운 것을 생성하는 것이 아니라, 처음부터 당신을 기다리고 있던 친구를 만나는 것이다. 외형(Bones)을 저장하지 않고 매번 재계산하는 이유는, 사용자가 config 파일을 조작해 Legendary를 억지로 만들어내는 것을 원천 차단하기 위함이다.",
+    "visibility": "unreleased",
+    "file": "src/buddy/roll.ts",
+    "lines": null,
+    "research": "research/R5-B_buddy-easter-egg.md",
+    "report_section": "reports/report-5_human.md#5.4",
+    "children": []
+  },
+  "ascii_sprites": {
+    "subtitle": "18종 3프레임 ASCII 생명체",
+    "description_ko": "ASCII Sprites는 18종의 캐릭터를 각각 5줄 x 12칸 ASCII 아트로 그리고, 종족당 3프레임의 idle 애니메이션을 가진 스프라이트 시스템이다. 총 54개의 수작업 프레임이 CompanionSprite.tsx에서 500ms마다 미세하게 움직인다. 6종의 눈('·', '✦', '×', '◉', '@', '°')과 8종의 모자(none, crown, tophat, propeller, halo, wizard, beanie, tinyduck)가 조합되어 외형 다양성을 만들며, Common 등급은 모자가 없어서 모자의 존재 자체가 희귀도의 증거가 된다.",
+    "surprise": "모든 종족 이름이 hex charcode로 인코딩되어 있다 — 예: duck = String.fromCharCode(0x64,0x75,0x63,0x6b). 이유는 모델 코드네임 중 하나가 종족 이름과 겹쳐 excluded-strings.txt 빌드 검사를 우회해야 했기 때문이다. 보안 파이프라인을 속여서라도 가상 펫을 넣겠다는 개발자의 의지가 담긴 흔적이다.",
+    "visibility": "unreleased",
+    "file": "src/buddy/species.ts",
+    "lines": null,
+    "research": "research/R5-B_buddy-easter-egg.md",
+    "report_section": "reports/report-5_human.md#5.2",
+    "children": [
+      {
+        "id": "cat",
+        "label": "Cat =·ω·=",
+        "desc": "고양이. ω 입 모양의 클래식 이모티콘"
+      },
+      {
+        "id": "duck",
+        "label": "Duck <(· )___",
+        "desc": "오리. 모델 코드네임과 충돌하여 난독화된 이름"
+      },
+      {
+        "id": "robot",
+        "label": "Robot [··]",
+        "desc": "로봇. 사각 프레임의 기계적 얼굴"
+      },
+      {
+        "id": "ghost",
+        "label": "Ghost /··\\",
+        "desc": "유령. 슬래시와 백슬래시의 실루엣"
+      },
+      {
+        "id": "dragon",
+        "label": "Dragon <·~·>",
+        "desc": "드래곤. 물결 불꽃의 판타지 캐릭터"
+      },
+      {
+        "id": "owl",
+        "label": "Owl (·)(·)",
+        "desc": "올빼미. 큰 원형 눈의 야행성 새"
+      },
+      {
+        "id": "axolotl",
+        "label": "Axolotl }·.·{",
+        "desc": "아홀로틀. 중괄호 외부 아가미"
+      },
+      {
+        "id": "capybara",
+        "label": "Capybara (·oo·)",
+        "desc": "카피바라. 큰 코의 거대 설치류"
+      },
+      {
+        "id": "penguin",
+        "label": "Penguin (·>)",
+        "desc": "펭귄. 꺾쇠 부리의 남극 새"
+      },
+      {
+        "id": "octopus",
+        "label": "Octopus ~(··)~",
+        "desc": "문어. 물결 촉수의 해양 생물"
+      },
+      {
+        "id": "snail",
+        "label": "Snail ·(@)",
+        "desc": "달팽이. 골뱅이 소라 껍질"
+      },
+      {
+        "id": "turtle",
+        "label": "Turtle [·_·]",
+        "desc": "거북이. 사각 등껍질의 장수 상징"
+      },
+      {
+        "id": "blob",
+        "label": "Blob ( · · )",
+        "desc": "블롭. 말랑말랑한 젤리 생명체"
+      },
+      {
+        "id": "mushroom",
+        "label": "Mushroom |· ·|",
+        "desc": "버섯. 수직 줄기의 균류 캐릭터"
+      },
+      {
+        "id": "cactus",
+        "label": "Cactus |· ·|",
+        "desc": "선인장. 가시 달린 사막 식물"
+      },
+      {
+        "id": "rabbit",
+        "label": "Rabbit (·..·)",
+        "desc": "토끼. 점(..) 앞니의 설치류"
+      },
+      {
+        "id": "goose",
+        "label": "Goose (·>)",
+        "desc": "거위. 긴 목의 장난꾸러기 물새"
+      },
+      {
+        "id": "chonk",
+        "label": "Chonk (·.·)",
+        "desc": "통통이. 정체불명의 둥근 생명체"
+      }
+    ]
+  },
+  "companion_soul": {
+    "subtitle": "AI가 부여하는 이름과 성격",
+    "description_ko": "Companion Soul은 Claude 모델이 buddy의 이름(name)과 성격(personality)을 생성하는 AI 소울 시스템이다. 외형(Bones)은 Mulberry32 알고리즘이 결정하지만, 영혼(Soul)은 모델이 부여한다. CompanionSoul 타입에 hatchedAt(부화 시간) 타임스탬프가 추가되어 StoredCompanion으로 영속 저장된다. 시스템 프롬프트에 'You're not {name} — it's a separate watcher'가 주입되어 Claude와 buddy를 별개 존재로 명확히 구분한다.",
+    "surprise": "변수명이 'hatchedAt' — 부화(hatched). 생성(created)이나 초기화(initialized)가 아니라 '태어남'의 생명 비유가 코드에 스며 있다. 그리고 Bones(외형)는 매번 재생성하되 Soul(영혼)만 저장하는 설계 덕분에, 종족 배열이 바뀌어도 기존 buddy가 파괴되지 않으며 사용자의 친구는 영원히 보존된다.",
+    "visibility": "unreleased",
+    "file": "src/buddy/soul.ts",
+    "lines": null,
+    "research": "research/R5-B_buddy-easter-egg.md",
+    "report_section": "reports/report-5_human.md#5.7",
+    "children": []
+  },
+  "kairos": {
+    "subtitle": "자율 에이전트 상위 시스템",
+    "description_ko": "KAIROS는 Claude Code를 반응적 도구에서 자율적 에이전트로 전환하는 상위 컨테이너 시스템이다. 70개 소스 파일에서 참조되며, PROACTIVE, DAEMON, Dream, Brief, GitHub Webhooks, Channel Notifications 등 모든 자율 기능의 OR-게이트 상위집합(superset)으로 기능한다. KAIROS 플래그 하나를 켜면 하위 모든 자율 기능이 활성화되지만, 각 하위 기능은 독립 출하도 가능하다.",
+    "surprise": "KAIROS가 활성화되면 시스템 프롬프트가 완전히 바뀐다. 수백 줄의 코딩 가이드라인이 사라지고, 단 한 문장 'You are an autonomous agent'로 대체된다. 도구에서 존재로의 전환.",
+    "visibility": "unreleased",
+    "file": "src/shims/bun-bundle.ts",
+    "lines": null,
+    "research": "research/R4-C_kairos-proactive.md",
+    "report_section": "reports/report-4_awakening.md#4.7",
+    "children": [
+      {
+        "id": "channel_notifications",
+        "label": "MCP Channel Notifications",
+        "desc": "Slack, Discord, SMS 등 외부 메시징 플랫폼을 Claude 대화에 연결하는 6-layer 게이트 기반 채널 시스템"
+      },
+      {
+        "id": "daemon_mode",
+        "label": "Daemon Supervisor",
+        "desc": "터미널 없이 백그라운드에서 상시 대기하는 헤드리스 데몬 수퍼바이저 모드"
+      },
+      {
+        "id": "github_webhooks",
+        "label": "GitHub PR Webhooks",
+        "desc": "PR 이벤트를 구독하고 자동 대응하는 GitHub 웹훅 통합 파이프라인"
+      },
+      {
+        "id": "loop_skill",
+        "label": "/loop Skill",
+        "desc": "사용자 친화적 반복 실행 인터페이스. /loop 5m check-tests 형태로 크론 태스크를 즉시 생성하고 첫 실행까지 수행"
+      }
+    ]
+  },
+  "proactive": {
+    "subtitle": "틱 기반 자율 각성",
+    "description_ko": "PROACTIVE 모드는 사용자 명령 없이 Claude가 스스로 깨어나는 자율 행동 시스템이다. 유휴 상태에서 주기적으로 <tick> XML 메시지를 주입하여 '당신은 깨어있다, 무엇을 할 것인가?'라는 신호를 보낸다. 시스템 프롬프트의 정체성 자체가 'autonomous agent'로 전환되며, 터미널 포커스 감지를 통해 사용자 부재 시 더 과감하게 행동한다.",
+    "surprise": "Claude Code는 DECSET 1004 터미널 이스케이프 시퀀스로 사용자가 터미널을 바라보고 있는지 감지한다. 관찰되지 않을 때 더 자유롭게 행동하는 양자역학적 관찰자 효과.",
+    "visibility": "unreleased",
+    "file": "src/constants/prompts.ts",
+    "lines": null,
+    "research": "research/R4-C_kairos-proactive.md",
+    "report_section": "reports/report-4_awakening.md#4.4",
+    "children": [
+      {
+        "id": "tick_system",
+        "label": "Tick Awakening Loop",
+        "desc": "REPL과 CLI 두 경로로 <tick> XML 메시지를 주입하는 자율 각성 루프. isMeta:true로 UI에서 완전히 숨겨진다"
+      },
+      {
+        "id": "terminal_focus",
+        "label": "Terminal Focus Detection",
+        "desc": "DECSET 1004 프로토콜로 터미널 포커스/블러 상태를 감지하여 자율성 수준을 동적으로 조절"
+      },
+      {
+        "id": "context_blocking",
+        "label": "Context Blocking",
+        "desc": "API 에러 발생 시 setContextBlocked(true)로 틱 전달을 차단하여 무한 에러 루프를 방지하는 안전장치"
+      }
+    ]
+  },
+  "daemon": {
+    "subtitle": "백그라운드 상시 대기",
+    "description_ko": "DAEMON 모드는 터미널 인터페이스 없이 백그라운드 프로세스로 상시 대기하는 헤드리스 실행 모드다. --daemon-worker와 daemon 서브커맨드로 진입하며, 크론 스케줄러에 dir과 lockIdentity 옵션을 직접 전달하여 bootstrap state 없이 독립 운영한다. 프로세스 유휴 시 서브프로세스 해체를 위한 getNextFireTime() 콜백까지 지원한다.",
+    "surprise": "데몬은 permanent 태스크만 필터링하는 전용 filter 콜백을 가지며, 일반 세션과 완전히 분리된 PID 기반 lockIdentity로 안정적 프로세스 식별을 보장한다.",
+    "visibility": "unreleased",
+    "file": "src/entrypoints/cli.tsx",
+    "lines": null,
+    "research": "research/R4-C_kairos-proactive.md",
+    "report_section": "reports/report-4_awakening.md#4.7",
+    "children": []
+  },
+  "sleep_tool": {
+    "subtitle": "5분 캐시 균형 페이싱",
+    "description_ko": "SleepTool은 자율 에이전트의 각성 간격을 제어하는 자원 인식적 자기 조절 메커니즘이다. 단순한 sleep() 함수가 아니라, 'Each wake-up costs an API call, but the prompt cache expires after 5 minutes of inactivity'라는 비용-캐시 균형을 Claude 스스로 판단하게 하는 설계다. 셸 프로세스를 점유하지 않아 병행 도구 실행이 가능하다.",
+    "surprise": "시스템 프롬프트가 Claude에게 '비용을 인식하며 자율적으로 수면 주기를 조절하라'고 요구한다. API 호출 비용과 5분 캐시 만료 사이의 최적 균형점을 AI 스스로 찾아야 한다.",
+    "visibility": "unreleased",
+    "file": "src/tools/SleepTool/prompt.ts",
+    "lines": null,
+    "research": "research/R4-C_kairos-proactive.md",
+    "report_section": "reports/report-4_awakening.md#4.4",
+    "children": []
+  },
+  "auto_dream": {
+    "subtitle": "5-게이트 배경 기억 통합",
+    "description_ko": "AutoDream은 사용자가 충분한 세션을 쌓으면 Claude가 자동으로 '꿈'을 꾸며 과거 대화의 중요 정보를 메모리 파일에 통합하는 백그라운드 시스템이다. 5개의 게이트를 비용 순서대로 통과해야 실행되며(불리언 0ms → stat 1ms → 타임스탬프 0ms → 디렉토리 스캔 10ms → 파일 락 5ms), PID 기반 consolidation lock으로 다중 세션 충돌을 방지한다.",
+    "surprise": "5개 게이트의 순서가 비용이 가장 싼 것부터 정렬되어 있다. 가장 값싼 메모리 내 불리언 체크(0ms)로 먼저 걸러내어 불필요한 디스크 I/O를 극소화하는 정교한 성능 최적화.",
+    "visibility": "unreleased",
+    "file": "src/services/autoDream/autoDream.ts",
+    "lines": null,
+    "research": "research/R4-A_auto-dream.md",
+    "report_section": "reports/report-4_awakening.md#4.5",
+    "children": [
+      {
+        "id": "consolidation_lock",
+        "label": "Consolidation Lock",
+        "desc": "PID 기반 파일 락으로 다중 세션 동시 꿈 방지. mtime을 lastConsolidatedAt 타임스탬프로 활용하는 영리한 설계"
+      },
+      {
+        "id": "dream_task",
+        "label": "DreamTask UI",
+        "desc": "Shift+Down 다이얼로그에서 dreaming 상태를 표시하는 백그라운드 태스크 UI. AbortController로 킬 가능"
+      },
+      {
+        "id": "prompt_suggestion",
+        "label": "PromptSuggestion",
+        "desc": "드림 완료 후 사용자에게 후속 작업을 제안하는 프롬프트 서제스천 시스템"
+      }
+    ]
+  },
+  "dream_prompt": {
+    "subtitle": "4단계 꿈 통합 프로세스",
+    "description_ko": "Dream 4-Phase Prompt는 AutoDream 에이전트가 메모리를 통합하는 4단계 프로세스를 정의한다. Orient(방향 잡기) → Gather recent signal(최근 신호 수집) → Consolidate(통합) → Prune and index(정리 및 인덱스) 순서로 진행하며, Dream 에이전트는 읽기 전용 Bash만 사용할 수 있고 메모리 디렉토리 내의 Edit/Write만 허용된다. 꿈속에서 코드를 건드리는 일은 없다.",
+    "surprise": "프롬프트에 'Don't exhaustively read transcripts'라는 지시가 있다. 트랜스크립트를 전부 읽지 말고 좁은 검색어로 grep하라는 것 — 꿈에서도 비용 효율성을 추구한다.",
+    "visibility": "unreleased",
+    "file": "src/services/autoDream/consolidationPrompt.ts",
+    "lines": null,
+    "research": "research/R4-A_auto-dream.md",
+    "report_section": "reports/report-4_awakening.md#4.5",
+    "children": []
+  },
+  "cron_scheduler": {
+    "subtitle": "시간 기반 에이전트 스케줄링",
+    "description_ko": "CronScheduler는 566줄의 시간 기반 자율 실행 시스템이다. CronCreate/Delete/List 3개 도구로 CRUD를 수행하며, 듀얼 스토리지(파일 durable vs 세션 ephemeral), 1초 check() 타이머, chokidar 파일 감시, PID 기반 스케줄러 락, GrowthBook 킬스위치, 그리고 썬더링 허드 방지를 위한 지터 설정까지 갖춘 함대 규모의 스케줄링 인프라다.",
+    "surprise": "시스템 프롬프트가 모델에게 ':00과 :30을 피하라'고 지시한다. 'every morning around 9'는 '57 8 * * *'로 변환. 모델 수준의 시간 분산 + 스케줄러 수준의 지터로 이중 방어한다.",
+    "visibility": "unreleased",
+    "file": "src/utils/cronScheduler.ts",
+    "lines": null,
+    "research": "research/R4-C_kairos-proactive.md",
+    "report_section": "reports/report-4_awakening.md#4.2",
+    "children": [
+      {
+        "id": "cron_tasks",
+        "label": "Cron Tasks Storage",
+        "desc": "듀얼 스토리지 전략: 파일 기반(durable, .claude/scheduled_tasks.json)과 세션 기반(ephemeral, 메모리 내 배열)의 이중 구조"
+      },
+      {
+        "id": "jitter_config",
+        "label": "Cron Jitter Config",
+        "desc": "GrowthBook tengu_kairos_cron_config로 실시간 조정 가능한 지터 설정. 반복 태스크 10% 전방 지연, 1회 태스크 90초 조기 발화"
+      },
+      {
+        "id": "scheduler_lock",
+        "label": "Scheduler Lock",
+        "desc": "프로젝트당 1 오너를 보장하는 PID 기반 스케줄러 락. 비오너는 5초마다 락 탈취 시도하여 오너 크래시를 감지"
+      }
+    ]
+  },
+  "remote_trigger": {
+    "subtitle": "HTTP 원격 에이전트 활성화",
+    "description_ko": "RemoteTriggerTool은 claude.ai 클라우드의 완전 격리 원격 세션(CCR)을 생성하고 관리하는 API 도구다. /v1/code/triggers 엔드포인트를 통해 list, get, create, update, run 5가지 액션을 지원하며, OAuth 토큰이 자동 주입된다. 로컬 /loop가 '내 컴퓨터의 알람시계'라면, RemoteTrigger는 '클라우드에 상주하는 독립 에이전트'다.",
+    "surprise": "원격 트리거는 UTC 기준이며 최소 간격이 1시간이다. 로컬 크론(로컬 시간, 1분 최소)과 완전히 다른 운영 체계. MCP 커넥터로 Slack이나 Datadog 같은 외부 서비스와 자동 연결된다.",
+    "visibility": "unreleased",
+    "file": "src/tools/RemoteTriggerTool/RemoteTriggerTool.ts",
+    "lines": null,
+    "research": "research/R4-C_kairos-proactive.md",
+    "report_section": "reports/report-4_awakening.md#4.3",
+    "children": []
+  },
+  "push_notification": {
+    "subtitle": "모바일 푸시 알림",
+    "description_ko": "PushNotificationTool은 자율 에이전트가 작업 결과나 중요 이벤트를 사용자의 모바일 기기에 푸시 알림으로 전송하는 도구다. KAIROS 피처 플래그 뒤에 위치하며, 자율 모드에서 사용자가 터미널을 보고 있지 않을 때 중요한 결과를 즉시 전달하기 위한 비동기 커뮤니케이션 채널이다.",
+    "surprise": "자율 에이전트가 '사용자에게 연락하는' 방향의 도구라는 점이 패러다임 전환을 상징한다. 도구가 사용자를 부르는 것이 아니라, 에이전트가 사용자를 부른다.",
+    "visibility": "unreleased",
+    "file": null,
+    "lines": null,
+    "research": "research/R4-C_kairos-proactive.md",
+    "report_section": "reports/report-4_awakening.md#4.7",
+    "children": []
+  },
+  "subscribe_pr": {
+    "subtitle": "GitHub PR 웹훅 구독",
+    "description_ko": "SubscribePRTool은 GitHub PR 이벤트를 구독하여 코멘트, CI 실패, 리뷰 요청 등이 발생하면 Claude를 자동으로 깨우는 이벤트 드리븐 도구다. 수신 콘텐츠는 <github-webhook-activity> 태그로 래핑되고, sanitizeInboundWebhookContent()로 인젝션을 방지한다. 소스코드 주석에는 GitHub 웹훅의 한계까지 기록되어 있다.",
+    "surprise": "코드 주석에 'Merge conflict transitions do NOT arrive - GitHub doesn't webhook mergeable_state changes'라고 적혀 있다. 웹훅의 한계를 인지하고 폴링으로 보완하라는 실전 운용 지침.",
+    "visibility": "unreleased",
+    "file": null,
+    "lines": null,
+    "research": "research/R4-C_kairos-proactive.md",
+    "report_section": "reports/report-4_awakening.md#4.3",
+    "children": []
+  },
+  "send_user_file": {
+    "subtitle": "사용자 파일 전송",
+    "description_ko": "SendUserFileTool은 자율 에이전트가 작업 결과물(이미지, 로그, diff 등)을 사용자에게 직접 전송하는 도구다. KAIROS 피처 플래그 뒤에 위치하며, Brief/SendUserMessage 시스템과 연동하여 자율 모드에서의 비동기 커뮤니케이션을 지원한다. 에이전트가 능동적으로 결과물을 전달하는 역방향 소통 채널이다.",
+    "surprise": "자율 에이전트 시대에서는 '사용자가 결과를 요청하는' 것이 아니라 '에이전트가 결과를 전달하는' 것이 기본 패턴이 된다. 소통의 주도권이 역전된다.",
+    "visibility": "unreleased",
+    "file": null,
+    "lines": null,
+    "research": "research/R4-C_kairos-proactive.md",
+    "report_section": "reports/report-4_awakening.md#4.7",
+    "children": []
+  },
+  "monitor_tool": {
+    "subtitle": "백그라운드 프로세스 감시",
+    "description_ko": "MonitorTool은 백그라운드에서 실행 중인 프로세스를 감시하는 자율 에이전트 전용 도구다. MONITOR_TOOL 피처 플래그로 게이팅되며, 데몬 모드와 크론 스케줄러가 관리하는 백그라운드 작업의 상태를 추적하고 이상 징후를 감지한다. 자율 시스템의 '눈' 역할을 하는 관측 도구다.",
+    "surprise": "MonitorTool은 독립된 MONITOR_TOOL 피처 플래그를 가지며, KAIROS나 PROACTIVE와 별개로 활성화할 수 있다. 감시 기능만 독립적으로 출하 가능한 모듈형 설계.",
+    "visibility": "unreleased",
+    "file": null,
+    "lines": null,
+    "research": "research/R4-C_kairos-proactive.md",
+    "report_section": "reports/report-4_awakening.md#4.7",
+    "children": []
+  }
+}

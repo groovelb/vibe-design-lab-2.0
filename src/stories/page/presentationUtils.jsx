@@ -1,27 +1,22 @@
 'use client';
-import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { SlideMaster } from '../../components/presentation';
 import { presentationTokens as t } from '../../styles/themes/presentation';
-import { S1 } from '../../data/presentations';
 
-export default {
-  title: 'Page/Presentation/S1',
-  parameters: { layout: 'fullscreen' },
-};
-
-// ─── Flatten ───
-
-function flattenSlides(section) {
+/**
+ * 덱 데이터를 플랫 슬라이드 배열로 변환
+ * @param {object} deck - { id, chapters: [{ id, title, parts: [{ slides }] }] }
+ * @returns {object[]} breadcrumb이 포함된 슬라이드 배열
+ */
+export function flattenSlides(deck) {
   const slides = [];
-  section.chapters.forEach((chapter) => {
+  deck.chapters.forEach((chapter) => {
     chapter.parts.forEach((part) => {
       part.slides.forEach((slide) => {
         slides.push({
           ...slide,
           breadcrumb: {
-            section: section.id,
+            section: deck.id,
             chapter: `${chapter.id}. ${chapter.title}`,
             part: part.title,
           },
@@ -32,11 +27,13 @@ function flattenSlides(section) {
   return slides;
 }
 
-const allSlides = flattenSlides(S1);
-
-// ─── Drawer ToC ───
-
-function DrawerToC({ slides, currentIdx, onSelect }) {
+/**
+ * Drawer 목차 컴포넌트
+ * @param {object[]} slides - flattenSlides 결과
+ * @param {number} currentIdx - 현재 슬라이드 인덱스
+ * @param {function} onSelect - 슬라이드 선택 콜백
+ */
+export function DrawerToC({ slides, currentIdx, onSelect }) {
   let lastPart = '';
   let num = 0;
 
@@ -92,25 +89,3 @@ function DrawerToC({ slides, currentIdx, onSelect }) {
     </Box>
   );
 }
-
-// ─── Story ───
-
-export const Docs = {
-  render: () => {
-    const [idx, setIdx] = useState(0);
-    const slide = allSlides[idx];
-
-    return (
-      <SlideMaster
-        breadcrumb={slide.breadcrumb}
-        slideIndex={idx + 1}
-        totalSlides={allSlides.length}
-        onPrev={() => setIdx((p) => Math.max(0, p - 1))}
-        onNext={() => setIdx((p) => Math.min(allSlides.length - 1, p + 1))}
-        drawerContent={<DrawerToC slides={allSlides} currentIdx={idx} onSelect={setIdx} />}
-      >
-        {slide.render()}
-      </SlideMaster>
-    );
-  },
-};

@@ -1,0 +1,101 @@
+[
+  {
+    "id": "surface",
+    "name_ko": "표면",
+    "name_en": "Surface",
+    "layer": "L1",
+    "color": "#4CAF50",
+    "description": "사용자가 직접 보고 쓰는 CLI, 도구, 슬래시 커맨드",
+    "node_ids": ["cli_repl", "slash_commands", "file_tools", "bash_tool", "search_tools", "web_tools", "agent_tool", "permission_prompt", "mcp_public", "notebook_tool", "skill_tool"]
+  },
+  {
+    "id": "engine",
+    "name_ko": "엔진",
+    "name_en": "Engine",
+    "layer": "L2",
+    "color": "#2196F3",
+    "description": "QueryEngine, 시스템 프롬프트, 도구 조립, 컴팩션",
+    "node_ids": ["query_engine", "system_prompt", "tool_registry", "tool_assembly", "tool_use_context", "cache_boundary", "compact_service", "micro_compact", "auto_compact", "app_state", "session_storage", "stop_hooks", "frc", "tool_search"]
+  },
+  {
+    "id": "memory",
+    "name_ko": "기억",
+    "name_en": "Memory",
+    "layer": "L2",
+    "color": "#00BCD4",
+    "description": "CLAUDE.md 계층, 메모리 디렉토리, 회상, 추출",
+    "node_ids": ["claudemd", "memdir", "memory_index", "extract_memories", "session_memory", "find_relevant_memories", "team_memory_sync"]
+  },
+  {
+    "id": "runtime",
+    "name_ko": "런타임",
+    "name_en": "Runtime",
+    "layer": "L2",
+    "color": "#607D8B",
+    "description": "Bun, React+Ink, esbuild, IDE 브릿지, MCP 클라이언트",
+    "node_ids": ["bun_runtime", "react_ink", "esbuild_bundle", "bridge_system", "mcp_client", "oauth_system"]
+  },
+  {
+    "id": "security",
+    "name_ko": "보안",
+    "name_en": "Security",
+    "layer": "L2-L3",
+    "color": "#F44336",
+    "description": "권한 시스템, 샌드박스, AI 분류기, 거부 추적",
+    "node_ids": ["permission_system", "permission_rules", "sandbox", "transcript_classifier", "bash_classifier", "denial_tracking", "iron_gate", "commit_attribution", "undercover_mode"]
+  },
+  {
+    "id": "telemetry",
+    "name_ko": "감시",
+    "name_en": "Telemetry",
+    "layer": "L3",
+    "color": "#FF9800",
+    "description": "OpenTelemetry 4-layer, GrowthBook A/B, 피처 플래그, DCE",
+    "node_ids": ["otel_pipeline", "feature_flags", "dead_code_elim", "growthbook"]
+  },
+  {
+    "id": "enterprise",
+    "name_ko": "엔터프라이즈",
+    "name_en": "Enterprise",
+    "layer": "L3",
+    "color": "#795548",
+    "description": "MDM 원격 관리, 정책 제한, 5-tier 설정 우선순위",
+    "node_ids": ["mdm_system", "remote_managed", "settings_pipeline"]
+  },
+  {
+    "id": "protection",
+    "name_ko": "방어",
+    "name_en": "Protection",
+    "layer": "L3",
+    "color": "#E91E63",
+    "description": "Anti-distillation, 비밀 스캐너, 모델 위장, 빌드 검증",
+    "node_ids": ["anti_distillation", "connector_summarize", "secret_scanner", "cyber_risk", "model_sanitizer", "excluded_strings", "internal_repos"]
+  },
+  {
+    "id": "orchestration",
+    "name_ko": "군단",
+    "name_en": "Orchestration",
+    "layer": "L4",
+    "color": "#9C27B0",
+    "description": "코디네이터, Agent Swarms, 메일박스, 백엔드, 셧다운",
+    "node_ids": ["coordinator_mode", "coordinator_prompt", "agent_swarms", "team_create", "team_delete", "send_message", "teammate_mailbox", "task_notification", "in_process_backend", "pane_backend", "worktree_isolation", "shutdown_protocol", "verification_agent"]
+  },
+  {
+    "id": "autonomy",
+    "name_ko": "자율",
+    "name_en": "Autonomy",
+    "layer": "L4",
+    "color": "#673AB7",
+    "description": "KAIROS, PROACTIVE, Dream, 크론, 트리거, 모니터",
+    "node_ids": ["kairos", "proactive", "daemon", "sleep_tool", "auto_dream", "dream_prompt", "cron_scheduler", "remote_trigger", "push_notification", "subscribe_pr", "send_user_file", "monitor_tool"]
+  },
+  {
+    "id": "culture",
+    "name_ko": "문화",
+    "name_en": "Culture",
+    "layer": "L4",
+    "color": "#FFEB3B",
+    "description": "buddy 가상 펫, 결정론적 가챠, ASCII 생명체, AI 소울",
+    "node_ids": ["buddy_system", "gacha_rng", "ascii_sprites", "companion_soul"]
+  }
+]

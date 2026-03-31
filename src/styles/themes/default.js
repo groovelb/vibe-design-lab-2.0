@@ -282,8 +282,23 @@ const components = {
         --vdl-100: ${violetGray[100]};
         --vdl-50: ${violetGray[50]};
       }
-      body {
+      * {
         scrollbar-width: thin;
+        scrollbar-color: ${violetGray[500]} transparent;
+      }
+      *::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      *::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      *::-webkit-scrollbar-thumb {
+        background: ${violetGray[500]};
+        border-radius: 3px;
+      }
+      *::-webkit-scrollbar-thumb:hover {
+        background: ${violetGray[400]};
       }
     `,
   },

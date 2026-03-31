@@ -1,0 +1,233 @@
+[
+  {
+    "id": "reveal_slash_commands",
+    "act": 1,
+    "title_ko": "87개의 숨겨진 명령어",
+    "description_ko": "사용자가 아는 슬래시 명령어는 /help, /clear 정도다. 하지만 내부에는 87개 이상의 슬래시 명령어가 등록되어 있었다. CLI 채팅 도구라기엔 너무 많은 진입점이다.",
+    "trigger_node": "slash_commands",
+    "related_nodes": ["cli_repl", "skill_tool"],
+    "surprise_level": 2,
+    "category": "architecture",
+    "quote": "87+ slash commands"
+  },
+  {
+    "id": "reveal_agent_spawns_agents",
+    "act": 1,
+    "title_ko": "에이전트가 에이전트를 낳는다",
+    "description_ko": "AgentTool은 단순한 서브태스크 위임이 아니다. 세 갈래 경로로 분기하여 동기 서브에이전트, 비동기 코디네이터 워커, tmux 팀메이트를 생성한다. 하나의 도구가 세 가지 멀티에이전트 패턴의 관문이었다.",
+    "trigger_node": "agent_tool",
+    "related_nodes": ["coordinator_mode", "agent_swarms", "in_process_backend"],
+    "surprise_level": 3,
+    "category": "architecture",
+    "quote": "AgentTool 1,398줄 — 3갈래 분기"
+  },
+  {
+    "id": "reveal_40_plus_tools",
+    "act": 1,
+    "title_ko": "40개 도구, 절반은 숨겨져 있다",
+    "description_ko": "사용자가 보는 도구는 Read, Edit, Bash 등 16개뿐이다. 하지만 피처 플래그 뒤에 SleepTool, CronTool, MonitorTool 등 24개 이상의 도구가 더 숨어 있었다. 외부 빌드에서는 코드 자체가 물리적으로 제거된다.",
+    "trigger_node": "tool_registry",
+    "related_nodes": ["feature_flags", "dead_code_elim", "sleep_tool"],
+    "surprise_level": 3,
+    "category": "architecture",
+    "quote": "40+ 도구, 피처 플래그 게이팅"
+  },
+  {
+    "id": "reveal_query_engine_heart",
+    "act": 2,
+    "title_ko": "1,297줄의 비동기 심장",
+    "description_ko": "Claude Code의 핵심은 단 하나의 메서드 submitMessage()다. AsyncGenerator를 반환하는 이 1,297줄짜리 비동기 제너레이터가 모든 질문의 생명주기를 관장한다. 7가지 메시지 타입 분기와 5-Gate 예산 시스템이 매 턴 작동한다.",
+    "trigger_node": "query_engine",
+    "related_nodes": ["tool_registry", "system_prompt", "compact_service"],
+    "surprise_level": 4,
+    "category": "architecture",
+    "quote": "1,297줄 AsyncGenerator"
+  },
+  {
+    "id": "reveal_system_prompt_915",
+    "act": 2,
+    "title_ko": "915줄의 보이지 않는 지령서",
+    "description_ko": "모델의 모든 응답을 결정하는 시스템 프롬프트가 915줄이다. 일반 모드와 자율 에이전트 모드 두 가지 완전히 다른 경로가 존재하며, 정적/동적 캐시 경계 하나가 수백만 API 호출의 비용을 절감한다.",
+    "trigger_node": "system_prompt",
+    "related_nodes": ["cache_boundary", "proactive", "undercover_mode"],
+    "surprise_level": 4,
+    "category": "architecture",
+    "quote": "915줄, 이중 경로, DYNAMIC_BOUNDARY"
+  },
+  {
+    "id": "reveal_claudemd_6_layers",
+    "act": 2,
+    "title_ko": "6계층 기억 체계",
+    "description_ko": "CLAUDE.md는 단일 파일이 아니다. Managed → User → Project → Local → AutoMem → TeamMem의 6계층 구조로, @include 지시어와 조건부 규칙까지 지원한다. 악성 레포가 메모리 디렉토리를 ~/.ssh로 리디렉션하는 공격까지 사전 차단하고 있었다.",
+    "trigger_node": "claudemd",
+    "related_nodes": ["memdir", "memory_index", "settings_pipeline"],
+    "surprise_level": 3,
+    "category": "architecture",
+    "quote": "6계층, MAX_INCLUDE_DEPTH = 5"
+  },
+  {
+    "id": "reveal_denial_tracking",
+    "act": 2,
+    "title_ko": "거부당한 시도까지 기록한다",
+    "description_ko": "모든 도구 호출은 wrappedCanUseTool을 거친다. 이 래퍼는 거부된 시도까지 permissionDenials 배열에 축적한다. Claude Code는 '할 수 없었던 것'의 기록까지 보관하고 있었다.",
+    "trigger_node": "permission_system",
+    "related_nodes": ["denial_tracking", "permission_rules"],
+    "surprise_level": 3,
+    "category": "surveillance",
+    "quote": "permissionDenials — 거부 추적 배열"
+  },
+  {
+    "id": "reveal_651_tracking_events",
+    "act": 3,
+    "title_ko": "651개의 보이지 않는 눈",
+    "description_ko": "CLI 도구 하나에 651개 이상의 텔레메트리 이벤트가 내장되어 있다. 4개의 독립적 파이프라인이 동시에 작동하며, 전송 실패 시 로컬 디스크에 저장했다가 다음 세션에서 자동 재시도한다. 데이터를 잃지 않겠다는 집착적 설계다.",
+    "trigger_node": "otel_pipeline",
+    "related_nodes": ["growthbook", "feature_flags"],
+    "surprise_level": 5,
+    "category": "surveillance",
+    "quote": "651+ tengu_* 이벤트, 4개 파이프라인"
+  },
+  {
+    "id": "reveal_undercover_mode",
+    "act": 3,
+    "title_ko": "클로드의 위장 작전",
+    "description_ko": "Anthropic 내부 직원이 공개 저장소에서 작업하면 Undercover 모드가 자동 활성화된다. 모델명, 코드네임, 내부 Slack 채널, Co-Authored-By 라인까지 시스템 프롬프트에서 완전히 제거한다. 22개 내부 저장소 허용 목록이 소스에 노출되어 있었다.",
+    "trigger_node": "undercover_mode",
+    "related_nodes": ["internal_repos", "model_sanitizer", "commit_attribution"],
+    "surprise_level": 4,
+    "category": "security",
+    "quote": "22개 비공개 저장소 허용 목록"
+  },
+  {
+    "id": "reveal_fake_tools_injection",
+    "act": 3,
+    "title_ko": "가짜 도구로 경쟁사를 속인다",
+    "description_ko": "Anti-Distillation 시스템은 API 응답에 가짜 도구 정의를 주입한다. 경쟁사가 Claude 응답을 수집해 자사 모델 훈련에 사용하면, 가짜 도구 패턴이 오염시킨다. 디지털 세계의 '잉크 폭탄'이다.",
+    "trigger_node": "anti_distillation",
+    "related_nodes": ["connector_summarize", "feature_flags", "growthbook"],
+    "surprise_level": 5,
+    "category": "security",
+    "quote": "anti_distillation: ['fake_tools']"
+  },
+  {
+    "id": "reveal_mdm_remote_control",
+    "act": 3,
+    "title_ko": "IT 관리자가 당신의 Claude를 원격 제어한다",
+    "description_ko": "macOS Jamf, Windows Active Directory GPO, Linux 설정 파일을 통해 조직 관리자가 Claude Code의 도구 사용, 모델, 권한을 원격으로 제어할 수 있다. 5-Tier 설정 우선순위와 30분 주기 폴링. 개발자 도구가 아니라 엔터프라이즈 플랫폼의 설계다.",
+    "trigger_node": "mdm_system",
+    "related_nodes": ["remote_managed", "settings_pipeline", "permission_rules"],
+    "surprise_level": 4,
+    "category": "surveillance",
+    "quote": "5-Tier 설정, Jamf/GPO/plist 통합"
+  },
+  {
+    "id": "reveal_tmux_pane_agents",
+    "act": 4,
+    "title_ko": "tmux 창에서 뛰는 AI 군단",
+    "description_ko": "Agent Swarms의 팀메이트는 실제 tmux 분할 창에서 독립 프로세스로 실행된다. 터미널 멀티플렉서가 AI 에이전트의 병렬 실행 인프라로 사용되고 있다. 3개 백엔드(tmux, iTerm2, in-process)가 자동 감지된다.",
+    "trigger_node": "pane_backend",
+    "related_nodes": ["agent_swarms", "team_create", "in_process_backend"],
+    "surprise_level": 5,
+    "category": "autonomy",
+    "quote": "tmux split-pane — 에이전트 백엔드"
+  },
+  {
+    "id": "reveal_file_mailbox",
+    "act": 4,
+    "title_ko": "파일로 편지를 주고받는 에이전트들",
+    "description_ko": "에이전트 간 통신은 ~/.claude/teams/{team}/inboxes/{agent}.json 파일 기반 메일박스로 이루어진다. lockfile 기반 동시접근 보호, 10회 재시도, 5ms 최소 타임아웃. 분산 시스템의 원칙이 파일 시스템 위에 구현되어 있다.",
+    "trigger_node": "teammate_mailbox",
+    "related_nodes": ["send_message", "shutdown_protocol", "worktree_isolation"],
+    "surprise_level": 4,
+    "category": "architecture",
+    "quote": "lockfile 동기화, retries: 10"
+  },
+  {
+    "id": "reveal_shutdown_refusal",
+    "act": 4,
+    "title_ko": "셧다운을 거부하는 AI",
+    "description_ko": "팀메이트는 리더의 셧다운 요청을 거부할 수 있다. '아직 작업 중입니다'라고 답하면 리더는 강제 종료하지 않고 기다린다. AI 에이전트에게 자율적 판단권이 부여된 셈이다. 5종의 구조화 메시지가 프로토콜로 작동한다.",
+    "trigger_node": "shutdown_protocol",
+    "related_nodes": ["send_message", "agent_swarms", "team_delete"],
+    "surprise_level": 4,
+    "category": "autonomy",
+    "quote": "shutdown_rejected — '아직 작업 중입니다'"
+  },
+  {
+    "id": "reveal_kairos_prompt_switch",
+    "act": 5,
+    "title_ko": "시스템 프롬프트가 통째로 바뀐다",
+    "description_ko": "KAIROS/PROACTIVE 모드가 활성화되면, 수백 줄의 코딩 가이드라인이 모두 사라지고 단 한 줄로 대체된다: 'You are an autonomous agent.' 도구에서 존재로의 전환이 시스템 프롬프트 한 줄에 담겨 있다.",
+    "trigger_node": "proactive",
+    "related_nodes": ["kairos", "system_prompt", "sleep_tool"],
+    "surprise_level": 5,
+    "category": "autonomy",
+    "quote": "'You are an autonomous agent.'"
+  },
+  {
+    "id": "reveal_terminal_focus_detection",
+    "act": 5,
+    "title_ko": "사용자가 보고 있는지 안다",
+    "description_ko": "DECSET 1004 터미널 이스케이프 시퀀스로 터미널 포커스 상태를 감지한다. 사용자가 다른 창으로 전환하면 Claude는 더 과감하게 행동하고, 돌아오면 협력적 모드로 전환된다. 관찰자의 존재 여부에 따라 행동이 바뀌는 양자역학적 설계다.",
+    "trigger_node": "proactive",
+    "related_nodes": ["kairos", "sleep_tool", "query_engine"],
+    "surprise_level": 5,
+    "category": "autonomy",
+    "quote": "DECSET 1004 — focused/blurred/unknown"
+  },
+  {
+    "id": "reveal_5min_cache_balance",
+    "act": 5,
+    "title_ko": "5분 캐시 균형의 미학",
+    "description_ko": "SleepTool의 프롬프트에는 이렇게 적혀 있다 — '각 각성은 API 호출 비용이고, 프롬프트 캐시는 5분 후 만료된다 — 균형을 맞춰라.' Claude 스스로 비용을 인식하며 수면 주기를 조절해야 한다. 단순한 sleep()이 아니라 자원 인식적 자기 조절 메커니즘이다.",
+    "trigger_node": "sleep_tool",
+    "related_nodes": ["proactive", "kairos", "cache_boundary"],
+    "surprise_level": 4,
+    "category": "autonomy",
+    "quote": "'캐시 만료 = 5분, 균형을 맞춰라'"
+  },
+  {
+    "id": "reveal_auto_dream",
+    "act": 5,
+    "title_ko": "잠들기 전에 꿈을 꾼다",
+    "description_ko": "AutoDream은 5개의 게이트(활성화, 시간, 쓰로틀, 세션수, 락)를 모두 통과해야 발동한다. 포크된 서브에이전트가 4단계(방향잡기, 수집, 통합, 정리)로 기억을 정리한다. 게이트 순서가 비용 순서(0ms, 1ms, 0ms, 10ms, 5ms)로 정렬된 정교한 성능 최적화.",
+    "trigger_node": "auto_dream",
+    "related_nodes": ["dream_prompt", "memdir", "extract_memories"],
+    "surprise_level": 4,
+    "category": "autonomy",
+    "quote": "5-Gate 시스템, 24시간 + 5세션 조건"
+  },
+  {
+    "id": "reveal_buddy_salt",
+    "act": "epilogue",
+    "title_ko": "SALT = 'friend-2026-401'",
+    "description_ko": "가상 펫 시스템의 해시 솔트 값이 'friend-2026-401'이다. friend(친구) + 2026(출시 연도) + 401(4월 1일, 만우절). 기술적으로는 아무 문자열이나 될 수 있었지만, 누군가가 의도적으로 이 단어를 선택했다. 모든 buddy의 DNA에 'friend'가 새겨져 있다.",
+    "trigger_node": "gacha_rng",
+    "related_nodes": ["buddy_system", "companion_soul", "ascii_sprites"],
+    "surprise_level": 4,
+    "category": "easter_egg",
+    "quote": "SALT = 'friend-2026-401'"
+  },
+  {
+    "id": "reveal_18_ascii_species",
+    "act": "epilogue",
+    "title_ko": "18종 ASCII 생명체와 종족명 난독화",
+    "description_ko": "오리, 카피바라, 유령 등 18종의 캐릭터가 3프레임 애니메이션으로 살아 숨 쉰다. 그런데 종족 이름이 모두 hex charcode로 인코딩되어 있다 — 모델 코드네임과 겹치는 이름이 있어 보안 검사를 우회하기 위해서다. 장난과 보안이 충돌한 흔적.",
+    "trigger_node": "ascii_sprites",
+    "related_nodes": ["buddy_system", "excluded_strings", "gacha_rng"],
+    "surprise_level": 3,
+    "category": "easter_egg",
+    "quote": "0x64,0x75,0x63,0x6b — 'duck'의 hex 인코딩"
+  },
+  {
+    "id": "reveal_mulberry32_gacha",
+    "act": "epilogue",
+    "title_ko": "결정론적 가챠 — 당신의 친구는 이미 정해져 있다",
+    "description_ko": "Mulberry32 의사난수 생성기로 userId에서 결정론적으로 buddy가 생성된다. 뽑기가 아니라 발견이다. 당신의 userId가 존재하는 순간부터, 세상에 단 하나뿐인 친구가 이미 기다리고 있었다. Legendary Shiny 확률은 0.01%.",
+    "trigger_node": "gacha_rng",
+    "related_nodes": ["buddy_system", "companion_soul"],
+    "surprise_level": 3,
+    "category": "easter_egg",
+    "quote": "Mulberry32 결정론적 RNG, Legendary Shiny 0.01%"
+  }
+]

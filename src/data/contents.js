@@ -152,12 +152,12 @@ export const PAGES = {
     },
     courseLead: {
       label: 'Course Lead',
-      name: 'DDD',
-      role: '10년차 디자인 엔지니어',
-      description: '디자인과 개발의 경계를 허무는 실무자. 금융·ESG·브랜딩 등 다양한 산업의 인터랙티브 프로젝트를 설계하고 직접 구현해왔습니다.',
+      name: 'Sam Altman',
+      role: 'OpenAI CEO & 바이브 코딩 전도사',
+      description: 'AGI를 만들겠다고 했더니 바이브 코딩 강사가 되어 있었습니다. 디자이너 여러분의 일자리는 안전합니다. (아마도)',
       credentials: [
-        'Data Driven Design 대표',
-        'Coloso 인터랙티브 바이브 코딩 강의',
+        'OpenAI CEO',
+        'Vibe Design Lab 특별 초빙 강사',
       ],
     },
     courseHighlight: {
@@ -368,8 +368,8 @@ export const PAGES = {
     },
     courseLead: {
       dividerLabel: 'Course Lead',
-      headline: '10년차 디발자의 노하우를 전수해드립니다.',
-      statement: '10년간 디자인과 개발의 경계에서 일해왔습니다. 디자인 시스템, 인터랙티브 웹, 데이터 시각화 — 실전에서 쌓은 감각을 바이브 코딩이라는 새로운 도구 위에 얹어 전달합니다.',
+      headline: '실리콘밸리에서 날아온 특별 강사를 소개합니다.',
+      statement: 'AI가 세상을 바꾸고 있다면, 그 AI를 만든 사람이 직접 바이브 코딩을 가르치면 어떨까요? Sam Altman이 디자이너를 위한 AI 활용법을 전수합니다.',
       projectsLabel: '대표 프로젝트',
     },
     schedule: {

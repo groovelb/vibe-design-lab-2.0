@@ -6,7 +6,9 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import { ChevronDown } from 'lucide-react';
 import { DocumentTitle, PageContainer } from '../../components/storybookDocumentation';
-import { S1 } from '../../data/presentations';
+import { S1_Ch1, S1_Ch2, S1_Ch3 } from '../../data/presentations';
+
+const DECKS = [S1_Ch1, S1_Ch2, S1_Ch3];
 
 export default {
   title: 'Overview/Presentation Data',
@@ -95,37 +97,41 @@ function PresentationBrowser() {
       <DocumentTitle
         title="Presentation Data"
         status="Data"
-        note={ `${ S1.id }. ${ S1.title }` }
+        note="S1 챕터별 덱"
         brandName="Vibe Design"
         systemName="Online"
         version="1.0"
       />
       <PageContainer>
-        <Accordion
-          disableGutters
-          defaultExpanded
-          sx={ {
-            ...accordionSx,
-            border: '1px solid',
-            borderColor: 'divider',
-          } }
-        >
-          <AccordionSummary
-            expandIcon={ <ChevronDown size={ 18 } /> }
-            sx={ { '& .MuiAccordionSummary-content': { my: 1 } } }
+        { DECKS.map((deck) => (
+          <Accordion
+            key={ deck.id }
+            disableGutters
+            defaultExpanded
+            sx={ {
+              ...accordionSx,
+              border: '1px solid',
+              borderColor: 'divider',
+              mb: 1,
+            } }
           >
-            <Box sx={ { display: 'flex', alignItems: 'baseline', gap: 1.5 } }>
-              <Typography sx={ { ...mono, fontWeight: 700 } }>{ S1.id }</Typography>
-              <Typography variant="body1" sx={ { fontWeight: 700 } }>{ S1.title }</Typography>
-              <Typography variant="caption" color="text.secondary">
-                { S1.chapters.length }ch
-              </Typography>
-            </Box>
-          </AccordionSummary>
-          <AccordionDetails sx={ { pt: 0 } }>
-            { S1.chapters.map((ch) => <ChapterBlock key={ ch.id } chapter={ ch } />) }
-          </AccordionDetails>
-        </Accordion>
+            <AccordionSummary
+              expandIcon={ <ChevronDown size={ 18 } /> }
+              sx={ { '& .MuiAccordionSummary-content': { my: 1 } } }
+            >
+              <Box sx={ { display: 'flex', alignItems: 'baseline', gap: 1.5 } }>
+                <Typography sx={ { ...mono, fontWeight: 700 } }>{ deck.id }</Typography>
+                <Typography variant="body1" sx={ { fontWeight: 700 } }>{ deck.title }</Typography>
+                <Typography variant="caption" color="text.secondary">
+                  { deck.chapters[0].parts.length } parts
+                </Typography>
+              </Box>
+            </AccordionSummary>
+            <AccordionDetails sx={ { pt: 0 } }>
+              { deck.chapters.map((ch) => <ChapterBlock key={ ch.id } chapter={ ch } />) }
+            </AccordionDetails>
+          </Accordion>
+        )) }
       </PageContainer>
     </>
   );

@@ -19,6 +19,7 @@ import { presentationTokens as t } from '../../styles/themes/presentation';
  * @param {number} totalSlides - 전체 슬라이드 수 [Optional]
  * @param {function} onPrev - 이전 슬라이드 핸들러 [Optional]
  * @param {function} onNext - 다음 슬라이드 핸들러 [Optional]
+ * @param {string} slideTitle - 현재 슬라이드 타이틀 [Optional]
  * @param {ReactNode} drawerContent - Drawer 메뉴 내용 [Optional]
  * @param {object} sx - 추가 스타일 [Optional]
  *
@@ -40,6 +41,7 @@ function SlideMaster({
   totalSlides,
   onPrev,
   onNext,
+  slideTitle,
   drawerContent,
   sx,
 }) {
@@ -91,10 +93,10 @@ function SlideMaster({
           borderColor: t.color.border,
         }}
       >
-        {crumbs.length > 0 && (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+        {(crumbs.length > 0 || slideTitle) && (
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: '6px', minWidth: 0 }}>
             {crumbs.map((crumb, i) => (
-              <Box key={i} sx={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Box key={i} sx={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
                 {i > 0 && (
                   <Box
                     component="span"
@@ -113,14 +115,46 @@ function SlideMaster({
                   sx={{
                     fontFamily: t.fontFamily.body,
                     fontSize: t.typo.label.fontSize,
-                    fontWeight: i === crumbs.length - 1 ? 600 : 400,
-                    color: i === crumbs.length - 1 ? t.color.text : t.color.textSecondary,
+                    fontWeight: i === crumbs.length - 1 && !slideTitle ? 600 : 400,
+                    color: i === crumbs.length - 1 && !slideTitle ? t.color.text : t.color.textSecondary,
                   }}
                 >
                   {crumb}
                 </Box>
               </Box>
             ))}
+            {slideTitle && (
+              <>
+                {crumbs.length > 0 && (
+                  <Box
+                    component="span"
+                    sx={{
+                      fontFamily: t.fontFamily.body,
+                      fontSize: t.typo.label.fontSize,
+                      color: t.color.textTertiary,
+                      userSelect: 'none',
+                      flexShrink: 0,
+                    }}
+                  >
+                    ›
+                  </Box>
+                )}
+                <Box
+                  component="span"
+                  sx={{
+                    fontFamily: t.fontFamily.body,
+                    fontSize: t.typo.label.fontSize,
+                    fontWeight: 600,
+                    color: t.color.text,
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {slideTitle}
+                </Box>
+              </>
+            )}
           </Box>
         )}
       </Box>

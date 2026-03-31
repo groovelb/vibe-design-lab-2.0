@@ -46,12 +46,13 @@
 1. **resources/component-catalog.md** Read — 사용 가능한 컴포넌트 확인
 2. **resources/slide-patterns.md** Read — 슬라이드 구성 패턴 참조
 3. **resources/id-naming-rules.md** Read — ID 규칙 확인
-4. 대상 덱 파일 Read (`src/data/presentations/s*.jsx`)
-5. **작업 실행**
+4. 대상 챕터 덱 파일 Read (`src/data/presentations/s{n}/ch{n}.jsx`)
+5. 필요한 슬라이드 데이터 파일 Read (`src/data/presentations/s{n}/slides/*.jsx`)
+6. **작업 실행**
    - 추가: 삽입 위치의 Part 내에서 순번 확인 → 새 슬라이드 추가 → 뒤따르는 ID 재번호
    - 수정: 해당 슬라이드의 render만 수정
    - 삭제: 슬라이드 제거 → 뒤따르는 ID 재번호
-6. **검증** (MUST)
+7. **검증** (MUST)
    - grep으로 해당 Part 내 ID 중복 확인
    - 미사용 import 정리 (사용되는 컴포넌트만 import)
    - Placeholder 잔재 확인
@@ -60,9 +61,10 @@
 
 1. **resources/data-file-template.md** Read — 보일러플레이트 참조
 2. **resources/component-catalog.md** Read
-3. 새 파일 생성 (`src/data/presentations/s{n}.jsx`)
-4. `src/data/presentations/index.js` 배럴 export 추가
-5. 덱 데모 스토리 생성 (`src/stories/page/PresentationS{n}.stories.jsx`)
+3. 챕터별 덱 파일 생성 (`src/data/presentations/s{n}/ch{n}.jsx`)
+4. `src/data/presentations/s{n}/index.jsx` 배럴 export 추가
+5. `src/data/presentations/index.js` 배럴 export 추가
+6. 챕터별 스토리 생성 (`src/stories/page/PresentationS{n}Ch{n}.stories.jsx`)
 
 ### 컴포넌트 워크플로우
 
@@ -86,6 +88,37 @@
 2. 덱 파일에서 `SlideImage` import 확인
 3. `<SlideImage src="/presentations/{filename}" alt="..." />` 로 참조
 4. Placeholder.Box가 있었다면 제거
+
+---
+
+## 파일 구조
+
+덱은 **챕터 단위**로 관리한다. 영상이 챕터별로 제작되기 때문.
+
+```
+src/data/presentations/
+├── index.js                    ← 배럴: 모든 챕터 덱 re-export
+├── presentationData.js         ← 레거시 (render 없는 placeholder)
+└── s1/
+    ├── index.jsx               ← 배럴: S1_Ch1, S1_Ch2, S1_Ch3
+    ├── ch1.jsx                 ← S1_Ch1 덱 정의
+    ├── ch2.jsx                 ← S1_Ch2 덱 정의
+    ├── ch3.jsx                 ← S1_Ch3 덱 정의
+    └── slides/                 ← 파트별 슬라이드 데이터 모듈
+        ├── s1-p-a-prologue.jsx
+        ├── 2-a-vibe-design.jsx
+        └── ...
+
+src/stories/page/
+├── presentationUtils.jsx             ← 공유 유틸 (flattenSlides, DrawerToC)
+├── PresentationS1Ch1.stories.jsx     ← Page/Presentation/S1-Ch1
+├── PresentationS1Ch2.stories.jsx     ← Page/Presentation/S1-Ch2
+└── PresentationS1Ch3.stories.jsx     ← Page/Presentation/S1-Ch3
+```
+
+- 덱 export 네이밍: `S{section}_Ch{chapter}` (예: `S1_Ch1`, `S1_Ch2`)
+- 스토리 타이틀: `Page/Presentation/S{section}-Ch{chapter}`
+- 각 챕터 덱은 기존과 동일한 `{ id, title, chapters: [{ parts: [{ slides }] }] }` shape
 
 ---
 
