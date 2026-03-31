@@ -29,7 +29,7 @@ function SlideList({ items, variant = 'bullet', level = 'body', gap = t.spacing.
         display: 'flex',
         flexDirection: 'column',
         gap: `${gap}px`,
-        listStyleType: variant === 'number' ? 'decimal' : 'disc',
+        listStyleType: variant === 'number' ? 'decimal' : '"▪  "',
         ...sx,
       }}
     >

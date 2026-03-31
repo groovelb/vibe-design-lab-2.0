@@ -14,3 +14,4 @@ export { SlideImage } from './elements/SlideImage';
 export { SlideStorytelling } from './elements/SlideStorytelling';
 export { SlideTypoStack } from './elements/SlideTypoStack';
 export { SlideList } from './elements/SlideList';
+export { SlideDescList } from './elements/SlideDescList';

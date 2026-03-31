@@ -22,9 +22,9 @@ import { presentationTokens as t } from '../../../styles/themes/presentation';
  *   body="컴포넌트와 스타일의 체계적 분류"
  * />
  */
-function SlideTypoStack({ title, subtitle, headline, body, gap = t.spacing.element, sx }) {
+function SlideTypoStack({ title, subtitle, headline, body, gap = t.spacing.tight, sx }) {
   const layers = [
-    { content: title, scale: t.typo.title, tag: 'h2' },
+    { content: title, scale: t.typo.subtitle, tag: 'h2' },
     { content: subtitle, scale: t.typo.subtitle, tag: 'h3' },
     { content: headline, scale: t.typo.headline, tag: 'h4' },
     { content: body, scale: t.typo.body, tag: 'p' },
@@ -45,6 +45,7 @@ function SlideTypoStack({ title, subtitle, headline, body, gap = t.spacing.eleme
             lineHeight: scale.lineHeight,
             letterSpacing: scale.letterSpacing,
             color: tag === 'p' ? t.color.textSecondary : t.color.text,
+            whiteSpace: 'pre-line',
             m: 0,
           }}
         >

@@ -47,42 +47,51 @@ function SlideStorytelling({ from, to, arrowLabel, direction = 'vertical', sx })
         {from}
       </Box>
 
-      {/* 화살표 + 라벨 */}
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: isVertical ? 'row' : 'column',
-          alignItems: 'center',
-          gap: `${t.spacing.tight}px`,
-          color: t.color.arrow,
-        }}
-      >
+      {/* 화살표 — 직선 + filled 삼각촉 */}
+      <Box sx={{
+        display: 'flex',
+        flexDirection: isVertical ? 'column' : 'row',
+        alignItems: 'center',
+        gap: 0,
+      }}>
+        <Box sx={{
+          [isVertical ? 'width' : 'height']: '1px',
+          [isVertical ? 'height' : 'width']: '40vh',
+          bgcolor: t.color.arrow,
+        }} />
+        <Box
+          component="svg"
+          viewBox={isVertical ? '0 0 12 10' : '0 0 10 12'}
+          sx={{
+            width: isVertical ? 12 : 10,
+            height: isVertical ? 10 : 12,
+            display: 'block',
+          }}
+        >
+          {isVertical
+            ? <path d="M0,0 L6,10 L12,0 Z" fill={t.color.arrow} />
+            : <path d="M0,0 L10,6 L0,12 Z" fill={t.color.arrow} />
+          }
+        </Box>
+      </Box>
+
+      {/* arrowLabel */}
+      {arrowLabel && (
         <Box
           component="span"
           sx={{
             fontFamily: t.fontFamily.body,
-            fontSize: 32,
-            lineHeight: 1,
-            userSelect: 'none',
+            fontSize: t.typo.caption.fontSize,
+            fontWeight: t.typo.caption.fontWeight,
+            lineHeight: t.typo.caption.lineHeight,
+            color: t.color.textSecondary,
+            mt: isVertical ? `${t.spacing.tight}px` : 0,
+            ml: isVertical ? 0 : `${t.spacing.tight}px`,
           }}
         >
-          {isVertical ? '↓' : '→'}
+          {arrowLabel}
         </Box>
-        {arrowLabel && (
-          <Box
-            component="span"
-            sx={{
-              fontFamily: t.fontFamily.body,
-              fontSize: t.typo.caption.fontSize,
-              fontWeight: t.typo.caption.fontWeight,
-              lineHeight: t.typo.caption.lineHeight,
-              color: t.color.textSecondary,
-            }}
-          >
-            {arrowLabel}
-          </Box>
-        )}
-      </Box>
+      )}
 
       {/* to 문장 */}
       <Box

@@ -38,12 +38,13 @@ function SlideChapterTitle({ overline, title, summary, toc, sx }) {
         <Box
           sx={{
             fontFamily: t.fontFamily.brand,
-            fontSize: t.typo.label.fontSize,
-            fontWeight: t.typo.label.fontWeight,
-            lineHeight: t.typo.label.lineHeight,
+            fontSize: t.typo.caption.fontSize,
+            fontWeight: 600,
+            lineHeight: t.typo.caption.lineHeight,
             letterSpacing: '0.12em',
             textTransform: 'uppercase',
             color: t.color.textSecondary,
+            mb: `-${t.spacing.tight}px`,
           }}
         >
           {overline}
@@ -76,7 +77,7 @@ function SlideChapterTitle({ overline, title, summary, toc, sx }) {
             lineHeight: t.typo.body.lineHeight,
             color: t.color.textSecondary,
             maxWidth: '70%',
-            mt: `${t.spacing.tight}px`,
+            mt: `-${t.spacing.tight}px`,
           }}
         >
           {summary}
@@ -86,15 +87,15 @@ function SlideChapterTitle({ overline, title, summary, toc, sx }) {
       {/* Table of Contents */}
       {toc && toc.length > 0 && (
         <Box
-          component="ol"
+          component="ul"
           sx={{
             m: 0,
-            mt: `${t.spacing.element}px`,
+            mt: `${t.spacing.section}px`,
             pl: `${t.typo.headline.fontSize * 1.2}px`,
             display: 'flex',
             flexDirection: 'column',
             gap: `${t.spacing.tight}px`,
-            listStyleType: 'upper-alpha',
+            listStyleType: '"▪  "',
           }}
         >
           {toc.map((item, i) => (

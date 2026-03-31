@@ -24,6 +24,7 @@ const nav = {
 const content = {
   maxWidth: 1536, // MUI xl
   aspectRatio: '4 / 3',
+  gap: 64, // 레이아웃(Split, Grid) 컬럼/셀 간 공통 간격
 };
 
 // ─── Typography Scale (프레젠테이션 전용) ───
@@ -38,9 +39,10 @@ const typo = {
 
 // ─── Spacing ───
 const spacing = {
-  section: 48,
-  element: 24,
+  section: 80,
+  element: 48,
   tight: 12,
+  none: 0,
   loose: 64,
 };
 
