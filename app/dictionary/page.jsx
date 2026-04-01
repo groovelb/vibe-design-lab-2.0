@@ -1,9 +1,12 @@
 import { DictionaryPage } from '@/components/page/DictionaryPage';
 
 export const metadata = {
-  title: 'Dictionary',
+  title: 'Vibe Dictionary — AI가 이해하는 디자인 언어 체계',
   description:
-    'Vibe Dictionary — 디자인 패턴의 분류 체계. 도구가 바뀌어도 유효한 200개 이상의 디자인 키워드를 제공합니다.',
+    '200+ 디자인 키워드. 디자인 시스템의 기준을 AI가 이해하는 언어로 번역한 체계. 도구가 바뀌어도 이 키워드는 남습니다.',
+  alternates: {
+    canonical: 'https://vibedesignlab.net/dictionary',
+  },
 };
 
 export default function Page() {

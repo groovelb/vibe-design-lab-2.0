@@ -1,7 +1,7 @@
 # SEO 종합 점검 보고서
 
 > 작성일: 2026-03-30
-> 대상: Vibe Design Labs Next.js 프로덕트 전체 페이지
+> 대상: Vibe Design Lab Next.js 프로덕트 전체 페이지
 
 ---
 
@@ -19,24 +19,7 @@
 
 ## 1. CRITICAL — 즉시 수정 필요
 
-### 1-1. Favicon이 Vite 로고
-
-`/public/favicon.svg`는 **Vite(빌드 도구) 기본 로고**. VDL 브랜드 로고가 아님.
-브라우저 탭, 북마크, 검색 결과에서 전혀 다른 브랜드의 아이콘이 노출 중.
-
-```
-현재: Vite 그래디언트 로고 (보라+노랑)
-필요: VDL 자체 로고 (Flat V 또는 Iso Line V — contents.js VISUAL_ASSETS.logo 참조)
-```
-
-추가로 `favicon.ico` 파일도 없어서 일부 환경(구형 브라우저, 일부 SNS 크롤러)에서 파비콘이 아예 안 보임.
-
-### 1-2. 브랜드명 오타
-
-`app/course/[slug]/page.jsx`의 title이 **"Vibe Design Lab"** — 's' 누락.
-정식 브랜드명은 **"Vibe Design Labs"**.
-
-### 1-3. description 언어 불일치
+### 1-1. description 언어 불일치
 
 Root layout과 홈페이지의 description이 영문(`"Design language system for vibe coding education"`).
 타겟 사용자는 한국어 화자이고 한국 검색엔진(네이버/구글 코리아)에서의 노출이 중요.
@@ -49,7 +32,7 @@ Root layout과 홈페이지의 description이 영문(`"Design language system fo
 
 | 항목 | 현재 | 문제 |
 |------|------|------|
-| **title** | `Vibe Design Labs` | Root layout과 중복. 검색 결과에서 다른 페이지와 구분 불가 |
+| **title** | `Vibe Design Lab` | Root layout과 중복. 검색 결과에서 다른 페이지와 구분 불가 |
 | **description** | 영문 | 한국어 타겟인데 영문. 네이버/구글KR 검색 스니펫에 의미 전달 안 됨 |
 | **OG image** | 없음 | SNS 공유 시 이미지 없이 텍스트만 표시. 카카오톡/슬랙/트위터 미리보기 빈 박스 |
 | **OG title/description** | 없음 | SNS에서 title/description도 별도 지정 불가 |
@@ -59,7 +42,7 @@ Root layout과 홈페이지의 description이 영문(`"Design language system fo
 **권장 metadata:**
 
 ```
-title: "Vibe Design Labs — 디자이너를 위한 바이브 코딩 교육"
+title: "Vibe Design Lab — 디자이너를 위한 바이브 코딩 교육"
 description: contents.md의 hero headline + subCopy 기반 한국어
 OG image: 1200×630 브랜드 키비주얼
 ```
@@ -73,8 +56,6 @@ OG image: 1200×630 브랜드 키비주얼
 | **generateMetadata** | 미사용 | slug 기반 동적 메타데이터 생성 안 함 |
 | **OG image** | 없음 | 코스별 커버 이미지가 `/public/assets/course/`에 있는데 미활용 |
 | **Course 스키마** | 없음 | `Course` JSON-LD 없음. 구글 교육 관련 리치 결과 불가 |
-| **브랜드명 오타** | "Vibe Design Lab" | 's' 누락 |
-
 **특히 치명적**: 이 페이지가 수강 신청 전환이 일어나는 곳인데, SNS에서 공유될 때 아무런 미리보기 이미지가 없음. 카카오톡으로 링크를 보내면 빈 박스.
 
 ### Story / Dictionary / Experiment — 보조 페이지
@@ -95,7 +76,6 @@ OG image: 1200×630 브랜드 키비주얼
 |------|------|--------|
 | **OG image (전체)** | 없음 | 카카오톡/슬랙/SNS 공유 시 미리보기 없음 |
 | **Twitter card** | 없음 | X/트위터 공유 미리보기 없음 |
-| **favicon.ico** | 없음 | 일부 환경 파비콘 미표시 |
 | **apple-touch-icon** | 없음 | iOS 홈화면 추가 시 아이콘 없음 |
 | **robots.txt** | 없음 | 크롤러 가이드 없음 |
 | **sitemap.xml** | 없음 | 검색엔진 색인 지연 가능 |
@@ -112,9 +92,7 @@ OG image: 1200×630 브랜드 키비주얼
 
 ### P0 (즉시)
 
-1. VDL 브랜드 파비콘으로 교체 (현재 Vite 로고)
-2. Landing/Course Detail description을 한국어로 변경
-3. 브랜드명 오타 수정 ("Lab" → "Labs")
+1. Landing/Course Detail description을 한국어로 변경
 
 ### P1 (SNS 공유 품질)
 
@@ -126,4 +104,4 @@ OG image: 1200×630 브랜드 키비주얼
 
 7. robots.txt + sitemap.xml 생성
 8. Organization/Course JSON-LD 구조화 데이터
-9. apple-touch-icon + favicon.ico 추가
+9. apple-touch-icon 추가

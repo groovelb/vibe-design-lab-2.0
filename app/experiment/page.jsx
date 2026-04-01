@@ -4,9 +4,12 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 
 export const metadata = {
-  title: 'Experiment',
+  title: 'Brand Experiment — 같은 의도, 다른 언어',
   description:
-    'Vibe Dictionary의 어휘 체계로 설계하고 바이브 코딩으로 구현한 가상 브랜드·서비스 웹사이트 실험 프로젝트.',
+    '같은 AI, 같은 도구. 다른 건 프롬프트에 담긴 디자인 기준뿐입니다. Before/After로 차이를 확인하세요.',
+  alternates: {
+    canonical: 'https://vibedesignlab.net/experiment',
+  },
 };
 
 export default function ExperimentPage() {
