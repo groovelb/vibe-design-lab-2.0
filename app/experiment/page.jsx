@@ -41,55 +41,70 @@ export default function ExperimentPage() {
             <Box
               sx={{
                 bgcolor: 'grey.900',
-                p: { xs: 3, md: 4 },
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
+                overflow: 'hidden',
                 transition: 'background-color 0.2s',
                 '&:hover': { bgcolor: 'grey.800' },
                 '&:hover .experiment-card-arrow': { transform: 'translateX(4px)' },
               }}
             >
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 3 }}>
-                <Typography variant="overline" sx={{ color: '#FF6B2C' }}>
-                  2026. 3. 31.
-                </Typography>
-                <Typography
-                  variant="caption"
-                  sx={{ color: '#FF6B2C', bgcolor: 'rgba(255,107,44,0.10)', px: 1.5, py: 0.5 }}
-                >
-                  Report
-                </Typography>
-              </Box>
+              {/* OG 썸네일 */}
+              <Box
+                component="img"
+                src="/og-claude-code-v1.webp"
+                alt="Claude Code 512K 유출 분석"
+                sx={{
+                  width: '100%',
+                  aspectRatio: '16 / 9',
+                  objectFit: 'cover',
+                  display: 'block',
+                }}
+              />
 
-              <Typography variant="h5" sx={{ color: 'text.primary', fontWeight: 700, mb: 2 }}>
-                Claude Code는 코딩 도구가 아니다
-              </Typography>
+              <Box sx={{ p: { xs: 3, md: 4 }, display: 'flex', flexDirection: 'column', flex: 1 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 3 }}>
+                  <Typography variant="overline" sx={{ color: 'text.secondary' }}>
+                    2026. 3. 31.
+                  </Typography>
+                  <Typography
+                    variant="caption"
+                    sx={{ color: 'text.secondary', bgcolor: 'action.hover', px: 1.5, py: 0.5 }}
+                  >
+                    Report
+                  </Typography>
+                </Box>
 
-              <Typography
-                variant="body2"
-                sx={{ color: 'text.secondary', mb: 4, flex: 1 }}
-              >
-                512,000줄의 TypeScript 소스코드 유출. 4계층 빙산 구조 속 9개의 키워드.
-              </Typography>
+                <Typography variant="h5" sx={{ color: 'text.primary', fontWeight: 700, mb: 2 }}>
+                  Claude Code는 코딩 도구가 아니다
+                </Typography>
 
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Typography
-                  variant="caption"
-                  sx={{
-                    fontFamily: 'var(--font-mono, "IBM Plex Mono"), monospace',
-                    color: 'text.secondary',
-                  }}
+                  variant="body2"
+                  sx={{ color: 'text.secondary', mb: 4, flex: 1 }}
                 >
-                  512K LOC · 6 Acts
+                  512,000줄의 소스코드 유출. 협상 프로토콜의 인터랙티브 해부 보고서.
                 </Typography>
-                <Typography
-                  className="experiment-card-arrow"
-                  variant="body1"
-                  sx={{ color: '#FF6B2C', transition: 'transform 0.2s' }}
-                >
-                  →
-                </Typography>
+
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      fontFamily: 'var(--font-mono, "IBM Plex Mono"), monospace',
+                      color: 'text.secondary',
+                    }}
+                  >
+                    512K LOC · 6 Acts
+                  </Typography>
+                  <Typography
+                    className="experiment-card-arrow"
+                    variant="body1"
+                    sx={{ color: 'text.primary', transition: 'transform 0.2s' }}
+                  >
+                    →
+                  </Typography>
+                </Box>
               </Box>
             </Box>
           </Link>

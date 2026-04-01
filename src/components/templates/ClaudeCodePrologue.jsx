@@ -7,6 +7,7 @@ import { IcebergSection } from '../container/IcebergSection';
 import { FloatingBuddies } from '../data-display/FloatingBuddies';
 import { ParallaxLayer } from '../scroll/ParallaxLayer';
 import { BG_PARALLAX_SPEED } from '../motion/constants';
+import { ConstructType } from '../motion/ConstructType';
 import { PROLOGUE, CC } from '@/data/claudeCodeExperimentData';
 
 const ASCII_LOGO = ` ██████ ██      █████  ██    ██ ██████  ███████
@@ -223,18 +224,35 @@ export function ClaudeCodePrologue() {
           {ASCII_LOGO}
         </Box>
 
-        {/* Prompt line — headline */}
-        <Typography
-          sx={{
-            fontFamily: 'var(--font-mono, "IBM Plex Mono"), monospace',
-            color: '#FFFFFF',
-            fontSize: { xs: '1rem', md: '1.25rem' },
-            fontWeight: 700,
-            mb: 2,
-          }}
-        >
-          {'> '}{PROLOGUE.headline}
-        </Typography>
+        {/* Prompt line — headline (typing effect) */}
+        <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, mb: 2 }}>
+          <Typography
+            component="span"
+            sx={{
+              fontFamily: 'var(--font-mono, "IBM Plex Mono"), monospace',
+              color: '#FFFFFF',
+              fontSize: { xs: '1rem', md: '1.25rem' },
+              fontWeight: 700,
+              flexShrink: 0,
+            }}
+          >
+            {'>'}
+          </Typography>
+          <ConstructType
+            text={PROLOGUE.headline}
+            variant="body1"
+            typingSpeed={25}
+            delay={800}
+            sx={{
+              '& .MuiTypography-root': {
+                fontFamily: 'var(--font-mono, "IBM Plex Mono"), monospace',
+                color: '#FFFFFF',
+                fontSize: { xs: '1rem', md: '1.25rem' },
+                fontWeight: 700,
+              },
+            }}
+          />
+        </Box>
 
         {/* Body */}
         <Typography
