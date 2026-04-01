@@ -32,16 +32,16 @@ export function ClaudeCodeAutonomy() {
     <IcebergSection
       depth="abyss"
       density="tight"
-      overline="Act 5 · 각성 스위치"
+      overline="Act 5 · 자율 전환"
       tagline={act.tagline}
       transition={act.transition}
     >
       <Box sx={{ maxWidth: 800, mx: 'auto', py: { xs: 4, md: 6 }, mb: { xs: 4, md: 6 } }}>
         <Typography
           variant="h4"
-          sx={{ color: CC.orange, fontWeight: 700, mb: 3 }}
+          sx={{ color: CC.orange, mb: 3 }}
         >
-          {'\u201C'}{act.pullQuote}{'\u201D'}
+          {act.pullQuote}
         </Typography>
         <Typography
           variant="body1"
@@ -86,7 +86,7 @@ export function ClaudeCodeAutonomy() {
           You are an autonomous agent.
         </Typography>
         <Typography variant="body2" sx={{ color: 'rgba(0,0,0,0.6)', mt: 2 }}>
-          KAIROS/PROACTIVE 모드가 활성화되면, 수백 줄의 코딩 가이드라인이 모두 사라지고 이 한 줄로 대체된다.
+          KAIROS/PROACTIVE 모드가 활성화되면, 수백 줄의 협상 규칙이 모두 사라지고 이 한 줄로 대체된다.
         </Typography>
       </Box>
 

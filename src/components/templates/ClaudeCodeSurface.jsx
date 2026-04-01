@@ -1,10 +1,11 @@
 'use client';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { scaleLinear } from 'd3';
 import Box from '@mui/material/Box';
 import ButtonBase from '@mui/material/ButtonBase';
 import Collapse from '@mui/material/Collapse';
 import Typography from '@mui/material/Typography';
+import { Canvas, useFrame } from '@react-three/fiber';
 import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
 import FolderOutlined from '@mui/icons-material/FolderOutlined';
 import PlayArrowOutlined from '@mui/icons-material/PlayArrowOutlined';
@@ -133,6 +134,78 @@ function ToolColumn({ groups, header, isHidden, hoveredTool, onHover }) {
 
 const MONO = 'var(--font-mono, "IBM Plex Mono"), monospace';
 const W = { white10: 'rgba(255,255,255,0.10)', white30: 'rgba(255,255,255,0.30)', white50: 'rgba(255,255,255,0.50)' };
+
+/* ─── Claw'd 복셀 (스크롤 연동 재등장) ─── */
+
+const CLAW_ORANGE = '#E57B55';
+const CLAW_BLACK = '#1A1A1A';
+
+function buildClawdBlocks() {
+  const blocks = [];
+  const bodyW = 9;
+  const off = -4;
+  const bodyD = 3;
+  const zOff = -1;
+  for (const lx of [0, 2, 6, 8]) {
+    for (const lz of [0, 2]) {
+      for (let y = 0; y <= 2; y++) {
+        blocks.push({ x: lx + off, y, z: lz + zOff, color: CLAW_ORANGE });
+      }
+    }
+  }
+  for (let y = 3; y <= 5; y++) {
+    for (let x = 0; x < bodyW; x++) {
+      for (let z = 0; z < bodyD; z++) {
+        const c = (y === 4 && z === 0 && (x === 3 || x === 5)) ? CLAW_BLACK : CLAW_ORANGE;
+        blocks.push({ x: x + off, y, z: z + zOff, color: c });
+      }
+    }
+  }
+  for (let ax = 1; ax <= 2; ax++) {
+    for (let z = 0; z < bodyD; z++) {
+      blocks.push({ x: off - ax, y: 4, z: z + zOff, color: CLAW_ORANGE });
+      blocks.push({ x: bodyW + off - 1 + ax, y: 4, z: z + zOff, color: CLAW_ORANGE });
+    }
+  }
+  return blocks;
+}
+
+const clawdProgress = { current: 0 };
+
+function ClawdScrollModel() {
+  const groupRef = useRef();
+  const { orangeBlocks, blackBlocks } = useMemo(() => {
+    const all = buildClawdBlocks();
+    return {
+      orangeBlocks: all.filter((b) => b.color === CLAW_ORANGE),
+      blackBlocks: all.filter((b) => b.color === CLAW_BLACK),
+    };
+  }, []);
+
+  useFrame(() => {
+    if (!groupRef.current) return;
+    const p = clawdProgress.current;
+    groupRef.current.rotation.y = p * Math.PI;
+    groupRef.current.position.y = p * 3;
+  });
+
+  return (
+    <group ref={groupRef} position={[0, 0, 0]} scale={0.3}>
+      {orangeBlocks.map((b, i) => (
+        <mesh key={`o-${i}`} position={[b.x, b.y, b.z]}>
+          <boxGeometry args={[1, 1, 1]} />
+          <meshStandardMaterial color={CLAW_ORANGE} roughness={0.85} />
+        </mesh>
+      ))}
+      {blackBlocks.map((b, i) => (
+        <mesh key={`b-${i}`} position={[b.x, b.y, b.z]}>
+          <boxGeometry args={[1, 1, 1]} />
+          <meshStandardMaterial color={CLAW_BLACK} roughness={0.9} />
+        </mesh>
+      ))}
+    </group>
+  );
+}
 
 /**
  * CalloutStrip — 수직 border 구분 + 카운터 애니메이션
@@ -405,6 +478,19 @@ function DualBuildChart() {
 export function ClaudeCodeSurface() {
   const [hoveredTool, setHoveredTool] = useState(null);
   const [tableOpen, setTableOpen] = useState(false);
+  const quoteRef = useRef(null);
+
+  useEffect(() => {
+    const onScroll = () => {
+      if (!quoteRef.current) return;
+      const rect = quoteRef.current.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const p = 1 - rect.bottom / (vh + rect.height);
+      clawdProgress.current = Math.max(0, Math.min(1, p));
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   return (
     <IcebergSection
@@ -585,20 +671,50 @@ export function ClaudeCodeSurface() {
         )}
       </Box>
 
-      {/* 인용 블록 */}
-      <Box sx={{ maxWidth: 800, mx: 'auto', py: { xs: 4, md: 6 }, mb: { xs: 5, md: 8 } }}>
-        <Typography
-          variant="h4"
-          sx={{ color: CC.orange, fontWeight: 700, mb: 3 }}
+      {/* 인용 블록 + Claw'd 재등장 */}
+      <Box
+        ref={quoteRef}
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+          gap: { xs: 3, md: 4 },
+          alignItems: 'center',
+          py: { xs: 4, md: 6 },
+          mb: { xs: 5, md: 8 },
+        }}
+      >
+        <Box>
+          <Typography
+            variant="h4"
+            sx={{ color: CC.orange, mb: 3 }}
+          >
+            {act.pullQuote}
+          </Typography>
+          <Typography
+            variant="body1"
+            sx={{ color: 'text.secondary', lineHeight: 1.8 }}
+          >
+            {act.description}
+          </Typography>
+        </Box>
+        <Box
+          sx={{
+            height: { xs: 280, md: 400 },
+            pointerEvents: 'none',
+          }}
         >
-          {'\u201C'}{act.pullQuote}{'\u201D'}
-        </Typography>
-        <Typography
-          variant="body1"
-          sx={{ color: 'text.secondary', lineHeight: 1.8 }}
-        >
-          {act.description}
-        </Typography>
+          <Canvas
+            orthographic
+            frameloop="always"
+            camera={{ zoom: 55, position: [10, 8, -10], near: -100, far: 100 }}
+            style={{ width: '100%', height: '100%' }}
+            gl={{ alpha: true }}
+          >
+            <ambientLight intensity={0.3} />
+            <directionalLight position={[5, 10, -5]} intensity={0.5} />
+            <ClawdScrollModel />
+          </Canvas>
+        </Box>
       </Box>
 
       {/* Reveals — 2컬럼 그리드 */}

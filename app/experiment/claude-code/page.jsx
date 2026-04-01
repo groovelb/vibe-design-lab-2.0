@@ -1,9 +1,9 @@
 import { ClaudeCodeExperimentPage } from '@/components/page/ClaudeCodeExperimentPage';
 
 export const metadata = {
-  title: '해부 — Claude Code 512K',
+  title: '클로드 코드 유출 — 512K 줄의 협상 프로토콜',
   description:
-    'AI 코딩 도구의 소스 코드 유출. 512,000줄의 TypeScript 속에서 발견한 4계층 빙산의 인터랙티브 해부 보고서.',
+    '클로드 코드 유출 512,000줄을 읽었습니다. 코딩 도구가 아니었습니다. 이중 빌드, 단일 관문, 단방향 거울, 거부하는 기계, 각성 스위치 — 당신의 의도와 AI의 능력 사이를 조율하는 협상 프로토콜의 인터랙티브 해부 보고서.',
 };
 
 export default function Page() {

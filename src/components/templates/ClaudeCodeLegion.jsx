@@ -34,9 +34,9 @@ export function ClaudeCodeLegion() {
       <Box sx={{ maxWidth: 800, mx: 'auto', py: { xs: 4, md: 6 }, mb: { xs: 5, md: 8 } }}>
         <Typography
           variant="h4"
-          sx={{ color: CC.orange, fontWeight: 700, mb: 3 }}
+          sx={{ color: CC.orange, mb: 3 }}
         >
-          {'\u201C'}{act.pullQuote}{'\u201D'}
+          {act.pullQuote}
         </Typography>
         <Typography
           variant="body1"
@@ -121,7 +121,7 @@ export function ClaudeCodeLegion() {
               textAlign: 'center',
             }}
           >
-            {'\u201C'}명령-복종이 아니라 요청-협상. 거부권이 있는 도구는 도구가 아니다.{'\u201D'}
+            {'\u201C'}명령-복종이 아니라 요청-협상. 거부할 수 있는 에이전트는 도구가 아닙니다.{'\u201D'}
           </Typography>
         </Box>
       </Box>

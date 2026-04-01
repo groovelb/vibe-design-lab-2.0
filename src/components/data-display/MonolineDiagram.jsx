@@ -1,5 +1,5 @@
 'use client';
-import { forwardRef } from 'react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import FadeTransition from '../motion/FadeTransition';
@@ -80,53 +80,89 @@ function Node({ cx, cy, label, isAccent, labelY }) {
 }
 
 /* ── Flow Diagram (Act 2) ── */
+const FLOW_STEP_DELAY = 300;
+
 function FlowDiagram() {
-  // 입력 → QueryEngine → API → Tool Loop → 출력
-  const nodes = [
-    { cx: 60, cy: 60, label: '입력', isAccent: false },
-    { cx: 200, cy: 60, label: 'QueryEngine', isAccent: true },
-    { cx: 340, cy: 60, label: 'API', isAccent: false },
-    { cx: 480, cy: 60, label: 'Tool Loop', isAccent: true },
-    { cx: 620, cy: 60, label: '출력', isAccent: false },
-  ];
+  const ref = useRef(null);
+  const [step, setStep] = useState(-1);
+  const triggered = useRef(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !triggered.current) {
+          triggered.current = true;
+          for (let i = 0; i < 5; i++) {
+            setTimeout(() => setStep(i), i * FLOW_STEP_DELAY);
+          }
+        }
+      },
+      { threshold: 0.5 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  const gStyle = (i) => ({
+    opacity: step >= i ? 1 : 0,
+    transform: step >= i ? 'translateX(0)' : 'translateX(-12px)',
+    transition: `opacity 0.5s ease, transform 0.5s ease`,
+  });
 
   return (
     <svg
+      ref={ref}
       viewBox="0 0 680 120"
       fill="none"
       role="img"
       aria-label="QueryEngine 실행 흐름: 입력에서 API, 도구 루프를 거쳐 출력"
     >
       <Defs />
-      {/* 연결선 */}
-      <line x1="68" y1="60" x2="192" y2="60" stroke={STROKE} strokeWidth="1" strokeLinecap="round" markerEnd="url(#ml-arrow)" />
-      <line x1="208" y1="60" x2="332" y2="60" stroke={STROKE} strokeWidth="1" strokeLinecap="round" markerEnd="url(#ml-arrow)" />
-      <line x1="348" y1="60" x2="472" y2="60" stroke={STROKE} strokeWidth="1" strokeLinecap="round" markerEnd="url(#ml-arrow)" />
-      <line x1="488" y1="60" x2="612" y2="60" stroke={STROKE} strokeWidth="1" strokeLinecap="round" markerEnd="url(#ml-arrow)" />
-      {/* Tool Loop 순환 화살표 */}
-      <path
-        d="M480,52 C480,30 340,30 340,52"
-        stroke={STROKE_ACCENT}
-        strokeWidth="1"
-        strokeLinecap="round"
-        strokeDasharray="4 4"
-        fill="none"
-        markerEnd="url(#ml-arrow-accent)"
-      />
-      <text
-        x="410"
-        y="28"
-        textAnchor="middle"
-        fill={LABEL_ACCENT}
-        fontSize="9"
-        fontFamily="var(--font-mono, 'IBM Plex Mono'), monospace"
-      >
-        반복
-      </text>
-      {/* 노드 */}
-      {nodes.map((n) => (
-        <Node key={n.label} {...n} labelY={90} />
-      ))}
+      {/* Step 0: 입력 */}
+      <g style={gStyle(0)}>
+        <Node cx={60} cy={60} label="입력" isAccent={false} labelY={90} />
+      </g>
+      {/* Step 1: 입력→QE 선 + QueryEngine */}
+      <g style={gStyle(1)}>
+        <line x1="68" y1="60" x2="192" y2="60" stroke={STROKE} strokeWidth="1" strokeLinecap="round" markerEnd="url(#ml-arrow)" />
+        <Node cx={200} cy={60} label="QueryEngine" isAccent labelY={90} />
+      </g>
+      {/* Step 2: QE→API 선 + API */}
+      <g style={gStyle(2)}>
+        <line x1="208" y1="60" x2="332" y2="60" stroke={STROKE} strokeWidth="1" strokeLinecap="round" markerEnd="url(#ml-arrow)" />
+        <Node cx={340} cy={60} label="API" isAccent={false} labelY={90} />
+      </g>
+      {/* Step 3: API→TL 선 + Tool Loop + 순환 화살표 */}
+      <g style={gStyle(3)}>
+        <line x1="348" y1="60" x2="472" y2="60" stroke={STROKE} strokeWidth="1" strokeLinecap="round" markerEnd="url(#ml-arrow)" />
+        <Node cx={480} cy={60} label="Tool Loop" isAccent labelY={90} />
+        <path
+          d="M480,52 C480,30 340,30 340,52"
+          stroke={STROKE_ACCENT}
+          strokeWidth="1"
+          strokeLinecap="round"
+          strokeDasharray="4 4"
+          fill="none"
+          markerEnd="url(#ml-arrow-accent)"
+        />
+        <text
+          x="410"
+          y="28"
+          textAnchor="middle"
+          fill={LABEL_ACCENT}
+          fontSize="9"
+          fontFamily="var(--font-mono, 'IBM Plex Mono'), monospace"
+        >
+          반복
+        </text>
+      </g>
+      {/* Step 4: TL→출력 선 + 출력 */}
+      <g style={gStyle(4)}>
+        <line x1="488" y1="60" x2="612" y2="60" stroke={STROKE} strokeWidth="1" strokeLinecap="round" markerEnd="url(#ml-arrow)" />
+        <Node cx={620} cy={60} label="출력" isAccent={false} labelY={90} />
+      </g>
     </svg>
   );
 }

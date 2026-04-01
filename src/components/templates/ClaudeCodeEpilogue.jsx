@@ -24,9 +24,9 @@ export function ClaudeCodeEpilogue() {
       <Box sx={{ maxWidth: 800, mx: 'auto', py: { xs: 4, md: 6 }, mb: { xs: 6, md: 10 } }}>
         <Typography
           variant="h4"
-          sx={{ color: CC.orange, fontWeight: 700, mb: 3 }}
+          sx={{ color: CC.orange, mb: 3 }}
         >
-          {'\u201C'}{act.pullQuote}{'\u201D'}
+          {act.pullQuote}
         </Typography>
         <Typography
           variant="body1"

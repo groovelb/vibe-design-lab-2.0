@@ -8,8 +8,8 @@ import FadeTransition from '../motion/FadeTransition';
  * StickyNodeExplorer
  *
  * 스크롤 드리븐 노드 그래프 스토리텔링 컴포넌트.
- * 왼쪽: sticky 고정 SVG 노드 그래프 (점진적 노드/엣지 활성화)
- * 오른쪽: 스크롤 콘텐츠 스텝 (IntersectionObserver 기반)
+ * 모바일: 상단 sticky 그래프 + 하단 스크롤 스텝 (단일 컬럼)
+ * 데스크톱: 좌측 sticky 그래프 + 우측 스크롤 스텝 (2컬럼)
  *
  * @param {Array<{id,label,x,y,layer,isHighlight?}>} nodes - 전체 노드 [Required]
  * @param {Array<{source,target}>} edges - 전체 엣지 [Required]
@@ -20,8 +20,6 @@ import FadeTransition from '../motion/FadeTransition';
 
 const CC_ORANGE = '#FF6B2C';
 const CC_ORANGE_LIGHT = '#FF8F5C';
-const CC_ORANGE_MUTED = 'rgba(255, 107, 44, 0.10)';
-const CC_ORANGE_STRONG = 'rgba(255, 107, 44, 0.18)';
 
 const LAYER_STROKE = {
   L1: 'var(--vdl-200)',
@@ -180,7 +178,7 @@ function ScrollStep({ step, index, isActive, onInView }) {
     <Box
       ref={ref}
       sx={{
-        minHeight: { md: '60vh' },
+        minHeight: { xs: '50vh', md: '60vh' },
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
@@ -239,7 +237,8 @@ function ScrollStep({ step, index, isActive, onInView }) {
           color: isActive ? 'text.primary' : 'text.secondary',
           fontWeight: 700,
           mb: 1.5,
-          lineHeight: 1.5,
+          fontSize: { xs: '1rem', md: '1.5rem' },
+          lineHeight: 1.4,
           transition: 'color 0.3s ease',
         }}
       >
@@ -251,99 +250,11 @@ function ScrollStep({ step, index, isActive, onInView }) {
         variant="body2"
         sx={{
           color: 'text.secondary',
+          fontSize: { xs: '0.875rem', md: '1rem' },
           lineHeight: 1.8,
-          maxWidth: 400,
+          maxWidth: 480,
         }}
       >
-        {step.bodyKo}
-      </Typography>
-    </Box>
-  );
-}
-
-/* ── mobile step ── */
-
-function MobileStep({ step, index, nodes, edges, activeSet, prevSet }) {
-  return (
-    <Box sx={{ mb: 4 }}>
-      {/* mini inline graph */}
-      <Box sx={{ mb: 2 }}>
-        <svg
-          viewBox={`0 0 ${W} ${H * 0.55}`}
-          fill="none"
-          style={{ width: '100%', maxWidth: 360 }}
-        >
-          {edges.map((e) => {
-            const k = edgeKey(e);
-            const isActive = activeSet.edges.has(k);
-            const isPast = prevSet.edges.has(k);
-            const s = nodes.find((n) => n.id === e.source);
-            const t = nodes.find((n) => n.id === e.target);
-            if (!s || !t) return null;
-            const sx = PAD + s.x * (W - PAD * 2);
-            const sy = PAD * 0.6 + s.y * (H * 0.55 - PAD * 1.2);
-            const tx = PAD + t.x * (W - PAD * 2);
-            const ty = PAD * 0.6 + t.y * (H * 0.55 - PAD * 1.2);
-            return (
-              <StickyEdge
-                key={k}
-                x1={sx} y1={sy} x2={tx} y2={ty}
-                isActive={isActive} isPast={isPast} dashOffset={0}
-              />
-            );
-          })}
-          {nodes.map((n) => {
-            const px = PAD + n.x * (W - PAD * 2);
-            const py = PAD * 0.6 + n.y * (H * 0.55 - PAD * 1.2);
-            return (
-              <StickyNode
-                key={n.id}
-                x={px} y={py}
-                label={n.label} layer={n.layer}
-                isHighlight={n.isHighlight}
-                isActive={activeSet.nodes.has(n.id)}
-                isPast={prevSet.nodes.has(n.id)}
-              />
-            );
-          })}
-        </svg>
-      </Box>
-
-      {/* text */}
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-        <Box
-          sx={{
-            width: 20, height: 20, borderRadius: '50%',
-            border: '1.5px solid', borderColor: CC_ORANGE,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-          }}
-        >
-          <Typography
-            variant="caption"
-            sx={{
-              fontFamily: 'var(--font-mono, "IBM Plex Mono"), monospace',
-              color: CC_ORANGE, fontWeight: 700, fontSize: '0.6rem', lineHeight: 1,
-            }}
-          >
-            {index + 1}
-          </Typography>
-        </Box>
-        {step.callout && (
-          <Typography variant="code" sx={{ color: CC_ORANGE, fontSize: '0.7rem' }}>
-            {step.callout.value} {step.callout.caption}
-          </Typography>
-        )}
-      </Box>
-      <Typography
-        variant="body2"
-        sx={{
-          fontFamily: 'var(--font-mono, "IBM Plex Mono"), monospace',
-          color: 'text.primary', fontWeight: 700, mb: 0.5,
-        }}
-      >
-        {step.titleKo}
-      </Typography>
-      <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.7 }}>
         {step.bodyKo}
       </Typography>
     </Box>
@@ -403,70 +314,71 @@ const StickyNodeExplorer = forwardRef(function StickyNodeExplorer(
     (e) => posMap[e.source] && posMap[e.target],
   );
 
+  const graphSvg = (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      fill="none"
+      role="img"
+      aria-label={`${nodes.length}개 노드의 관계 그래프 — Step ${activeStep + 1}/${steps.length}`}
+      style={{ width: '100%', height: '100%' }}
+    >
+      {validEdges.map((e) => {
+        const k = edgeKey(e);
+        const isActive = activeSet.edges.has(k);
+        const isPast = prevSet.edges.has(k);
+        return (
+          <StickyEdge
+            key={k}
+            x1={posMap[e.source].x}
+            y1={posMap[e.source].y}
+            x2={posMap[e.target].x}
+            y2={posMap[e.target].y}
+            isActive={isActive}
+            isPast={isPast}
+            dashOffset={isActive && !prevSet.edges.has(k) ? dashOffset : 0}
+          />
+        );
+      })}
+      {scaledNodes.map((n) => (
+        <StickyNode
+          key={n.id}
+          x={n.px}
+          y={n.py}
+          label={n.label}
+          layer={n.layer}
+          isHighlight={n.isHighlight}
+          isActive={activeSet.nodes.has(n.id)}
+          isPast={prevSet.nodes.has(n.id)}
+        />
+      ))}
+    </svg>
+  );
+
   return (
     <FadeTransition isTriggerOnView direction="up" delay={200}>
       <Box ref={ref} sx={sx} {...props}>
-        {/* ── Desktop: sticky 2-column ── */}
         <Box
           sx={{
-            display: { xs: 'none', md: 'grid' },
-            gridTemplateColumns: '1fr 1fr',
-            gap: 0,
+            display: { xs: 'block', md: 'grid' },
+            gridTemplateColumns: { md: '1fr 1fr' },
             position: 'relative',
           }}
         >
-          {/* Left: sticky graph */}
+          {/* Sticky graph — 모바일: 상단 고정, 데스크톱: 좌측 고정 */}
           <Box
             sx={{
               position: 'sticky',
-              top: 'calc(50vh - 310px)',
-              height: H,
-              alignSelf: 'start',
+              top: { xs: 0, md: 'calc(50vh - 310px)' },
+              height: { xs: 280, md: H },
+              alignSelf: { md: 'start' },
+              zIndex: 1,
             }}
           >
-            <svg
-              viewBox={`0 0 ${W} ${H}`}
-              fill="none"
-              role="img"
-              aria-label={`${nodes.length}개 노드의 관계 그래프 — Step ${activeStep + 1}/${steps.length}`}
-              style={{ width: '100%', height: '100%' }}
-            >
-              {/* edges */}
-              {validEdges.map((e) => {
-                const k = edgeKey(e);
-                const isActive = activeSet.edges.has(k);
-                const isPast = prevSet.edges.has(k);
-                return (
-                  <StickyEdge
-                    key={k}
-                    x1={posMap[e.source].x}
-                    y1={posMap[e.source].y}
-                    x2={posMap[e.target].x}
-                    y2={posMap[e.target].y}
-                    isActive={isActive}
-                    isPast={isPast}
-                    dashOffset={isActive && !prevSet.edges.has(k) ? dashOffset : 0}
-                  />
-                );
-              })}
-              {/* nodes */}
-              {scaledNodes.map((n) => (
-                <StickyNode
-                  key={n.id}
-                  x={n.px}
-                  y={n.py}
-                  label={n.label}
-                  layer={n.layer}
-                  isHighlight={n.isHighlight}
-                  isActive={activeSet.nodes.has(n.id)}
-                  isPast={prevSet.nodes.has(n.id)}
-                />
-              ))}
-            </svg>
+            {graphSvg}
           </Box>
 
-          {/* Right: scroll steps */}
-          <Box sx={{ pl: { md: 4, lg: 6 } }}>
+          {/* Scroll steps */}
+          <Box sx={{ pl: { xs: 0, md: 4, lg: 6 } }}>
             {steps.map((step, i) => (
               <ScrollStep
                 key={i}
@@ -479,25 +391,6 @@ const StickyNodeExplorer = forwardRef(function StickyNodeExplorer(
             {/* spacer for last step to have scroll room */}
             <Box sx={{ height: '30vh' }} />
           </Box>
-        </Box>
-
-        {/* ── Mobile: stacked ── */}
-        <Box sx={{ display: { xs: 'block', md: 'none' } }}>
-          {steps.map((step, i) => {
-            const stepActive = buildActiveSet(step);
-            const stepPrev = i > 0 ? buildActiveSet(steps[i - 1]) : { nodes: new Set(), edges: new Set() };
-            return (
-              <MobileStep
-                key={i}
-                step={step}
-                index={i}
-                nodes={nodes}
-                edges={edges}
-                activeSet={stepActive}
-                prevSet={stepPrev}
-              />
-            );
-          })}
         </Box>
       </Box>
     </FadeTransition>

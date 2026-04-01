@@ -142,6 +142,7 @@ const IcebergSection = forwardRef(function IcebergSection(
                 textAlign: 'center',
                 maxWidth: 720,
                 mx: 'auto',
+                my: spacing.transitionMt,
               }}
             >
               {transition}

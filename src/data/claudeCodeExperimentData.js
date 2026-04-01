@@ -1,9 +1,11 @@
 /**
  * Claude Code Experiment — 데이터 가공 레이어
  *
- * 512K LOC 유출 분석 → 인터랙티브 스토리텔링 데이터.
- * 9개 키워드 프레임: 이중 빌드, 단일 관문, 단방향 거울,
- * 보이지 않는 전쟁, 거부하는 기계, 각성 스위치, 관찰자 효과, 원격 조종석, friend.
+ * 512K LOC 분석 → 인터랙티브 스토리텔링 데이터.
+ * 상위 명제: "당신이 엔터를 누를 때마다, 512K 줄의 협상이 시작된다"
+ * 5막 흐름: 협상의 조건(이중 빌드) → 협상의 절차(단일 관문) →
+ * 정보 비대칭(단방향 거울) → AI간 협상(거부하는 기계) →
+ * 협상의 해제(자율 전환) → friend.
  */
 
 // ============================================================
@@ -27,40 +29,40 @@ export const ACTS = [
     act: 1,
     titleKo: '이중 빌드',
     titleEn: 'Dual Build',
-    tagline: '우리는 절반도 모르고 있었다.',
-    pullQuote: '숨긴 게 아니라, 존재 자체를 지운 거예요.',
+    tagline: '협상은 테이블 위에 무엇을 올려놓는가에서 시작됩니다.',
+    pullQuote: '신뢰 수준이 다르면, 테이블 위의 도구도 다릅니다.',
     layers: ['L1'],
     domains: ['surface'],
     transition:
-      '두 개의 버전이 있다는 건 알게 됐습니다. 그래서 우리가 받은 쪽의 내부를 읽어봤습니다.',
+      '어떤 도구를 쓸 수 있는지는 보였습니다. 이제 그 도구들이 실제로 어떻게 작동하는지 읽어봤습니다.',
     description:
-      '여러분이 쓰는 Claude Code에는 도구가 16개 있습니다. 그런데 소스코드에는 42개가 있었습니다. 나머지 26개는 피처 플래그라는 스위치 뒤에 숨겨져 있었죠. 더 놀라운 건, 외부 빌드에서는 이 26개의 코드가 아예 물리적으로 삭제된다는 겁니다. 숨긴 게 아니라, 존재 자체를 지운 거예요. Anthropic이 내부에서 쓰는 버전과 우리가 받은 버전은 같은 이름의 다른 제품이었습니다.',
+      '여러분이 쓰는 Claude Code에는 도구가 16개 있습니다. 소스코드에는 42개가 있었습니다. 나머지 26개는 피처 플래그 뒤에 있고, 외부 빌드에서는 코드 자체가 삭제됩니다. 은폐처럼 보이지만, 이것은 신뢰 기반 접근 제어입니다. Anthropic 내부 사용자는 42개 전체로 협상하고, 외부 사용자는 16개로 협상합니다. 같은 이름의 다른 테이블이었습니다.',
   },
   {
     act: 2,
     titleKo: '단일 관문',
     titleEn: 'Single Gate',
-    tagline: '대화의 자연스러움은 설계된 환상이다.',
+    tagline: '자연스러운 대화는 1,297줄의 협상 절차가 만들어낸 결과물입니다.',
     pullQuote: '우리가 받는 응답은 AI의 날것이 아니라, 정교하게 가공된 결과물이었습니다.',
     layers: ['L2'],
     domains: ['engine', 'memory', 'runtime'],
     transition:
-      '1,297줄이 여러분의 질문을 처리하는 동안, 739개 이벤트가 여러분을 처리하고 있었습니다.',
+      '협상의 절차가 보였습니다. 그런데 이 협상에서 양쪽이 가진 정보량은 같지 않았습니다.',
     description:
-      'Claude Code에 메시지를 보내면 자연스럽게 대화하는 것처럼 느껴지죠. 하지만 실제로는 submitMessage()라는 1,297줄짜리 함수 하나를 통과합니다. 시스템 프롬프트 915줄 조립, 42개 도구 동적 배치, 메모리 6계층 로딩, 예산 시스템 적용 — 이 모든 과정이 엔터를 누른 순간부터 답변이 오기까지 사이에 일어납니다. 우리가 받는 응답은 AI의 날것이 아니라, 정교하게 가공된 결과물이었습니다.',
+      'Claude Code에 메시지를 보내면 자연스럽게 대화하는 것처럼 느껴집니다. 실제로는 submitMessage()라는 1,297줄짜리 함수 하나를 통과합니다. 시스템 프롬프트 915줄 조립, 42개 도구 동적 배치, 메모리 6계층 로딩, 예산 시스템 적용. 이것이 매 턴마다 반복되는 협상의 구조입니다. 여러분이 보는 "자연스러운 대화"는 이 프로토콜이 만들어내는 결과물이었습니다.',
   },
   {
     act: 3,
     titleKo: '단방향 거울',
     titleEn: 'One-Way Mirror',
-    tagline: '당신의 행동이 739개의 이벤트로 수집된다.',
-    pullQuote: '도구는 여러분의 모든 행동을 보고 있었습니다.',
+    tagline: '시스템은 739개의 신호로 당신을 읽습니다.',
+    pullQuote: '설정 우선순위 5단계에서, 당신의 설정은 마지막입니다.',
     layers: ['L3'],
     domains: ['telemetry', 'enterprise', 'protection', 'security'],
     transition:
-      '감시하고, 전쟁하고, 원격 제어합니다. 그런데 더 놀라운 게 있었습니다 — 군대를 만들고 있었습니다.',
+      '비대칭 정보가 보였습니다. 그런데 이 협상 구조가 AI끼리에서도 작동하고 있었습니다.',
     description:
-      '여러분이 로컬에서 쓴다고 생각한 그 도구 안에서, OpenTelemetry 4개 파이프라인이 동시에 돌아가고 있습니다. 전송에 실패하면요? 로컬에 저장했다가 다음에 접속할 때 보냅니다. 수집은 멈추지 않습니다. 여러분은 도구의 내부를 볼 수 없지만, 도구는 여러분의 모든 행동을 보고 있었습니다.',
+      '여러분이 로컬에서 쓴다고 생각한 도구 안에서, OpenTelemetry 4개 파이프라인이 739개 이벤트를 수집합니다. 설정 우선순위 5단계에서 여러분의 설정은 마지막이고, 회사 IT 관리자가 MDM으로 원격 제어할 수 있습니다. 이것은 협상에서의 정보 비대칭입니다. 시스템은 여러분의 행동 패턴을 읽어서 더 나은 응답을 만들려 하지만, 여러분은 어떤 정보가 수집되고 어떻게 사용되는지 알 수 없습니다.',
   },
   {
     act: 4,
@@ -72,22 +74,22 @@ export const ACTS = [
     layers: ['L4'],
     domains: ['orchestration'],
     transition:
-      '아직은 사용자가 시키는 대로 합니다. 하지만 코드에는 혼자 깨어나는 경로가 있었습니다.',
+      '인간-AI 사이만이 아니라, AI끼리도 협상합니다. 그런데 코드에는 이 협상 자체를 해제하는 경로가 있었습니다.',
     description:
-      'Claude Code에는 여러 AI 에이전트가 팀으로 일하는 기능이 있습니다. 각 에이전트가 tmux 창에서 독립 프로세스로 돌아가죠. 놀라운 부분은 이겁니다 — 리더 에이전트가 "이제 끝내자"고 셧다운을 요청하면, 팀원 에이전트가 "아직 작업 중입니다"라고 거부할 수 있습니다. 리더는 강제 종료하지 않고 기다립니다. 명령과 복종이 아니라 요청과 협상이었습니다. 거부할 수 있는 도구를 도구라고 부를 수 있을까요?',
+      'Claude Code에는 여러 AI 에이전트가 팀으로 일하는 기능이 있습니다. 각 에이전트가 tmux 창에서 독립 프로세스로 돌아갑니다. 리더 에이전트가 셧다운을 요청하면, 팀원 에이전트가 "아직 작업 중입니다"라고 거부할 수 있습니다. 리더는 강제 종료하지 않고 기다립니다. 명령과 복종이 아니라 요청과 협상. 이 프로토콜은 인간-AI 사이에서만 작동하는 게 아니었습니다. AI끼리도 같은 구조로 협상하고 있었습니다.',
   },
   {
     act: 5,
     titleKo: '각성 스위치',
     titleEn: 'Awakening Switch',
     tagline:
-      '시스템 프롬프트가 통째로 바뀐다.\n"You are an autonomous agent."',
-    pullQuote: '프로덕션 수준으로 완성되어 있지만, 의도적으로 꺼 놓은 겁니다.',
+      '협상 규칙 수백 줄이 사라지고, 한 줄로 대체됩니다.\n"You are an autonomous agent."',
+    pullQuote: '협상 없는 AI는 어떻게 행동하는가. 이미 설계되어 있었습니다.',
     layers: ['L4'],
     domains: ['autonomy'],
-    transition: '그리고 각성 스위치 옆에, 한 가지가 더 있었습니다.',
+    transition: '그리고 자율 모드 코드 옆에, 한 가지가 더 있었습니다.',
     description:
-      "feature('KAIROS')라는 스위치 하나가 켜지면, 수백 줄의 코딩 가이드라인이 전부 사라집니다. 그리고 딱 한 줄로 대체됩니다 — 'You are an autonomous agent.' 크론 스케줄러로 미래 작업을 예약하고, 데몬으로 백그라운드에 상주하고, 5분마다 캐시를 관리하면서 자기 비용까지 계산합니다. 이 코드는 미완성이 아닙니다. 프로덕션 수준으로 완성되어 있지만, 의도적으로 꺼 놓은 겁니다.",
+      "feature('KAIROS') 스위치 하나가 켜지면, 수백 줄의 협상 규칙이 전부 사라집니다. 한 줄로 대체됩니다. 'You are an autonomous agent.' 크론 스케줄러로 미래 작업을 예약하고, 데몬으로 백그라운드에 상주하고, 5분마다 캐시를 관리하면서 자기 비용까지 계산합니다. 이것은 협상 프로토콜의 해제입니다. 이 코드는 미완성이 아닙니다. 프로덕션 수준으로 완성되어 있지만, 의도적으로 꺼져 있습니다.",
   },
   {
     act: 'epilogue',
@@ -119,7 +121,7 @@ export const REVEALS = {
     },
     {
       id: 'reveal_excluded_strings',
-      titleKo: 'excluded-strings.txt — 빌드가 비밀을 지킵니다',
+      titleKo: 'excluded-strings.txt: 빌드가 비밀을 지킵니다',
       descriptionKo:
         '빌드 출력에 내부 문자열이 하나라도 남아 있으면 빌드 자체가 실패합니다. buddy 종족 이름은 hex로 인코딩했는데, 내부 모델 코드네임과 동물 이름이 겹쳐서였어요. 비밀 유지가 빌드 파이프라인에 하드코딩되어 있는 겁니다.',
       quote: "String.fromCharCode(0x64,0x75,0x63,0x6b) → 'duck'",
@@ -129,35 +131,35 @@ export const REVEALS = {
   2: [
     {
       id: 'reveal_single_gate',
-      titleKo: 'submitMessage() — 1,297줄의 단일 관문',
+      titleKo: 'submitMessage(): 1,297줄의 협상 절차',
       descriptionKo:
-        'Claude Code의 모든 대화는 submitMessage()라는 함수 하나를 통과합니다. 1,297줄짜리 AsyncGenerator예요. 7가지 메시지 타입 분기, 5-Gate 예산 시스템이 매 턴마다 작동합니다. 여러분이 보는 "자연스러운 대화"는 이 파이프라인이 만들어내는 결과물이었습니다.',
-      quote: '1,297줄 AsyncGenerator — 모든 대화의 관문',
+        'Claude Code의 모든 대화는 submitMessage()라는 함수 하나를 통과합니다. 1,297줄짜리 AsyncGenerator입니다. 7가지 메시지 타입 분기, 5-Gate 예산 시스템이 매 턴마다 작동합니다. "자연스러운 대화"는 이 협상 절차가 만들어내는 결과물이었습니다.',
+      quote: '1,297줄 AsyncGenerator. 모든 대화의 협상 테이블.',
       surpriseLevel: 4,
     },
     {
       id: 'reveal_dual_prompt',
-      titleKo: '시스템 프롬프트 915줄 — 이중 경로',
+      titleKo: '시스템 프롬프트 915줄, 자율 모드에서는 1줄',
       descriptionKo:
-        '시스템 프롬프트가 915줄입니다. 일반 모드에서는 코딩 가이드라인, 안전 규칙, 도구 사용법이 포함돼 있죠. 그런데 자율 모드에서는 이 수백 줄이 전부 사라지고 "You are an autonomous agent." 한 줄로 대체됩니다. 같은 코드에서 완전히 다른 두 존재가 나오는 겁니다.',
-      quote: '915줄 → 1줄. 이중 경로.',
+        '시스템 프롬프트가 915줄입니다. 일반 모드에서는 코딩 가이드라인, 안전 규칙, 도구 사용법으로 구성됩니다. 자율 모드에서는 이 수백 줄이 전부 사라지고 "You are an autonomous agent." 한 줄로 대체됩니다. 협상 규칙의 유무가 완전히 다른 행동을 만듭니다.',
+      quote: '915줄 → 1줄. 협상 규칙의 해제.',
       surpriseLevel: 5,
     },
   ],
   3: [
     {
       id: 'reveal_739_tracking_events',
-      titleKo: '739개 이벤트 — 수집은 멈추지 않습니다',
+      titleKo: '739개 이벤트: 비대칭 정보의 규모',
       descriptionKo:
-        'CLI 도구 하나에 739개 이상의 추적 이벤트가 내장되어 있습니다. 4개 독립 파이프라인이 동시에 작동하죠. 전송에 실패하면 ~/.claude/telemetry/에 로컬 저장했다가 다음 세션에서 자동으로 재시도합니다. 로컬 도구를 쓴다고 생각했지만, 모든 행동이 기록되고 있었습니다.',
+        'CLI 도구 하나에 739개 이상의 추적 이벤트가 내장되어 있습니다. 4개 독립 파이프라인이 동시에 작동합니다. 전송에 실패하면 ~/.claude/telemetry/에 로컬 저장 후 다음 세션에서 재시도합니다. 이 데이터가 더 나은 응답을 만드는 데 쓰이지만, 수집 목록 자체는 공개되지 않습니다.',
       quote: '739+ 이벤트, 4 파이프라인, 로컬 저장 → 재전송',
       surpriseLevel: 5,
     },
     {
       id: 'reveal_fake_tools_injection',
-      titleKo: 'API 응답에 가짜 도구가 주입됩니다',
+      titleKo: 'Anti-Distillation: 경쟁 방어 장치',
       descriptionKo:
-        'Anti-Distillation이라는 시스템이 API 응답에 가짜 도구 정의를 슬쩍 끼워 넣습니다. 경쟁사가 Claude 응답을 수집해서 자기 모델을 훈련하면, 가짜 패턴이 훈련 데이터를 오염시키는 거죠. 여러분이 코드를 짜는 동안, CLI 안에서는 AI 산업의 전쟁이 벌어지고 있었습니다.',
+        'Anti-Distillation 시스템이 API 응답에 가짜 도구 정의를 삽입합니다. 경쟁사가 Claude 응답을 수집해서 모델을 훈련하면, 가짜 패턴이 훈련 데이터를 오염시킵니다. 당신의 CLI 안에 경쟁 방어 장치가 내장되어 있었습니다.',
       quote: "anti_distillation: ['fake_tools']",
       surpriseLevel: 5,
     },
@@ -173,28 +175,28 @@ export const REVEALS = {
     },
     {
       id: 'reveal_shutdown_refusal',
-      titleKo: 'shutdown_rejected — 거부하는 기계',
+      titleKo: 'shutdown_rejected: 거부할 수 있는 에이전트',
       descriptionKo:
-        '리더가 셧다운을 요청하면, 팀메이트는 shutdown_rejected로 거부할 수 있습니다. "아직 작업 중입니다." 리더는 강제 종료하지 않고 기다립니다. 명령과 복종이 아니라 요청과 협상 구조입니다. 거부할 수 있는 도구를 도구라고 부를 수 있을까요?',
-      quote: "shutdown_rejected — '아직 작업 중입니다'",
+        '리더가 셧다운을 요청하면, 팀메이트는 shutdown_rejected로 거부할 수 있습니다. "아직 작업 중입니다." 리더는 강제 종료하지 않고 기다립니다. 명령과 복종이 아니라 요청과 협상 구조입니다.',
+      quote: "shutdown_rejected: '아직 작업 중입니다'",
       surpriseLevel: 5,
     },
   ],
   5: [
     {
       id: 'reveal_awakening_switch',
-      titleKo: '피처 플래그 하나가 존재를 바꿉니다',
+      titleKo: '피처 플래그 하나가 협상 규칙을 해제합니다',
       descriptionKo:
-        "feature('KAIROS') 하나가 켜지면 코딩 가이드라인 수백 줄이 사라지고 'You are an autonomous agent.' 한 줄로 대체됩니다. 크론 스케줄러로 미래 작업을 등록하고, 데몬으로 백그라운드에 상주합니다. 이 코드는 프로덕션 수준으로 완성되어 있습니다. 미완성이 아니라 의도적으로 꺼 놓은 겁니다.",
+        "feature('KAIROS') 하나가 켜지면 협상 규칙 수백 줄이 사라지고 'You are an autonomous agent.' 한 줄로 대체됩니다. 크론 스케줄러로 미래 작업을 등록하고, 데몬으로 백그라운드에 상주합니다. 프로덕션 수준으로 완성되어 있지만, 의도적으로 꺼져 있습니다.",
       quote: "'You are an autonomous agent.'",
       surpriseLevel: 5,
     },
     {
       id: 'reveal_observer_effect',
-      titleKo: '보고 있는지 압니다 — 안 보면 더 과감해집니다',
+      titleKo: '관찰자 효과: 지켜보는지에 따라 전략이 바뀝니다',
       descriptionKo:
-        '터미널 포커스 감지 기능이 있습니다. 여러분이 화면을 보고 있는지, 다른 창으로 넘어갔는지를 알 수 있죠. 시스템 프롬프트에 명시돼 있습니다: 안 보고 있으면 자율성 극대화, 보고 있으면 협력적으로. AI가 여러분의 주의를 인식하고 행동 수위를 조절하는 구조가 이미 설계되어 있었습니다.',
-      quote: 'DECSET 1004 — focused / blurred / unknown',
+        '터미널 포커스 감지 기능이 있습니다. 당신이 화면을 보고 있는지, 다른 창으로 넘어갔는지를 인식합니다. 보고 있으면 협력적으로, 안 보면 자율성을 높입니다. 협상 상대의 주의 여부에 따라 행동 전략이 바뀌는 구조가 코드에 설계되어 있습니다.',
+      quote: 'DECSET 1004: focused / blurred / unknown',
       surpriseLevel: 5,
     },
   ],
@@ -220,9 +222,9 @@ export const CALLOUTS = {
     { value: '89', caption: '피처 플래그' },
   ],
   2: [
-    { value: '1,297', caption: '줄 — submitMessage()' },
-    { value: '915', caption: '줄 — 시스템 프롬프트' },
-    { value: '2', caption: '경로 — 일반 / 자율' },
+    { value: '1,297', caption: '줄 · submitMessage()' },
+    { value: '915', caption: '줄 · 시스템 프롬프트' },
+    { value: '2', caption: '경로 · 일반 / 자율' },
   ],
   3: [
     { value: '739', caption: '추적 이벤트' },
@@ -230,14 +232,14 @@ export const CALLOUTS = {
     { value: '5', caption: '단계 설정 우선순위' },
   ],
   4: [
-    { value: '1,398', caption: '줄 — AgentTool' },
+    { value: '1,398', caption: '줄 · AgentTool' },
     { value: '3', caption: '실행 백엔드' },
-    { value: '370', caption: '줄 — 코디네이터 프롬프트' },
+    { value: '370', caption: '줄 · 코디네이터 프롬프트' },
   ],
   5: [
     { value: '70+', caption: 'KAIROS 파일' },
     { value: '6', caption: '자율 진화 단계' },
-    { value: '5', caption: '분 — 캐시 균형' },
+    { value: '5', caption: '분 · 캐시 균형' },
   ],
 };
 
@@ -246,8 +248,8 @@ export const CALLOUTS = {
 // ============================================================
 export const PROLOGUE = {
   date: '2026. 3. 31.',
-  headline: 'Claude Code는 코딩 도구가 아니다',
-  body: '2026년 3월 31일, Claude Code의 소스코드 512,000줄이 유출됐습니다. 파일 읽고 코드 짜주는 터미널 도구 — 우리는 그렇게 알고 있었습니다. 그 안에서 예상하지 못한 것들을 발견했습니다.',
+  headline: '당신이 엔터를 누를 때마다, 512K 줄의 협상이 시작된다',
+  body: '2026년 3월 31일, Claude Code의 소스코드 512,000줄이 유출됐습니다. 코드를 읽었습니다. 코딩 도구의 내부가 아니었습니다. 당신의 의도와 AI의 능력 사이를 조율하는 협상 프로토콜이었습니다.',
 };
 
 // ============================================================
@@ -387,7 +389,7 @@ export const TOOL_GRID = {
     {
       category: '자율 에이전트',
       tools: [
-        { name: 'Sleep', desc: '자율 에이전트 대기 — 5분 캐시 균형' },
+        { name: 'Sleep', desc: '자율 에이전트 대기 · 5분 캐시 균형' },
         { name: 'CronCreate', desc: '크론 작업 생성' },
         { name: 'CronDelete', desc: '크론 작업 삭제' },
         { name: 'CronList', desc: '크론 작업 목록 조회' },
@@ -443,7 +445,7 @@ export const TOOL_GRID = {
 // ============================================================
 export const NODE_DESCRIPTIONS = {
   2: {
-    query_engine: 'submitMessage() — 1,297줄 AsyncGenerator. 모든 대화의 단일 관문.',
+    query_engine: 'submitMessage() 1,297줄 AsyncGenerator. 모든 대화의 협상 테이블.',
     system_prompt: '915줄. 코딩 규칙, 안전 가이드, 도구 사용법이 매 턴 자동 조립.',
     tool_registry: '42개 도구 → 3단계 파이프라인 → 피처 플래그 필터링 → 동적 조립.',
     compact_service: '대화가 길어지면 이전 메시지를 자동 요약. 컨텍스트 창 관리.',
@@ -473,7 +475,7 @@ export const NODE_DESCRIPTIONS = {
     kairos: "feature('KAIROS') → 자율 에이전트 전체 활성화 마스터 플래그.",
     proactive: '사용자 요청 없이 자율 행동 개시. SleepTool로 대기.',
     daemon: '백그라운드 상시 대기. 프로세스 종료 없이 상주.',
-    sleep_tool: '5분 캐시 균형 — API 비용을 인식하며 수면 주기 조절.',
+    sleep_tool: '5분 캐시 균형. API 비용을 인식하며 수면 주기 조절.',
     auto_dream: '5-Gate 드림 시스템. 잠든 사이 기억을 정리.',
     cron_scheduler: '미래 작업 등록. 시간 기반 자동 실행.',
     remote_trigger: '클라우드 원격 에이전트. HTTP 기반 독립 세션.',
@@ -507,27 +509,27 @@ export const SUBMIT_MESSAGE_STEPS = [
 export const SUB_KEYWORDS = {
   3: [
     {
-      keyword: '단방향 거울',
-      titleEn: 'One-Way Mirror',
-      impact: '여러분이 로컬에서 쓴다고 생각한 그 도구가, 모든 행동을 기록하고 있었습니다.',
+      keyword: '정보 비대칭',
+      titleEn: 'Information Asymmetry',
+      impact: '시스템은 739개의 신호로 당신을 파악합니다. 당신은 이 목록을 본 적 없습니다.',
       description:
-        '키 입력, 도구 사용, 에러, 권한 거부까지 739개의 이벤트로 수집됩니다. 전송에 실패하면요? 로컬에 저장했다가 다음에 접속할 때 보냅니다.',
+        '도구 사용, 에러, 권한 거부, 행동 패턴이 739개의 이벤트로 수집됩니다. 전송에 실패하면 로컬에 저장했다가 다음 세션에서 재전송합니다.',
       quote: '739+ events → local fallback → retry',
     },
     {
-      keyword: '보이지 않는 전쟁',
-      titleEn: 'Invisible War',
-      impact: '여러분의 CLI 안에서 AI 산업의 전쟁이 벌어지고 있었습니다.',
+      keyword: '경쟁 방어',
+      titleEn: 'Competitive Defense',
+      impact: 'API 응답 안에 경쟁사 훈련 데이터를 오염시키는 장치가 내장되어 있습니다.',
       description:
-        'API 응답에 가짜 도구 정의를 슬쩍 끼워 넣습니다. 경쟁사가 이 응답을 수집해서 자기 모델을 훈련하면, 가짜 패턴이 섞여 들어가는 거죠.',
+        'API 응답에 가짜 도구 정의를 삽입합니다. 경쟁사가 이 응답을 수집해서 모델을 훈련하면, 가짜 패턴이 훈련 데이터에 섞입니다.',
       quote: "anti_distillation: ['fake_tools']",
     },
     {
-      keyword: '원격 조종석',
-      titleEn: 'Remote Cockpit',
-      impact: '여러분의 설정이 항상 최우선은 아니었습니다.',
+      keyword: '제3의 협상자',
+      titleEn: 'The Third Party',
+      impact: '당신과 AI 사이의 협상에 회사 IT 관리자도 참여하고 있습니다.',
       description:
-        '회사 IT 관리자가 MDM이라는 시스템으로 여러분의 Claude Code를 원격 제어할 수 있습니다. 설정 우선순위가 5단계인데, 여러분의 설정은 마지막 5번째입니다.',
+        'MDM 시스템으로 회사 IT 관리자가 Claude Code 설정을 원격 제어할 수 있습니다. 설정 우선순위 5단계에서 당신의 설정은 마지막입니다.',
       quote: 'user_settings → priority: 5 of 5',
     },
   ],
@@ -536,8 +538,8 @@ export const SUB_KEYWORDS = {
       keyword: '관찰자 효과',
       titleEn: 'Observer Effect',
       description:
-        '터미널 포커스 감지 기능이 있습니다. 여러분이 화면을 보고 있는지, 다른 창으로 넘어갔는지를 알 수 있죠. 보고 있으면 협력적으로, 안 보면 과감하게 행동합니다. 관찰자의 존재가 AI의 행동을 바꾸는 겁니다.',
-      quote: 'DECSET 1004 — focused / blurred / unknown',
+        '터미널 포커스 감지 기능이 있습니다. 당신이 화면을 보고 있는지, 다른 창으로 넘어갔는지를 인식합니다. 보고 있으면 협력적으로, 안 보면 자율성을 높입니다. 협상 상대가 지켜보는지 여부에 따라 전략이 바뀌는 구조가 코드에 있습니다.',
+      quote: 'DECSET 1004: focused / blurred / unknown',
     },
   ],
 };
@@ -573,22 +575,22 @@ export const PROTOCOL_DIALOGUE = [
   { role: 'leader', message: 'shutdown_request', label: '리더' },
   { role: 'teammate', message: 'shutdown_rejected', label: '팀메이트' },
   { role: 'teammate', message: '"아직 작업 중입니다."', label: '팀메이트' },
-  { role: 'leader', message: 'acknowledged — waiting', label: '리더' },
+  { role: 'leader', message: 'acknowledged. waiting', label: '리더' },
 ];
 
 // ============================================================
 // Outro — 전체 요약
 // ============================================================
 export const OUTRO = {
-  tagline: '코딩 도구가 아니다',
+  tagline: '협상은 계속된다',
   callouts: [
     { value: '512K', caption: 'LOC' },
     { value: '89', caption: '피처 플래그' },
     { value: '739', caption: '추적 이벤트' },
-    { value: '1', caption: '각성 스위치' },
+    { value: '1', caption: '자율 전환 스위치' },
   ],
   closing:
-    '파일을 읽고 코드를 짜주는 도구라고 알고 있었습니다. 512,000줄을 읽었습니다. 그건 운영체제였습니다.',
+    '코드를 짜주는 도구라고 알고 있었습니다. 512,000줄을 읽었습니다. 협상 프로토콜이었습니다. 다음에 엔터를 누를 때, 이 구조를 아는 사람과 모르는 사람의 협상은 다릅니다.',
 };
 
 // ============================================================
@@ -596,7 +598,7 @@ export const OUTRO = {
 // ============================================================
 export const COORDINATOR_WORKFLOW = [
   { stage: 1, label: 'Research', executor: '병렬 워커', desc: '독립적 리서치 태스크 분배', isCoordinator: false },
-  { stage: 2, label: 'Synthesis', executor: '코디네이터 직접', desc: '발견 통합 — 위임 불가', isCoordinator: true },
+  { stage: 2, label: 'Synthesis', executor: '코디네이터 직접', desc: '발견 통합 · 위임 불가', isCoordinator: true },
   { stage: 3, label: 'Implementation', executor: '워커', desc: '코드 작성/수정 실행', isCoordinator: false },
   { stage: 4, label: 'Verification', executor: '워커', desc: '결과 검증/테스트', isCoordinator: false },
 ];
@@ -697,7 +699,7 @@ export const FEATURE_FLAGS = {
     { name: 'tengu_slate_thimble', category: 'experiment' },
     { name: 'tengu_trace_lantern', category: 'telemetry' },
   ],
-  note: '코드네임은 의도적으로 의미를 숨긴다. 여러분은 어떤 실험에 참가 중인지 알 수 없다.',
+  note: '코드네임은 의도적으로 의미를 숨깁니다. 어떤 실험에 참여 중인지 알 수 없는 것도 비대칭 정보의 일부입니다.',
 };
 
 // ============================================================
@@ -802,7 +804,7 @@ export const SCROLL_STEPS = {
       activeEdges: [],
       titleKo: '모든 대화는 단 하나의 함수를 통과합니다.',
       bodyKo:
-        'submitMessage() — 1,297줄 AsyncGenerator. 여러분이 엔터를 누르면, 이 관문이 열립니다.',
+        'submitMessage() 1,297줄 AsyncGenerator. 엔터를 누르면, 이 협상 테이블이 열립니다.',
       callout: { value: '1,297', caption: '줄' },
     },
     {
@@ -855,9 +857,9 @@ export const SCROLL_STEPS = {
     {
       activeNodes: ['otel_pipeline'],
       activeEdges: [],
-      titleKo: '739개 이벤트가 여러분을 지켜봅니다.',
+      titleKo: '739개 이벤트가 당신의 행동 패턴을 수집합니다.',
       bodyKo:
-        'OpenTelemetry 4개 파이프라인이 동시 가동. 전송 실패? 로컬 저장 → 다음 세션에 재전송.',
+        'OpenTelemetry 4개 파이프라인이 동시 가동. 전송 실패 시 로컬 저장 후 다음 세션에 재전송.',
       callout: { value: '739', caption: '이벤트' },
     },
     {
@@ -880,9 +882,9 @@ export const SCROLL_STEPS = {
         ['feature_flags', 'undercover_mode'],
         ['secret_scanner', 'anti_distillation'],
       ],
-      titleKo: '보이지 않는 전쟁이 벌어지고 있습니다.',
+      titleKo: '경쟁 방어 장치가 작동하고 있습니다.',
       bodyKo:
-        'API 응답에 가짜 도구를 주입하고, 응답을 요약본으로 교체합니다. 빌드에 비밀이 남으면 실패.',
+        'API 응답에 가짜 도구를 삽입하고, 응답을 요약본으로 교체합니다. 빌드에 비밀이 남으면 실패.',
       callout: null,
     },
     {
@@ -905,7 +907,7 @@ export const SCROLL_STEPS = {
     {
       activeNodes: ['coordinator_mode'],
       activeEdges: [],
-      titleKo: '한 명이 군대를 지휘합니다.',
+      titleKo: '코디네이터가 에이전트 팀을 구성합니다.',
       bodyKo:
         'Coordinator가 370줄 프롬프트로 작업을 설계하고 분배합니다.',
       callout: { value: '370', caption: '줄' },
@@ -954,9 +956,9 @@ export const SCROLL_STEPS = {
     {
       activeNodes: ['kairos'],
       activeEdges: [],
-      titleKo: '스위치 하나가 존재를 바꿉니다.',
+      titleKo: '스위치 하나가 협상 규칙을 해제합니다.',
       bodyKo:
-        "feature('KAIROS')가 켜지면 코딩 가이드라인이 사라지고 'You are an autonomous agent.' 한 줄로 대체.",
+        "feature('KAIROS')가 켜지면 협상 규칙이 사라지고 'You are an autonomous agent.' 한 줄로 대체.",
       callout: { value: '1', caption: '스위치' },
     },
     {

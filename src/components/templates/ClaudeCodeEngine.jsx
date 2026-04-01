@@ -111,9 +111,9 @@ export function ClaudeCodeEngine() {
           <Box sx={{ py: { xs: 3, md: 4 } }}>
             <Typography
               variant="h5"
-              sx={{ color: CC.orange, fontWeight: 700, mb: 2 }}
+              sx={{ color: CC.orange, mb: 2 }}
             >
-              {'\u201C'}{act.pullQuote}{'\u201D'}
+              {act.pullQuote}
             </Typography>
             <Typography
               variant="body1"

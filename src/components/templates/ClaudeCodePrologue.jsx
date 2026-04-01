@@ -4,6 +4,9 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { IcebergSection } from '../container/IcebergSection';
+import { FloatingBuddies } from '../data-display/FloatingBuddies';
+import { ParallaxLayer } from '../scroll/ParallaxLayer';
+import { BG_PARALLAX_SPEED } from '../motion/constants';
 import { PROLOGUE, CC } from '@/data/claudeCodeExperimentData';
 
 const ASCII_LOGO = ` ██████ ██      █████  ██    ██ ██████  ███████
@@ -71,15 +74,11 @@ function ClawdModel() {
     };
   }, []);
 
-  useFrame(({ clock }) => {
+  useFrame(() => {
     if (!groupRef.current) return;
-    const t = clock.getElapsedTime();
     const s = scrollRef.current;
-
-    // 스크롤 → 천천히 Y축 회전
-    groupRef.current.rotation.y = s * 0.003;
-    // idle 부유 애니메이션
-    groupRef.current.position.y = -3 + Math.sin(t * 0.8) * 0.15;
+    groupRef.current.rotation.y = s * 0.005;
+    groupRef.current.position.y = -3 + s * 0.003;
   });
 
   return (
@@ -122,136 +121,146 @@ export function ClaudeCodePrologue() {
         position: 'relative',
       }}
     >
-      {/* Claw'd 3D — 우측 배치, 스크롤 연동 회전 */}
-      <Box
-        sx={{
-          position: 'absolute',
-          top: 0,
-          right: 0,
-          bottom: 0,
-          width: { xs: '50%', sm: '55%', md: '45%' },
-          pointerEvents: 'none',
-          opacity: { xs: 0.4, sm: 0.7, md: 1 },
-        }}
-      >
-        <Canvas
-          orthographic
-          camera={{
-            zoom: 80,
-            position: [10, 8, -10],
-            near: -100,
-            far: 100,
-          }}
-          style={{ width: '100%', height: '100%' }}
-          gl={{ alpha: true }}
-        >
-          <ambientLight intensity={0.3} />
-          <directionalLight position={[5, 10, -5]} intensity={0.5} />
-          <ClawdModel />
-        </Canvas>
-      </Box>
-
-      {/* Terminal chrome — traffic light dots */}
-      <Box sx={{ display: 'flex', gap: 1, mb: { xs: 4, md: 6 } }}>
-        <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#FF5F56' }} />
-        <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#FFBD2E' }} />
-        <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#27C93F' }} />
-      </Box>
-
-      {/* Welcome message — bordered box */}
-      <Box
-        sx={{
-          display: 'inline-flex',
-          gap: 1.5,
-          alignItems: 'center',
-          border: '1px solid',
-          borderColor: CC.orange,
-          px: { xs: 2, md: 3 },
-          py: 1.5,
-          mb: { xs: 4, md: 6 },
-        }}
-      >
-        <Typography
-          component="span"
+      {/* 배경 레이어 — Buddies + Claw'd 3D, 느린 패럴럭스 */}
+      <ParallaxLayer speed={BG_PARALLAX_SPEED} sx={{
+        position: 'absolute',
+        inset: 0,
+        pointerEvents: 'none',
+      }}>
+        <FloatingBuddies />
+        <Box
           sx={{
-            fontFamily: 'var(--font-mono, "IBM Plex Mono"), monospace',
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            bottom: 0,
+            width: { xs: '50%', sm: '55%', md: '45%' },
+            opacity: { xs: 0.4, sm: 0.7, md: 1 },
+          }}
+        >
+          <Canvas
+            orthographic
+            frameloop="always"
+            camera={{
+              zoom: 80,
+              position: [10, 8, -10],
+              near: -100,
+              far: 100,
+            }}
+            style={{ width: '100%', height: '100%' }}
+            gl={{ alpha: true }}
+          >
+            <ambientLight intensity={0.3} />
+            <directionalLight position={[5, 10, -5]} intensity={0.5} />
+            <ClawdModel />
+          </Canvas>
+        </Box>
+      </ParallaxLayer>
+
+      {/* 콘텐츠 레이어 — 전체를 하나로 감싸서 빠른 패럴럭스 */}
+      <ParallaxLayer speed={1.1} sx={{ position: 'relative', minHeight: '100vh' }}>
+        {/* Terminal chrome — traffic light dots */}
+        <Box sx={{ display: 'flex', gap: 1, mb: { xs: 4, md: 6 } }}>
+          <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#FF5F56' }} />
+          <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#FFBD2E' }} />
+          <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#27C93F' }} />
+        </Box>
+
+        {/* Welcome message — bordered box */}
+        <Box
+          sx={{
+            display: 'inline-flex',
+            gap: 1.5,
+            alignItems: 'center',
+            border: '1px solid',
+            borderColor: CC.orange,
+            px: { xs: 2, md: 3 },
+            py: 1.5,
+            mb: { xs: 4, md: 6 },
+          }}
+        >
+          <Typography
+            component="span"
+            sx={{
+              fontFamily: 'var(--font-mono, "IBM Plex Mono"), monospace',
+              color: CC.orange,
+              fontSize: { xs: '0.875rem', md: '1rem' },
+            }}
+          >
+            ✻
+          </Typography>
+          <Typography
+            component="span"
+            sx={{
+              fontFamily: 'var(--font-mono, "IBM Plex Mono"), monospace',
+              color: 'rgba(255,255,255,0.6)',
+              fontSize: { xs: '0.875rem', md: '1rem' },
+            }}
+          >
+            Welcome to the{' '}
+            <Box component="span" sx={{ color: '#FFFFFF', fontWeight: 700 }}>
+              Claude Code
+            </Box>
+            {' '}research preview!
+          </Typography>
+        </Box>
+
+        {/* ASCII art logo */}
+        <Box
+          component="pre"
+          sx={{
+            fontFamily: 'Menlo, Consolas, "Courier New", monospace',
             color: CC.orange,
-            fontSize: { xs: '0.875rem', md: '1rem' },
+            fontSize: { xs: '0.4rem', sm: '0.6rem', md: '0.9rem', lg: '1.1rem' },
+            lineHeight: { xs: 1.3, md: 1.2 },
+            letterSpacing: { xs: '0.05em', md: '0.08em' },
+            mb: { xs: 5, md: 8 },
+            m: 0,
+            overflow: 'hidden',
+            whiteSpace: 'pre',
           }}
         >
-          ✻
-        </Typography>
+          {ASCII_LOGO}
+        </Box>
+
+        {/* Prompt line — headline */}
         <Typography
-          component="span"
           sx={{
             fontFamily: 'var(--font-mono, "IBM Plex Mono"), monospace',
-            color: 'rgba(255,255,255,0.6)',
-            fontSize: { xs: '0.875rem', md: '1rem' },
+            color: '#FFFFFF',
+            fontSize: { xs: '1rem', md: '1.25rem' },
+            fontWeight: 700,
+            mb: 2,
           }}
         >
-          Welcome to the{' '}
-          <Box component="span" sx={{ color: '#FFFFFF', fontWeight: 700 }}>
-            Claude Code
-          </Box>
-          {' '}research preview!
+          {'> '}{PROLOGUE.headline}
         </Typography>
-      </Box>
 
-      {/* ASCII art logo */}
-      <Box
-        component="pre"
-        sx={{
-          fontFamily: 'Menlo, Consolas, "Courier New", monospace',
-          color: CC.orange,
-          fontSize: { xs: '0.4rem', sm: '0.6rem', md: '0.9rem', lg: '1.1rem' },
-          lineHeight: { xs: 1.3, md: 1.2 },
-          letterSpacing: { xs: '0.05em', md: '0.08em' },
-          mb: { xs: 5, md: 8 },
-          m: 0,
-          overflow: 'hidden',
-          whiteSpace: 'pre',
-        }}
-      >
-        {ASCII_LOGO}
-      </Box>
+        {/* Body */}
+        <Typography
+          variant="body1"
+          sx={{
+            fontFamily: 'var(--font-mono, "IBM Plex Mono"), monospace',
+            color: 'rgba(255,255,255,0.4)',
+            maxWidth: 720,
+            lineHeight: 1.8,
+            mb: 4,
+          }}
+        >
+          {PROLOGUE.body}
+        </Typography>
 
-      {/* Prompt line — headline */}
-      <Typography
-        sx={{
-          fontFamily: 'var(--font-mono, "IBM Plex Mono"), monospace',
-          color: '#FFFFFF',
-          fontSize: { xs: '1rem', md: '1.25rem' },
-          fontWeight: 700,
-          mb: 2,
-        }}
-      >
-        {'> '}{PROLOGUE.headline}
-      </Typography>
-
-      {/* Body */}
-      <Typography
-        variant="body1"
-        sx={{
-          fontFamily: 'var(--font-mono, "IBM Plex Mono"), monospace',
-          color: 'rgba(255,255,255,0.4)',
-          maxWidth: 720,
-          lineHeight: 1.8,
-          mb: 4,
-        }}
-      >
-        {PROLOGUE.body}
-      </Typography>
-
-      {/* Date stamp */}
-      <Typography
-        sx={{
-          fontFamily: 'var(--font-mono, "IBM Plex Mono"), monospace',
-          color: 'rgba(255,255,255,0.25)',
-          fontSize: '0.75rem',
-        }}
-      >
-        {PROLOGUE.date} · source leaked · 512,000 LOC
-      </Typography>
+        {/* Date stamp */}
+        <Typography
+          sx={{
+            fontFamily: 'var(--font-mono, "IBM Plex Mono"), monospace',
+            color: 'rgba(255,255,255,0.25)',
+            fontSize: '0.75rem',
+          }}
+        >
+          {PROLOGUE.date} · source leaked · 512,000 LOC
+        </Typography>
+      </ParallaxLayer>
     </IcebergSection>
   );
 }
