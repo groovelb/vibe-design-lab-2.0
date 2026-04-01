@@ -15,6 +15,7 @@ export const metadata = {
     '바이브 코딩, 내맘대로 되고 있나요? 디자인 사고로 제품을 설계하는 바이브 코딩 교육. 디자인 언어 체계와 커뮤니티 학습으로 시작하세요.',
   icons: {
     icon: '/favicon.svg',
+    apple: '/apple-touch-icon.png',
   },
   openGraph: {
     type: 'website',

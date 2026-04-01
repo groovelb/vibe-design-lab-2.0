@@ -2,8 +2,8 @@ import { CourseDetailPage } from '../../../src/components/page/CourseDetailPage'
 import { COURSES } from '@/data/landingMockData';
 
 const COURSE_META = {
-  'vibe-design-starter-kit': {
-    title: 'Vibe Design Starter Kit — 바이브 코딩 강의',
+  'starter-kit': {
+    title: 'Vibe Design Starter Kit — 디자인으로 배우는 바이브 코딩',
     description:
       '디자인 사고로 제품을 설계하는 바이브 코딩 강의. 프로덕트 디자이너·프론트엔드 개발자를 위한 4주 코호트. 디자인 시스템과 AI 언어 체계를 실전에 적용합니다.',
     ogDescription:
@@ -39,7 +39,7 @@ export async function generateStaticParams() {
 }
 
 const COURSE_JSONLD = {
-  'vibe-design-starter-kit': {
+  'starter-kit': {
     '@context': 'https://schema.org',
     '@type': 'Course',
     name: 'Vibe Design Starter Kit',

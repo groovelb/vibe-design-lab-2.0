@@ -11,7 +11,7 @@
 
 export const COURSES = [
   {
-    slug: 'vibe-design-starter-kit',
+    slug: 'starter-kit',
     title: 'Vibe Design Starter Kit',
     subtitle: '디자인 사고로 제품을 설계하는 바이브 코딩',
     target: '프로덕트 디자이너 · 프론트엔드 개발자',

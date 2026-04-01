@@ -66,7 +66,7 @@ export const Docs = {
       '디자인 사고로 제품을 설계하는 바이브 코딩. 준비된 Starter Kit과 함께 디자인 자체를 구현 수단으로 활용하는 연습을 합니다.',
     target: '프로덕트 디자이너 · 프론트엔드 개발자',
     ctaLabel: '자세히 보기',
-    ctaHref: '/course/vibe-design-starter-kit',
+    ctaHref: '/course/starter-kit',
   },
 };
 

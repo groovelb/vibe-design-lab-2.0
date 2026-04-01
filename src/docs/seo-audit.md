@@ -1,6 +1,7 @@
 # SEO 종합 점검 보고서
 
-> 작성일: 2026-03-30
+> 최초 작성일: 2026-03-30
+> 최종 업데이트: 2026-04-02
 > 대상: Vibe Design Lab Next.js 프로덕트 전체 페이지
 
 ---
@@ -13,95 +14,100 @@
 | **타겟** | 3~8년차 UX/UI 디자이너(70%), 프론트엔드 개발자(20%), PM(10%) |
 | **핵심 전환 경로** | Landing → Course → Course Detail → 수강 신청 CTA |
 | **언어** | 한국어 우선 (Phase 1), 브랜드 고유명사만 영문 |
-| **활성 페이지** | `/` (Landing), `/course/[slug]` (Course Detail) — 이 두 페이지가 전환 퍼널의 핵심 |
+| **활성 페이지** | `/` (Landing), `/course/starter-kit` (Course Detail), `/experiment/claude-code`, `/dictionary`, `/story`, `/experiment` |
 
 ---
 
-## 1. CRITICAL — 즉시 수정 필요
+## 1. 완료된 작업 (2026-04-02)
 
-### 1-1. description 언어 불일치
+### 1-1. Root Layout metadata 정비
 
-Root layout과 홈페이지의 description이 영문(`"Design language system for vibe coding education"`).
-타겟 사용자는 한국어 화자이고 한국 검색엔진(네이버/구글 코리아)에서의 노출이 중요.
-
----
-
-## 2. 페이지별 분석
-
-### Landing (`/`) — 전환 퍼널의 입구
-
-| 항목 | 현재 | 문제 |
+| 항목 | 이전 | 이후 |
 |------|------|------|
-| **title** | `Vibe Design Lab` | Root layout과 중복. 검색 결과에서 다른 페이지와 구분 불가 |
-| **description** | 영문 | 한국어 타겟인데 영문. 네이버/구글KR 검색 스니펫에 의미 전달 안 됨 |
-| **OG image** | 없음 | SNS 공유 시 이미지 없이 텍스트만 표시. 카카오톡/슬랙/트위터 미리보기 빈 박스 |
-| **OG title/description** | 없음 | SNS에서 title/description도 별도 지정 불가 |
-| **Structured Data** | 없음 | `Organization`, `WebSite`, `Course` 스키마 없음. 구글 리치 결과 불가 |
-| **Canonical URL** | 없음 | |
+| title default | `Vibe Design Lab` | `Vibe Design Lab — 디자이너를 위한 바이브 코딩 교육` |
+| title template | `%s \| Vibe Design Lab` | 동일 (유지) |
+| description | 한국어 ✓ | 키워드 최적화 한국어 |
+| openGraph | siteName만 | siteName + type + locale |
+| twitter | 없음 | `summary_large_image` |
+| robots | 없음 | `index: true, follow: true` |
+| canonical | 없음 | `https://vibedesignlab.net` |
+| icons | favicon.svg | favicon.svg + apple-touch-icon.png |
+| JSON-LD | 없음 | `Organization` + `WebSite` (@graph) |
 
-**권장 metadata:**
+### 1-2. 전 페이지 metadata 키워드 최적화
 
-```
-title: "Vibe Design Lab — 디자이너를 위한 바이브 코딩 교육"
-description: contents.md의 hero headline + subCopy 기반 한국어
-OG image: 1200×630 브랜드 키비주얼
-```
+| URL | title | og:title | og:description |
+|-----|-------|----------|---------------|
+| `/` | Vibe Design Lab — 디자이너를 위한 바이브 코딩 교육 | 동일 | 되는 대로가 아니라 의도대로. 디자인 언어 체계를 배우면 AI 결과물이 달라집니다. |
+| `/course/starter-kit` | Vibe Design Starter Kit — 디자인으로 배우는 바이브 코딩 | 동일 | 되는 대로가 아니라 의도대로. 디자인 언어 체계로 바이브 코딩의 결과를 통제하는 4주 코호트. |
+| `/dictionary` | Vibe Dictionary — AI가 이해하는 디자인 언어 체계 | layout 상속 | layout 상속 |
+| `/story` | 바이브 디자인이란 — Vibe Design Lab의 철학 | layout 상속 | layout 상속 |
+| `/experiment` | Brand Experiment — 같은 의도, 다른 언어 | layout 상속 | layout 상속 |
+| `/experiment/claude-code` | 클로드 코드 유출 — 512K 줄 속에 숨겨진 협상 프로토콜 | layout 상속 | layout 상속 |
 
-### Course Detail (`/course/[slug]`) — 전환 결정 페이지
+### 1-3. Course Detail — generateMetadata 전환
 
-| 항목 | 현재 | 문제 |
-|------|------|------|
-| **title** | 정적 하드코딩 | 동적 라우트(`[slug]`)인데 모든 코스가 동일한 제목 |
-| **description** | 정적 하드코딩 | 코스별 차별화 없음 |
-| **generateMetadata** | 미사용 | slug 기반 동적 메타데이터 생성 안 함 |
-| **OG image** | 없음 | 코스별 커버 이미지가 `/public/assets/course/`에 있는데 미활용 |
-| **Course 스키마** | 없음 | `Course` JSON-LD 없음. 구글 교육 관련 리치 결과 불가 |
-**특히 치명적**: 이 페이지가 수강 신청 전환이 일어나는 곳인데, SNS에서 공유될 때 아무런 미리보기 이미지가 없음. 카카오톡으로 링크를 보내면 빈 박스.
+- 정적 `export const metadata` → `generateMetadata({ params })` 동적 전환
+- `generateStaticParams()`로 SSG 유지
+- slug별 COURSE_META 매핑 (`starter-kit`)
+- Course JSON-LD 구조화 데이터 삽입 (provider, audience, duration, price, courseMode)
 
-### Story / Dictionary / Experiment — 보조 페이지
+### 1-4. robots.js
 
-| 페이지 | title | description | OG | 비고 |
-|--------|-------|-------------|-----|------|
-| `/story` | Story \| VDL | 한국어 ✓ | 없음 | Coming Soon 상태 |
-| `/dictionary` | Dictionary \| VDL | 한국어 ✓ | 없음 | Coming Soon 상태 |
-| `/experiment` | Experiment \| VDL | 한국어 ✓ | 없음 | Coming Soon 상태 |
+- 기본 전체 허용 (`*`)
+- AI 크롤러 명시 허용: `GPTBot`, `ClaudeBot`, `PerplexityBot`, `Google-Extended`
+- sitemap 선언: `https://vibedesignlab.net/sitemap.xml`
 
-보조 페이지들은 아직 Coming Soon이므로 우선순위는 낮지만, 최소한 브랜드 공통 OG 이미지는 필요.
+### 1-5. sitemap.js
+
+정적 5페이지 + 동적 코스 페이지. COURSES 데이터에서 slug 자동 생성.
+
+| URL | changeFrequency | priority |
+|-----|-----------------|----------|
+| `/` | weekly | 1.0 |
+| `/course/starter-kit` | weekly | 0.9 |
+| `/dictionary` | monthly | 0.8 |
+| `/story` | monthly | 0.7 |
+| `/experiment` | monthly | 0.6 |
+| `/experiment/claude-code` | monthly | 0.5 |
+
+### 1-6. Canonical URL
+
+전 페이지에 canonical 설정 완료. trailing slash 없이 통일.
+
+### 1-7. apple-touch-icon
+
+favicon.svg 기반 180×180 PNG 생성 → `public/apple-touch-icon.png`. layout.jsx에 등록.
+
+### 1-8. OG 이미지 현황
+
+| URL | OG 이미지 | 상태 |
+|-----|----------|------|
+| `/` | `app/opengraph-image.png` | 있음 |
+| `/course/starter-kit` | `app/course/[slug]/opengraph-image.png` | 있음 |
+| `/experiment/claude-code` | `app/experiment/claude-code/opengraph-image.png` | 있음 |
+| `/dictionary` | root fallback | — |
+| `/story` | root fallback | — |
+| `/experiment` | root fallback | — |
+
+### 1-9. 데이터 정합성 수정
+
+- `landingMockData.js` COURSES slug: `vibe-design-starter-kit` → `starter-kit` (실제 URL과 일치)
+- `CourseDetailCard.stories.jsx` ctaHref 동일하게 수정
 
 ---
 
-## 3. 누락 항목 전체 목록
+## 2. 남은 작업
 
-| 항목 | 상태 | 영향도 |
-|------|------|--------|
-| **OG image (전체)** | 없음 | 카카오톡/슬랙/SNS 공유 시 미리보기 없음 |
-| **Twitter card** | 없음 | X/트위터 공유 미리보기 없음 |
-| **apple-touch-icon** | 없음 | iOS 홈화면 추가 시 아이콘 없음 |
-| **robots.txt** | 없음 | 크롤러 가이드 없음 |
-| **sitemap.xml** | 없음 | 검색엔진 색인 지연 가능 |
-| **Structured Data (JSON-LD)** | 없음 | 리치 결과 불가 |
-| **Canonical URL** | 없음 | 중복 URL 문제 가능 |
-| **generateMetadata()** | 미사용 | 동적 라우트 코스별 SEO 불가 |
-| **한국어 description (홈)** | 영문 | 한국 검색엔진 스니펫 부실 |
+### Phase 3 (미래 — 콘텐츠/인프라 확장 시)
+
+| 항목 | 설명 | 선행 조건 |
+|------|------|----------|
+| 블로그/리소스 페이지 | 키워드 클러스터별 콘텐츠 제작 | 콘텐츠 전략 확정 |
+| llms.txt | AI 모델 사이트 이해용 | 콘텐츠 충분 시 |
+| Search Console 연동 | 소유권 확인 + sitemap 제출 + 색인 모니터링 | 배포 후 |
+| `/story` 앵커 페이지 | "바이브 디자인" 키워드 소유 | 콘텐츠 제작 시 |
 
 ---
 
-## 4. 우선순위 제안
-
-현재 활성 페이지(Landing, Course Detail)와 전환 퍼널 기준:
-
-### P0 (즉시)
-
-1. Landing/Course Detail description을 한국어로 변경
-
-### P1 (SNS 공유 품질)
-
-4. 브랜드 공통 OG 이미지 제작 (1200×630)
-5. Root layout에 openGraph/twitter metadata 추가
-6. Course Detail에 `generateMetadata()` 적용 + 코스별 OG 이미지
-
-### P2 (검색엔진 최적화)
-
-7. robots.txt + sitemap.xml 생성
-8. Organization/Course JSON-LD 구조화 데이터
-9. apple-touch-icon 추가
+*전략 명세: `src/docs/seo-specification.md` 참조*
