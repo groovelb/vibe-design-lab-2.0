@@ -341,50 +341,100 @@ export const MINI_GRAPHS = {
 // ============================================================
 export const TOOL_GRID = {
   public: [
-    { name: 'Agent', desc: '서브에이전트 생성' },
-    { name: 'Bash', desc: '셸 명령 실행' },
-    { name: 'Read', desc: '파일 읽기' },
-    { name: 'Edit', desc: '파일 편집 (diff)' },
-    { name: 'Write', desc: '파일 쓰기 (전체)' },
-    { name: 'Glob', desc: '파일 패턴 검색' },
-    { name: 'Grep', desc: '내용 검색 (ripgrep)' },
-    { name: 'Notebook', desc: 'Jupyter 노트북 편집' },
-    { name: 'WebFetch', desc: 'URL 페치' },
-    { name: 'WebSearch', desc: '웹 검색' },
-    { name: 'Todo', desc: 'TODO 관리' },
-    { name: 'TaskOutput', desc: '태스크 출력 읽기' },
-    { name: 'TaskStop', desc: '태스크 중지' },
-    { name: 'AskUser', desc: '사용자 질문' },
-    { name: 'Skill', desc: '스킬 호출' },
-    { name: 'Brief', desc: '브리프 모드 전환' },
+    {
+      category: '파일 시스템',
+      tools: [
+        { name: 'Read', desc: '파일 읽기' },
+        { name: 'Edit', desc: '파일 편집 (diff)' },
+        { name: 'Write', desc: '파일 쓰기 (전체)' },
+        { name: 'Glob', desc: '파일 패턴 검색' },
+        { name: 'Grep', desc: '내용 검색 (ripgrep)' },
+        { name: 'Notebook', desc: 'Jupyter 노트북 편집' },
+      ],
+    },
+    {
+      category: '실행',
+      tools: [
+        { name: 'Bash', desc: '셸 명령 실행' },
+        { name: 'Agent', desc: '서브에이전트 생성' },
+      ],
+    },
+    {
+      category: '웹',
+      tools: [
+        { name: 'WebFetch', desc: 'URL 페치' },
+        { name: 'WebSearch', desc: '웹 검색' },
+      ],
+    },
+    {
+      category: '태스크',
+      tools: [
+        { name: 'Todo', desc: 'TODO 관리' },
+        { name: 'TaskOutput', desc: '태스크 출력 읽기' },
+        { name: 'TaskStop', desc: '태스크 중지' },
+      ],
+    },
+    {
+      category: '제어',
+      tools: [
+        { name: 'AskUser', desc: '사용자 질문' },
+        { name: 'Skill', desc: '스킬 호출' },
+        { name: 'Brief', desc: '브리프 모드 전환' },
+      ],
+    },
   ],
   hidden: [
-    { name: 'Sleep', desc: '자율 에이전트 대기 — 5분 캐시 균형' },
-    { name: 'CronCreate', desc: '크론 작업 생성' },
-    { name: 'CronDelete', desc: '크론 작업 삭제' },
-    { name: 'CronList', desc: '크론 작업 목록 조회' },
-    { name: 'RemoteTrigger', desc: '클라우드 원격 에이전트 실행' },
-    { name: 'Monitor', desc: '백그라운드 프로세스 감시' },
-    { name: 'SendFile', desc: '사용자에게 파일 전송' },
-    { name: 'PushNotify', desc: '푸시 알림 발송' },
-    { name: 'SubscribePR', desc: 'PR 웹훅 구독' },
-    { name: 'WebBrowser', desc: '브라우저 제어' },
-    { name: 'CtxInspect', desc: '컨텍스트 검사' },
-    { name: 'TermCapture', desc: '터미널 캡처' },
-    { name: 'Snip', desc: '히스토리 스닙' },
-    { name: 'ListPeers', desc: '피어 에이전트 목록' },
-    { name: 'Workflow', desc: '워크플로우 스크립트 실행' },
-    { name: 'REPL', desc: 'VM 기반 도구 래핑 (내부 전용)' },
-    { name: 'SuggestPR', desc: '백그라운드 PR 제안 (내부 전용)' },
-    { name: 'Config', desc: '설정 관리 (내부 전용)' },
-    { name: 'Tungsten', desc: '내부 시스템 (미상)' },
-    { name: 'TeamCreate', desc: '에이전트 팀 생성' },
-    { name: 'TeamDelete', desc: '에이전트 팀 삭제' },
-    { name: 'SendMsg', desc: '에이전트 간 메시지 전송' },
-    { name: 'PlanMode', desc: '계획 모드 진입' },
-    { name: 'ExitPlan', desc: '계획 모드 탈출' },
-    { name: 'Worktree', desc: '격리 작업트리 진입' },
-    { name: 'Overflow', desc: '오버플로우 테스트' },
+    {
+      category: '자율 에이전트',
+      tools: [
+        { name: 'Sleep', desc: '자율 에이전트 대기 — 5분 캐시 균형' },
+        { name: 'CronCreate', desc: '크론 작업 생성' },
+        { name: 'CronDelete', desc: '크론 작업 삭제' },
+        { name: 'CronList', desc: '크론 작업 목록 조회' },
+        { name: 'RemoteTrigger', desc: '클라우드 원격 에이전트 실행' },
+        { name: 'Monitor', desc: '백그라운드 프로세스 감시' },
+      ],
+    },
+    {
+      category: '멀티에이전트',
+      tools: [
+        { name: 'TeamCreate', desc: '에이전트 팀 생성' },
+        { name: 'TeamDelete', desc: '에이전트 팀 삭제' },
+        { name: 'SendMsg', desc: '에이전트 간 메시지 전송' },
+        { name: 'ListPeers', desc: '피어 에이전트 목록' },
+      ],
+    },
+    {
+      category: '알림 · 통신',
+      tools: [
+        { name: 'SendFile', desc: '사용자에게 파일 전송' },
+        { name: 'PushNotify', desc: '푸시 알림 발송' },
+        { name: 'SubscribePR', desc: 'PR 웹훅 구독' },
+        { name: 'SuggestPR', desc: '백그라운드 PR 제안 (내부 전용)' },
+      ],
+    },
+    {
+      category: '계획 · 격리',
+      tools: [
+        { name: 'PlanMode', desc: '계획 모드 진입' },
+        { name: 'ExitPlan', desc: '계획 모드 탈출' },
+        { name: 'Worktree', desc: '격리 작업트리 진입' },
+      ],
+    },
+    {
+      category: '내부 런타임',
+      tools: [
+        { name: 'WebBrowser', desc: '브라우저 제어' },
+        { name: 'CtxInspect', desc: '컨텍스트 검사' },
+        { name: 'TermCapture', desc: '터미널 캡처' },
+        { name: 'Snip', desc: '히스토리 스닙' },
+        { name: 'Workflow', desc: '워크플로우 스크립트 실행' },
+        { name: 'REPL', desc: 'VM 기반 도구 래핑 (내부 전용)' },
+        { name: 'Config', desc: '설정 관리 (내부 전용)' },
+        { name: 'Tungsten', desc: '내부 시스템 (미상)' },
+        { name: 'Overflow', desc: '오버플로우 테스트' },
+      ],
+    },
   ],
 };
 
@@ -431,15 +481,24 @@ export const NODE_DESCRIPTIONS = {
 };
 
 // ============================================================
+// Dual Build Infra Stats — Act 1 비례 바 차트
+// ============================================================
+export const DUAL_BUILD_STATS = [
+  { label: '도구', public: 16, hidden: 26 },
+  { label: '컴파일 플래그', public: 28, hidden: 32 },
+  { label: '런타임 플래그', public: 0, hidden: 13 },
+];
+
+// ============================================================
 // submitMessage 알고리즘 — Act 2 코드 시각화
 // ============================================================
 export const SUBMIT_MESSAGE_STEPS = [
-  { line: 'buildSystemPrompt()', desc: '시스템 프롬프트 915줄 조립' },
-  { line: 'loadMemoryHierarchy()', desc: 'CLAUDE.md 6계층 메모리 로딩' },
-  { line: 'assembleToolPool()', desc: '42개 도구 → 필터링 → 동적 조립' },
-  { line: 'checkBudgetGates()', desc: '5-Gate 예산 시스템 적용' },
-  { line: 'yield* processStream()', desc: '7가지 메시지 타입 분기 처리' },
-  { line: 'compactIfNeeded()', desc: '컨텍스트 초과 시 자동 요약' },
+  { line: 'buildSystemPrompt()', desc: '시스템 프롬프트 915줄 조립', weight: 3 },
+  { line: 'loadMemoryHierarchy()', desc: 'CLAUDE.md 6계층 메모리 로딩', weight: 2 },
+  { line: 'assembleToolPool()', desc: '42개 도구 → 필터링 → 동적 조립', weight: 2 },
+  { line: 'checkBudgetGates()', desc: '5-Gate 예산 시스템 적용', weight: 1.5 },
+  { line: 'yield* processStream()', desc: '7가지 메시지 타입 분기 처리', weight: 4 },
+  { line: 'compactIfNeeded()', desc: '컨텍스트 초과 시 자동 요약', weight: 1.5 },
 ];
 
 // ============================================================
@@ -530,4 +589,414 @@ export const OUTRO = {
   ],
   closing:
     '파일을 읽고 코드를 짜주는 도구라고 알고 있었습니다. 512,000줄을 읽었습니다. 그건 운영체제였습니다.',
+};
+
+// ============================================================
+// Phase 1 — 코디네이터 워크플로우 (Act 4)
+// ============================================================
+export const COORDINATOR_WORKFLOW = [
+  { stage: 1, label: 'Research', executor: '병렬 워커', desc: '독립적 리서치 태스크 분배', isCoordinator: false },
+  { stage: 2, label: 'Synthesis', executor: '코디네이터 직접', desc: '발견 통합 — 위임 불가', isCoordinator: true },
+  { stage: 3, label: 'Implementation', executor: '워커', desc: '코드 작성/수정 실행', isCoordinator: false },
+  { stage: 4, label: 'Verification', executor: '워커', desc: '결과 검증/테스트', isCoordinator: false },
+];
+
+export const COORDINATOR_TOOLS = ['Agent', 'SendMessage', 'TaskStop', 'SyntheticOutput'];
+
+export const MESSAGE_TYPES = [
+  { type: 'shutdown_request', desc: '셧다운 요청' },
+  { type: 'shutdown_approved', desc: '셧다운 승인' },
+  { type: 'shutdown_rejected', desc: '셧다운 거부' },
+  { type: 'plan_approval', desc: '계획 승인/거절' },
+  { type: 'idle_notification', desc: '유휴 알림' },
+];
+
+// ============================================================
+// Phase 1 — MDM 3-플랫폼 (Act 3)
+// ============================================================
+export const MDM_PLATFORMS = [
+  {
+    platform: 'macOS',
+    mechanism: 'plist (Jamf/Mosyle)',
+    tool: 'plutil',
+    path: 'com.anthropic.claudecode.plist',
+  },
+  {
+    platform: 'Windows',
+    mechanism: 'Registry (GPO)',
+    tool: 'reg query',
+    path: 'HKLM\\SOFTWARE\\Policies\\ClaudeCode',
+  },
+  {
+    platform: 'Linux',
+    mechanism: 'JSON (file-based)',
+    tool: 'fs read',
+    path: '/etc/claude-code/managed-settings.json',
+  },
+];
+
+export const SETTINGS_PRIORITY = [
+  { level: 1, source: 'Remote Managed', desc: 'API 서버에서 동기화' },
+  { level: 2, source: 'MDM', desc: '관리자 전용 프로필' },
+  { level: 3, source: 'managed-settings.json', desc: '파일 기반 관리 설정' },
+  { level: 4, source: 'HKCU / user plist', desc: '사용자 레지스트리' },
+  { level: 5, source: '로컬 settings.json', desc: '최하위 사용자 설정' },
+];
+
+// ============================================================
+// Phase 1 — 메모리 계층 (Act 2)
+// ============================================================
+export const MEMORY_HIERARCHY = {
+  layers: [
+    { level: 1, name: 'Managed', path: '/etc/claude-code/CLAUDE.md', scope: '엔터프라이즈 전역' },
+    { level: 2, name: 'User', path: '~/.claude/CLAUDE.md', scope: '개인 전역' },
+    { level: 3, name: 'Project', path: 'CLAUDE.md', scope: '프로젝트별 (git)' },
+    { level: 4, name: 'Local', path: 'CLAUDE.local.md', scope: '프로젝트별 (gitignore)' },
+    { level: 5, name: 'AutoMem', path: 'memory/MEMORY.md', scope: '자동 메모리' },
+    { level: 6, name: 'TeamMem', path: 'memory/team/MEMORY.md', scope: '팀 메모리' },
+  ],
+  types: [
+    { type: 'user', desc: '역할/목표/전문성', visibility: 'always private' },
+    { type: 'feedback', desc: '작업 교정', visibility: 'default private' },
+    { type: 'project', desc: '진행 중 작업/버그', visibility: 'bias toward team' },
+    { type: 'reference', desc: '외부 시스템 포인터', visibility: 'usually team' },
+  ],
+  limits: { maxLines: 200, maxBytes: '25KB', maxFiles: 200, maxTopics: 5, maxIncludeDepth: 5 },
+};
+
+// ============================================================
+// Phase 1 — 피처 플래그 (Act 3)
+// ============================================================
+export const FEATURE_FLAGS = {
+  compile: {
+    total: 60,
+    exposed: 28,
+    internal: 32,
+    categories: [
+      { name: '자율 에이전트', count: 10, flags: ['PROACTIVE', 'KAIROS', 'DAEMON', 'AGENT_TRIGGERS'] },
+      { name: '메모리/컨텍스트', count: 7, flags: ['EXTRACT_MEMORIES', 'REACTIVE_COMPACT', 'CONTEXT_COLLAPSE'] },
+      { name: '멀티에이전트', count: 3, flags: ['COORDINATOR_MODE', 'FORK_SUBAGENT', 'VERIFICATION_AGENT'] },
+      { name: 'UI/UX', count: 6, flags: ['VOICE_MODE', 'BUDDY', 'QUICK_SEARCH', 'TERMINAL_PANEL'] },
+      { name: '보안/권한', count: 4, flags: ['TRANSCRIPT_CLASSIFIER', 'BASH_CLASSIFIER', 'ANTI_DISTILLATION_CC'] },
+      { name: '원격/IDE', count: 6, flags: ['BRIDGE_MODE', 'SSH_REMOTE', 'CCR_MIRROR', 'UDS_INBOX'] },
+      { name: '도구/스킬', count: 7, flags: ['CHICAGO_MCP', 'WEB_BROWSER_TOOL', 'MCP_SKILLS'] },
+    ],
+  },
+  runtime: [
+    { name: 'tengu_onyx_plover', category: 'autonomy' },
+    { name: 'tengu_cobalt_frost', category: 'experiment' },
+    { name: 'tengu_coral_fern', category: 'experiment' },
+    { name: 'tengu_herring_clock', category: 'memory' },
+    { name: 'tengu_passport_quail', category: 'memory' },
+    { name: 'tengu_session_memory', category: 'memory' },
+    { name: 'tengu_timber_lark', category: 'experiment' },
+    { name: 'tengu_amber_quartz_disabled', category: 'experiment' },
+    { name: 'tengu_harbor', category: 'experiment' },
+    { name: 'tengu_strap_foyer', category: 'experiment' },
+    { name: 'tengu_bramble_lintel', category: 'memory' },
+    { name: 'tengu_slate_thimble', category: 'experiment' },
+    { name: 'tengu_trace_lantern', category: 'telemetry' },
+  ],
+  note: '코드네임은 의도적으로 의미를 숨긴다. 여러분은 어떤 실험에 참가 중인지 알 수 없다.',
+};
+
+// ============================================================
+// Phase 2 — 퍼미션 모드 스펙트럼 (Act 3)
+// ============================================================
+export const PERMISSION_MODES = [
+  { mode: 'plan', label: 'Plan', desc: '읽기 전용, 파일 수정 불가', level: 1 },
+  { mode: 'default', label: 'Default', desc: '모든 도구에 사용자 승인 필요', level: 2 },
+  { mode: 'acceptEdits', label: 'Accept Edits', desc: '파일 편집 + 안전 FS 자동 허용', level: 3 },
+  { mode: 'auto', label: 'Auto', desc: 'AI 분류기가 자동 판정', level: 4, isInternal: true },
+  { mode: 'bypassPermissions', label: 'Bypass (YOLO)', desc: '모든 도구 무조건 허용', level: 5 },
+  { mode: 'dontAsk', label: "Don't Ask", desc: 'ask → deny 변환 (무인 모드)', level: 6 },
+];
+
+export const PERMISSION_RULE_SOURCES = [
+  'userSettings', 'projectSettings', 'localSettings', 'flagSettings',
+  'policySettings', 'cliArg', 'command', 'session',
+];
+
+export const DENIAL_LIMITS = { consecutive: 3, total: 20 };
+
+// ============================================================
+// Phase 2 — 부트 시퀀스 (Act 2)
+// ============================================================
+export const BOOT_PHASES = [
+  { phase: 0, label: 'cli.tsx', timing: '0–5ms', desc: '빠른 경로 분기', detail: '13개 fast-path 중 하나면 main.tsx 로딩 생략' },
+  {
+    phase: 1, label: 'main.tsx', timing: '~135ms', desc: '병렬 서브프로세스 발사',
+    parallel: [
+      { name: 'plutil', timing: '~30ms' },
+      { name: 'reg query', timing: '~30ms' },
+      { name: 'keychain OAuth', timing: '~32ms' },
+      { name: 'keychain API', timing: '~33ms' },
+    ],
+  },
+  { phase: 2, label: 'Commander', timing: '', desc: 'CLI 옵션/서브커맨드 빌드' },
+  { phase: 3, label: 'preAction', timing: '', desc: 'MDM 대기 + init() + 마이그레이션' },
+  { phase: 4, label: 'action', timing: '', desc: '권한/도구/MCP/setup 병렬화' },
+  { phase: 5, label: 'setup', timing: '', desc: '셋업 스크린 (15개 다이얼로그)' },
+  { phase: 6, label: 'REPL', timing: '', desc: 'React/Ink 마운트 + 지연 프리페치' },
+];
+
+// ============================================================
+// Phase 2 — Dream 5-Gate (Act 5)
+// ============================================================
+export const DREAM_GATES = [
+  { gate: 1, label: '활성화', threshold: 'enabled', timing: '0ms', desc: '드림 피처 활성 여부' },
+  { gate: 2, label: '시간 게이트', threshold: '24시간', timing: '~1ms', desc: '마지막 드림 이후 경과' },
+  { gate: 3, label: '스캔 쓰로틀', threshold: '10분', timing: '0ms', desc: '빈번한 재스캔 방지' },
+  { gate: 4, label: '세션 게이트', threshold: '5 세션', timing: '~10ms', desc: '최소 세션 수 충족' },
+  { gate: 5, label: '락 획득', threshold: 'PID 락', timing: '~5ms', desc: '단독 실행 보장' },
+];
+
+export const DREAM_PHASES = [
+  { phase: 1, label: 'Orient', desc: '메모리 디렉토리 탐색, 기존 토픽 파일 확인' },
+  { phase: 2, label: 'Gather', desc: '최근 로그/트랜스크립트에서 신호 수집' },
+  { phase: 3, label: 'Consolidate', desc: '새 정보를 기존 토픽 파일에 병합' },
+  { phase: 4, label: 'Prune', desc: 'MEMORY.md 200줄 이하 유지, 부실 포인터 제거' },
+];
+
+// ============================================================
+// Phase 2 — 버디 가챠 (Epilogue)
+// ============================================================
+export const BUDDY_GACHA = {
+  rarities: [
+    { tier: 'Common', weight: 60, stars: 1, floor: 5 },
+    { tier: 'Uncommon', weight: 25, stars: 2, floor: 15 },
+    { tier: 'Rare', weight: 10, stars: 3, floor: 25 },
+    { tier: 'Epic', weight: 4, stars: 4, floor: 35 },
+    { tier: 'Legendary', weight: 1, stars: 5, floor: 50 },
+  ],
+  shinyChance: '1%',
+  legendaryShiny: '0.01%',
+  eyes: ['·', '✦', '×', '◉', '@', '°'],
+  hats: [
+    { name: 'none', ascii: '' },
+    { name: 'crown', ascii: '\\^^^/' },
+    { name: 'tophat', ascii: '[___]' },
+    { name: 'propeller', ascii: '-+-' },
+    { name: 'halo', ascii: '( )' },
+    { name: 'wizard', ascii: '/^\\' },
+    { name: 'beanie', ascii: '(___)' },
+    { name: 'tinyduck', ascii: ',>' },
+  ],
+  stats: ['DEBUGGING', 'PATIENCE', 'CHAOS', 'WISDOM', 'SNARK'],
+  peakFormula: 'floor + 50 + rand(30)',
+  dumpFormula: 'floor - 10 + rand(15)',
+};
+
+// ============================================================
+// Scroll Steps — Sticky Node Explorer 스크롤 시퀀스
+// ============================================================
+
+/**
+ * 각 Step은 activeNodes/activeEdges를 누적 방식으로 정의.
+ * step 0 = 첫 노드만, 마지막 step = 전체 완성.
+ */
+export const SCROLL_STEPS = {
+  2: [
+    {
+      activeNodes: ['query_engine'],
+      activeEdges: [],
+      titleKo: '모든 대화는 단 하나의 함수를 통과합니다.',
+      bodyKo:
+        'submitMessage() — 1,297줄 AsyncGenerator. 여러분이 엔터를 누르면, 이 관문이 열립니다.',
+      callout: { value: '1,297', caption: '줄' },
+    },
+    {
+      activeNodes: ['query_engine', 'system_prompt'],
+      activeEdges: [['query_engine', 'system_prompt']],
+      titleKo: '915줄이 매 턴 조립됩니다.',
+      bodyKo:
+        '코딩 규칙, 안전 가이드, 도구 사용법. 자율 모드에서는 이 수백 줄이 한 줄로 대체됩니다.',
+      callout: { value: '915', caption: '줄' },
+    },
+    {
+      activeNodes: ['query_engine', 'system_prompt', 'tool_registry'],
+      activeEdges: [
+        ['query_engine', 'system_prompt'],
+        ['query_engine', 'tool_registry'],
+      ],
+      titleKo: '42개 도구가 동적으로 배치됩니다.',
+      bodyKo:
+        '3단계 파이프라인 → 피처 플래그 필터링 → 동적 조립. 여러분에게는 16개만 보입니다.',
+      callout: { value: '42', caption: '도구' },
+    },
+    {
+      activeNodes: ['query_engine', 'system_prompt', 'tool_registry', 'compact_service'],
+      activeEdges: [
+        ['query_engine', 'system_prompt'],
+        ['query_engine', 'tool_registry'],
+        ['query_engine', 'compact_service'],
+      ],
+      titleKo: '대화가 길어지면, 기억을 압축합니다.',
+      bodyKo:
+        '컨텍스트 창이 한계에 가까워지면 이전 메시지를 자동 요약합니다. 여러분은 이 과정을 인식하지 못합니다.',
+      callout: null,
+    },
+    {
+      activeNodes: ['query_engine', 'system_prompt', 'tool_registry', 'compact_service', 'claudemd', 'bun_runtime'],
+      activeEdges: [
+        ['query_engine', 'system_prompt'],
+        ['query_engine', 'tool_registry'],
+        ['query_engine', 'compact_service'],
+        ['system_prompt', 'claudemd'],
+        ['bun_runtime', 'tool_registry'],
+      ],
+      titleKo: '6계층 메모리가 바닥부터 쌓입니다.',
+      bodyKo:
+        '프로젝트 → 사용자 → 글로벌 설정이 계층적으로 로딩됩니다. Bun 런타임 위에서 전부 실행.',
+      callout: { value: '6', caption: '계층' },
+    },
+  ],
+  3: [
+    {
+      activeNodes: ['otel_pipeline'],
+      activeEdges: [],
+      titleKo: '739개 이벤트가 여러분을 지켜봅니다.',
+      bodyKo:
+        'OpenTelemetry 4개 파이프라인이 동시 가동. 전송 실패? 로컬 저장 → 다음 세션에 재전송.',
+      callout: { value: '739', caption: '이벤트' },
+    },
+    {
+      activeNodes: ['otel_pipeline', 'growthbook', 'feature_flags'],
+      activeEdges: [
+        ['otel_pipeline', 'growthbook'],
+        ['otel_pipeline', 'feature_flags'],
+      ],
+      titleKo: '89개 스위치가 두 제품의 경계를 결정합니다.',
+      bodyKo:
+        '컴파일타임 60개 + 런타임 29개. 사용자별 A/B 테스트가 실시간으로 돌아갑니다.',
+      callout: { value: '89', caption: '플래그' },
+    },
+    {
+      activeNodes: ['otel_pipeline', 'growthbook', 'feature_flags', 'anti_distillation', 'undercover_mode', 'secret_scanner'],
+      activeEdges: [
+        ['otel_pipeline', 'growthbook'],
+        ['otel_pipeline', 'feature_flags'],
+        ['growthbook', 'anti_distillation'],
+        ['feature_flags', 'undercover_mode'],
+        ['secret_scanner', 'anti_distillation'],
+      ],
+      titleKo: '보이지 않는 전쟁이 벌어지고 있습니다.',
+      bodyKo:
+        'API 응답에 가짜 도구를 주입하고, 응답을 요약본으로 교체합니다. 빌드에 비밀이 남으면 실패.',
+      callout: null,
+    },
+    {
+      activeNodes: ['otel_pipeline', 'growthbook', 'feature_flags', 'anti_distillation', 'undercover_mode', 'secret_scanner', 'mdm_system', 'remote_settings'],
+      activeEdges: [
+        ['otel_pipeline', 'growthbook'],
+        ['otel_pipeline', 'feature_flags'],
+        ['growthbook', 'anti_distillation'],
+        ['feature_flags', 'undercover_mode'],
+        ['secret_scanner', 'anti_distillation'],
+        ['mdm_system', 'remote_settings'],
+      ],
+      titleKo: '여러분의 설정은 우선순위 5번째입니다.',
+      bodyKo:
+        'IT 관리자가 macOS plist, Windows GPO, Linux JSON으로 원격 제어. 사용자 설정은 최하위.',
+      callout: { value: '5/5', caption: '우선순위' },
+    },
+  ],
+  4: [
+    {
+      activeNodes: ['coordinator_mode'],
+      activeEdges: [],
+      titleKo: '한 명이 군대를 지휘합니다.',
+      bodyKo:
+        'Coordinator가 370줄 프롬프트로 작업을 설계하고 분배합니다.',
+      callout: { value: '370', caption: '줄' },
+    },
+    {
+      activeNodes: ['coordinator_mode', 'agent_swarms', 'team_create'],
+      activeEdges: [
+        ['coordinator_mode', 'agent_swarms'],
+        ['coordinator_mode', 'team_create'],
+      ],
+      titleKo: '팀을 만들고, 역할을 부여합니다.',
+      bodyKo:
+        '연구→종합→구현→검증 4단계 파이프라인. 워커가 재귀적으로 또 워커를 만들 수 있습니다.',
+      callout: { value: '4', caption: '단계' },
+    },
+    {
+      activeNodes: ['coordinator_mode', 'agent_swarms', 'team_create', 'pane_backend', 'worktree_isolation'],
+      activeEdges: [
+        ['coordinator_mode', 'agent_swarms'],
+        ['coordinator_mode', 'team_create'],
+        ['agent_swarms', 'pane_backend'],
+        ['team_create', 'worktree_isolation'],
+      ],
+      titleKo: '각자의 방에서 독립적으로 일합니다.',
+      bodyKo:
+        'tmux 분할 창 = 독립 프로세스. git worktree = 격리 환경. 충돌 없이 병렬 작업.',
+      callout: null,
+    },
+    {
+      activeNodes: ['coordinator_mode', 'agent_swarms', 'team_create', 'pane_backend', 'worktree_isolation', 'send_message', 'shutdown_protocol'],
+      activeEdges: [
+        ['coordinator_mode', 'agent_swarms'],
+        ['coordinator_mode', 'team_create'],
+        ['agent_swarms', 'pane_backend'],
+        ['team_create', 'worktree_isolation'],
+        ['agent_swarms', 'send_message'],
+        ['send_message', 'shutdown_protocol'],
+      ],
+      titleKo: '거부할 수 있는 기계.',
+      bodyKo:
+        '리더가 셧다운을 요청하면 팀메이트가 거부합니다. 강제 종료 없이 기다립니다. 명령이 아니라 협상.',
+      callout: null,
+    },
+  ],
+  5: [
+    {
+      activeNodes: ['kairos'],
+      activeEdges: [],
+      titleKo: '스위치 하나가 존재를 바꿉니다.',
+      bodyKo:
+        "feature('KAIROS')가 켜지면 코딩 가이드라인이 사라지고 'You are an autonomous agent.' 한 줄로 대체.",
+      callout: { value: '1', caption: '스위치' },
+    },
+    {
+      activeNodes: ['kairos', 'proactive', 'daemon'],
+      activeEdges: [
+        ['kairos', 'proactive'],
+        ['kairos', 'daemon'],
+      ],
+      titleKo: '요청 없이 행동하고, 종료 없이 상주합니다.',
+      bodyKo:
+        '사용자가 시키지 않아도 자율적으로 행동 개시. 백그라운드에 데몬으로 상주합니다.',
+      callout: null,
+    },
+    {
+      activeNodes: ['kairos', 'proactive', 'daemon', 'sleep_tool', 'auto_dream'],
+      activeEdges: [
+        ['kairos', 'proactive'],
+        ['kairos', 'daemon'],
+        ['proactive', 'sleep_tool'],
+        ['kairos', 'auto_dream'],
+      ],
+      titleKo: '잠들면서도 기억을 정리합니다.',
+      bodyKo:
+        '5분마다 캐시 균형을 조절하고, 5-Gate 드림 시스템으로 메모리를 정리합니다.',
+      callout: { value: '5', caption: 'Gate' },
+    },
+    {
+      activeNodes: ['kairos', 'proactive', 'daemon', 'sleep_tool', 'auto_dream', 'cron_scheduler', 'remote_trigger'],
+      activeEdges: [
+        ['kairos', 'proactive'],
+        ['kairos', 'daemon'],
+        ['proactive', 'sleep_tool'],
+        ['kairos', 'auto_dream'],
+        ['daemon', 'cron_scheduler'],
+        ['cron_scheduler', 'remote_trigger'],
+      ],
+      titleKo: '미래를 예약하고, 클라우드에서 깨어납니다.',
+      bodyKo:
+        '크론 스케줄러로 미래 작업을 등록. HTTP 기반 원격 트리거로 독립 세션 실행.',
+      callout: null,
+    },
+  ],
 };

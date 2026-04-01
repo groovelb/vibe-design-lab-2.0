@@ -5,8 +5,11 @@ import { IcebergSection } from '../container/IcebergSection';
 import { DataCallout } from '../data-display/DataCallout';
 import { RevealCard } from '../card/RevealCard';
 import { MonolineDiagram } from '../data-display/MonolineDiagram';
-import { IcebergMiniGraph } from '../data-display/IcebergMiniGraph';
-import { ACTS, CALLOUTS, REVEALS, MINI_GRAPHS, SUB_KEYWORDS, NODE_DESCRIPTIONS, CC } from '@/data/claudeCodeExperimentData';
+import { StickyNodeExplorer } from '../data-display/StickyNodeExplorer';
+import {
+  ACTS, CALLOUTS, REVEALS, MINI_GRAPHS, SUB_KEYWORDS, NODE_DESCRIPTIONS,
+  DREAM_GATES, DREAM_PHASES, CC, SCROLL_STEPS,
+} from '@/data/claudeCodeExperimentData';
 
 const act = ACTS[4];
 
@@ -77,6 +80,7 @@ export function ClaudeCodeAutonomy() {
             fontFamily: 'var(--font-mono, "IBM Plex Mono"), monospace',
             fontWeight: 700,
             color: CC.black,
+            fontSize: { xs: '1.5rem', sm: '2rem', md: undefined },
           }}
         >
           You are an autonomous agent.
@@ -186,11 +190,81 @@ export function ClaudeCodeAutonomy() {
         </Box>
       ))}
 
+      {/* Dream 5-Gate + 4 Phases — 2컬럼 */}
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+          gap: { xs: 2, md: 3 },
+          mb: { xs: 5, md: 8 },
+        }}
+      >
+        {/* 5-Gate 시퀀스 */}
+        <Box sx={{ p: { xs: 3, md: 4 }, bgcolor: CC.blackCard }}>
+          <Typography variant="overline" sx={{ color: CC.orange, display: 'block', mb: 2 }}>
+            Dream 5-Gate Sequence
+          </Typography>
+          {DREAM_GATES.map((g, i) => {
+            const isLast = i === DREAM_GATES.length - 1;
+            return (
+              <Box key={g.gate} sx={{ display: 'flex', gap: 2, py: 1.5, alignItems: 'baseline' }}>
+                <Typography
+                  variant="code"
+                  sx={{ color: isLast ? CC.orange : 'text.secondary', minWidth: 20, flexShrink: 0 }}
+                >
+                  G{g.gate}
+                </Typography>
+                <Box sx={{ flex: 1 }}>
+                  <Typography variant="body2" sx={{ color: isLast ? CC.orange : 'text.primary', fontWeight: 600 }}>
+                    {g.label}
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                    {g.desc}
+                  </Typography>
+                </Box>
+                <Typography
+                  variant="code"
+                  sx={{ color: CC.orangeLight, flexShrink: 0, fontSize: '0.7rem' }}
+                >
+                  {g.threshold}
+                </Typography>
+              </Box>
+            );
+          })}
+        </Box>
+
+        {/* Dream 4 Phases */}
+        <Box sx={{ p: { xs: 3, md: 4 }, bgcolor: CC.blackCard }}>
+          <Typography variant="overline" sx={{ color: CC.orange, display: 'block', mb: 2 }}>
+            Dream Phases
+          </Typography>
+          {DREAM_PHASES.map((dp) => (
+            <Box key={dp.phase} sx={{ py: 2 }}>
+              <Box sx={{ display: 'flex', gap: 2, alignItems: 'baseline', mb: 0.5 }}>
+                <Typography
+                  variant="code"
+                  sx={{ color: CC.orange, minWidth: 20, flexShrink: 0 }}
+                >
+                  {dp.phase}
+                </Typography>
+                <Typography variant="body2" sx={{ color: CC.orangeLight, fontWeight: 700 }}>
+                  {dp.label}
+                </Typography>
+              </Box>
+              <Typography variant="body2" sx={{ color: 'text.secondary', pl: '36px' }}>
+                {dp.desc}
+              </Typography>
+            </Box>
+          ))}
+        </Box>
+      </Box>
+
       <MonolineDiagram variant="timeline" sx={{ mb: { xs: 6, md: 10 } }} />
 
-      <IcebergMiniGraph
+      <StickyNodeExplorer
         nodes={MINI_GRAPHS[5].nodes}
         edges={MINI_GRAPHS[5].edges}
+        steps={SCROLL_STEPS[5]}
         descriptions={NODE_DESCRIPTIONS[5]}
         sx={{ mb: { xs: 6, md: 10 } }}
       />

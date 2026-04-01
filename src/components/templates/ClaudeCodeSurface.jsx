@@ -1,86 +1,398 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { scaleLinear } from 'd3';
 import Box from '@mui/material/Box';
+import ButtonBase from '@mui/material/ButtonBase';
+import Collapse from '@mui/material/Collapse';
 import Typography from '@mui/material/Typography';
+import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
+import FolderOutlined from '@mui/icons-material/FolderOutlined';
+import PlayArrowOutlined from '@mui/icons-material/PlayArrowOutlined';
+import LanguageOutlined from '@mui/icons-material/LanguageOutlined';
+import ChecklistOutlined from '@mui/icons-material/ChecklistOutlined';
+import TuneOutlined from '@mui/icons-material/TuneOutlined';
+import SmartToyOutlined from '@mui/icons-material/SmartToyOutlined';
+import HubOutlined from '@mui/icons-material/HubOutlined';
+import CellTowerOutlined from '@mui/icons-material/CellTowerOutlined';
+import AccountTreeOutlined from '@mui/icons-material/AccountTreeOutlined';
+import MemoryOutlined from '@mui/icons-material/MemoryOutlined';
 import { IcebergSection } from '../container/IcebergSection';
-import { DataCallout } from '../data-display/DataCallout';
 import { RevealCard } from '../card/RevealCard';
-import { ACTS, CALLOUTS, REVEALS, DUAL_BUILD_COMPARISON, TOOL_GRID, CC } from '@/data/claudeCodeExperimentData';
+import { ACTS, CALLOUTS, REVEALS, DUAL_BUILD_COMPARISON, DUAL_BUILD_STATS, TOOL_GRID, CC } from '@/data/claudeCodeExperimentData';
+
+const CATEGORY_ICONS = {
+  '파일 시스템': FolderOutlined,
+  '실행': PlayArrowOutlined,
+  '웹': LanguageOutlined,
+  '태스크': ChecklistOutlined,
+  '제어': TuneOutlined,
+  '자율 에이전트': SmartToyOutlined,
+  '멀티에이전트': HubOutlined,
+  '알림 · 통신': CellTowerOutlined,
+  '계획 · 격리': AccountTreeOutlined,
+  '내부 런타임': MemoryOutlined,
+};
 
 const act = ACTS[0];
 
 /**
- * ToolColumn — 도구 목록 컬럼 (hover 인터랙션)
+ * ToolColumn — 도구 목록 컬럼 (카테고리 그룹 + hover 인터랙션)
  *
- * @param {Array<{name,desc}>} tools - 도구 배열 [Required]
+ * @param {Array<{category,tools}>} groups - 카테고리별 도구 그룹 [Required]
  * @param {string} header - 컬럼 헤더 [Required]
  * @param {boolean} isHidden - 비공개 도구 컬럼 여부 [Optional]
  * @param {{name,desc}|null} hoveredTool - 현재 hover 중인 도구 [Required]
  * @param {function} onHover - hover 콜백 [Required]
  */
-function ToolColumn({ tools, header, isHidden, hoveredTool, onHover }) {
+function ToolColumn({ groups, header, isHidden, hoveredTool, onHover }) {
+  const ROW = {
+    display: 'flex',
+    alignItems: 'center',
+    height: 44,
+    px: 3,
+    borderBottom: '1px solid',
+    borderColor: 'divider',
+    overflow: 'hidden',
+  };
+
   return (
     <Box>
-      <Box
-        sx={{
-          py: 2,
-          px: 3,
-          bgcolor: isHidden ? CC.orangeMuted : 'transparent',
-        }}
-      >
-        <Typography
-          variant="overline"
-          sx={{ color: isHidden ? CC.orange : 'text.primary' }}
-        >
+      <Box sx={{ ...ROW, bgcolor: isHidden ? CC.orangeMuted : 'transparent' }}>
+        <Typography variant="overline" sx={{ color: isHidden ? CC.orange : 'text.primary' }}>
           {header}
         </Typography>
       </Box>
-      {tools.map((tool) => {
-        const isActive = hoveredTool?.name === tool.name;
-        return (
-          <Box
-            key={tool.name}
-            onMouseEnter={() => onHover(tool)}
-            onMouseLeave={() => onHover(null)}
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              py: 1.5,
-              px: 3,
-              cursor: 'default',
-              bgcolor: isActive
-                ? (isHidden ? CC.orangeMuted : 'action.hover')
-                : 'transparent',
-              transition: 'background-color 0.15s',
-            }}
-          >
-            <Typography
-              variant="body2"
-              sx={{
-                fontFamily: 'var(--font-mono, "IBM Plex Mono"), monospace',
-                color: isActive
-                  ? (isHidden ? CC.orange : 'text.primary')
-                  : (isHidden ? 'text.secondary' : 'text.primary'),
-                fontWeight: isActive ? 600 : 400,
-              }}
-            >
-              {tool.name}
-            </Typography>
+      {groups.map((group) => (
+        <Box key={group.category}>
+          <Box sx={{ ...ROW, gap: 0.75 }}>
+            {(() => {
+              const Icon = CATEGORY_ICONS[group.category];
+              return Icon ? (
+                <Icon sx={{ fontSize: 14, color: isHidden ? CC.orangeLight : 'text.secondary' }} />
+              ) : null;
+            })()}
             <Typography
               variant="caption"
               sx={{
-                color: 'text.secondary',
-                display: { xs: 'none', sm: 'block' },
-                textAlign: 'right',
-                maxWidth: 200,
+                color: isHidden ? CC.orangeLight : 'text.secondary',
+                fontWeight: 700,
+                letterSpacing: '0.04em',
               }}
             >
-              {tool.desc}
+              {group.category}
             </Typography>
           </Box>
-        );
-      })}
+          {group.tools.map((tool) => {
+            const isActive = hoveredTool?.name === tool.name;
+            return (
+              <Box
+                key={tool.name}
+                onMouseEnter={() => onHover(tool)}
+                onMouseLeave={() => onHover(null)}
+                sx={{
+                  ...ROW,
+                  justifyContent: 'space-between',
+                  cursor: 'default',
+                  bgcolor: isActive
+                    ? (isHidden ? CC.orangeMuted : 'action.hover')
+                    : 'transparent',
+                  transition: 'background-color 0.15s',
+                }}
+              >
+                <Typography
+                  variant="body2"
+                  sx={{
+                    fontFamily: 'var(--font-mono, "IBM Plex Mono"), monospace',
+                    color: isActive
+                      ? (isHidden ? CC.orange : 'text.primary')
+                      : (isHidden ? 'text.secondary' : 'text.primary'),
+                    fontWeight: isActive ? 600 : 400,
+                  }}
+                >
+                  {tool.name}
+                </Typography>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    color: 'text.secondary',
+                    display: { xs: 'none', sm: 'block' },
+                    textAlign: 'right',
+                    maxWidth: 200,
+                  }}
+                >
+                  {tool.desc}
+                </Typography>
+              </Box>
+            );
+          })}
+        </Box>
+      ))}
+    </Box>
+  );
+}
+
+const MONO = 'var(--font-mono, "IBM Plex Mono"), monospace';
+const W = { white10: 'rgba(255,255,255,0.10)', white30: 'rgba(255,255,255,0.30)', white50: 'rgba(255,255,255,0.50)' };
+
+/**
+ * CalloutStrip — 수직 border 구분 + 카운터 애니메이션
+ */
+function CalloutStrip() {
+  const ref = useRef(null);
+  const [progress, setProgress] = useState(0);
+  const animated = useRef(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !animated.current) {
+          animated.current = true;
+          const dur = 1200;
+          const t0 = performance.now();
+          const step = (now) => {
+            const raw = Math.min((now - t0) / dur, 1);
+            setProgress(1 - (1 - raw) ** 3);
+            if (raw < 1) requestAnimationFrame(step);
+          };
+          requestAnimationFrame(step);
+        }
+      },
+      { threshold: 0.5 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  const items = CALLOUTS[1];
+
+  const formatValue = (val) => {
+    const num = parseInt(val.replace(/,/g, ''), 10);
+    if (Number.isNaN(num)) return val;
+    const current = Math.round(num * progress);
+    return num >= 1000 ? current.toLocaleString() : String(current);
+  };
+
+  return (
+    <Box
+      ref={ref}
+      sx={{
+        display: 'flex',
+        mb: { xs: 5, md: 8 },
+      }}
+    >
+      {items.map((c, i) => (
+        <Box
+          key={c.caption}
+          sx={{
+            flex: 1,
+            pl: i > 0 ? { xs: 2, md: 4 } : 0,
+            borderLeft: i > 0 ? '1px solid' : 'none',
+            borderColor: 'divider',
+          }}
+        >
+          <Typography
+            component="div"
+            sx={{
+              fontFamily: MONO,
+              fontVariantNumeric: 'tabular-nums',
+              fontSize: { xs: '3rem', md: '4.5rem' },
+              lineHeight: 1,
+              color: i === 0 ? CC.orange : 'text.primary',
+              fontWeight: 700,
+            }}
+          >
+            {formatValue(c.value)}
+          </Typography>
+          <Typography
+            variant="body2"
+            component="div"
+            sx={{ color: 'text.secondary', mt: 1 }}
+          >
+            {c.caption}
+          </Typography>
+        </Box>
+      ))}
+    </Box>
+  );
+}
+
+/**
+ * DualBuildChart — D3 스케일 + 스크롤 트리거 카운트업 애니메이션
+ */
+function DualBuildChart() {
+  const chartRef = useRef(null);
+  const [progress, setProgress] = useState(0);
+  const animated = useRef(false);
+
+  useEffect(() => {
+    const el = chartRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !animated.current) {
+          animated.current = true;
+          const dur = 1400;
+          const t0 = performance.now();
+          const step = (now) => {
+            const raw = Math.min((now - t0) / dur, 1);
+            setProgress(1 - (1 - raw) ** 3);
+            if (raw < 1) requestAnimationFrame(step);
+          };
+          requestAnimationFrame(step);
+        }
+      },
+      { threshold: 0.35 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  const margin = { top: 0, right: 120, bottom: 20, left: 0 };
+  const width = 960;
+  const barH = 44;
+  const gap = 16;
+  const innerH = DUAL_BUILD_STATS.length * (barH + gap) - gap;
+  const height = margin.top + innerH + margin.bottom;
+  const innerW = width - margin.left - margin.right;
+
+  const xScale = useMemo(() => {
+    const maxVal = Math.max(...DUAL_BUILD_STATS.map((d) => d.public + d.hidden));
+    return scaleLinear().domain([0, maxVal]).range([0, innerW]).nice();
+  }, [innerW]);
+
+  const ticks = useMemo(() => xScale.ticks(4), [xScale]);
+
+  return (
+    <Box ref={chartRef} sx={{ mb: { xs: 5, md: 8 } }}>
+      {/* 범례 */}
+      <Box sx={{ display: 'flex', gap: 3, mb: 1.5 }}>
+        {[
+          { color: W.white10, label: '공개' },
+          { color: CC.orange, label: '비공개' },
+        ].map((l) => (
+          <Box key={l.label} sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+            <Box sx={{ width: 10, height: 10, bgcolor: l.color, flexShrink: 0 }} />
+            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+              {l.label}
+            </Typography>
+          </Box>
+        ))}
+      </Box>
+
+      {/* 모바일 텍스트 폴백 */}
+      <Box sx={{ display: { xs: 'block', sm: 'none' } }}>
+        {DUAL_BUILD_STATS.map((row) => {
+          const total = row.public + row.hidden;
+          return (
+            <Box key={row.label} sx={{ display: 'flex', alignItems: 'center', gap: 1.5, py: 1 }}>
+              <Box sx={{ flex: 1, display: 'flex', height: 20 }}>
+                {row.public > 0 && (
+                  <Box sx={{ flex: row.public, bgcolor: W.white10 }} />
+                )}
+                <Box sx={{ flex: row.hidden, bgcolor: CC.orange, opacity: 0.78 }} />
+              </Box>
+              <Typography
+                variant="code"
+                sx={{ color: 'text.secondary', minWidth: 80, textAlign: 'right', fontSize: '0.7rem' }}
+              >
+                {Math.round(total * progress)} {row.label}
+              </Typography>
+            </Box>
+          );
+        })}
+      </Box>
+
+      <Box component="span" sx={{ display: { xs: 'none', sm: 'block' } }}>
+      <svg viewBox={`0 0 ${width} ${height}`} style={{ width: '100%', height: 'auto', display: 'block' }}>
+        <g transform={`translate(${margin.left},${margin.top})`}>
+          {/* 수직 그리드 */}
+          {ticks.map((t) => (
+            <line
+              key={t}
+              x1={xScale(t)} y1={0} x2={xScale(t)} y2={innerH}
+              stroke="rgba(255,255,255,0.06)" strokeWidth={1}
+            />
+          ))}
+
+          {/* 베이스 라인 */}
+          <line x1={0} y1={innerH} x2={innerW} y2={innerH} stroke={W.white10} strokeWidth={1} />
+
+          {/* 바 */}
+          {DUAL_BUILD_STATS.map((row, i) => {
+            const y = i * (barH + gap);
+            const total = row.public + row.hidden;
+            const wPub = xScale(row.public) * progress;
+            const wHid = xScale(row.hidden) * progress;
+            const dispPub = Math.round(row.public * progress);
+            const dispHid = Math.round(row.hidden * progress);
+            const dispTotal = Math.round(total * progress);
+
+            return (
+              <g key={row.label} transform={`translate(0,${y})`}>
+                {/* 공개 세그먼트 */}
+                {row.public > 0 && (
+                  <>
+                    <rect x={0} y={0} width={wPub} height={barH} fill={W.white10} rx={1} />
+                    {wPub > 22 && (
+                      <text
+                        x={wPub / 2} y={barH / 2}
+                        textAnchor="middle" dominantBaseline="central"
+                        fill={W.white50} fontSize={7.5} fontWeight={600} fontFamily={MONO}
+                      >
+                        {dispPub}
+                      </text>
+                    )}
+                    {progress > 0.1 && (
+                      <line x1={wPub} y1={0} x2={wPub} y2={barH} stroke={W.white30} strokeWidth={0.5} />
+                    )}
+                  </>
+                )}
+
+                {/* 비공개 세그먼트 */}
+                {wHid > 0 && (
+                  <rect
+                    x={wPub} y={0} width={wHid} height={barH}
+                    fill={CC.orange} opacity={0.78} rx={1}
+                  />
+                )}
+                {wHid > 22 && (
+                  <text
+                    x={wPub + wHid / 2} y={barH / 2}
+                    textAnchor="middle" dominantBaseline="central"
+                    fill={CC.black} fontSize={7.5} fontWeight={600} fontFamily={MONO}
+                  >
+                    {dispHid}
+                  </text>
+                )}
+
+                {/* 우측: 합계 + 라벨 */}
+                <text
+                  x={innerW + 10} y={barH / 2}
+                  textAnchor="start" dominantBaseline="central" fontFamily={MONO}
+                >
+                  <tspan fill={W.white50} fontSize={8} fontWeight={600}>{dispTotal}</tspan>
+                  <tspan fill={W.white30} fontSize={7.5} dx={5}>{row.label}</tspan>
+                </text>
+              </g>
+            );
+          })}
+
+          {/* 틱 라벨 */}
+          {ticks.map((t) => (
+            <text
+              key={t}
+              x={xScale(t)} y={innerH + 12}
+              textAnchor="middle"
+              fill={W.white30} fontSize={7.5} fontFamily={MONO}
+            >
+              {t}
+            </text>
+          ))}
+        </g>
+      </svg>
+      </Box>
     </Box>
   );
 }
@@ -92,6 +404,7 @@ function ToolColumn({ tools, header, isHidden, hoveredTool, onHover }) {
  */
 export function ClaudeCodeSurface() {
   const [hoveredTool, setHoveredTool] = useState(null);
+  const [tableOpen, setTableOpen] = useState(false);
 
   return (
     <IcebergSection
@@ -101,48 +414,88 @@ export function ClaudeCodeSurface() {
       tagline={act.tagline}
       transition={act.transition}
     >
-      {/* 핵심 수치 */}
-      <Box
-        sx={{
-          display: 'grid',
-          gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)' },
-          gap: { xs: 2, md: 3 },
-          mb: { xs: 5, md: 8 },
-        }}
-      >
-        {CALLOUTS[1].map((c, i) => (
-          <DataCallout
-            key={c.caption}
-            value={c.value}
-            caption={c.caption}
-            variant={i === 0 ? 'hero' : 'accent'}
-          />
-        ))}
-      </Box>
+      {/* 핵심 수치 — 수직 border 구분 + 카운터 */}
+      <CalloutStrip />
 
-      {/* 42개 도구 테이블 — 공개/비공개 2컬럼 */}
+      {/* 인프라 비례 차트 */}
+      <DualBuildChart />
+
+      {/* 42개 도구 테이블 — 미리보기 + 펼치기 */}
       <Box sx={{ mb: { xs: 5, md: 8 } }}>
+        {/* 테이블 영역: 접힌 상태에서 8 row(헤더+첫 카테고리) 노출 */}
         <Box
           sx={{
-            display: 'grid',
-            gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
-            gap: { xs: 0, md: 3 },
+            position: 'relative',
+            maxHeight: tableOpen ? 'none' : 44 * 8,
+            overflow: 'hidden',
+            transition: 'max-height 0.5s ease',
           }}
         >
-          <ToolColumn
-            tools={TOOL_GRID.public}
-            header="공개 — 16개"
-            hoveredTool={hoveredTool}
-            onHover={setHoveredTool}
-          />
-          <ToolColumn
-            tools={TOOL_GRID.hidden}
-            header="비공개 — 26개"
-            isHidden
-            hoveredTool={hoveredTool}
-            onHover={setHoveredTool}
-          />
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+              gap: { xs: 0, md: 3 },
+            }}
+          >
+            <ToolColumn
+              groups={TOOL_GRID.public}
+              header="공개 — 16개"
+              hoveredTool={hoveredTool}
+              onHover={setHoveredTool}
+            />
+            <ToolColumn
+              groups={TOOL_GRID.hidden}
+              header="비공개 — 26개"
+              isHidden
+              hoveredTool={hoveredTool}
+              onHover={setHoveredTool}
+            />
+          </Box>
+
+          {/* 그라데이션 페이드 */}
+          {!tableOpen && (
+            <Box
+              sx={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                height: 80,
+                background: 'linear-gradient(to bottom, transparent, #0A0A0A)',
+                pointerEvents: 'none',
+              }}
+            />
+          )}
         </Box>
+
+        {/* 토글 버튼 */}
+        <ButtonBase
+          onClick={() => setTableOpen((v) => !v)}
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 0.75,
+            width: '100%',
+            py: 2,
+            mt: 1,
+            borderBottom: '1px solid',
+            borderColor: 'divider',
+          }}
+        >
+          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+            {tableOpen ? '접기' : '나머지 도구 펼치기'}
+          </Typography>
+          <KeyboardArrowDownOutlined
+            sx={{
+              fontSize: 16,
+              color: 'text.secondary',
+              transition: 'transform 0.3s',
+              transform: tableOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+            }}
+          />
+        </ButtonBase>
 
         {/* 모바일: hover 설명 패널 */}
         <Box

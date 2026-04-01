@@ -37,19 +37,19 @@ const DEPTH_STYLES = {
     color: 'grey.950',
   },
   shallow: {
-    bgcolor: 'grey.900',
+    bgcolor: 'transparent',
     color: 'grey.100',
   },
   mid: {
-    bgcolor: 'grey.900',
+    bgcolor: 'transparent',
     color: 'grey.100',
   },
   deep: {
-    bgcolor: 'background.default',
+    bgcolor: 'transparent',
     color: 'grey.100',
   },
   abyss: {
-    bgcolor: 'background.default',
+    bgcolor: 'transparent',
     color: 'grey.200',
   },
 };

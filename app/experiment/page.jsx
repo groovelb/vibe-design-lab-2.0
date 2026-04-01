@@ -16,7 +16,6 @@ export default function ExperimentPage() {
       sx={{
         width: '100%',
         minHeight: '100vh',
-        bgcolor: 'background.default',
         py: { xs: 12, md: 16 },
       }}
     >

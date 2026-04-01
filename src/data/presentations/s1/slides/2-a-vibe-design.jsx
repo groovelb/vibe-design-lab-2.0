@@ -464,7 +464,7 @@ export const vibeDesignSlides = [
       <SlideHSplit>
         <SlideTypoStack
           title="바이브 디자인"
-          subtitle="바이브 코딩 환경에서 디자인 의도를 체계적 언어로 전달하는 방법론"
+          subtitle="바이브 코딩 환경에서 디자인 의도를 체계적으로 전달"
           body={'결과물의 품질을 결정하는 건 도구의 성능이 아니라\n언어의 정밀도입니다.'}
         />
         <SlideDescList

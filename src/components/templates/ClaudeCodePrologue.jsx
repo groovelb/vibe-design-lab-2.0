@@ -1,6 +1,8 @@
 'use client';
+import { useRef, useEffect, useMemo } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import { Canvas, useFrame } from '@react-three/fiber';
 import { IcebergSection } from '../container/IcebergSection';
 import { PROLOGUE, CC } from '@/data/claudeCodeExperimentData';
 
@@ -16,21 +18,139 @@ const ASCII_LOGO = ` ██████ ██      █████  ██    �
 ██      ██    ██ ██   ██ ██
  ██████  ██████  ██████  ███████`;
 
+/* ─── Claw'd 복셀 (PlayerExternal 기반, rapier 의존 제거) ─── */
+
+const CLAW_ORANGE = '#E57B55';
+const CLAW_BLACK = '#1A1A1A';
+
+function buildCharacterBlocks() {
+  const blocks = [];
+  const bodyW = 9;
+  const bodyOffset = -4;
+  const bodyD = 3;
+  const zOffset = -1;
+
+  for (const lx of [0, 2, 6, 8]) {
+    for (const lz of [0, 2]) {
+      for (let y = 0; y <= 2; y++) {
+        blocks.push({ x: lx + bodyOffset, y, z: lz + zOffset, color: CLAW_ORANGE });
+      }
+    }
+  }
+
+  for (let y = 3; y <= 5; y++) {
+    for (let x = 0; x < bodyW; x++) {
+      for (let z = 0; z < bodyD; z++) {
+        const color = (y === 4 && z === 0 && (x === 3 || x === 5)) ? CLAW_BLACK : CLAW_ORANGE;
+        blocks.push({ x: x + bodyOffset, y, z: z + zOffset, color });
+      }
+    }
+  }
+
+  for (let ax = 1; ax <= 2; ax++) {
+    for (let z = 0; z < bodyD; z++) {
+      blocks.push({ x: bodyOffset - ax, y: 4, z: z + zOffset, color: CLAW_ORANGE });
+      blocks.push({ x: bodyW + bodyOffset - 1 + ax, y: 4, z: z + zOffset, color: CLAW_ORANGE });
+    }
+  }
+
+  return blocks;
+}
+
+/** 스크롤 값을 R3F 씬 안으로 전달하는 브릿지 */
+const scrollRef = { current: 0 };
+
+function ClawdModel() {
+  const groupRef = useRef();
+
+  const { orangeBlocks, blackBlocks } = useMemo(() => {
+    const blocks = buildCharacterBlocks();
+    return {
+      orangeBlocks: blocks.filter((b) => b.color === CLAW_ORANGE),
+      blackBlocks: blocks.filter((b) => b.color === CLAW_BLACK),
+    };
+  }, []);
+
+  useFrame(({ clock }) => {
+    if (!groupRef.current) return;
+    const t = clock.getElapsedTime();
+    const s = scrollRef.current;
+
+    // 스크롤 → 천천히 Y축 회전
+    groupRef.current.rotation.y = s * 0.003;
+    // idle 부유 애니메이션
+    groupRef.current.position.y = -3 + Math.sin(t * 0.8) * 0.15;
+  });
+
+  return (
+    <group ref={groupRef} position={[0, -3, 0]} scale={0.3}>
+      {orangeBlocks.map((b, i) => (
+        <mesh key={`o-${i}`} position={[b.x, b.y, b.z]}>
+          <boxGeometry args={[1, 1, 1]} />
+          <meshStandardMaterial color={CLAW_ORANGE} roughness={0.85} />
+        </mesh>
+      ))}
+      {blackBlocks.map((b, i) => (
+        <mesh key={`b-${i}`} position={[b.x, b.y, b.z]}>
+          <boxGeometry args={[1, 1, 1]} />
+          <meshStandardMaterial color={CLAW_BLACK} roughness={0.9} />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
 /**
  * ClaudeCodePrologue
  *
  * § 0. 유출 — 터미널 컨셉 히어로 + ASCII 아트 로고.
  */
 export function ClaudeCodePrologue() {
+  useEffect(() => {
+    const onScroll = () => { scrollRef.current = window.scrollY; };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   return (
     <IcebergSection
       depth="deep"
       density="breathe"
       isMinHeight
       sx={{
-        bgcolor: '#1E1E1E !important',
+        background: 'linear-gradient(to bottom, var(--vdl-950) 75%, transparent) !important',
+        position: 'relative',
       }}
     >
+      {/* Claw'd 3D — 우측 배치, 스크롤 연동 회전 */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          bottom: 0,
+          width: { xs: '50%', sm: '55%', md: '45%' },
+          pointerEvents: 'none',
+          opacity: { xs: 0.4, sm: 0.7, md: 1 },
+        }}
+      >
+        <Canvas
+          orthographic
+          camera={{
+            zoom: 80,
+            position: [10, 8, -10],
+            near: -100,
+            far: 100,
+          }}
+          style={{ width: '100%', height: '100%' }}
+          gl={{ alpha: true }}
+        >
+          <ambientLight intensity={0.3} />
+          <directionalLight position={[5, 10, -5]} intensity={0.5} />
+          <ClawdModel />
+        </Canvas>
+      </Box>
+
       {/* Terminal chrome — traffic light dots */}
       <Box sx={{ display: 'flex', gap: 1, mb: { xs: 4, md: 6 } }}>
         <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#FF5F56' }} />
@@ -81,7 +201,7 @@ export function ClaudeCodePrologue() {
       <Box
         component="pre"
         sx={{
-          fontFamily: 'var(--font-mono, "IBM Plex Mono"), monospace',
+          fontFamily: 'Menlo, Consolas, "Courier New", monospace',
           color: CC.orange,
           fontSize: { xs: '0.4rem', sm: '0.6rem', md: '0.9rem', lg: '1.1rem' },
           lineHeight: { xs: 1.3, md: 1.2 },

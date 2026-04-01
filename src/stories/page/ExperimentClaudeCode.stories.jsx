@@ -1,3 +1,4 @@
+import { AmbientGrainedBackground } from '../../components/dynamic-color/AmbientGrainedBackground';
 import { ClaudeCodeExperimentPage } from '../../components/page/ClaudeCodeExperimentPage';
 
 export default {
@@ -27,5 +28,12 @@ AI 코딩 도구 소스 코드 512K LOC 유출 분석을
  * Prologue(밝은 배경) → 수면선 → Act 1–5(점진적 어둠) → Epilogue → Outro
  */
 export const FullPage = {
-  render: () => <ClaudeCodeExperimentPage />,
+  render: () => (
+    <>
+      <AmbientGrainedBackground />
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        <ClaudeCodeExperimentPage />
+      </div>
+    </>
+  ),
 };
