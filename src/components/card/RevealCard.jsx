@@ -28,8 +28,6 @@ const RevealCard = forwardRef(function RevealCard(
         sx={{
           py: { xs: 3, md: 4 },
           px: { xs: 2, md: 3 },
-          borderTop: '1px solid',
-          borderColor: 'divider',
           transition: 'background-color 0.2s',
           '&:hover': { bgcolor: 'rgba(255, 107, 44, 0.06)' },
           ...sx,

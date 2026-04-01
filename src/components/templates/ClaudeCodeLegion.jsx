@@ -82,8 +82,6 @@ export function ClaudeCodeLegion() {
                   gap: 2,
                   py: 2,
                   px: 2,
-                  borderBottom: '1px solid',
-                  borderColor: 'divider',
                   alignItems: 'baseline',
                   bgcolor: style.bg,
                 }}
@@ -118,9 +116,6 @@ export function ClaudeCodeLegion() {
               mt: 3,
               pt: 2,
               textAlign: 'center',
-              fontStyle: 'italic',
-              borderTop: '1px solid',
-              borderColor: 'divider',
             }}
           >
             {'\u201C'}명령-복종이 아니라 요청-협상. 거부권이 있는 도구는 도구가 아니다.{'\u201D'}

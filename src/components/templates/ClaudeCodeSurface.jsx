@@ -25,8 +25,6 @@ function ToolColumn({ tools, header, isHidden, hoveredTool, onHover }) {
         sx={{
           py: 2,
           px: 3,
-          borderBottom: '2px solid',
-          borderColor: isHidden ? CC.orange : 'text.primary',
           bgcolor: isHidden ? CC.orangeMuted : 'transparent',
         }}
       >
@@ -50,8 +48,6 @@ function ToolColumn({ tools, header, isHidden, hoveredTool, onHover }) {
               alignItems: 'center',
               py: 1.5,
               px: 3,
-              borderBottom: '1px solid',
-              borderColor: 'divider',
               cursor: 'default',
               bgcolor: isActive
                 ? (isHidden ? CC.orangeMuted : 'action.hover')
@@ -195,7 +191,6 @@ export function ClaudeCodeSurface() {
               sx={{
                 p: { xs: 3, md: 4 },
                 bgcolor: i === 1 ? CC.orangeMuted : 'action.hover',
-                borderTop: i === 1 ? `3px solid ${CC.orange}` : '3px solid transparent',
               }}
             >
               <Typography
@@ -215,8 +210,6 @@ export function ClaudeCodeSurface() {
                     display: 'flex',
                     justifyContent: 'space-between',
                     py: 1.5,
-                    borderBottom: '1px solid',
-                    borderColor: 'divider',
                   }}
                 >
                   <Typography variant="body2" sx={{ color: 'text.secondary' }}>

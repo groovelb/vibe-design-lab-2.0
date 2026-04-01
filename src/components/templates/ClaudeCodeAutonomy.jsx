@@ -106,7 +106,6 @@ export function ClaudeCodeAutonomy() {
                 sx={{
                   p: { xs: 3, md: 4 },
                   bgcolor: isLast ? CC.orangeMuted : CC.blackCard,
-                  borderTop: isLast ? `3px solid ${CC.orange}` : '3px solid transparent',
                 }}
               >
                 <Typography
@@ -156,7 +155,6 @@ export function ClaudeCodeAutonomy() {
             mb: { xs: 4, md: 6 },
             p: { xs: 3, md: 4 },
             bgcolor: CC.blackCard,
-            borderTop: `3px solid ${CC.orange}`,
           }}
         >
           <Typography

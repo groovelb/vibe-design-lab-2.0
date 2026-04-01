@@ -40,7 +40,6 @@ export function ClaudeCodeEngine() {
         <Box
           sx={{
             bgcolor: CC.blackCard,
-            borderTop: `3px solid ${CC.orange}`,
             p: { xs: 3, md: 4 },
           }}
         >
@@ -57,8 +56,6 @@ export function ClaudeCodeEngine() {
               sx={{
                 py: 1.5,
                 pl: { xs: 2, md: 3 },
-                borderBottom: '1px solid',
-                borderColor: 'divider',
               }}
             >
               <Typography variant="code" sx={{ color: 'text.primary' }}>

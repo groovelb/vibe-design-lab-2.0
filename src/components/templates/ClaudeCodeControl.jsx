@@ -40,7 +40,6 @@ export function ClaudeCodeControl() {
             sx={{
               p: { xs: 3, md: 4 },
               bgcolor: CC.blackCard,
-              borderTop: `3px solid ${CC.orange}`,
             }}
           >
             <Typography

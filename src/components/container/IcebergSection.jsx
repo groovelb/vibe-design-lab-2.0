@@ -2,7 +2,6 @@
 import { forwardRef } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
 import Container from '@mui/material/Container';
 import FadeTransition from '../motion/FadeTransition';
 
@@ -136,13 +135,6 @@ const IcebergSection = forwardRef(function IcebergSection(
         {/* Transition */}
         {transition && (
           <FadeTransition isTriggerOnView direction="up" delay={200}>
-            <Divider
-              sx={{
-                borderColor: depth === 'surface' ? 'grey.200' : 'divider',
-                mt: spacing.transitionMt,
-                mb: 4,
-              }}
-            />
             <Typography
               variant="body1"
               sx={{

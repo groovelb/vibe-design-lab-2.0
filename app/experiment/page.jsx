@@ -1,7 +1,7 @@
+import Link from 'next/link';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import Divider from '@mui/material/Divider';
-import { SectionContainer } from '@/components/container/SectionContainer';
+import Container from '@mui/material/Container';
 
 export const metadata = {
   title: 'Experiment',
@@ -11,95 +11,91 @@ export const metadata = {
 
 export default function ExperimentPage() {
   return (
-    <SectionContainer sx={{ minHeight: '100vh', display: 'flex', alignItems: 'center' }}>
-      <Box sx={{ width: '100%', maxWidth: 960 }}>
-        {/* Header line */}
-        <Divider sx={{ borderColor: 'divider', mb: 3 }} />
-
-        {/* Top row: label + status */}
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'baseline',
-            mb: 6,
-          }}
-        >
-          <Typography variant="overline" sx={{ color: 'text.secondary' }}>
-            Experiment
-          </Typography>
-          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            Coming Soon
-          </Typography>
-        </Box>
-
-        {/* Title */}
-        <Typography
-          variant="h2"
-          sx={{ color: 'text.primary', mb: 6, maxWidth: 640 }}
-        >
+    <Box
+      component="section"
+      sx={{
+        width: '100%',
+        minHeight: '100vh',
+        bgcolor: 'background.default',
+        py: { xs: 12, md: 16 },
+      }}
+    >
+      <Container maxWidth="xl">
+        <Typography variant="overline" sx={{ color: 'text.secondary', display: 'block', mb: 4 }}>
           Experiment
         </Typography>
 
-        <Divider sx={{ borderColor: 'divider', mb: 4 }} />
+        <Typography variant="h2" sx={{ color: 'text.primary', mb: { xs: 6, md: 8 } }}>
+          Experiment
+        </Typography>
 
-        {/* Description grid */}
+        {/* 3col Grid */}
         <Box
           sx={{
             display: 'grid',
-            gridTemplateColumns: { xs: '1fr', sm: '200px 1fr' },
-            gap: { xs: 1, sm: 4 },
-            mb: 3,
+            gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' },
+            gap: { xs: 2, md: 3 },
           }}
         >
-          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            정의
-          </Typography>
-          <Typography variant="body1" sx={{ color: 'text.secondary' }}>
-            Vibe Dictionary의 어휘 체계로 설계하고 바이브 코딩으로 구현한
-            가상의 브랜드·서비스 웹사이트.
-          </Typography>
+          {/* Claude Code */}
+          <Link href="/experiment/claude-code" style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+            <Box
+              sx={{
+                bgcolor: 'grey.900',
+                p: { xs: 3, md: 4 },
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                transition: 'background-color 0.2s',
+                '&:hover': { bgcolor: 'grey.800' },
+                '&:hover .experiment-card-arrow': { transform: 'translateX(4px)' },
+              }}
+            >
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 3 }}>
+                <Typography variant="overline" sx={{ color: '#FF6B2C' }}>
+                  2026. 3. 31.
+                </Typography>
+                <Typography
+                  variant="caption"
+                  sx={{ color: '#FF6B2C', bgcolor: 'rgba(255,107,44,0.10)', px: 1.5, py: 0.5 }}
+                >
+                  Report
+                </Typography>
+              </Box>
+
+              <Typography variant="h5" sx={{ color: 'text.primary', fontWeight: 700, mb: 2 }}>
+                Claude Code는 코딩 도구가 아니다
+              </Typography>
+
+              <Typography
+                variant="body2"
+                sx={{ color: 'text.secondary', mb: 4, flex: 1 }}
+              >
+                512,000줄의 TypeScript 소스코드 유출. 4계층 빙산 구조 속 9개의 키워드.
+              </Typography>
+
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    fontFamily: 'var(--font-mono, "IBM Plex Mono"), monospace',
+                    color: 'text.secondary',
+                  }}
+                >
+                  512K LOC · 6 Acts
+                </Typography>
+                <Typography
+                  className="experiment-card-arrow"
+                  variant="body1"
+                  sx={{ color: '#FF6B2C', transition: 'transform 0.2s' }}
+                >
+                  →
+                </Typography>
+              </Box>
+            </Box>
+          </Link>
         </Box>
-
-        <Divider sx={{ borderColor: 'divider', mb: 4 }} />
-
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: { xs: '1fr', sm: '200px 1fr' },
-            gap: { xs: 1, sm: 4 },
-            mb: 3,
-          }}
-        >
-          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            목적
-          </Typography>
-          <Typography variant="body1" sx={{ color: 'text.secondary' }}>
-            표준 어휘로 설계했을 때 결과물이 어떻게 달라지는지 확인하는 실험 프로젝트.
-            Before/After 비교를 통해 디자인 언어의 정밀도 차이를 기록한다.
-          </Typography>
-        </Box>
-
-        <Divider sx={{ borderColor: 'divider', mb: 4 }} />
-
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: { xs: '1fr', sm: '200px 1fr' },
-            gap: { xs: 1, sm: 4 },
-            mb: 3,
-          }}
-        >
-          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            공개 범위
-          </Typography>
-          <Typography variant="body1" sx={{ color: 'text.secondary' }}>
-            멤버십 회원에게 전체 소스 코드 공개.
-          </Typography>
-        </Box>
-
-        <Divider sx={{ borderColor: 'divider' }} />
-      </Box>
-    </SectionContainer>
+      </Container>
+    </Box>
   );
 }
