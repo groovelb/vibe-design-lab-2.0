@@ -27,7 +27,7 @@
 
     { "id": "query_engine", "label": "QueryEngine (1,297 lines)", "layer": "L2", "category": "engine", "act": 2, "file": "src/QueryEngine.ts" },
     { "id": "system_prompt", "label": "System Prompt Builder (915 lines)", "layer": "L2", "category": "engine", "act": 2, "file": "src/constants/prompts.ts" },
-    { "id": "tool_registry", "label": "Tool Registry (40+ tools)", "layer": "L2", "category": "engine", "act": 2, "file": "src/tools.ts" },
+    { "id": "tool_registry", "label": "Tool Registry (42 tools)", "layer": "L2", "category": "engine", "act": 2, "file": "src/tools.ts" },
     { "id": "tool_assembly", "label": "Tool Assembly Pipeline", "layer": "L2", "category": "engine", "act": 2 },
     { "id": "tool_use_context", "label": "ToolUseContext (40+ fields)", "layer": "L2", "category": "engine", "act": 2, "file": "src/Tool.ts" },
     { "id": "cache_boundary", "label": "Static/Dynamic Cache Boundary", "layer": "L2", "category": "optimization", "act": 2 },
@@ -55,7 +55,7 @@
     { "id": "sandbox", "label": "Sandbox System", "layer": "L2", "category": "security", "act": 3 },
     { "id": "commit_attribution", "label": "Commit Attribution Tracking", "layer": "L2", "category": "tracking", "act": 3 },
 
-    { "id": "feature_flags", "label": "60+ Feature Flags", "layer": "L3", "category": "control", "act": 3 },
+    { "id": "feature_flags", "label": "89 Feature Flags", "layer": "L3", "category": "control", "act": 3 },
     { "id": "dead_code_elim", "label": "Dead Code Elimination", "layer": "L3", "category": "build", "act": 3 },
     { "id": "growthbook", "label": "GrowthBook A/B Testing", "layer": "L3", "category": "control", "act": 3 },
     { "id": "otel_pipeline", "label": "OpenTelemetry Pipeline", "layer": "L3", "category": "telemetry", "act": 3 },
@@ -128,7 +128,7 @@
     { "source": "system_prompt", "target": "cyber_risk", "type": "includes", "label": "Always included", "act": 3 },
     { "source": "undercover_mode", "target": "system_prompt", "type": "modifies", "label": "Strips model identity", "act": 3 },
 
-    { "source": "tool_registry", "target": "tool_assembly", "type": "feeds", "label": "40+ tools", "act": 2 },
+    { "source": "tool_registry", "target": "tool_assembly", "type": "feeds", "label": "42 tools", "act": 2 },
     { "source": "tool_assembly", "target": "mcp_client", "type": "merges", "label": "MCP tool merge", "act": 2 },
     { "source": "tool_search", "target": "tool_registry", "type": "defers", "label": "Lazy tool loading", "act": 2 },
     { "source": "tool_registry", "target": "file_tools", "type": "contains", "label": "Read/Edit/Write", "act": 2 },

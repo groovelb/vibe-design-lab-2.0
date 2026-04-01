@@ -180,8 +180,8 @@
     ]
   },
   "tool_registry": {
-    "subtitle": "40개 이상 도구 관리 레지스트리",
-    "description_ko": "Tool Registry는 40개 이상의 도구를 관리하는 중앙 레지스트리다. 항상 활성화되는 핵심 16개 도구, 피처 플래그로 게이팅되는 조건부 도구, ant-only 내부 전용 도구를 분류하여 관리한다. feature() 호출은 esbuild가 컴파일 타임에 true/false로 치환하여 false 분기의 require()를 번들에서 완전히 제거하는 DCE(Dead Code Elimination) 패턴을 사용한다.",
+    "subtitle": "42개 도구 관리 레지스트리",
+    "description_ko": "Tool Registry는 42개 도구를 관리하는 중앙 레지스트리다. 항상 활성화되는 핵심 16개 도구, 피처 플래그로 게이팅되는 조건부 도구, ant-only 내부 전용 도구를 분류하여 관리한다. feature() 호출은 esbuild가 컴파일 타임에 true/false로 치환하여 false 분기의 require()를 번들에서 완전히 제거하는 DCE(Dead Code Elimination) 패턴을 사용한다.",
     "surprise": "외부 사용자의 Claude Code에는 SleepTool, REPLTool, TungstenTool 등의 코드가 물리적으로 존재하지 않는다. feature(false) 분기의 코드는 esbuild가 빌드 시 완전히 제거한다.",
     "visibility": "hidden",
     "file": "src/tools.ts",
@@ -738,8 +738,8 @@
     "children": []
   },
   "feature_flags": {
-    "subtitle": "60+ 컴파일타임 게이트",
-    "description_ko": "Claude Code의 모든 고급 기능은 60개 이상의 컴파일타임 피처 플래그 뒤에 숨겨져 있다. 외부 빌드에서는 전부 false로 설정되어 코드 자체가 제거되며, 내부(ant) 빌드에서만 선택적으로 활성화된다. PROACTIVE, KAIROS, DAEMON, COORDINATOR_MODE 같은 플래그가 L4 레이어 전체의 존재 여부를 결정하며, ANTI_DISTILLATION_CC, TRANSCRIPT_CLASSIFIER 같은 보안 플래그도 이 체계로 관리된다. 일부 기능은 컴파일 타임 + 런타임(GrowthBook) 이중 게이팅으로 작동한다.",
+    "subtitle": "89개 컴파일타임 게이트",
+    "description_ko": "Claude Code의 모든 고급 기능은 89개의 컴파일타임 피처 플래그 뒤에 숨겨져 있다. 외부 빌드에서는 전부 false로 설정되어 코드 자체가 제거되며, 내부(ant) 빌드에서만 선택적으로 활성화된다. PROACTIVE, KAIROS, DAEMON, COORDINATOR_MODE 같은 플래그가 L4 레이어 전체의 존재 여부를 결정하며, ANTI_DISTILLATION_CC, TRANSCRIPT_CLASSIFIER 같은 보안 플래그도 이 체계로 관리된다. 일부 기능은 컴파일 타임 + 런타임(GrowthBook) 이중 게이팅으로 작동한다.",
     "surprise": "ABLATION_BASELINE이라는 플래그는 항상 off으로 설계되었다 — '모든 기능이 꺼졌을 때'의 기준선을 측정하기 위한 것으로, A/B 테스트에서 새 기능의 순수 효과를 정확히 측정하기 위해 존재한다",
     "visibility": "secret",
     "file": "src/shims/bun-bundle.ts",

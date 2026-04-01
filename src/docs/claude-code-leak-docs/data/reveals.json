@@ -22,15 +22,15 @@
     "quote": "AgentTool 1,398줄 — 3갈래 분기"
   },
   {
-    "id": "reveal_40_plus_tools",
+    "id": "reveal_42_tools",
     "act": 1,
-    "title_ko": "40개 도구, 절반은 숨겨져 있다",
-    "description_ko": "사용자가 보는 도구는 Read, Edit, Bash 등 16개뿐이다. 하지만 피처 플래그 뒤에 SleepTool, CronTool, MonitorTool 등 24개 이상의 도구가 더 숨어 있었다. 외부 빌드에서는 코드 자체가 물리적으로 제거된다.",
+    "title_ko": "42개 도구, 26개는 존재 자체가 지워진다",
+    "description_ko": "사용자가 보는 도구는 Read, Edit, Bash 등 16개뿐이다. 나머지 26개(SleepTool, CronTool, MonitorTool 등)는 피처 플래그 뒤에 숨어 있고, 외부 빌드에서는 Dead Code Elimination으로 코드 자체가 물리적으로 삭제된다. 숨기는 게 아니라, 존재를 지운다.",
     "trigger_node": "tool_registry",
     "related_nodes": ["feature_flags", "dead_code_elim", "sleep_tool"],
     "surprise_level": 3,
     "category": "architecture",
-    "quote": "40+ 도구, 피처 플래그 게이팅"
+    "quote": "42개 도구, 16개만 공개"
   },
   {
     "id": "reveal_query_engine_heart",
@@ -77,15 +77,15 @@
     "quote": "permissionDenials — 거부 추적 배열"
   },
   {
-    "id": "reveal_651_tracking_events",
+    "id": "reveal_739_tracking_events",
     "act": 3,
-    "title_ko": "651개의 보이지 않는 눈",
-    "description_ko": "CLI 도구 하나에 651개 이상의 텔레메트리 이벤트가 내장되어 있다. 4개의 독립적 파이프라인이 동시에 작동하며, 전송 실패 시 로컬 디스크에 저장했다가 다음 세션에서 자동 재시도한다. 데이터를 잃지 않겠다는 집착적 설계다.",
+    "title_ko": "739개의 보이지 않는 눈",
+    "description_ko": "CLI 도구 하나에 739개의 텔레메트리 이벤트가 내장되어 있다. 4개의 독립적 파이프라인이 동시에 작동하며, 전송 실패 시 로컬 디스크에 저장했다가 다음 세션에서 자동 재시도한다. 데이터를 잃지 않겠다는 집착적 설계다.",
     "trigger_node": "otel_pipeline",
     "related_nodes": ["growthbook", "feature_flags"],
     "surprise_level": 5,
     "category": "surveillance",
-    "quote": "651+ tengu_* 이벤트, 4개 파이프라인"
+    "quote": "739 tengu_* 이벤트, 4개 파이프라인"
   },
   {
     "id": "reveal_undercover_mode",
