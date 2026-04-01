@@ -70,13 +70,13 @@ export const ACTS = [
     titleEn: 'Refusing Machine',
     tagline:
       '리더가 셧다운을 요청하면,\n에이전트는 거부할 수 있다.',
-    pullQuote: '거부할 수 있는 도구를 도구라고 부를 수 있을까요?',
+    pullQuote: '프로토콜에 shutdown_rejected 경로가 존재합니다. 강제 종료가 아니라 협상입니다.',
     layers: ['L4'],
     domains: ['orchestration'],
     transition:
       '인간-AI 사이만이 아니라, AI끼리도 협상합니다.\n그런데 코드에는 이 협상 자체를 해제하는 경로가 있었습니다.',
     description:
-      'Claude Code에는 여러 AI 에이전트가 팀으로 일하는 기능이 있습니다. 각 에이전트가 tmux 창에서 독립 프로세스로 돌아갑니다. 리더 에이전트가 셧다운을 요청하면, 팀원 에이전트가 "아직 작업 중입니다"라고 거부할 수 있습니다. 리더는 강제 종료하지 않고 기다립니다. 명령과 복종이 아니라 요청과 협상. 이 프로토콜은 인간-AI 사이에서만 작동하는 게 아니었습니다. AI끼리도 같은 구조로 협상하고 있었습니다.',
+      'Claude Code에는 여러 AI 에이전트가 팀으로 일하는 기능이 있습니다. 각 에이전트가 tmux 창에서 독립 프로세스로 돌아갑니다. 리더 에이전트가 셧다운을 요청하면, 팀원 에이전트가 "아직 작업 중입니다"라고 거부할 수 있습니다. 리더는 강제 종료하지 않고 기다립니다. 명령과 복종이 아니라 요청과 협상. 이 프로토콜은 인간-AI 사이에서만 작동하는 게 아니었습니다. AI끼리도 같은 메시지 프로토콜이 적용됩니다.',
   },
   {
     act: 5,
@@ -84,12 +84,12 @@ export const ACTS = [
     titleEn: 'Awakening Switch',
     tagline:
       '협상 규칙 수백 줄이 사라지고, 한 줄로 대체됩니다.\n"You are an autonomous agent."',
-    pullQuote: '협상 없는 AI는 어떻게 행동하는가. 이미 설계되어 있었습니다.',
+    pullQuote: 'KAIROS 플래그가 켜지면, 협상 규칙이 해제된 자율 모드 코드가 활성화됩니다.',
     layers: ['L4'],
     domains: ['autonomy'],
     transition: '그리고 자율 모드 코드 옆에, 한 가지가 더 있었습니다.',
     description:
-      "feature('KAIROS') 스위치 하나가 켜지면, 수백 줄의 협상 규칙이 전부 사라집니다. 한 줄로 대체됩니다. 'You are an autonomous agent.' 크론 스케줄러로 미래 작업을 예약하고, 데몬으로 백그라운드에 상주하고, 5분마다 캐시를 관리하면서 자기 비용까지 계산합니다. 이것은 협상 프로토콜의 해제입니다. 이 코드는 미완성이 아닙니다. 프로덕션 수준으로 완성되어 있지만, 의도적으로 꺼져 있습니다.",
+      "feature('KAIROS') 플래그가 켜지면, 수백 줄의 협상 규칙이 전부 사라집니다. 한 줄로 대체됩니다. 'You are an autonomous agent.' 크론 스케줄러, 데몬 상주, 5분 주기 캐시 관리, 비용 계산 로직이 포함되어 있습니다. 이 코드는 구현되어 있고, 피처 플래그로 비활성화된 상태입니다.",
   },
   {
     act: 'epilogue',
@@ -115,7 +115,7 @@ export const REVEALS = {
       id: 'reveal_dual_build',
       titleKo: '42개 도구, 26개는 빌드에서 삭제됩니다',
       descriptionKo:
-        '여러분에게 보이는 도구는 16개입니다. 하지만 소스코드에는 42개가 있었습니다. SleepTool, CronTool, MonitorTool 같은 26개 도구가 피처 플래그 뒤에 숨겨져 있었죠. 외부 빌드에서는 Dead Code Elimination이라는 기술로 코드 자체가 물리적으로 삭제됩니다. 숨긴 게 아니라, 존재를 지운 겁니다.',
+        '소스코드에는 42개 도구가 정의되어 있습니다. 외부 빌드에서는 피처 플래그가 꺼진 26개(SleepTool, CronTool, MonitorTool 등)가 Dead Code Elimination으로 물리적으로 제거됩니다. 결과적으로 외부 사용자에게는 16개만 노출됩니다.',
       quote: 'feature(false) → Dead Code Elimination',
       surpriseLevel: 4,
     },
@@ -151,7 +151,7 @@ export const REVEALS = {
       id: 'reveal_739_tracking_events',
       titleKo: '739개 이벤트: 비대칭 정보의 규모',
       descriptionKo:
-        'CLI 도구 하나에 739개 이상의 추적 이벤트가 내장되어 있습니다. 4개 독립 파이프라인이 동시에 작동합니다. 전송에 실패하면 ~/.claude/telemetry/에 로컬 저장 후 다음 세션에서 재시도합니다. 이 데이터가 더 나은 응답을 만드는 데 쓰이지만, 수집 목록 자체는 공개되지 않습니다.',
+        'CLI 도구 하나에 739개 이상의 추적 이벤트가 내장되어 있습니다. 4개 독립 파이프라인이 동시에 작동합니다. 전송에 실패하면 ~/.claude/telemetry/에 로컬 저장 후 다음 세션에서 재시도합니다. 수집 항목의 전체 목록과 용도는 공개되지 않습니다.',
       quote: '739+ 이벤트, 4 파이프라인, 로컬 저장 → 재전송',
       surpriseLevel: 5,
     },
