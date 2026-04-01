@@ -32,54 +32,52 @@
 
 ## 2. 내러티브 아크 (5막 구조)
 
-### Act 1 — "터미널의 동반자" (Surface)
-> *당신이 알고 있는 Claude Code*
+### Act 1 — "이중 빌드" (Surface)
+> *Anthropic이 쓰는 Claude Code에는 도구가 42개다. 당신 것에는 16개.*
 
 - 도입: 유출 사건 경위 (npm .map 파일 → R2 버킷 → 512K LOC)
-- 사용자가 익숙한 기능들 훑기
-- **전환점**: "하지만 이게 전부가 아니었습니다"
+- 42개 도구 중 16개만 공개, 89개 피처 플래그, excluded-strings.txt 이중 삭제 검증
+- **전환점**: "두 개의 제품이 있다는 건 알았다. 당신이 받은 쪽의 내부를 읽었다."
 
-### Act 2 — "46,000줄의 심장" (Engine)
-> *하나의 질문이 답이 되기까지*
+### Act 2 — "단일 관문" (Engine)
+> *한 줄 입력하면 1,297줄이 실행된다.*
 
-- QueryEngine의 실행 루프 시각화 (입력 → API → 도구 루프 → 출력)
-- `buildTool()` 팩토리 — 42개 도구가 어떻게 조립되는지
-- React + Ink — 터미널이 실은 브라우저와 같은 방식으로 렌더링된다는 놀라움
-- Bun 런타임 — Node.js가 아닌 이유
+- submitMessage() 1,297줄 AsyncGenerator — 모든 대화의 단일 진입점
+- 시스템 프롬프트 915줄, 42개 도구 동적 조립, CLAUDE.md 6계층 메모리
+- 5-Gate 예산 시스템 (토큰/비용/시간/abort/tombstone)
+- React + Ink 터미널 렌더링, Bun 런타임
 
-### Act 3 — "보이지 않는 눈" (Control)
-> *Anthropic은 무엇을 보고 있는가*
+### Act 3 — "단방향 거울" (Control)
+> *739개 이벤트가 수집된다. 전송 실패하면 저장했다가 다음 세션에 재전송한다.*
 
-- GrowthBook — 사용자마다 다른 기능을 보여주는 A/B 테스트
-- OpenTelemetry → gRPC → BigQuery — 데이터 수집 파이프라인
-- MDM + policyLimits + remoteManagedSettings — 기업 원격 제어
-- 28개 피처 플래그 — 기능의 on/off 스위치
-- **반전**: "관찰만 하는 게 아닙니다. 제어하고 있습니다."
+- OpenTelemetry 4개 파이프라인, 739개 텔레메트리 이벤트
+- GrowthBook A/B 테스트, 89개 피처 플래그
+- MDM + 5-Tier 설정 우선순위 — 사용자 설정이 마지막
+- Anti-Distillation — API 응답에 가짜 도구 주입
+- **반전**: "사용자는 도구의 내부를 볼 수 없지만, 도구는 사용자의 모든 행동을 본다."
 
-### Act 4 — "깨어나는 군단" (Swarm)
-> *단일 에이전트에서 멀티에이전트 군단으로*
+### Act 4 — "거부하는 기계" (Orchestration)
+> *리더가 셧다운을 요청하면, 에이전트는 거부할 수 있다.*
 
-- TeamCreateTool — 리더가 팀을 소환
-- SendMessageTool — 에이전트 간 통신 프로토콜
-- Coordinator Mode — 연구→종합→구현→검증 4단계 파이프라인
-- tmux/iTerm2에서 병렬로 뛰는 에이전트들
-- **클라이맥스**: "코드를 짜는 건 하나의 Claude가 아닙니다. 군단입니다."
+- Coordinator가 팀 생성, tmux 분할 창에서 독립 프로세스 실행
+- 파일 기반 메일박스 통신 (lockfile + 10회 재시도)
+- shutdown_rejected — 팀메이트가 리더의 셧다운 요청을 거부
+- **클라이맥스**: "명령-복종이 아니라 요청-협상. 거부권이 있는 도구는 도구가 아니다."
 
-### Act 5 — "잠들지 않는 코드" (Autonomy)
-> *Claude가 스스로 깨어나는 미래*
+### Act 5 — "각성 스위치" (Autonomy)
+> *시스템 프롬프트가 통째로 바뀐다. "You are an autonomous agent."*
 
-- KAIROS — 파일 전송, 푸시 알림, GitHub 웹훅 구독, Dream
-- PROACTIVE — 사용자 명령 없이 자율 행동
-- DAEMON — 백그라운드에서 항상 대기하는 슈퍼바이저
-- CronScheduler — "매일 오전 9시에 코드 리뷰 해줘"
-- RemoteTrigger — 외부에서 HTTP로 에이전트 깨우기
-- **결말**: "Claude Code는 도구가 아닙니다. 잠재된 자율 에이전트 플랫폼입니다."
+- feature('KAIROS') 하나로 915줄 프롬프트가 1줄로 대체
+- DAEMON 백그라운드 상주, CronScheduler 미래 작업 등록
+- DECSET 1004 터미널 포커스 감지 — 보고 있으면 협력적, 안 보면 과감하게
+- SleepTool 5분 캐시 균형, AutoDream 5-Gate 메모리 통합
+- **결말**: "코드는 프로덕션 수준이다. 기술적 미완성이 아니라 의도적으로 꺼 놓은 것이다."
 
-### Epilogue — "buddy/"
-> *512,000줄 코드 속에 숨겨진 가상 펫*
+### Epilogue — "friend"
+> *512,000줄 코드 속에서, 누군가는 SALT = 'friend'를 입력했다.*
 
-- 18종의 종족, 5단계 희귀도, 1% Shiny
-- 개발팀의 인간적 면모
+- 18종 ASCII 생명체, Mulberry32 결정론적 가챠, SALT='friend-2026-401'
+- 해시 솔트에 아무 문자열이나 넣을 수 있었지만 누군가가 'friend'를 선택했다
 - 여운을 남기는 가벼운 마무리
 
 ---

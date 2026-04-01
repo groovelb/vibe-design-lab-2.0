@@ -80,7 +80,7 @@
 |----|-------|------|
 | `query_engine` | QueryEngine (1,297줄) | **핵심 엔진** — async generator 실행 루프, API 스트리밍, 도구 루프 |
 | `system_prompt` | System Prompt Builder (915줄) | 정적/동적 분리 프롬프트 조립기, 15+ 동적 섹션 |
-| `tool_registry` | Tool Registry (40+) | 전체 도구 목록 관리, feature-gated 포함/제외 |
+| `tool_registry` | Tool Registry (42) | 전체 도구 목록 관리, feature-gated 포함/제외 |
 | `tool_assembly` | Tool Assembly Pipeline | 3단계: getAllBaseTools → getTools → assembleToolPool |
 | `tool_use_context` | ToolUseContext (40+ 필드) | 도구 실행에 필요한 모든 컨텍스트 객체 |
 | `cache_boundary` | Static/Dynamic Cache Boundary | 프롬프트 캐시 효율을 위한 정적/동적 분리선 |
@@ -135,7 +135,7 @@
 | ID | Label | 설명 |
 |----|-------|------|
 | `otel_pipeline` | OpenTelemetry Pipeline | 4-layer 수집: 1P OTEL, Datadog, BigQuery, 3P OTLP |
-| `feature_flags` | 60+ Feature Flags | 컴파일타임 DCE + 런타임 GrowthBook 이중 게이팅 |
+| `feature_flags` | 89 Feature Flags | 컴파일타임 DCE + 런타임 GrowthBook 이중 게이팅 |
 | `dead_code_elim` | Dead Code Elimination | `feature(false)` 분기를 빌드 시 완전 제거 |
 | `growthbook` | GrowthBook A/B Testing | 서버사이드 실험 평가, tengu_* 코드네임, 노출 추적 |
 
@@ -183,7 +183,7 @@
 
 | ID | Label | 설명 |
 |----|-------|------|
-| `kairos` | KAIROS Subsystem | 자율 에이전트 기능의 상위 컨테이너 (70+ 파일) |
+| `kairos` | KAIROS Subsystem | 자율 에이전트 기능의 상위 컨테이너 (70 파일) |
 | `proactive` | PROACTIVE Mode | 사용자 명령 없이 자율 행동 개시 |
 | `daemon` | DAEMON Mode | 터미널 없이 백그라운드 상시 대기 |
 | `sleep_tool` | SleepTool | 자율 에이전트 페이싱 — 5분 캐시 만료 균형 |

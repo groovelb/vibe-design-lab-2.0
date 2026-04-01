@@ -220,6 +220,39 @@
     "quote": "0x64,0x75,0x63,0x6b — 'duck'의 hex 인코딩"
   },
   {
+    "id": "reveal_excluded_strings",
+    "act": 1,
+    "title_ko": "빌드 출력물에 금지 문자열이 있으면 빌드가 실패한다",
+    "description_ko": "excluded-strings.txt에 등록된 내부 코드네임, 모델명, 저장소명이 최종 빌드 번들에 하나라도 포함되어 있으면 빌드 자체가 실패한다. Dead Code Elimination이 코드를 지운 뒤, 이 검증이 '정말 지워졌는지' 한번 더 확인한다. 이중 삭제 검증이다.",
+    "trigger_node": "excluded_strings",
+    "related_nodes": ["esbuild_bundle", "dead_code_elim", "feature_flags"],
+    "surprise_level": 4,
+    "category": "architecture",
+    "quote": "excluded-strings.txt — 빌드 출력 문자열 검증"
+  },
+  {
+    "id": "reveal_89_feature_flags",
+    "act": 1,
+    "title_ko": "89개 플래그가 두 제품의 경계선이다",
+    "description_ko": "컴파일타임 피처 플래그가 89개, 런타임 GrowthBook 플래그가 53개. 총 142개 게이트가 같은 코드베이스에서 두 개의 완전히 다른 제품을 만들어낸다. KAIROS, PROACTIVE, DAEMON 같은 자율 에이전트 기능부터 BUDDY 가상 펫까지 모두 이 스위치 뒤에 있다.",
+    "trigger_node": "feature_flags",
+    "related_nodes": ["dead_code_elim", "growthbook", "esbuild_bundle"],
+    "surprise_level": 4,
+    "category": "architecture",
+    "quote": "89 컴파일타임 + 53 런타임 = 142 게이트"
+  },
+  {
+    "id": "reveal_dual_prompt_path",
+    "act": 5,
+    "title_ko": "시스템 프롬프트에 두 개의 완전히 다른 경로가 있다",
+    "description_ko": "일반 모드(경로 A)에서는 915줄의 코딩 가이드라인이 로드된다. KAIROS/PROACTIVE 모드(경로 B)에서는 이 모든 것이 사라지고 'You are an autonomous agent.' 한 줄로 대체된다. 같은 바이너리 안에 도구의 인격과 존재의 인격이 공존한다.",
+    "trigger_node": "system_prompt",
+    "related_nodes": ["proactive", "kairos", "query_engine"],
+    "surprise_level": 5,
+    "category": "autonomy",
+    "quote": "경로 A: 915줄 / 경로 B: 'You are an autonomous agent.'"
+  },
+  {
     "id": "reveal_mulberry32_gacha",
     "act": "epilogue",
     "title_ko": "결정론적 가챠 — 당신의 친구는 이미 정해져 있다",
