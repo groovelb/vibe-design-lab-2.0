@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import { IcebergSection } from '../container/IcebergSection';
 import { DataCallout } from '../data-display/DataCallout';
-import { OUTRO } from '@/data/claudeCodeExperimentData';
+import { OUTRO, CC } from '@/data/claudeCodeExperimentData';
 
 /**
  * ClaudeCodeOutro
@@ -13,12 +13,12 @@ import { OUTRO } from '@/data/claudeCodeExperimentData';
  */
 export function ClaudeCodeOutro() {
   return (
-    <IcebergSection depth="deep">
-      <Divider sx={{ borderColor: 'divider', mb: { xs: 6, md: 8 } }} />
+    <IcebergSection depth="deep" density="breathe">
+      <Divider sx={{ borderColor: CC.orange, mb: { xs: 8, md: 12 } }} />
 
       <Typography
         variant="h3"
-        sx={{ color: 'text.primary', mb: { xs: 4, md: 6 } }}
+        sx={{ color: CC.orange, mb: { xs: 6, md: 10 } }}
       >
         {OUTRO.tagline}
       </Typography>
@@ -27,8 +27,8 @@ export function ClaudeCodeOutro() {
         sx={{
           display: 'grid',
           gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(4, 1fr)' },
-          gap: { xs: 2, md: 4 },
-          mb: { xs: 6, md: 8 },
+          gap: { xs: 2, md: 3 },
+          mb: { xs: 8, md: 12 },
         }}
       >
         {OUTRO.callouts.map((c) => (
@@ -43,7 +43,7 @@ export function ClaudeCodeOutro() {
 
       <Typography
         variant="body1"
-        sx={{ color: 'text.secondary', maxWidth: 640 }}
+        sx={{ color: 'text.secondary', maxWidth: 720 }}
       >
         {OUTRO.closing}
       </Typography>

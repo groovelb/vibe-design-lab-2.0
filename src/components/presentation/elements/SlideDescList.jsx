@@ -21,7 +21,7 @@ import { presentationTokens as t } from '../../../styles/themes/presentation';
  *   level="headline"
  * />
  */
-function SlideDescList({ items, level = 'headline', gap = t.spacing.element, sx }) {
+function SlideDescList({ items, level = 'headline', gap = t.spacing.group, sx }) {
   const titleScale = t.typo[level] || t.typo.headline;
 
   return (
@@ -40,7 +40,7 @@ function SlideDescList({ items, level = 'headline', gap = t.spacing.element, sx 
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            gap: `${t.spacing.none}px`,
+            gap: 0,
           }}
         >
           <Box

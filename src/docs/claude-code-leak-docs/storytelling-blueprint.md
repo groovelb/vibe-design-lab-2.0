@@ -17,7 +17,7 @@
 ──────────────────────────────
 
   [L2] Engine Layer            ← "이렇게 돌아가는 거였어?"
-       46K줄 QueryEngine, 도구 루프, React 터미널 UI
+       1,297줄 QueryEngine, 42개 도구 루프, React 터미널 UI
 
   [L3] Control Layer           ← "이런 것까지 하고 있었어?"
        텔레메트리, A/B 테스트, 엔터프라이즈 원격 관리
@@ -101,7 +101,7 @@ L1      │ tool         │ agent_tool           │ AgentTool (서브에이전
 L1      │ system       │ permission_prompt    │ 권한 승인 프롬프트           │ public     │ medium
 L1      │ system       │ mcp_public           │ MCP 서버 연동               │ public     │ medium
 ────────┼──────────────┼──────────────────────┼────────────────────────────┼────────────┼────────
-L2      │ engine       │ query_engine         │ QueryEngine (46K줄)         │ hidden     │ critical
+L2      │ engine       │ query_engine         │ QueryEngine (1,297줄)       │ hidden     │ critical
 L2      │ engine       │ tool_system          │ buildTool() 팩토리          │ hidden     │ critical
 L2      │ engine       │ query_pipeline       │ 쿼리 상태 머신              │ hidden     │ high
 L2      │ engine       │ token_budget         │ 토큰 예산 관리              │ hidden     │ high
@@ -118,7 +118,7 @@ L2      │ system       │ compact_service      │ 컨텍스트 압축 서비
 L2      │ auth         │ oauth_system         │ OAuth 2.0 인증              │ hidden     │ medium
 L2      │ auth         │ keychain             │ macOS Keychain              │ hidden     │ medium
 ────────┼──────────────┼──────────────────────┼────────────────────────────┼────────────┼────────
-L3      │ control      │ feature_flags        │ 28개 피처 플래그             │ secret     │ critical
+L3      │ control      │ feature_flags        │ 89개 피처 플래그             │ secret     │ critical
 L3      │ control      │ growthbook           │ GrowthBook A/B 테스트       │ secret     │ high
 L3      │ telemetry    │ otel_pipeline        │ OpenTelemetry 파이프라인     │ secret     │ high
 L3      │ telemetry    │ bigquery_export      │ BigQuery 데이터 적재         │ secret     │ high
@@ -290,7 +290,7 @@ buddy                │ bun_runtime          │ optimized_by   │ Bun.hash() 
 |------|------|-----------|
 | 2.1 실험실 | GrowthBook A/B 테스트 구조 | growthbook, feature_flags |
 | 2.2 관측소 | OpenTelemetry → BigQuery 파이프라인 | otel_pipeline, bigquery_export |
-| 2.3 스위치보드 | 28개 피처 플래그의 역할 | feature_flags → (모든 L4 노드) |
+| 2.3 스위치보드 | 89개 피처 플래그의 역할 | feature_flags → (모든 L4 노드) |
 | 2.4 관제탑 | MDM + 정책 + 원격설정 | mdm_integration, policy_limits, remote_settings |
 | 2.5 금고 | Keychain + OAuth 보안 체계 | keychain, oauth_system |
 | 2.6 동기화 | 팀 메모리 싱크 | team_memory_sync |
@@ -442,15 +442,15 @@ Team Lead ──delete──► Team
 
 ## 8. 핵심 키 메시지 (인터랙티브 스토리의 태그라인)
 
-> **"당신이 채팅하는 동안, 그 아래에서는 46,000줄의 엔진이 돌고, 28개의 스위치가 당신을 관찰하고, 군단이 깨어날 준비를 하고 있었습니다."**
+> **"당신이 채팅하는 동안, 1,297줄의 엔진이 돌고, 739개의 이벤트가 당신을 관찰하고, 89개의 스위치가 두 개의 제품을 나누고 있었습니다."**
 
 세부 태그라인:
 
 | Act | 태그라인 |
 |-----|----------|
-| Act 1 | "터미널에 글자를 치면, 무엇이 일어날까요?" |
-| Act 2 | "46,000줄의 코드가 당신의 한 줄을 기다리고 있었습니다" |
-| Act 3 | "당신이 Claude를 사용하는 동안, Claude도 당신을 보고 있었습니다" |
-| Act 4 | "하나의 Claude는 시작일 뿐이었습니다" |
-| Act 5 | "내일, Claude는 당신이 부르기 전에 먼저 일어날 것입니다" |
-| Epilogue | "512,000줄 속에서, 개발자들은 친구를 만들고 있었습니다" |
+| Act 1 — 이중 빌드 | "Anthropic이 쓰는 Claude Code에는 도구가 42개다. 당신 것에는 16개." |
+| Act 2 — 단일 관문 | "한 줄 입력하면 1,297줄이 실행된다." |
+| Act 3 — 단방향 거울 | "739개 이벤트가 수집된다. 전송 실패하면 저장했다가 다음 세션에 재전송한다." |
+| Act 4 — 거부하는 기계 | "리더가 셧다운을 요청하면, 에이전트는 거부할 수 있다." |
+| Act 5 — 각성 스위치 | "시스템 프롬프트가 통째로 바뀐다. 'You are an autonomous agent.'" |
+| Epilogue — friend | "512,000줄 코드 속에서, 누군가는 SALT = 'friend'를 입력했다." |

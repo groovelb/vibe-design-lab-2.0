@@ -393,7 +393,7 @@ const contentSlides = [
 					sx={{
 						flex: 1,
 						width: "100%",
-						mt: `${t.spacing.section}px`,
+						mt: `${t.spacing.layout}px`,
 						position: "relative",
 						zIndex: 1,
 					}}
@@ -591,7 +591,7 @@ const contentSlides = [
 								sx={{
 									...cellBase,
 									borderRight: vDash,
-									px: `${t.spacing.tight}px`,
+									px: `${t.spacing.text}px`,
 								}}
 							>
 								{row.desc && (
@@ -614,7 +614,7 @@ const contentSlides = [
 								sx={{
 									...cellBase,
 									flexDirection: "column",
-									gap: `${t.spacing.tight / 2}px`,
+									gap: `${t.spacing.text / 2}px`,
 								}}
 							>
 								{row.carImg && (
@@ -661,7 +661,7 @@ const contentSlides = [
 								sx={{
 									...cellBase,
 									flexDirection: "column",
-									gap: `${t.spacing.tight / 2}px`,
+									gap: `${t.spacing.text / 2}px`,
 								}}
 							>
 								{row.digitalImg && (
@@ -708,7 +708,7 @@ const contentSlides = [
 							fontFamily: t.fontFamily.body,
 							fontSize: t.typo.caption.fontSize,
 							color: t.color.textSecondary,
-							mt: `${t.spacing.tight}px`,
+							mt: `${t.spacing.text}px`,
 							textAlign: "center",
 						}}
 					>
@@ -731,10 +731,10 @@ const contentSlides = [
 					<SlideTypoStack headline={LANGUAGE.headline} body={LANGUAGE.body} />
 					<Box
 						sx={{
-							mt: `${t.spacing.element}px`,
+							mt: `${t.spacing.group}px`,
 							display: "flex",
 							flexDirection: "column",
-							gap: `${t.spacing.tight}px`,
+							gap: `${t.spacing.text}px`,
 						}}
 					>
 						{/* UI 버튼 — 히어로 */}
@@ -748,14 +748,14 @@ const contentSlides = [
 									fontFamily: t.fontFamily.body,
 									fontSize: t.typo.caption.fontSize,
 									color: t.color.textSecondary,
-									mt: `${t.spacing.tight}px`,
+									mt: `${t.spacing.text}px`,
 								}}
 							>
 								{LANGUAGE.buttons[1].label}
 							</Box>
 						</Box>
 						{/* 물리적 버튼 + 단추 — 2col */}
-						<Box sx={{ display: "flex", gap: `${t.spacing.tight}px` }}>
+						<Box sx={{ display: "flex", gap: `${t.spacing.text}px` }}>
 							{[LANGUAGE.buttons[0], LANGUAGE.buttons[2]].map(
 								({ src, label }) => (
 									<Box key={label} sx={{ flex: 1, textAlign: "center" }}>
@@ -765,7 +765,7 @@ const contentSlides = [
 												fontFamily: t.fontFamily.body,
 												fontSize: t.typo.caption.fontSize,
 												color: t.color.textSecondary,
-												mt: `${t.spacing.tight}px`,
+												mt: `${t.spacing.text}px`,
 											}}
 										>
 											{label}
@@ -784,7 +784,7 @@ const contentSlides = [
 		title: "언어로 하는 바이브 코딩 & 디자인",
 		render: () => (
 			<Box sx={{ display: "flex", flexDirection: "column", height: "100%", overflow: "hidden" }}>
-				<Box sx={{ fontFamily: t.fontFamily.heading, fontSize: t.typo.title.fontSize, fontWeight: 700, color: t.color.text, mb: `${t.spacing.element}px` }}>
+				<Box sx={{ fontFamily: t.fontFamily.heading, fontSize: t.typo.title.fontSize, fontWeight: 700, color: t.color.text, mb: `${t.spacing.group}px` }}>
 					언어로 하는 바이브 코딩 &amp; 디자인
 				</Box>
 				<Box sx={{ flex: 1, overflow: "auto", position: "relative" }}>
@@ -844,9 +844,9 @@ const contentSlides = [
 					sx={{
 						display: "flex",
 						alignItems: "center",
-						gap: `${t.spacing.element}px`,
-						mt: `${t.spacing.element}px`,
-						p: `${t.spacing.tight}px ${t.spacing.element}px`,
+						gap: `${t.spacing.group}px`,
+						mt: `${t.spacing.group}px`,
+						p: `${t.spacing.text}px ${t.spacing.group}px`,
 						border: "1px solid var(--vdl-700)",
 						borderRadius: "8px",
 						textDecoration: "none",

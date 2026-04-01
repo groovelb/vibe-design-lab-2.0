@@ -5,10 +5,7 @@ import { SectionContainer } from '../container/SectionContainer';
 import { VdlLogo } from '../typography/VdlLogo';
 import FadeTransition from '../motion/FadeTransition';
 import { GLASS_SX } from '../../common/ui/glassSx';
-import { PAGES } from '../../data/contents';
 import { gradientLoopKf } from '../kinetic-typography/GradientText';
-
-const { footerCta } = PAGES.landing;
 
 const DiscordIcon = ({ size = 24 }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={size} height={size} fill="#5865F2" style={{ flexShrink: 0 }}>
@@ -17,19 +14,19 @@ const DiscordIcon = ({ size = 24 }) => (
 );
 
 /**
- * LandingFooterCTA 섹션 템플릿
+ * SiteFooter 컴포넌트
  *
- * Landing 페이지의 최종 CTA 섹션.
- * FooterShifting 레이아웃과 함께 사용된다.
- * 공식 오픈 날짜 안내 + Discord 커뮤니티 배너.
+ * 전역 푸터. 모든 페이지 하단에 표시된다.
+ * VDL 로고 + CTA + Discord 배너 + 사업자 정보.
  *
  * Example usage:
- * <LandingFooterCTA />
+ * <SiteFooter />
  */
-export function LandingFooterCTA() {
+export function SiteFooter() {
   return (
     <SectionContainer>
       <Box
+        component="footer"
         sx={{
           display: 'flex',
           flexDirection: 'column',
@@ -100,6 +97,27 @@ export function LandingFooterCTA() {
             </Typography>
           </Box>
         </FadeTransition>
+
+        {/* 사업자 정보 */}
+        <Box
+          sx={{
+            mt: { xs: 6, md: 10 },
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 0.5,
+          }}
+        >
+          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+            데이터 드리븐 디자인
+          </Typography>
+          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+            서울특별시 관악구 행운1나길 8-15, 1동 2층 202호
+          </Typography>
+          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+            010-7610-0640
+          </Typography>
+        </Box>
       </Box>
     </SectionContainer>
   );

@@ -30,7 +30,7 @@ function SlideStorytelling({ from, to, arrowLabel, direction = 'vertical', sx })
         alignItems: 'center',
         justifyContent: 'center',
         height: '100%',
-        gap: `${t.spacing.element}px`,
+        gap: `${t.spacing.group}px`,
         ...sx,
       }}
     >
@@ -60,7 +60,7 @@ function SlideStorytelling({ from, to, arrowLabel, direction = 'vertical', sx })
       }}>
         <Box sx={{
           [isVertical ? 'width' : 'height']: '1px',
-          [isVertical ? 'height' : 'width']: '40vh',
+          [isVertical ? 'height' : 'width']: '20vh',
           bgcolor: t.color.arrow,
         }} />
         <Box
@@ -89,8 +89,8 @@ function SlideStorytelling({ from, to, arrowLabel, direction = 'vertical', sx })
             fontWeight: t.typo.caption.fontWeight,
             lineHeight: t.typo.caption.lineHeight,
             color: t.color.textSecondary,
-            mt: isVertical ? `${t.spacing.tight}px` : 0,
-            ml: isVertical ? 0 : `${t.spacing.tight}px`,
+            mt: isVertical ? `${t.spacing.text}px` : 0,
+            ml: isVertical ? 0 : `${t.spacing.text}px`,
           }}
         >
           {arrowLabel}

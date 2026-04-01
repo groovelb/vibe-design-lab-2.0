@@ -26,9 +26,12 @@ const RevealCard = forwardRef(function RevealCard(
       <Box
         ref={ref}
         sx={{
-          py: 3,
+          py: { xs: 3, md: 4 },
+          px: { xs: 2, md: 3 },
           borderTop: '1px solid',
           borderColor: 'divider',
+          transition: 'background-color 0.2s',
+          '&:hover': { bgcolor: 'rgba(255, 107, 44, 0.06)' },
           ...sx,
         }}
         {...props}
@@ -37,7 +40,7 @@ const RevealCard = forwardRef(function RevealCard(
           <Typography
             component="span"
             variant="body2"
-            sx={{ fontWeight: 600, color: 'text.primary' }}
+            sx={{ fontWeight: 600, color: '#FF6B2C' }}
           >
             {title}
           </Typography>

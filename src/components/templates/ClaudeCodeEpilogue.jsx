@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { IcebergSection } from '../container/IcebergSection';
 import { RevealCard } from '../card/RevealCard';
-import { ACTS, REVEALS } from '@/data/claudeCodeExperimentData';
+import { ACTS, REVEALS, CC } from '@/data/claudeCodeExperimentData';
 import { BUDDY_SPECIES } from '@/data/buddySpecies';
 
 const act = ACTS[5];
@@ -17,17 +17,26 @@ export function ClaudeCodeEpilogue() {
   return (
     <IcebergSection
       depth="abyss"
-      overline="Epilogue"
+      density="breathe"
+      overline="Epilogue · friend"
       tagline={act.tagline}
     >
-      <Typography
-        variant="body1"
-        sx={{ color: 'text.secondary', maxWidth: 640, mb: { xs: 4, md: 6 } }}
-      >
-        {act.description}
-      </Typography>
+      <Box sx={{ maxWidth: 800, mx: 'auto', py: { xs: 4, md: 6 }, mb: { xs: 6, md: 10 } }}>
+        <Typography
+          variant="h4"
+          sx={{ color: CC.orange, fontWeight: 700, mb: 3 }}
+        >
+          {'\u201C'}{act.pullQuote}{'\u201D'}
+        </Typography>
+        <Typography
+          variant="body1"
+          sx={{ color: 'text.secondary', lineHeight: 1.8 }}
+        >
+          {act.description}
+        </Typography>
+      </Box>
 
-      {/* ASCII 갤러리 */}
+      {/* ASCII 갤러리 — 그리드 카드 */}
       <Box
         sx={{
           display: 'grid',
@@ -37,11 +46,21 @@ export function ClaudeCodeEpilogue() {
             md: 'repeat(6, 1fr)',
           },
           gap: { xs: 2, md: 3 },
-          mb: { xs: 4, md: 6 },
+          mb: { xs: 6, md: 10 },
         }}
       >
         {BUDDY_SPECIES.map((s) => (
-          <Box key={s.id} sx={{ textAlign: 'center', py: 2 }}>
+          <Box
+            key={s.id}
+            sx={{
+              textAlign: 'center',
+              py: { xs: 3, md: 4 },
+              px: 2,
+              bgcolor: CC.blackCard,
+              transition: 'background-color 0.2s',
+              '&:hover': { bgcolor: CC.orangeMuted },
+            }}
+          >
             <Typography
               variant="codeBlock"
               component="div"
@@ -57,7 +76,7 @@ export function ClaudeCodeEpilogue() {
             <Typography
               variant="caption"
               component="div"
-              sx={{ color: 'text.secondary', mt: 1 }}
+              sx={{ color: 'text.secondary', mt: 1.5 }}
             >
               {s.name}
             </Typography>
@@ -65,33 +84,42 @@ export function ClaudeCodeEpilogue() {
         ))}
       </Box>
 
-      {/* SALT 인용 */}
+      {/* SALT 인용 — 오렌지 액센트 */}
       <Box
         sx={{
-          bgcolor: 'action.hover',
-          py: 2,
-          px: 3,
-          mb: { xs: 4, md: 6 },
-          maxWidth: 480,
+          bgcolor: CC.orange,
+          py: 3,
+          px: 4,
+          mb: { xs: 6, md: 10 },
+          maxWidth: 560,
         }}
       >
-        <Typography variant="code" component="div" sx={{ color: 'text.primary' }}>
+        <Typography variant="code" component="div" sx={{ color: CC.black, fontWeight: 700 }}>
           {"SALT = 'friend-2026-401'"}
         </Typography>
-        <Typography variant="caption" component="div" sx={{ color: 'text.secondary', mt: 1 }}>
+        <Typography variant="caption" component="div" sx={{ color: 'rgba(0,0,0,0.6)', mt: 1.5 }}>
           friend(친구) + 2026(출시 연도) + 401(4월 1일). 모든 buddy의 해시 솔트에 friend가 들어간다.
         </Typography>
       </Box>
 
-      {REVEALS.epilogue.map((r) => (
-        <RevealCard
-          key={r.id}
-          title={r.titleKo}
-          description={r.descriptionKo}
-          quote={r.quote}
-          surpriseLevel={r.surpriseLevel}
-        />
-      ))}
+      {/* Reveals — 2컬럼 그리드 */}
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' },
+          gap: { xs: 0, md: 3 },
+        }}
+      >
+        {REVEALS.epilogue.map((r) => (
+          <RevealCard
+            key={r.id}
+            title={r.titleKo}
+            description={r.descriptionKo}
+            quote={r.quote}
+            surpriseLevel={r.surpriseLevel}
+          />
+        ))}
+      </Box>
     </IcebergSection>
   );
 }

@@ -18,7 +18,7 @@ import { presentationTokens as t } from '../../../styles/themes/presentation';
  *   <SlideImage src="/img.png" alt="우측" />
  * </SlideHSplit>
  */
-function SlideHSplit({ children, columns, gap = t.content.gap, sx }) {
+function SlideHSplit({ children, columns, gap = t.spacing.layout, sx }) {
   const items = Array.isArray(children) ? children : [children];
   const cols = columns || Math.min(items.length, 4);
 

@@ -29,7 +29,7 @@ function SlideChapterTitle({ overline, title, summary, toc, sx }) {
         flexDirection: 'column',
         justifyContent: 'center',
         height: '100%',
-        gap: `${t.spacing.element}px`,
+        gap: `${t.spacing.group}px`,
         ...sx,
       }}
     >
@@ -44,7 +44,7 @@ function SlideChapterTitle({ overline, title, summary, toc, sx }) {
             letterSpacing: '0.12em',
             textTransform: 'uppercase',
             color: t.color.textSecondary,
-            mb: `-${t.spacing.tight}px`,
+            mb: `-${t.spacing.text}px`,
           }}
         >
           {overline}
@@ -79,7 +79,7 @@ function SlideChapterTitle({ overline, title, summary, toc, sx }) {
             color: t.color.textSecondary,
             whiteSpace: 'pre-line',
             maxWidth: '70%',
-            mt: `-${t.spacing.tight}px`,
+            mt: `-${t.spacing.text}px`,
           }}
         >
           {summary}
@@ -92,11 +92,11 @@ function SlideChapterTitle({ overline, title, summary, toc, sx }) {
           component="ul"
           sx={{
             m: 0,
-            mt: `${t.spacing.section}px`,
+            mt: `${t.spacing.layout}px`,
             pl: `${t.typo.headline.fontSize * 1.2}px`,
             display: 'flex',
             flexDirection: 'column',
-            gap: `${t.spacing.tight}px`,
+            gap: `${t.spacing.text}px`,
             listStyleType: '"▪  "',
           }}
         >

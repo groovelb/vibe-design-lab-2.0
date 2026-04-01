@@ -27,7 +27,7 @@ function SlideImage({ src, alt, ratio = 'original', caption, objectFit = 'contai
         m: 0,
         display: 'flex',
         flexDirection: 'column',
-        gap: `${t.spacing.tight}px`,
+        gap: `${t.spacing.text}px`,
         ...sx,
       }}
     >

@@ -24,7 +24,6 @@ const nav = {
 const content = {
   maxWidth: 1536, // MUI xl
   aspectRatio: '4 / 3',
-  gap: 64, // 레이아웃(Split, Grid) 컬럼/셀 간 공통 간격
 };
 
 // ─── Typography Scale (프레젠테이션 전용) ───
@@ -37,13 +36,11 @@ const typo = {
   label: { fontSize: 14, fontWeight: 500, lineHeight: 1.4, letterSpacing: '0.02em' },
 };
 
-// ─── Spacing ───
+// ─── Spacing (3-tier) ───
 const spacing = {
-  section: 80,
-  element: 48,
-  tight: 12,
-  none: 0,
-  loose: 64,
+  layout: 96, // 레이아웃 간격: Grid/HSplit 셀 간, 대구분
+  group: 48,  // 그룹 간격: 섹션 내 요소 간
+  text: 12,   // 텍스트 간격: 텍스트 블록 내부
 };
 
 // ─── Color (VDL CSS 변수 참조) ───
@@ -55,7 +52,7 @@ const color = {
   textTertiary: 'var(--vdl-600)',
   border: 'var(--vdl-700)',
   accent: 'var(--vdl-50)',
-  arrow: 'var(--vdl-500)',
+  arrow: 'var(--vdl-300)',
 };
 
 // ─── Font Family (VDL CSS 변수 참조) ───

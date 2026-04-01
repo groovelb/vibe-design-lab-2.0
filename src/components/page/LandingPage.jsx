@@ -8,7 +8,6 @@ import { LandingLearningMethod } from '../templates/LandingLearningMethod';
 import { CourseDetailInstructor } from '../templates/CourseDetailInstructor';
 import { LandingCourseHighlight } from '../templates/LandingCourseHighlight';
 import { LandingCourseReview } from '../templates/LandingCourseReview';
-import { LandingFooterCTA } from '../templates/LandingFooterCTA';
 import { PageContainer } from '../layout/PageContainer';
 
 /**
@@ -38,7 +37,6 @@ export function LandingPage() {
       <LandingLearningMethod />
       <LandingCourseHighlight />
       <LandingCourseReview />
-      <LandingFooterCTA />
     </PageContainer>
   );
 }

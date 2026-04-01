@@ -60,7 +60,7 @@ const TestimonialCard = forwardRef(function TestimonialCard({
     if (!el) return;
     const io = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) el.play();
+        if (entry.isIntersecting) el.play().catch(() => {});
         else el.pause();
       },
       { threshold: 0.3 },

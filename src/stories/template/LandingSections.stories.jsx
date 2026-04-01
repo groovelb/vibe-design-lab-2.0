@@ -6,7 +6,7 @@ import { LandingCourseHighlight } from '../../components/templates/LandingCourse
 import { LandingCourseReview } from '../../components/templates/LandingCourseReview';
 import { LandingDictionaryPreview } from '../../components/templates/LandingDictionaryPreview';
 import { LandingCommunitySnapshot } from '../../components/templates/LandingCommunitySnapshot';
-import { LandingFooterCTA } from '../../components/templates/LandingFooterCTA';
+import { SiteFooter } from '../../components/layout/SiteFooter';
 import { LandingShowcaseOriginal } from '../../components/templates/LandingShowcaseOriginal';
 import { LandingShowcaseMagnifier } from '../../components/templates/LandingShowcaseMagnifier';
 
@@ -90,5 +90,5 @@ export const Showcase_Magnifier = {
 /** S9. Final CTA — "시작합니다" */
 export const S9_FooterCTA = {
   name: 'S9. Footer CTA',
-  render: () => <LandingFooterCTA />,
+  render: () => <SiteFooter />,
 };

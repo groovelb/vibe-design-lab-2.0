@@ -17,7 +17,7 @@ import { presentationTokens as t } from '../../../styles/themes/presentation';
  * <SlideList items={['항목 1', '항목 2', '항목 3']} />
  * <SlideList items={['첫째', '둘째']} variant="number" level="headline" />
  */
-function SlideList({ items, variant = 'bullet', level = 'body', gap = t.spacing.tight, sx }) {
+function SlideList({ items, variant = 'bullet', level = 'body', gap = t.spacing.text, sx }) {
   const scale = level === 'headline' ? t.typo.headline : t.typo.body;
 
   return (

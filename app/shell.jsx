@@ -2,6 +2,7 @@
 import Link from 'next/link';
 
 import { AppShell } from '@/components/layout/AppShell';
+import { SiteFooter } from '@/components/layout/SiteFooter';
 import { NavMenu } from '@/components/navigation/NavMenu';
 import { VdlLogo } from '@/components/typography/VdlLogo';
 import { AmbientGrainedBackground } from '@/components/dynamic-color/AmbientGrainedBackground';
@@ -62,6 +63,7 @@ export default function SiteShell({ children }) {
       hasHeaderBorder={false}
     >
       {children}
+      <SiteFooter />
     </AppShell>
     </>
   );

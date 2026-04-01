@@ -23,7 +23,7 @@ function SlideMessage({ children, sx }) {
         width: '100%',
         height: '100%',
         textAlign: 'center',
-        px: `${t.spacing.loose}px`,
+        px: `${t.spacing.layout}px`,
         ...sx,
       }}
     >

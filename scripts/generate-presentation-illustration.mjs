@@ -65,8 +65,9 @@ Do NOT include: text, labels, annotations, arrows, dimension lines, \
 or any written content. Pure visual forms only.`,
 
   'tech-iso': `\
-Technical isometric wireframe illustration on a solid very dark \
-near-black violet-gray background (approximately hsl 260, 20%, 4%).
+Technical isometric wireframe illustration on a solid pure black \
+background (#000000, RGB 0,0,0). The background must be completely \
+black with no visible gray tint.
 
 Stroke rules:
 - Primary strokes in bright near-white (approximately RGB 230, 233, 236)
@@ -403,7 +404,7 @@ Key elements:
 Emphasis: The outer circle rim is the dominant contour.`,
   },
 
-  // ── 2-A-4: 프로그래밍 언어의 추상화 과정 4단계 (테크 아이소, 1:1) ──
+  // ── 2-A-4: 프로그래밍 언어의 추상화 과정 4단계 (테크 아이소, 1:1, 순수 검정) ──
 
   {
     name: 'abstraction-punch-card',
@@ -411,12 +412,15 @@ Emphasis: The outer circle rim is the dominant contour.`,
     referenceImage: null,
     configOverride: { imageConfig: { aspectRatio: '1:1', imageSize: '1K', numberOfImages: 2 } },
     content: `\
+CRITICAL: The image MUST be a perfect square (1:1 aspect ratio). \
+The background MUST be pure black (#000000), not dark gray.
+
 Subject: A punch card machine — a large isometric mechanical device \
 with a rectangular card slot and rows of tiny cylindrical pins \
 arranged in a grid pattern on its surface.
 
-Composition: Single hero object centered on canvas, viewed from \
-isometric three-quarter angle.
+Composition: Single hero object centered in a square canvas, viewed \
+from isometric three-quarter angle.
 
 Key elements:
 - One large isometric box (the machine body) with visible top, \
@@ -435,12 +439,15 @@ strokes. The floating card uses secondary stroke brightness.`,
     referenceImage: null,
     configOverride: { imageConfig: { aspectRatio: '1:1', imageSize: '1K', numberOfImages: 2 } },
     content: `\
+CRITICAL: The image MUST be a perfect square (1:1 aspect ratio). \
+The background MUST be pure black (#000000), not dark gray.
+
 Subject: A compiler as a translation machine — an isometric funnel \
 or hourglass-shaped module. Varied geometric blocks enter from the \
 top and uniform small cubes exit from the bottom.
 
-Composition: Vertical flow, centered. Hero funnel module at center, \
-input blocks above, output cubes below.
+Composition: Vertical flow, centered in a square canvas. Hero \
+funnel module at center, input blocks above, output cubes below.
 
 Key elements:
 - Top: 3-4 small isometric blocks of different shapes and sizes \
@@ -459,12 +466,15 @@ strokes and most internal wireframe detail.`,
     referenceImage: null,
     configOverride: { imageConfig: { aspectRatio: '1:1', imageSize: '1K', numberOfImages: 2 } },
     content: `\
+CRITICAL: The image MUST be a perfect square (1:1 aspect ratio). \
+The background MUST be pure black (#000000), not dark gray.
+
 Subject: A layered isometric tower of stacked platform modules — \
 representing modern programming abstraction layers from OS at \
 the bottom to application at the top.
 
-Composition: Vertical stack, centered, bottom-up pyramid-like \
-arrangement.
+Composition: Vertical stack, centered in a square canvas, \
+bottom-up pyramid-like arrangement.
 
 Key elements:
 - Bottom: wide flat isometric platform (OS/runtime layer)
@@ -483,12 +493,16 @@ internal detail, brightest strokes.`,
     referenceImage: null,
     configOverride: { imageConfig: { aspectRatio: '1:1', imageSize: '1K', numberOfImages: 2 } },
     content: `\
+CRITICAL: The image MUST be a perfect square (1:1 aspect ratio). \
+The background MUST be pure black (#000000), not dark gray.
+
 Subject: An isometric speech bubble module on the left connected \
 by flowing lines to an isometric code editor module on the right — \
 representing natural language transforming into code via AI.
 
-Composition: Diagonal flow from upper-left to lower-right, two \
-hero-sized modules connected by curved lines with node dots.
+Composition: Diagonal flow from upper-left to lower-right in a \
+square canvas, two hero-sized modules connected by curved lines \
+with node dots.
 
 Key elements:
 - Left: a rounded isometric speech bubble box with soft edges \
@@ -501,6 +515,152 @@ small circular node markers at junction points
 
 Emphasis: Both the speech bubble and code editor share hero status \
 with brightest strokes. The AI module in between uses secondary.`,
+  },
+  // ── 2-A-9: 전통적 오류 3종 (테크 아이소, 1:1, 순수 검정) ──
+
+  {
+    name: 'error-syntax',
+    type: 'tech-iso',
+    referenceImage: null,
+    configOverride: { imageConfig: { aspectRatio: '1:1', imageSize: '1K', numberOfImages: 1 } },
+    content: `\
+CRITICAL: The image MUST be a perfect square (1:1 aspect ratio). \
+The background MUST be pure black (#000000), not dark gray.
+
+Subject: A single isometric gate with a narrow slit — a code block \
+approaching but unable to pass because its shape doesn't match the \
+slit opening. Represents syntax error (grammar mismatch).
+
+Composition: Centered in square canvas, minimal elements, icon-like.
+
+Key elements:
+- One flat isometric wall/gate with a rectangular slit opening
+- One small isometric block with wrong shape stuck at the slit
+- A few small rejected fragments bouncing off to the side
+
+Emphasis: The gate is the hero with brightest strokes.`,
+  },
+  {
+    name: 'error-semantic',
+    type: 'tech-iso',
+    referenceImage: null,
+    configOverride: { imageConfig: { aspectRatio: '1:1', imageSize: '1K', numberOfImages: 1 } },
+    content: `\
+CRITICAL: The image MUST be a perfect square (1:1 aspect ratio). \
+The background MUST be pure black (#000000), not dark gray.
+
+Subject: Two isometric puzzle pieces that look like they should \
+connect but their inner shapes are mismatched. Represents semantic \
+error (meaning mismatch).
+
+Composition: Centered in square canvas, two pieces side by side \
+with a visible gap between them, icon-like.
+
+Key elements:
+- Two isometric prism modules with interlocking edges that don't fit
+- Internal wireframe showing different patterns inside each piece
+- Small question-mark-shaped gap between the two pieces
+
+Emphasis: Both modules share hero brightness, the gap area is subtle.`,
+  },
+  {
+    name: 'error-linker',
+    type: 'tech-iso',
+    referenceImage: null,
+    configOverride: { imageConfig: { aspectRatio: '1:1', imageSize: '1K', numberOfImages: 1 } },
+    content: `\
+CRITICAL: The image MUST be a perfect square (1:1 aspect ratio). \
+The background MUST be pure black (#000000), not dark gray.
+
+Subject: Three isometric modules that should be connected by cables \
+but the cables are severed/broken midway. Represents linker error \
+(failed dependency connection).
+
+Composition: Centered in square canvas, three small modules in a \
+triangle arrangement with broken connection lines, icon-like.
+
+Key elements:
+- Three small isometric box modules at triangle vertices
+- Thin connection lines between them with visible breaks/gaps
+- Small circular node dots at the broken endpoints
+- Dangling wire ends at each break point
+
+Emphasis: The modules are hero brightness, broken lines are secondary.`,
+  },
+
+  // ── 2-A-10: 맥락적 오류 3종 (테크 아이소, 1:1, 순수 검정) ──
+
+  {
+    name: 'error-intent-drift',
+    type: 'tech-iso',
+    referenceImage: null,
+    configOverride: { imageConfig: { aspectRatio: '1:1', imageSize: '1K', numberOfImages: 1 } },
+    content: `\
+CRITICAL: The image MUST be a perfect square (1:1 aspect ratio). \
+The background MUST be pure black (#000000), not dark gray.
+
+Subject: An isometric arrow or path that starts straight but \
+gradually curves away from its target. Represents intention drift \
+— the result diverging from the original goal.
+
+Composition: Centered in square canvas, diagonal flow, icon-like.
+
+Key elements:
+- A small isometric target/destination module (upper right)
+- A curved path/arrow starting from lower left, bending away
+- Thin dotted line showing the intended straight path
+- The actual path drifting off to a different direction
+
+Emphasis: The target module is hero brightness, the drifting path \
+is secondary.`,
+  },
+  {
+    name: 'error-fragmented',
+    type: 'tech-iso',
+    referenceImage: null,
+    configOverride: { imageConfig: { aspectRatio: '1:1', imageSize: '1K', numberOfImages: 1 } },
+    content: `\
+CRITICAL: The image MUST be a perfect square (1:1 aspect ratio). \
+The background MUST be pure black (#000000), not dark gray.
+
+Subject: Multiple small isometric blocks that are similar but each \
+slightly different in size, angle, or internal pattern — they should \
+be consistent but aren't. Represents fragmented consistency.
+
+Composition: Centered in square canvas, scattered cluster, icon-like.
+
+Key elements:
+- 4-5 small isometric cubes/prisms that look similar at first glance
+- Each one has slightly different proportions or tilted at a different angle
+- No connection lines between them — they exist independently
+- Internal wireframe patterns differ subtly between blocks
+
+Emphasis: All blocks share similar brightness but their inconsistency \
+is the visual message.`,
+  },
+  {
+    name: 'error-tech-debt',
+    type: 'tech-iso',
+    referenceImage: null,
+    configOverride: { imageConfig: { aspectRatio: '1:1', imageSize: '1K', numberOfImages: 1 } },
+    content: `\
+CRITICAL: The image MUST be a perfect square (1:1 aspect ratio). \
+The background MUST be pure black (#000000), not dark gray.
+
+Subject: An isometric tower that looks solid on the outside but has \
+cracks and tangled wires visible through its transparent walls. \
+Represents hidden technical debt accumulating beneath the surface.
+
+Composition: Centered in square canvas, single tower, icon-like.
+
+Key elements:
+- One tall isometric prism/tower with clean outer wireframe edges
+- Inside: tangled, crossed, chaotic internal lines (hidden complexity)
+- Small hairline cracks on the surface edges
+- A few tiny fragments starting to detach from the base
+
+Emphasis: The outer tower wireframe is hero brightness, the internal \
+chaos uses subtle/secondary strokes.`,
   },
 ];
 

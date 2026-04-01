@@ -23,7 +23,7 @@ import { presentationTokens as t } from '../../../styles/themes/presentation';
  *   <SlideTypoStack headline="6" body="내용" />
  * </SlideGrid>
  */
-function SlideGrid({ children, columns, rows, gap = t.content.gap, sx }) {
+function SlideGrid({ children, columns, rows, gap = t.spacing.layout, sx }) {
   const items = (Array.isArray(children) ? children : [children]).flat();
   const rowCount = rows || Math.ceil(items.length / columns);
 

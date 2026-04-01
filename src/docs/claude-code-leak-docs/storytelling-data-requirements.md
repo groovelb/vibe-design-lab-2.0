@@ -80,23 +80,23 @@
   "acts": [
     {
       "id": 1,
-      "title": "터미널의 동반자",
-      "title_en": "Terminal Companion",
-      "tagline": "터미널에 글자를 치면, 무엇이 일어날까요?",
+      "title": "이중 빌드",
+      "title_en": "Dual Build",
+      "tagline": "Anthropic이 쓰는 Claude Code에는 도구가 42개다. 당신 것에는 16개.",
       "layers": ["L1"],
       "domains": ["surface"],
       "highlight_nodes": ["cli_repl", "file_tools", "bash_tool", "agent_tool"],
-      "transition": "하지만 이게 전부가 아니었습니다",
+      "transition": "두 개의 제품이 있다는 건 알았다. 당신이 받은 쪽의 내부를 읽었다.",
       "report": "reports/report-1_anatomy.md"
     },
     {
       "id": 2,
-      "title": "1,297줄의 심장",
-      "tagline": "1,297줄의 코드가 당신의 한 줄을 기다리고 있었습니다",
+      "title": "단일 관문",
+      "tagline": "한 줄 입력하면 1,297줄이 실행된다.",
       "layers": ["L2"],
       "domains": ["engine", "memory", "runtime"],
       "highlight_nodes": ["query_engine", "system_prompt", "tool_registry", "compact_service"],
-      "transition": "엔진은 완벽했습니다. 그런데 누가 이 엔진을 관찰하고 있을까요?",
+      "transition": "1,297줄이 질문을 처리하는 동안, 739개 이벤트가 당신을 처리하고 있었다.",
       "report": "reports/report-1_anatomy.md"
     },
     // ...Act 3, 4, 5, Epilogue
